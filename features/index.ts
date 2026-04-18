@@ -65,12 +65,16 @@ const genericSlots: FeatureSlotSet = {
   CategoryExtras: { expense: [], income: [] },
 };
 
-// The load-bearing conditional. Babel turns this into:
-//   if (false) { slots = require('@/features/islamic/slots').islamicSlots; }
-// Metro's minifier strips the branch. Net result: generic bundle has no reference
-// to '@/features/islamic/slots' at all.
+// The load-bearing conditional. Use INLINE process.env check (not the IS_ISLAMIC
+// constant) so Babel's transform-inline-environment-variables can fold the entire
+// branch to dead code in generic builds. With the constant indirection, Metro's
+// minifier may not perform cross-module folding aggressively enough.
+//
+// In generic: `process.env.APP_FLAVOR === 'islamic'` becomes `'generic' === 'islamic'`
+//             → `false` → terser DCEs the entire if body, removing the require string.
+// In islamic: same expression becomes `'islamic' === 'islamic'` → `true` → branch runs.
 let slots: FeatureSlotSet = genericSlots;
-if (IS_ISLAMIC) {
+if (process.env.APP_FLAVOR === 'islamic') {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   slots = require('@/features/islamic/slots').islamicSlots;
 }

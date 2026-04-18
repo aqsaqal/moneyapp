@@ -1,30 +1,35 @@
-// Islamic flavor slot bindings.
+// Islamic slot bindings — replaces the canary placeholder from Phase 1.
+// Imported by features/index.ts ONLY when IS_ISLAMIC === true.
 //
-// This file is imported ONLY from features/index.ts under
-// `if (IS_ISLAMIC)`. In generic builds the whole if-branch is dead-code-
-// eliminated; the Metro resolver further refuses to resolve paths under
-// features/islamic/; the blocklist makes the folder invisible. Even if one of
-// those layers were to fail silently, scripts/verify-tree-shake.sh asserts no
-// strings from this module appear in the generic bundle.
+// In generic builds, every symbol referenced from this file is invisible to
+// the bundler (Metro resolver returns {type:'empty'}, Babel folds the import
+// site to dead code, and the file is in resolver.blockList).
 
 import React from 'react';
-import { Text } from 'react-native';
 import type { FeatureSlotSet } from '@/features';
-import { CANARY, AMANAH_CANARY, HIJRI_CANARY } from './canary';
 
-// Placeholder components. Phase 4 replaces these with real implementations.
-const CanaryBadge: React.FC = () => <Text style={{ color: '#00C9A7', fontSize: 11 }}>{CANARY}</Text>;
+import { HijriDateBadge } from './hijri/HijriDateBadge';
+import { ZakatHomeCard } from './zakat/ZakatHomeCard';
+import { RamadanHomeCard } from './ramadan/RamadanHomeCard';
+import { MoreMenuEntries } from './screens/MoreMenuEntries';
+import { HalalStatusSheet } from './halal/HalalStatusSheet';
+import { HalalInlinePicker } from './halal/HalalInlinePicker';
+import { HalalFilterChip } from './halal/HalalFilterChip';
+import { ISLAMIC_EXPENSE_CATEGORIES } from './categories/islamicCategories';
+
+const HomeExtras: React.FC = () => (
+  <>
+    <ZakatHomeCard />
+    <RamadanHomeCard />
+  </>
+);
 
 export const islamicSlots: FeatureSlotSet = {
-  HomeHeaderExtras: CanaryBadge,
-  HomeExtras: () => (
-    <Text style={{ color: '#D4AF37', fontSize: 10 }}>
-      {AMANAH_CANARY} / {HIJRI_CANARY}
-    </Text>
-  ),
-  MoreMenuItems: () => null,
-  AddTxExtras: () => null,
-  TxActionSheetExtras: () => null,
-  HistoryFilterExtras: () => null,
-  CategoryExtras: { expense: [], income: [] },
+  HomeHeaderExtras: HijriDateBadge,
+  HomeExtras,
+  MoreMenuItems: MoreMenuEntries,
+  AddTxExtras: HalalInlinePicker,
+  TxActionSheetExtras: HalalStatusSheet,
+  HistoryFilterExtras: HalalFilterChip,
+  CategoryExtras: { expense: ISLAMIC_EXPENSE_CATEGORIES, income: [] },
 };

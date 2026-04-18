@@ -21,19 +21,25 @@ import { LockScreen } from '@/components/LockScreen';
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
 export default function RootLayout() {
-  // Fonts: core for both flavors; Arabic only for islamic.
-  const arabicFonts = IS_ISLAMIC
-    ? // eslint-disable-next-line @typescript-eslint/no-require-imports
-      require('@expo-google-fonts/ibm-plex-sans-arabic')
-    : {};
+  // Fonts: core for both flavors. Arabic font only for islamic — using INLINE
+  // process.env check (NOT via IS_ISLAMIC constant) so Babel's
+  // transform-inline-environment-variables folds this to a literal `false`
+  // before Metro's minifier sees it. This way the entire @expo-google-fonts/
+  // ibm-plex-sans-arabic package — including its asset path strings — is
+  // physically excluded from the generic bundle.
+  const arabicFontMap =
+    process.env.APP_FLAVOR === 'islamic'
+      ? // eslint-disable-next-line @typescript-eslint/no-require-imports
+        require('@expo-google-fonts/ibm-plex-sans-arabic')
+      : {};
 
   const [fontsLoaded] = useFonts({
     Outfit_700Bold,
     Outfit_800ExtraBold,
     PlusJakartaSans_500Medium,
     PlusJakartaSans_600SemiBold,
-    ...(IS_ISLAMIC
-      ? { IBMPlexSansArabic_500Medium: arabicFonts.IBMPlexSansArabic_500Medium }
+    ...(process.env.APP_FLAVOR === 'islamic'
+      ? { IBMPlexSansArabic_500Medium: arabicFontMap.IBMPlexSansArabic_500Medium }
       : {}),
   });
 

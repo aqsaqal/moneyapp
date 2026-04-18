@@ -72,7 +72,10 @@ export function TransactionRow({ t, currency = 'USD', onPressMore }: Transaction
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.name} numberOfLines={1}>{name}</Text>
-            {t.halalStatus && t.halalStatus !== 'unspecified' && (
+            {/* Halal badge only rendered in islamic builds — string literals
+                ('halal'/'haram'/'mushbooh') get DCE'd from generic via babel
+                process.env inlining. */}
+            {process.env.APP_FLAVOR === 'islamic' && t.halalStatus && t.halalStatus !== 'unspecified' && (
               <Text style={[styles.halal, { color: halalColor(t.halalStatus) }]}>
                 {t.halalStatus}
               </Text>
