@@ -1,0 +1,44 @@
+{
+  "cli": {
+    "version": ">=5.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "generic": {
+      "developmentClient": false,
+      "distribution": "store",
+      "env": {
+        "APP_FLAVOR": "generic",
+        "APP_NAME": "Flow",
+        "APP_BUNDLE_ID": "com.moneyflow.generic",
+        "APP_SCHEME": "flow",
+        "PRIMARY_COLOR": "#00E09E",
+        "FEATURES_ISLAMIC": "false"
+      },
+      "prebuildCommand": "node scripts/prepare-flavor.js"
+    },
+    "islamic": {
+      "developmentClient": false,
+      "distribution": "store",
+      "env": {
+        "APP_FLAVOR": "islamic",
+        "APP_NAME": "Amanah",
+        "APP_BUNDLE_ID": "com.amanah.app",
+        "APP_SCHEME": "amanah",
+        "PRIMARY_COLOR": "#00C9A7",
+        "FEATURES_ISLAMIC": "true"
+      },
+      "prebuildCommand": "node scripts/prepare-flavor.js"
+    },
+    "generic-dev": {
+      "extends": "generic",
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "islamic-dev": {
+      "extends": "islamic",
+      "developmentClient": true,
+      "distribution": "internal"
+    }
+  }
+}
