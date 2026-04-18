@@ -21,7 +21,10 @@
       "Bash(APP_FLAVOR=islamic npx tsc --noEmit)",
       "Bash(APP_FLAVOR=islamic node scripts/prepare-flavor.js)",
       "Bash(APP_FLAVOR=islamic npx expo export --platform ios --output-dir dist/islamic)",
-      "Bash(APP_FLAVOR=islamic npx expo export --platform ios --output-dir dist/islamic --clear)"
+      "Bash(APP_FLAVOR=islamic npx expo export --platform ios --output-dir dist/islamic --clear)",
+      "Bash(chmod +x /Users/admin/dev/projects/moneyapp/scripts/verify-tree-shake.sh /Users/admin/dev/projects/moneyapp/scripts/prepare-flavor.js)",
+      "Bash(bash /Users/admin/dev/projects/moneyapp/scripts/verify-tree-shake.sh)",
+      "Bash(APP_FLAVOR=generic npx tsc --noEmit)"
     ]
   }
 }
