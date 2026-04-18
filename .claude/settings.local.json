@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npx --version)",
+      "Bash(git init *)",
+      "Bash(git mv *)",
+      "Bash(npx --yes create-expo-app@latest _scaffold --template blank-typescript --no-install)",
+      "Bash(npm install *)",
+      "Bash(npx expo *)",
+      "Bash(npm i *)",
+      "Bash(APP_FLAVOR=generic node scripts/prepare-flavor.js)",
+      "Bash(APP_FLAVOR=generic npx expo export --platform ios --output-dir dist/generic --no-minify)",
+      "Read(//Users/admin/.nvm/versions/node/**)",
+      "Read(//usr/local/opt/**)",
+      "Bash(brew list *)",
+      "Bash(npx tsc *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
