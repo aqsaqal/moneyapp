@@ -22,7 +22,9 @@
     "build:islamic:android": "npm run prep:islamic && eas build --profile islamic --platform android",
     "verify:tree-shake": "bash scripts/verify-tree-shake.sh",
     "db:generate": "drizzle-kit generate",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "dependencies": {
     "@expo-google-fonts/ibm-plex-sans-arabic": "^0.4.2",
