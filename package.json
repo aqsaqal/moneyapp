@@ -23,6 +23,7 @@
     "verify:tree-shake": "bash scripts/verify-tree-shake.sh",
     "db:generate": "drizzle-kit generate",
     "typecheck": "tsc --noEmit",
+    "test": "bash scripts/run-tests.sh",
     "android": "expo run:android",
     "ios": "expo run:ios"
   },
