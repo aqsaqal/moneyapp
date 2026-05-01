@@ -45,7 +45,21 @@ export default function RootLayout() {
 
   const [dbReady, setDbReady] = useState(false);
   useEffect(() => {
-    bootAppData().then(() => setDbReady(true));
+    bootAppData().then(() => {
+      // Dev backdoor: skip onboarding when EXPO_PUBLIC_BYPASS_ONBOARDING=1.
+      // Babel inlines process.env.EXPO_PUBLIC_BYPASS_ONBOARDING at build time,
+      // and __DEV__ is a Metro-injected boolean. In production builds, the
+      // entire branch dead-code-eliminates. Useful when smoke-testing past
+      // onboarding without 3 taps each cycle.
+      if (__DEV__ && process.env.EXPO_PUBLIC_BYPASS_ONBOARDING === '1') {
+        if (!kv.getBool('onboardingCompleted', false)) {
+          kv.setBool('onboardingCompleted', true);
+          if (!kv.get('locale')) kv.set('locale', 'en-US');
+          if (!kv.get('currency')) kv.set('currency', 'USD');
+        }
+      }
+      setDbReady(true);
+    });
   }, []);
 
   useEffect(() => {
