@@ -34,7 +34,7 @@ export function HalalFilterChip({
 }
 
 const styles = StyleSheet.create({
-  chip: { paddingHorizontal: 14, paddingVertical: 6, borderRadius: radii.pill, backgroundColor: theme.bg2, borderWidth: 1, borderColor: theme.border },
+  chip: { paddingHorizontal: 14, paddingVertical: 10, borderRadius: radii.pill, backgroundColor: theme.bg2, borderWidth: 1, borderColor: theme.border },
   active: { backgroundColor: theme.accent, borderColor: 'transparent' },
   text: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body },
   activeText: { color: theme.bg, fontWeight: '700' },

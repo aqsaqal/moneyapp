@@ -160,6 +160,8 @@ export default function AddScreen() {
           style={styles.amount}
           accessibilityLabel={`Amount ${currencyPrefix(currency)}${amount}`}
           accessibilityLiveRegion="polite"
+          adjustsFontSizeToFit
+          numberOfLines={1}
         >
           {currencyPrefix(currency)}
           {amount}
@@ -349,7 +351,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.pill,
     backgroundColor: theme.bg2,
   },
-  modeTab: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: radii.pill },
+  modeTab: { paddingHorizontal: 14, paddingVertical: 10, borderRadius: radii.pill },
   modeActive: { backgroundColor: theme.accent },
   modeText: { color: theme.text2, fontSize: sizes.sm, textTransform: 'capitalize' },
   modeTextActive: { color: theme.bg, fontWeight: '700' },

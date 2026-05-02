@@ -53,6 +53,6 @@ const styles = StyleSheet.create({
   wrap: { gap: 6 },
   label: { color: theme.text2, fontSize: sizes.xs, textTransform: 'uppercase', letterSpacing: 1 },
   row: { flexDirection: 'row', gap: 8 },
-  chip: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: radii.pill, borderWidth: 1, backgroundColor: theme.bg2 },
+  chip: { paddingHorizontal: 14, paddingVertical: 10, borderRadius: radii.pill, borderWidth: 1, backgroundColor: theme.bg2 },
   chipText: { fontSize: sizes.sm, fontFamily: font.body },
 });

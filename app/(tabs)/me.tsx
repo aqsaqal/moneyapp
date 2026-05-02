@@ -6,7 +6,7 @@
 // daily-glance answer).
 
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, I18nManager, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -29,6 +29,14 @@ import { kv } from '@/utils/kv';
 import { formatMoney } from '@/utils/format';
 import { exportData } from '@/utils/dataExport';
 import { APP_NAME } from '@/constants/flavor';
+
+const LOCALES = [
+  { code: 'en-US', name: 'English', rtl: false },
+  { code: 'ar-SA', name: 'العربية', rtl: true },
+  { code: 'tr-TR', name: 'Türkçe', rtl: false },
+  { code: 'id-ID', name: 'Bahasa Indonesia', rtl: false },
+  { code: 'ms-MY', name: 'Bahasa Melayu', rtl: false },
+];
 
 export default function MeScreen() {
   const router = useRouter();
@@ -107,13 +115,97 @@ function AccountsSection() {
 
 // ---- Settings ----
 
+function changeLocale(next: string) {
+  const cur = kv.get('locale');
+  if (cur === next) return;
+  Alert.alert(
+    'Change language?',
+    'The app will restart to apply the new language and right-to-left direction.',
+    [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Restart',
+        style: 'default',
+        onPress: async () => {
+          kv.set('locale', next);
+          if (Platform.OS !== 'web') {
+            const shouldBeRTL = next.startsWith('ar');
+            if (shouldBeRTL !== I18nManager.isRTL) {
+              I18nManager.forceRTL(shouldBeRTL);
+              kv.set('rtlSetForLocale', next);
+            }
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
+              const Updates = require('expo-updates');
+              await Updates.reloadAsync();
+            } catch {
+              Alert.alert('Restart needed', 'Please close and reopen the app.');
+            }
+          }
+        },
+      },
+    ],
+  );
+}
+
 function SettingsSection() {
   const supported = useBiometricSupported();
   const [bio, setBio] = useState(isBiometricEnabled());
   const [currency, setCurrency] = useState<CurrencyCode>((kv.get('currency') ?? 'USD') as CurrencyCode);
+  const [locale, setLocale] = useState<string>(kv.get('locale') ?? 'en-US');
+  const [arabicNum, setArabicNum] = useState<boolean>(kv.getBool('arabicNumerals', true));
 
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+      <SectionHeader title="Language" />
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={sectionStyles.chipRow}
+      >
+        {LOCALES.map((l) => (
+          <Pressable
+            key={l.code}
+            onPress={() => {
+              setLocale(l.code);
+              changeLocale(l.code);
+            }}
+            style={[
+              sectionStyles.chip,
+              locale === l.code && { backgroundColor: theme.accent, borderColor: 'transparent' },
+            ]}
+            accessibilityRole="button"
+            accessibilityState={{ selected: locale === l.code }}
+            accessibilityLabel={`Language: ${l.name}${l.rtl ? ', right-to-left' : ''}`}
+          >
+            <Text style={[sectionStyles.chipText, locale === l.code && { color: theme.bg }]}>
+              {l.name}
+            </Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      {locale.startsWith('ar') && (
+        <SettingRow
+          label="Arabic-Indic numerals"
+          hint="Display ٠١٢٣٤٥٦٧٨٩ instead of 0123456789"
+          trailing={
+            <Pressable
+              onPress={() => {
+                const next = !arabicNum;
+                setArabicNum(next);
+                kv.setBool('arabicNumerals', next);
+              }}
+              style={[sectionStyles.toggle, arabicNum && { backgroundColor: theme.accent }]}
+              accessibilityRole="switch"
+              accessibilityState={{ checked: arabicNum }}
+            >
+              <View style={[sectionStyles.toggleKnob, arabicNum && { transform: [{ translateX: 18 }] }]} />
+            </Pressable>
+          }
+        />
+      )}
+
       <SectionHeader title="Currency" />
       <ScrollView
         horizontal

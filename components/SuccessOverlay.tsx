@@ -1,4 +1,9 @@
-// SuccessOverlay — Reanimated port of v4's checkPop + confetti @keyframes (lines 27-28, 40-43).
+// SuccessOverlay — Reanimated port of v4's checkPop + confetti @keyframes
+// (lines 27-28, 40-43).
+//
+// Phase 9 (a11y): when Reduce Motion is on, skip the scale-bounce + confetti
+// dots. A static green check still appears (so the user knows the action
+// succeeded), and the haptic still fires.
 
 import React, { useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
@@ -11,6 +16,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const CONFETTI_COUNT = 8;
 
@@ -19,23 +25,31 @@ export interface SuccessOverlayProps {
 }
 
 export function SuccessOverlay({ visible }: SuccessOverlayProps) {
+  const reducedMotion = useReducedMotion();
   const scale = useSharedValue(0);
   const rotate = useSharedValue(-45);
   const opacity = useSharedValue(0);
 
   useEffect(() => {
-    if (visible) {
-      scale.value = 0;
-      rotate.value = -45;
+    if (!visible) return;
+    if (reducedMotion) {
+      // Static check: appear and hold; fade after the parent's 700ms timeout.
+      scale.value = 1;
+      rotate.value = 0;
       opacity.value = 1;
-      scale.value = withSequence(
-        withTiming(1.3, { duration: 250 }),
-        withTiming(1, { duration: 150 }),
-      );
-      rotate.value = withTiming(0, { duration: 400 });
       opacity.value = withDelay(700, withTiming(0, { duration: 200 }));
+      return;
     }
-  }, [visible, scale, rotate, opacity]);
+    scale.value = 0;
+    rotate.value = -45;
+    opacity.value = 1;
+    scale.value = withSequence(
+      withTiming(1.3, { duration: 250 }),
+      withTiming(1, { duration: 150 }),
+    );
+    rotate.value = withTiming(0, { duration: 400 });
+    opacity.value = withDelay(700, withTiming(0, { duration: 200 }));
+  }, [visible, reducedMotion, scale, rotate, opacity]);
 
   const checkStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }, { rotate: `${rotate.value}deg` }],
@@ -45,13 +59,15 @@ export function SuccessOverlay({ visible }: SuccessOverlayProps) {
   if (!visible) return null;
 
   return (
-    <View pointerEvents="none" style={styles.overlay}>
+    <View pointerEvents="none" style={styles.overlay} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
       <Animated.View style={[styles.check, checkStyle]}>
         <MaterialCommunityIcons name="check" size={48} color={theme.bg} />
       </Animated.View>
-      {Array.from({ length: CONFETTI_COUNT }).map((_, i) => (
-        <ConfettiDot key={i} index={i} visible={visible} />
-      ))}
+      {/* Confetti only when motion is allowed. */}
+      {!reducedMotion &&
+        Array.from({ length: CONFETTI_COUNT }).map((_, i) => (
+          <ConfettiDot key={i} index={i} visible={visible} />
+        ))}
     </View>
   );
 }

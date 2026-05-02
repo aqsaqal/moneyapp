@@ -10,6 +10,7 @@ import { catInfo } from '@/constants/categories';
 import { FeatureSlots } from '@/features';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import { deleteTransaction } from '@/hooks/useAppData';
+import { dayStr } from '@/utils/format';
 import type { Transaction } from '@/utils/db/schema';
 
 export interface TransactionRowProps {
@@ -59,6 +60,16 @@ export function TransactionRow({ t, currency = 'USD', onPressMore }: Transaction
     </Pressable>
   );
 
+  // Aggregated screen-reader label: name, sign + amount, day, halal if set.
+  const a11yLabel = [
+    name,
+    t.type === 'transfer'
+      ? `transfer ${formatMoney(t.amount, currency)}`
+      : `${t.type === 'income' ? 'received' : 'spent'} ${formatMoney(t.amount, currency)}`,
+    dayStr(t.date),
+    t.halalStatus && t.halalStatus !== 'unspecified' ? `marked ${t.halalStatus}` : '',
+  ].filter(Boolean).join(', ');
+
   return (
     <>
       <Swipeable renderRightActions={renderRightActions}>
@@ -66,6 +77,10 @@ export function TransactionRow({ t, currency = 'USD', onPressMore }: Transaction
           onLongPress={() => setSheetOpen(true)}
           onPress={onPressMore}
           style={({ pressed }) => [styles.row, pressed && { backgroundColor: theme.bg3 }]}
+          accessible
+          accessibilityRole="button"
+          accessibilityLabel={a11yLabel}
+          accessibilityHint="Long press for options. Swipe to delete."
         >
           <View style={[styles.iconBox, { backgroundColor: `${color}22` }]}>
             <Icon name={icon} size={18} color={color} />

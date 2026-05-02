@@ -12,6 +12,7 @@ import Animated, {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { useHaptics } from '@/hooks/useHaptics';
+import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export interface FabButtonProps {
   onPress: () => void;
@@ -22,14 +23,19 @@ export interface FabButtonProps {
 export function FabButton({ onPress, size = 56, icon = 'plus' }: FabButtonProps) {
   const pulse = useSharedValue(0);
   const haptics = useHaptics();
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
+    if (reducedMotion) {
+      pulse.value = 0; // freeze ring at no-pulse state
+      return;
+    }
     pulse.value = withRepeat(
       withTiming(1, { duration: 1500, easing: Easing.out(Easing.quad) }),
       -1,
       false,
     );
-  }, [pulse]);
+  }, [pulse, reducedMotion]);
 
   const ringStyle = useAnimatedStyle(() => ({
     transform: [{ scale: 1 + pulse.value * 0.4 }],
