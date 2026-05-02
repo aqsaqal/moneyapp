@@ -34,6 +34,11 @@ npm test
 
 > **Node 18 caveat.** Expo SDK 54's Metro requires `Array.prototype.toReversed`, which is Node 20+. We polyfill it in [metro.config.js](metro.config.js); remove the polyfill when moving to Node 20.
 
+> **Android first-build notes (read before `npm run android:*`):**
+> 1. **NDK version override.** RN 0.81 defaults to NDK `27.1.12297006` (in `node_modules/react-native/gradle/libs.versions.toml`); Android Studio installs `30.0.14904198`. After `expo prebuild`, add `ext { ndkVersion = "30.0.14904198" }` to `android/build.gradle` **before** `apply plugin: "expo-root-project"` — that plugin reads `rootProject.ext.ndkVersion` at apply-time. The override doesn't survive a re-prebuild; reapply when you regenerate `android/`.
+> 2. **Skia patch is mandatory.** NDK 30's clang flags a real dangling-pointer bug in `@shopify/react-native-skia/cpp/api/JsiSkImageFilterFactory.h:250`. We persist the fix via `patches/@shopify+react-native-skia+*.patch` and a `postinstall: patch-package` hook. `npm install` automatically applies it.
+> 3. **APP_FLAVOR must reach gradle.** If you bypass `expo run:android` to invoke `./gradlew app:assembleDebug` directly, prefix `APP_FLAVOR=...` — the `expo-updates-gradle-plugin` re-evaluates `app.config.ts` at gradle time and bakes `assets/app.config` into the APK; without the env, it falls back to generic defaults (`name: "Flow"`, etc.).
+
 ## Layout
 
 ```

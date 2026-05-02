@@ -1,0 +1,20 @@
+diff --git a/node_modules/@shopify/react-native-skia/cpp/api/JsiSkImageFilterFactory.h b/node_modules/@shopify/react-native-skia/cpp/api/JsiSkImageFilterFactory.h
+index 8fd96fd..3266db3 100644
+--- a/node_modules/@shopify/react-native-skia/cpp/api/JsiSkImageFilterFactory.h
++++ b/node_modules/@shopify/react-native-skia/cpp/api/JsiSkImageFilterFactory.h
+@@ -245,9 +245,14 @@ public:
+   JSI_HOST_FUNCTION(MakeRuntimeShader) {
+     auto rtb = JsiSkRuntimeShaderBuilder::fromValue(runtime, arguments[0]);
+ 
++    // NDK 30's clang flags the original code: the std::string returned by
++    // .utf8(runtime) is a temporary, so .c_str() yields a dangling pointer.
++    // Keep the string alive in a named local for the rest of the scope.
++    std::string childNameStorage;
+     const char *childName = "";
+     if (hasOptionalArgument(arguments, count, 1)) {
+-      childName = arguments[1].asString(runtime).utf8(runtime).c_str();
++      childNameStorage = arguments[1].asString(runtime).utf8(runtime);
++      childName = childNameStorage.c_str();
+     }
+ 
+     sk_sp<SkImageFilter> input = nullptr;

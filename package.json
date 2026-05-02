@@ -24,6 +24,7 @@
     "db:generate": "drizzle-kit generate",
     "typecheck": "tsc --noEmit",
     "test": "bash scripts/run-tests.sh",
+    "postinstall": "patch-package",
     "android": "expo run:android",
     "ios": "expo run:ios"
   },
@@ -56,6 +57,7 @@
     "react-native": "0.81.5",
     "react-native-gesture-handler": "~2.28.0",
     "react-native-mmkv": "^4.3.1",
+    "react-native-nitro-modules": "^0.35.6",
     "react-native-reanimated": "~4.1.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
@@ -68,6 +70,7 @@
     "babel-plugin-transform-inline-environment-variables": "^0.4.4",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
+    "patch-package": "^8.0.1",
     "typescript": "~5.9.2"
   },
   "private": true
