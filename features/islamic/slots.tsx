@@ -22,6 +22,7 @@ import React from 'react';
 import type { FeatureSlotSet } from '@/features';
 
 import { HijriDateBadge } from './hijri/HijriDateBadge';
+import { HijriGregorianHero } from './hijri/HijriGregorianHero';
 import { ZakatHomeCard } from './zakat/ZakatHomeCard';
 import { RamadanHomeCard } from './ramadan/RamadanHomeCard';
 import { MoreMenuEntries } from './screens/MoreMenuEntries';
@@ -52,8 +53,8 @@ export const islamicSlots: FeatureSlotSet = {
   // v2 slots — wired
   PlanTabExtras: MoreMenuEntries, // Zakat + Sadaqa nav rows live on Plan tab in v2
 
-  // v2 slots — reserved for later phases, intentionally empty for Phase 5
-  HomeHeroExtras: EmptySlot,        // Phase 6: HijriGregorianHero
+  // v2 slots — Phase 6 wires HomeHeroExtras
+  HomeHeroExtras: HijriGregorianHero,
   MeTabExtras: EmptyNavSlot,        // Phase 8: mazhab + prayer-method rows
   ActivityHeaderExtras: EmptySlot,  // reserved
 

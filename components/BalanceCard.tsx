@@ -1,10 +1,74 @@
-// BalanceCard — home screen net-balance + monthly inc/exp cards (v4 lines 347-395).
+// BalanceCard — home screen balance summary.
+//
+// v1: <BalanceCard net + income + expense + disposable /> with Net leading.
+// v2: <DisposableHeroCard /> leads with Disposable as THE one number; income
+//     and expense are demoted to a single line of small subtext. Net moved
+//     to Me/Accounts where it's the right context (rare-glance).
+//
+// Both exported from this file so callers can pick the right variant.
 
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, radii, font, sizes, spacing } from '@/constants/theme';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
+
+// =============================================================================
+// v2 — DisposableHeroCard (Home)
+// =============================================================================
+
+export interface DisposableHeroCardProps {
+  disposable: number;
+  income: number;
+  expense: number;
+  daysLeft?: number;
+  monthLabel?: string;
+  currency?: CurrencyCode;
+}
+
+/**
+ * One number, big. Disposable = income - fixed expenses - variable spend.
+ * Subtext line: $income in · $spent out · N days left.
+ *
+ * Phase 6 of v2: replaces v1's BalanceCard on Home. Net Balance moved to
+ * Me/Accounts — it's a "see all my money" answer, not a daily-glance answer.
+ */
+export function DisposableHeroCard({
+  disposable,
+  income,
+  expense,
+  daysLeft,
+  monthLabel,
+  currency = 'USD',
+}: DisposableHeroCardProps) {
+  const positive = disposable >= 0;
+  return (
+    <View
+      style={styles.heroCard}
+      accessible
+      accessibilityLabel={`Disposable balance ${formatMoney(disposable, currency)}${monthLabel ? ` for ${monthLabel}` : ''}`}
+    >
+      <Text style={styles.heroLabel}>
+        {monthLabel ? `${monthLabel} · ` : ''}Disposable
+      </Text>
+      <Text
+        style={[styles.heroAmount, { color: positive ? theme.text1 : theme.expense }]}
+        adjustsFontSizeToFit
+        numberOfLines={1}
+      >
+        {formatMoney(disposable, currency)}
+      </Text>
+      <Text style={styles.heroSubline}>
+        {formatMoney(income, currency)} in · {formatMoney(expense, currency)} out
+        {typeof daysLeft === 'number' ? ` · ${daysLeft} days left` : ''}
+      </Text>
+    </View>
+  );
+}
+
+// =============================================================================
+// v1 — BalanceCard (kept for any caller still using it; e.g. future Me screen)
+// =============================================================================
 
 export interface BalanceCardProps {
   net: number;
@@ -15,7 +79,14 @@ export interface BalanceCardProps {
   currency?: CurrencyCode;
 }
 
-export function BalanceCard({ net, income, expense, disposable, monthLabel, currency = 'USD' }: BalanceCardProps) {
+export function BalanceCard({
+  net,
+  income,
+  expense,
+  disposable,
+  monthLabel,
+  currency = 'USD',
+}: BalanceCardProps) {
   return (
     <View style={styles.card}>
       <Text style={styles.label}>Net Balance{monthLabel ? ` · ${monthLabel}` : ''}</Text>
@@ -27,7 +98,12 @@ export function BalanceCard({ net, income, expense, disposable, monthLabel, curr
       {disposable !== undefined && (
         <View style={styles.disposable}>
           <Text style={styles.disposableLabel}>Disposable</Text>
-          <Text style={[styles.disposableValue, { color: disposable >= 0 ? theme.accent : theme.expense }]}>
+          <Text
+            style={[
+              styles.disposableValue,
+              { color: disposable >= 0 ? theme.accent : theme.expense },
+            ]}
+          >
             {formatMoney(disposable, currency)}
           </Text>
         </View>
@@ -61,6 +137,34 @@ function Pill({
 }
 
 const styles = StyleSheet.create({
+  // v2 hero
+  heroCard: {
+    backgroundColor: theme.bg2,
+    borderRadius: radii.xl,
+    padding: spacing.lg,
+    gap: 6,
+    borderWidth: 1,
+    borderColor: theme.border,
+  },
+  heroLabel: {
+    color: theme.text2,
+    fontSize: sizes.sm,
+    fontFamily: font.body,
+  },
+  heroAmount: {
+    color: theme.text1,
+    fontSize: sizes.display,
+    fontFamily: font.displayBold,
+    letterSpacing: -1,
+  },
+  heroSubline: {
+    color: theme.text3,
+    fontSize: sizes.sm,
+    fontFamily: font.body,
+    marginTop: 2,
+  },
+
+  // v1 (kept)
   card: {
     backgroundColor: theme.bg2,
     borderRadius: radii.xl,
@@ -69,16 +173,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.border,
   },
-  label: {
-    color: theme.text2,
-    fontSize: sizes.sm,
-    fontFamily: font.body,
-  },
-  net: {
-    color: theme.text1,
-    fontSize: sizes.display,
-    fontFamily: font.displayBold,
-  },
+  label: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body },
+  net: { color: theme.text1, fontSize: sizes.display, fontFamily: font.displayBold },
   row: { flexDirection: 'row', gap: spacing.md },
   pill: {
     flex: 1,
