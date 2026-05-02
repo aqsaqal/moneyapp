@@ -62,6 +62,7 @@ export interface KVSchema {
   islamicCoords: string;       // JSON {lat:number,lon:number}
   islamicHijriCalendar: string;// 'ummalqura' | 'tabular'
   defaultAccountId: string;    // remembered after first 5 successful adds (Phase 7)
+  arabicNumerals: string;      // '1' | '0' — opt-in for Arabic-Indic digits in formatMoney (Phase 8)
 }
 
 export const kv = {

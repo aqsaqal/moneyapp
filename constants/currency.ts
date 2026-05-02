@@ -1,5 +1,10 @@
 // Multi-currency formatting — plumbed in Phase 1 per decision #3.
-// Arabic numeral variants flow from the locale, not the currency code.
+// Phase 8: locale-aware numeral system. When the device/user locale starts
+// with `ar` AND the user hasn't disabled the Arabic-numerals toggle in Me,
+// we render Arabic-Indic digits (٠١٢٣٤٥٦٧٨٩) by appending the BCP-47
+// `-u-nu-arab` extension to the locale passed to Intl.NumberFormat.
+
+import { kv } from '@/utils/kv';
 
 export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'SAR' | 'AED' | 'MYR' | 'IDR' | 'TRY' | 'PKR' | 'EGP';
 
@@ -24,11 +29,24 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyDef> = {
   EGP: { code: 'EGP', name: 'Egyptian Pound', symbol: '£E', symbolNative: 'ج.م', decimalDigits: 2 },
 };
 
+/** Effective locale for number formatting — applies the user's
+ *  Arabic-numerals preference (default ON for ar-* locales). */
+function effectiveLocale(locale?: string): string | undefined {
+  const loc = locale ?? kv.get('locale');
+  if (!loc) return undefined;
+  if (!loc.startsWith('ar')) return loc;
+  // Default ON for Arabic locales; user can flip via kv.arabicNumerals=false.
+  const v = kv.get('arabicNumerals');
+  const useArabic = v === undefined ? true : v === '1';
+  return useArabic ? `${loc}-u-nu-arab` : loc;
+}
+
 /** Full-precision formatter. `$12.50`, `ر.س ١٢٫٥٠`. */
 export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?: string): string {
   const abs = Math.abs(amount);
+  const eff = effectiveLocale(locale);
   try {
-    return new Intl.NumberFormat(locale, {
+    return new Intl.NumberFormat(eff, {
       style: 'currency',
       currency: code,
       currencyDisplay: 'narrowSymbol',
@@ -41,9 +59,22 @@ export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?:
 }
 
 /** Short formatter for dense displays — v4's fmts(). `$1.5k` style. */
-export function formatMoneyShort(amount: number, code: CurrencyCode = 'USD'): string {
+export function formatMoneyShort(amount: number, code: CurrencyCode = 'USD', locale?: string): string {
   const abs = Math.abs(amount);
   const c = CURRENCIES[code];
-  if (abs >= 1000) return `${c.symbol}${(abs / 1000).toFixed(1)}k`;
-  return `${c.symbol}${abs.toFixed(0)}`;
+  const eff = effectiveLocale(locale);
+  // Use Intl.NumberFormat for the digits when locale is set, so Arabic-Indic
+  // digits flow through compact/short forms too.
+  const fmt = (n: number, digits: number) => {
+    try {
+      return new Intl.NumberFormat(eff, {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      }).format(n);
+    } catch {
+      return n.toFixed(digits);
+    }
+  };
+  if (abs >= 1000) return `${c.symbol}${fmt(abs / 1000, 1)}k`;
+  return `${c.symbol}${fmt(abs, 0)}`;
 }

@@ -26,6 +26,7 @@ import { HijriGregorianHero } from './hijri/HijriGregorianHero';
 import { ZakatHomeCard } from './zakat/ZakatHomeCard';
 import { RamadanHomeCard } from './ramadan/RamadanHomeCard';
 import { MoreMenuEntries } from './screens/MoreMenuEntries';
+import { MeTabExtras as MeTabExtrasComponent } from './screens/MeTabExtras';
 import { HalalStatusSheet } from './halal/HalalStatusSheet';
 import { HalalInlinePicker } from './halal/HalalInlinePicker';
 import { HalalFilterChip } from './halal/HalalFilterChip';
@@ -53,9 +54,9 @@ export const islamicSlots: FeatureSlotSet = {
   // v2 slots — wired
   PlanTabExtras: MoreMenuEntries, // Zakat + Sadaqa nav rows live on Plan tab in v2
 
-  // v2 slots — Phase 6 wires HomeHeroExtras
+  // v2 slots — Phase 6 wires HomeHeroExtras, Phase 8 wires MeTabExtras
   HomeHeroExtras: HijriGregorianHero,
-  MeTabExtras: EmptyNavSlot,        // Phase 8: mazhab + prayer-method rows
+  MeTabExtras: MeTabExtrasComponent,
   ActivityHeaderExtras: EmptySlot,  // reserved
 
   // Deprecated alias for back-compat with any external caller still importing

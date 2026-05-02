@@ -16,6 +16,16 @@
 #                                   shared schema/hooks. Never written/read
 #                                   in generic; just plumbed through.
 #
+# Tokens are case-sensitive raw-byte greps. We use specific signatures (e.g.
+# `UmAlQura` class name, not `umalqura` substring) to avoid false positives
+# from unrelated packages whose strings happen to contain similar tokens:
+#   - expo-localization ships `CalendarIdentifier` enum values like
+#     "islamic-umalqura", "islamic-civil", "hebrew" — Unicode CLDR standard
+#     calendar identifiers, not feature strings. Excluded by case-sensitivity.
+#   - MaterialCommunityIcons ships icon names like "moon-waxing-crescent",
+#     "star-crescent" in its bundled glyph map. Tokens here target the
+#     IMPORT path / class signature, not English words.
+#
 # Strings that MUST NOT appear in generic (Islamic-specific UI/features):
 set -euo pipefail
 
@@ -23,14 +33,19 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
 FORBIDDEN_TOKENS=(
-  Zakat Sadaqa Hijri Ramadan
-  nisab hawl mazhab
-  Qurban Hajj Amanah
-  mushbooh haram
-  umalqura adhan
+  # User-facing feature labels (case-sensitive)
+  Zakat Sadaqa Hijri Ramadan Qurban Hajj Amanah
+  # Domain terms (lowercase as written in code)
+  nisab hawl mazhab mushbooh haram
+  # Library / package signatures
+  UmAlQura                         # @umalqura/core class name
+  '@umalqura/core'                 # package import path
+  adhan                            # adhan-js library + audio asset name
+  'features/islamic' 'app-islamic' # path-qualified imports
+  ibm-plex-sans-arabic             # Arabic font asset
+  # Canaries
   HIJRI_CANARY ZAKAT_TEST_STRING AMANAH_CANARY
-  ibm-plex-sans-arabic
-  features/islamic app-islamic
+  # Other features
   Mecca Aladhan
 )
 
@@ -91,7 +106,7 @@ LAYER_C_FAIL=0
 # tree-shake check is suspect — we'd be matching against a build that
 # doesn't actually include Islamic features, so a "clean generic" passes
 # trivially.
-SANITY_TOKENS=(Zakat Sadaqa Hijri Ramadan nisab hawl umalqura mushbooh)
+SANITY_TOKENS=(Zakat Sadaqa Hijri Ramadan nisab hawl UmAlQura mushbooh)
 for tok in "${SANITY_TOKENS[@]}"; do
   COUNT=$( { LC_ALL=C grep -ao "$tok" "$ISLAMIC_HBC" 2>/dev/null || true; } | wc -l | tr -d ' ')
   if [ "$COUNT" = "0" ]; then

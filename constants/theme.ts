@@ -57,6 +57,32 @@ export const font = {
   arabic: 'IBMPlexSansArabic_500Medium',
 } as const;
 
+/**
+ * Phase 8: pick the right text font for the user's locale.
+ * Returns IBM Plex Sans Arabic for ar-* locales (islamic flavor only — the
+ * Arabic font isn't shipped in generic; tree-shake guarantee). Otherwise
+ * returns the default Latin body font.
+ *
+ * Components that mix Arabic + Latin text (e.g., HijriGregorianHero) should
+ * call this per-Text rather than at the StyleSheet level so each Text segment
+ * picks the right glyph file.
+ */
+export function localizedFont(locale: string | null | undefined): string {
+  if (locale && locale.startsWith('ar') && process.env.APP_FLAVOR === 'islamic') {
+    return font.arabic;
+  }
+  return font.body;
+}
+
+export function localizedDisplayFont(locale: string | null | undefined): string {
+  if (locale && locale.startsWith('ar') && process.env.APP_FLAVOR === 'islamic') {
+    // IBM Plex Sans Arabic doesn't ship a separate display weight in our
+    // package; reuse the medium for now. Headings still scale via fontSize.
+    return font.arabic;
+  }
+  return font.displayBold;
+}
+
 export const sizes = {
   xs: 11,
   sm: 13,

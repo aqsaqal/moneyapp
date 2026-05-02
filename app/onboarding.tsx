@@ -5,9 +5,11 @@ import React, { useState } from 'react';
 import { I18nManager, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import * as Localization from 'expo-localization';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { APP_NAME } from '@/constants/flavor';
 import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
+import { defaultCurrencyForRegion, defaultLocaleForRegion } from '@/constants/regionCurrency';
 import { kv } from '@/utils/kv';
 
 const LOCALES = [
@@ -18,10 +20,43 @@ const LOCALES = [
   { code: 'ms-MY', name: 'Bahasa Melayu', rtl: false },
 ];
 
+/** Pick the closest supported locale for a system locale (e.g., 'ar-EG' → 'ar-SA'
+ *  because we don't have ar-EG in our list). Falls back to en-US. */
+function detectLocale(): string {
+  const sys = Localization.getLocales()[0];
+  if (!sys) return 'en-US';
+
+  // Exact match first.
+  const sysCode = sys.languageTag;
+  if (LOCALES.some((l) => l.code === sysCode)) return sysCode;
+
+  // Region-driven match (Localization.region is more reliable for region-locked
+  // currency than the locale tag).
+  const region = sys.regionCode;
+  const regionLocale = defaultLocaleForRegion(region, '');
+  if (regionLocale && LOCALES.some((l) => l.code === regionLocale)) return regionLocale;
+
+  // Language-prefix match (e.g., 'ar-AE' → 'ar-SA').
+  const langPrefix = sys.languageCode + '-';
+  const byLang = LOCALES.find((l) => l.code.startsWith(langPrefix));
+  if (byLang) return byLang.code;
+
+  return 'en-US';
+}
+
+function detectCurrency(): CurrencyCode {
+  const sys = Localization.getLocales()[0];
+  // Prefer Localization.currency (most accurate) when present.
+  const c = (sys?.currencyCode ?? '').toUpperCase();
+  if (c in CURRENCIES) return c as CurrencyCode;
+  return defaultCurrencyForRegion(sys?.regionCode);
+}
+
 export default function Onboarding() {
   const router = useRouter();
-  const [locale, setLocale] = useState<string>('en-US');
-  const [currency, setCurrency] = useState<CurrencyCode>('USD');
+  // Auto-detect from device locale + region. User can override.
+  const [locale, setLocale] = useState<string>(() => detectLocale());
+  const [currency, setCurrency] = useState<CurrencyCode>(() => detectCurrency());
 
   const finish = async () => {
     kv.set('locale', locale);
