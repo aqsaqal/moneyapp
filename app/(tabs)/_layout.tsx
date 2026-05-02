@@ -1,18 +1,34 @@
 // v2 Tab layout: Home | Plan | (FAB middle absolute) | Activity | Me.
-// 4 tabs in the bar + FAB center-anchored absolute on top. The FAB takes
-// no Tabs.Screen slot; we add invisible padding spacers in the bar so the
-// 4 visible tabs split into 2-and-2 around the FAB.
+// 4 tabs + FAB center-anchored absolute on top.
+//
+// Edge-to-edge note (Android Samsung gestures + 3-button nav, iOS home
+// indicator): the system nav bar overlays the bottom of the screen. We
+// expand the tab bar's bottom padding by `insets.bottom` so tab targets
+// sit ABOVE system gestures, not under them. The FAB lifts the same
+// amount so it stays vertically centered relative to the tab bar.
 
 import React from 'react';
 import { Tabs, useRouter } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { theme } from '@/constants/theme';
 import { PRIMARY_COLOR } from '@/constants/flavor';
 import { FabButton } from '@/components/FabButton';
 
+const TAB_BAR_HEIGHT = 64;
+const TAB_BAR_PAD_BOTTOM = 8;
+const FAB_BASELINE_BOTTOM = 24; // base lift above tab bar floor
+
 export default function TabsLayout() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
+
+  // Push tab bar up by the system inset so its tap targets clear gesture nav.
+  const tabBarHeight = TAB_BAR_HEIGHT + insets.bottom;
+  const tabBarPaddingBottom = TAB_BAR_PAD_BOTTOM + insets.bottom;
+  // FAB sits roughly centered against the tab bar's visual middle.
+  const fabBottom = FAB_BASELINE_BOTTOM + insets.bottom;
 
   return (
     <View style={styles.root}>
@@ -21,7 +37,10 @@ export default function TabsLayout() {
           headerShown: false,
           tabBarActiveTintColor: PRIMARY_COLOR,
           tabBarInactiveTintColor: theme.text3,
-          tabBarStyle: styles.tabBar,
+          tabBarStyle: [
+            styles.tabBar,
+            { height: tabBarHeight, paddingBottom: tabBarPaddingBottom },
+          ],
           tabBarLabelStyle: { fontSize: 11 },
           tabBarItemStyle: { paddingHorizontal: 0 },
         }}
@@ -46,7 +65,7 @@ export default function TabsLayout() {
         />
         {/* No center "spacer" screen — the FAB is absolute-positioned and visually
             sits between Plan and Activity. The 4 tab items split evenly across
-            the bar; the FAB lifts above. We adjust tab item spacing in styles. */}
+            the bar; the FAB lifts above. */}
         <Tabs.Screen
           name="activity"
           options={{
@@ -66,8 +85,11 @@ export default function TabsLayout() {
           }}
         />
       </Tabs>
-      {/* Floating FAB — absolute, center-anchored, lifts above tab bar. */}
-      <View style={styles.fabWrap} pointerEvents="box-none">
+      {/* Floating FAB — absolute, center-anchored, lifts above tab bar AND system nav. */}
+      <View
+        style={[styles.fabWrap, { bottom: fabBottom }]}
+        pointerEvents="box-none"
+      >
         <FabButton onPress={() => router.push('/add')} />
       </View>
     </View>
@@ -80,13 +102,10 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg1,
     borderTopColor: theme.border,
     borderTopWidth: StyleSheet.hairlineWidth,
-    height: 64,
-    paddingBottom: 8,
     paddingTop: 6,
   },
   fabWrap: {
     position: 'absolute',
-    bottom: 40,
     left: 0,
     right: 0,
     alignItems: 'center',
