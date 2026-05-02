@@ -1,6 +1,7 @@
-// Tab layout: Home | FAB (middle) | History | More.
-// The FAB is its own route (add.tsx as modal); we customize the tab bar to
-// render it as a raised button in the middle slot.
+// v2 Tab layout: Home | Plan | (FAB middle absolute) | Activity | Me.
+// 4 tabs in the bar + FAB center-anchored absolute on top. The FAB takes
+// no Tabs.Screen slot; we add invisible padding spacers in the bar so the
+// 4 visible tabs split into 2-and-2 around the FAB.
 
 import React from 'react';
 import { Tabs, useRouter } from 'expo-router';
@@ -22,6 +23,7 @@ export default function TabsLayout() {
           tabBarInactiveTintColor: theme.text3,
           tabBarStyle: styles.tabBar,
           tabBarLabelStyle: { fontSize: 11 },
+          tabBarItemStyle: { paddingHorizontal: 0 },
         }}
       >
         <Tabs.Screen
@@ -34,25 +36,37 @@ export default function TabsLayout() {
           }}
         />
         <Tabs.Screen
-          name="history"
+          name="plan"
           options={{
-            title: 'History',
+            title: 'Plan',
+            tabBarIcon: ({ color, size }) => (
+              <MaterialCommunityIcons name="calendar-check" size={size} color={color} />
+            ),
+          }}
+        />
+        {/* No center "spacer" screen — the FAB is absolute-positioned and visually
+            sits between Plan and Activity. The 4 tab items split evenly across
+            the bar; the FAB lifts above. We adjust tab item spacing in styles. */}
+        <Tabs.Screen
+          name="activity"
+          options={{
+            title: 'Activity',
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="format-list-bulleted" size={size} color={color} />
             ),
           }}
         />
         <Tabs.Screen
-          name="more"
+          name="me"
           options={{
-            title: 'More',
+            title: 'Me',
             tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="dots-horizontal-circle-outline" size={size} color={color} />
+              <MaterialCommunityIcons name="account-circle-outline" size={size} color={color} />
             ),
           }}
         />
       </Tabs>
-      {/* Floating FAB — absolute-positioned, center-anchored, lifts above tab bar. */}
+      {/* Floating FAB — absolute, center-anchored, lifts above tab bar. */}
       <View style={styles.fabWrap} pointerEvents="box-none">
         <FabButton onPress={() => router.push('/add')} />
       </View>

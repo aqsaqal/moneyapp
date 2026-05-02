@@ -1,0 +1,232 @@
+// Me — identity / setup. Accounts up top (frequent), then Settings, then
+// (islamic) MeTabExtras (mazhab + prayer-method rows), then About.
+//
+// v2 IA: extracted from v1 app/(tabs)/more.tsx (AccountsTab + SettingsTab).
+// Net Balance moves here from Home (it's a "see all my money" answer, not a
+// daily-glance answer).
+
+import React, { useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { theme, spacing, font, sizes, radii } from '@/constants/theme';
+import {
+  SectionHeader,
+  SummaryCard,
+  SettingRow,
+  sectionStyles,
+} from '@/components/Sections';
+import { FeatureSlots } from '@/features';
+import { useAccounts } from '@/hooks/useAppData';
+import {
+  isBiometricEnabled,
+  setBiometricEnabled,
+  useBiometricSupported,
+} from '@/hooks/useBiometricLock';
+import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
+import { kv } from '@/utils/kv';
+import { formatMoney } from '@/utils/format';
+import { exportData } from '@/utils/dataExport';
+import { APP_NAME } from '@/constants/flavor';
+
+export default function MeScreen() {
+  const router = useRouter();
+  return (
+    <SafeAreaView style={styles.safe} edges={['top']}>
+      <View style={styles.top}>
+        <Text style={styles.title}>Me</Text>
+      </View>
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <AccountsSection />
+        <SettingsSection />
+        {/* Islamic: mazhab + prayer-method visible rows. Generic: nothing. */}
+        <FeatureSlots.MeTabExtras onNavigate={(p) => router.push(p as never)} />
+        <AboutSection />
+        <View style={{ height: 100 }} />
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+// ---- Accounts ----
+
+function AccountsSection() {
+  const accounts = useAccounts();
+  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const assets = accounts.filter((a) => a.balance >= 0).reduce((s, a) => s + a.balance, 0);
+  const debt = accounts.filter((a) => a.balance < 0).reduce((s, a) => s + Math.abs(a.balance), 0);
+  const net = assets - debt;
+  return (
+    <View style={{ gap: spacing.md }}>
+      <SectionHeader title="Accounts" />
+
+      {/* Net balance moved from Home → here in v2. */}
+      <View style={styles.netCard}>
+        <Text style={styles.netLabel}>Net balance</Text>
+        <Text style={[styles.netValue, { color: net >= 0 ? theme.accent : theme.expense }]}>
+          {formatMoney(net, currency)}
+        </Text>
+      </View>
+
+      <View style={sectionStyles.summaryRow}>
+        <SummaryCard label="Assets" value={assets} color={theme.accent} currency={currency} />
+        <SummaryCard label="Debt" value={debt} color={theme.expense} currency={currency} />
+      </View>
+
+      {accounts.map((a) => (
+        <View key={a.id} style={styles.acctCard}>
+          <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
+            <MaterialCommunityIcons name="wallet-outline" size={20} color={a.color} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.acctName}>{a.name}</Text>
+            <Text style={styles.acctType}>{a.type}</Text>
+            {a.creditLimit && (
+              <View style={[styles.barBg, { marginTop: 6 }]}>
+                <View
+                  style={[
+                    styles.barFill,
+                    {
+                      width: `${Math.min(Math.abs(a.balance) / a.creditLimit, 1) * 100}%`,
+                      backgroundColor: theme.expense,
+                    },
+                  ]}
+                />
+              </View>
+            )}
+          </View>
+          <Text style={[styles.acctBal, { color: a.balance >= 0 ? theme.accent : theme.expense }]}>
+            {formatMoney(a.balance, currency)}
+          </Text>
+        </View>
+      ))}
+    </View>
+  );
+}
+
+// ---- Settings ----
+
+function SettingsSection() {
+  const supported = useBiometricSupported();
+  const [bio, setBio] = useState(isBiometricEnabled());
+  const [currency, setCurrency] = useState<CurrencyCode>((kv.get('currency') ?? 'USD') as CurrencyCode);
+
+  return (
+    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+      <SectionHeader title="Currency" />
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={sectionStyles.chipRow}
+      >
+        {(Object.keys(CURRENCIES) as CurrencyCode[]).map((c) => (
+          <Pressable
+            key={c}
+            onPress={() => {
+              kv.set('currency', c);
+              setCurrency(c);
+            }}
+            style={[
+              sectionStyles.chip,
+              currency === c && { backgroundColor: theme.accent, borderColor: 'transparent' },
+            ]}
+            accessibilityRole="button"
+            accessibilityState={{ selected: currency === c }}
+          >
+            <Text style={[sectionStyles.chipText, currency === c && { color: theme.bg }]}>{c}</Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      <SectionHeader title="Security" />
+      <SettingRow
+        label="Biometric Unlock"
+        hint={
+          supported
+            ? 'Face ID / fingerprint required to open the app'
+            : 'Not available on this device'
+        }
+        trailing={
+          <Pressable
+            onPress={() => {
+              if (supported) {
+                setBiometricEnabled(!bio);
+                setBio(!bio);
+              }
+            }}
+            style={[sectionStyles.toggle, bio && { backgroundColor: theme.accent }]}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: bio, disabled: !supported }}
+          >
+            <View style={[sectionStyles.toggleKnob, bio && { transform: [{ translateX: 18 }] }]} />
+          </Pressable>
+        }
+      />
+
+      <SectionHeader title="Data" />
+      <SettingRow
+        label="Export all data (JSON)"
+        icon="export"
+        onPress={() => exportData('json')}
+      />
+      <SettingRow
+        label="Export transactions (CSV)"
+        icon="export"
+        onPress={() => exportData('csv')}
+      />
+    </View>
+  );
+}
+
+// ---- About ----
+
+function AboutSection() {
+  return (
+    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+      <SectionHeader title="About" />
+      <SettingRow label={APP_NAME} hint="Version 1.0.0" />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  safe: { flex: 1, backgroundColor: theme.bg },
+  top: { padding: spacing.lg, gap: spacing.md },
+  title: { color: theme.text1, fontSize: sizes.xxxl, fontFamily: font.displayBold },
+  scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
+  netCard: {
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  netLabel: { color: theme.text2, fontSize: sizes.sm },
+  netValue: { fontSize: sizes.xxl, fontFamily: font.displayBold },
+  acctCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+  },
+  iconBox: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  acctName: { color: theme.text1, fontSize: sizes.md },
+  acctType: { color: theme.text3, fontSize: sizes.xs, textTransform: 'capitalize' },
+  acctBal: { fontSize: sizes.lg, fontFamily: font.display, fontWeight: '700' },
+  barBg: { height: 6, backgroundColor: theme.bg3, borderRadius: 3, overflow: 'hidden' },
+  barFill: { height: '100%', borderRadius: 3 },
+});

@@ -39,30 +39,57 @@ export interface TxActionSheetExtrasProps {
   txId: string;
 }
 
-export interface MoreMenuItemsProps {
+export interface NavSlotProps {
   onNavigate: (path: string) => void;
 }
 
+/** @deprecated v2 collapsed the More tab into Plan + Me. Use NavSlotProps. */
+export type MoreMenuItemsProps = NavSlotProps;
+
 export interface FeatureSlotSet {
+  // v1 slots (still used)
   HomeHeaderExtras: React.FC;
   HomeExtras: React.FC;
-  MoreMenuItems: React.FC<MoreMenuItemsProps>;
   AddTxExtras: React.FC<AddTxExtrasProps>;
   TxActionSheetExtras: React.FC<TxActionSheetExtrasProps>;
   HistoryFilterExtras: React.FC<HalalFilterChipProps>;
   CategoryExtras: { expense: CategoryDef[]; income: CategoryDef[] };
+
+  // v2 slots
+  /** Hijri-first hero row under brand on Home. Replaces HomeHeaderExtras for islamic. */
+  HomeHeroExtras: React.FC;
+  /** Bottom of Plan tab — Zakat + Sadaqa entries (islamic). */
+  PlanTabExtras: React.FC<NavSlotProps>;
+  /** Mid-section of Me tab — mazhab + prayer-method rows (islamic). */
+  MeTabExtras: React.FC<NavSlotProps>;
+  /** Optional row for Activity tab header — currently unused (HistoryFilterExtras
+   *  already handles halal filter chip). Reserved for future filter chips. */
+  ActivityHeaderExtras: React.FC;
+
+  /**
+   * @deprecated v1 More tab is gone in v2. Aliased to PlanTabExtras for back-compat
+   * with any caller that imports MoreMenuItems. New code should use PlanTabExtras.
+   */
+  MoreMenuItems: React.FC<NavSlotProps>;
 }
 
 const EmptySlot: React.FC = () => null;
+const EmptyNavSlot: React.FC<NavSlotProps> = () => null;
 
 const genericSlots: FeatureSlotSet = {
   HomeHeaderExtras: EmptySlot,
   HomeExtras: EmptySlot,
-  MoreMenuItems: EmptySlot,
   AddTxExtras: EmptySlot,
   TxActionSheetExtras: EmptySlot,
   HistoryFilterExtras: EmptySlot,
   CategoryExtras: { expense: [], income: [] },
+
+  HomeHeroExtras: EmptySlot,
+  PlanTabExtras: EmptyNavSlot,
+  MeTabExtras: EmptyNavSlot,
+  ActivityHeaderExtras: EmptySlot,
+
+  MoreMenuItems: EmptyNavSlot, // deprecated alias
 };
 
 // The load-bearing conditional. Use INLINE process.env check (not the IS_ISLAMIC
