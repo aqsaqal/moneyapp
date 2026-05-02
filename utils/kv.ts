@@ -61,6 +61,7 @@ export interface KVSchema {
   islamicCity: string;         // city for prayer calculation (islamic only)
   islamicCoords: string;       // JSON {lat:number,lon:number}
   islamicHijriCalendar: string;// 'ummalqura' | 'tabular'
+  defaultAccountId: string;    // remembered after first 5 successful adds (Phase 7)
 }
 
 export const kv = {

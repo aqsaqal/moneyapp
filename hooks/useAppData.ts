@@ -255,9 +255,43 @@ export function addTransaction(input: AddTxnInput): Transaction {
     } else {
       db.update(accounts).set({ balance: sql`${accounts.balance} - ${input.amount}` }).where(eq(accounts.id, input.accountId)).run();
     }
+    // Phase 7: bump merchant_memory for L2 prediction. Skipped for transfers
+    // (no category) and recurring auto-creates (system-named, not user notes).
+    if (input.type === 'expense' && input.category && input.note && !input.recurringId) {
+      bumpMerchantMemoryInline(raw, input.note, input.category, input.accountId, now);
+    }
   });
   bump();
   return { ...row } as Transaction;
+}
+
+/** Inline duplicate of bumpMerchantMemory to avoid pulling useSmartPredict into
+ *  this file's import graph (would create a cycle). Kept in sync with the
+ *  exported version in hooks/useSmartPredict.ts. */
+function bumpMerchantMemoryInline(
+  raw: ReturnType<typeof getRawDB>,
+  note: string,
+  category: string,
+  accountId: string,
+  now: number,
+) {
+  const tokens = note
+    .toLowerCase()
+    .replace(/[^a-z\s]/g, ' ')
+    .split(/\s+/)
+    .filter((t) => t.length >= 3);
+  for (const tok of tokens) {
+    raw.runSync(
+      `INSERT INTO merchant_memory (text, category, account_id, count, last_used)
+       VALUES (?, ?, ?, 1, ?)
+       ON CONFLICT(text) DO UPDATE SET
+         category = excluded.category,
+         account_id = excluded.account_id,
+         count = merchant_memory.count + 1,
+         last_used = excluded.last_used`,
+      [tok, category, accountId, now],
+    );
+  }
 }
 
 export function deleteTransaction(id: string): void {

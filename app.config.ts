@@ -29,10 +29,23 @@ const config: ExpoConfig = {
   ios: {
     bundleIdentifier: process.env.APP_BUNDLE_ID ?? 'com.moneyflow.generic',
     supportsTablet: false,
+    infoPlist: {
+      // Phase 7 (Smart Add): voice-to-add via @react-native-voice/voice.
+      // Apple Speech runs on-device for short utterances on iOS 17+.
+      NSSpeechRecognitionUsageDescription:
+        'Used to dictate transaction notes (e.g. "twelve fifty coffee"). On-device on iOS 17+.',
+      NSMicrophoneUsageDescription:
+        'Used to record short voice notes that are transcribed into transactions. Audio is not sent to our servers.',
+    },
   },
   android: {
     package: process.env.APP_BUNDLE_ID ?? 'com.moneyflow.generic',
     edgeToEdgeEnabled: true,
+    // Phase 7 (Smart Add): voice-to-add. RECORD_AUDIO is the only new permission;
+    // Android Speech Recognizer service handles the rest.
+    permissions: [
+      'android.permission.RECORD_AUDIO',
+    ],
   },
   plugins: [
     'expo-router',
@@ -41,6 +54,18 @@ const config: ExpoConfig = {
     'expo-notifications',
     'expo-local-authentication',
     'expo-localization',
+    [
+      'expo-build-properties',
+      {
+        android: {
+          // Phase 7: @react-native-voice/voice 3.2.4 still ships
+          // com.android.support:* (pre-AndroidX). Jetifier rewrites those
+          // references to androidx.* at build time, eliminating the
+          // duplicate-class conflict that otherwise blocks assembleRelease.
+          enableJetifier: true,
+        },
+      },
+    ],
   ],
   experiments: { typedRoutes: true },
   extra: {

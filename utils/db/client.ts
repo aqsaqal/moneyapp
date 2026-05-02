@@ -40,7 +40,8 @@ function createTables(db: SQLite.SQLiteDatabase) {
       date INTEGER NOT NULL,
       created_at INTEGER NOT NULL,
       recurring_id TEXT,
-      halal_status TEXT
+      halal_status TEXT,
+      receipt_image_path TEXT
     );
     CREATE INDEX IF NOT EXISTS tx_date_idx ON transactions(date);
     CREATE INDEX IF NOT EXISTS tx_category_idx ON transactions(category);
@@ -83,7 +84,29 @@ function createTables(db: SQLite.SQLiteDatabase) {
       transaction_id TEXT NOT NULL,
       paid_at INTEGER NOT NULL
     );
+
+    -- Phase 7 (Smart Add) — additive, no migration of existing rows.
+    CREATE TABLE IF NOT EXISTS merchant_memory (
+      text TEXT PRIMARY KEY NOT NULL,
+      category TEXT NOT NULL,
+      account_id TEXT NOT NULL,
+      count INTEGER NOT NULL DEFAULT 1,
+      last_used INTEGER NOT NULL
+    );
+    CREATE INDEX IF NOT EXISTS mm_count_idx ON merchant_memory(count DESC);
   `);
+
+  // Phase 7 — additive column on existing transactions table.
+  // SQLite ALTER TABLE ADD COLUMN is idempotent only if guarded; check first.
+  try {
+    const cols = db.getAllSync<{ name: string }>(`PRAGMA table_info(transactions)`);
+    const hasReceipt = cols.some((c) => c.name === 'receipt_image_path');
+    if (!hasReceipt) {
+      db.execSync(`ALTER TABLE transactions ADD COLUMN receipt_image_path TEXT;`);
+    }
+  } catch {
+    /* swallow — fresh DB will already have the column from CREATE TABLE if we add it there in a future major. */
+  }
 }
 
 /** Close and reset. Useful for tests and "erase all data" flows. */

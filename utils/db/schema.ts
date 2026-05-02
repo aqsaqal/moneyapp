@@ -18,6 +18,8 @@ export const transactions = sqliteTable(
     createdAt: integer('created_at').notNull(),
     recurringId: text('recurring_id'),     // set when created by markPaid()
     halalStatus: text('halal_status'),     // optional; islamic only sets/reads
+    // Reserved for v2.3 receipt OCR. Nullable + additive — no migration cost.
+    receiptImagePath: text('receipt_image_path'),
   },
   (t) => ({
     dateIdx: index('tx_date_idx').on(t.date),
@@ -56,6 +58,28 @@ export const recurring = sqliteTable('recurring', {
   color: text('color').notNull(),
 });
 
+// Phase 7 (Smart Add) — merchant memory for L2 category prediction.
+//
+// Updated on every successful addTransaction(): tokenize the note, upsert
+// (token → category, accountId, ++count, lastUsed). On future adds, when
+// the user types a token we already know, look it up here and pre-fill
+// category + account.
+//
+// Compound primary key (text, accountId) so the same word can map to
+// different (category, account) pairs for different accounts ("uber" on
+// the corporate card might be transport; on the cash account, also
+// transport — usually consistent, but we don't lock it in).
+export const merchantMemory = sqliteTable('merchant_memory', {
+  text: text('text').notNull(),                  // lowercased single token
+  category: text('category').notNull(),
+  accountId: text('account_id').notNull(),
+  count: integer('count').notNull().default(1),
+  lastUsed: integer('last_used').notNull(),
+});
+// Note: drizzle-orm/sqlite-core composite PRIMARY KEY support varies; we
+// enforce uniqueness via DDL in client.ts (CREATE UNIQUE INDEX on (text)
+// gives last-write-wins per token, which is the right semantics here).
+
 // Tracks which recurring items have been paid in which month.
 // Composite key: recurringId + monthKey (YYYY-MM).
 export const paidItems = sqliteTable('paid_items', {
@@ -82,6 +106,9 @@ export type NewRecurring = typeof recurring.$inferInsert;
 
 export type PaidItem = typeof paidItems.$inferSelect;
 export type NewPaidItem = typeof paidItems.$inferInsert;
+
+export type MerchantMemoryRow = typeof merchantMemory.$inferSelect;
+export type NewMerchantMemoryRow = typeof merchantMemory.$inferInsert;
 
 // Convenience: monthKey for a given date (YYYY-MM).
 export function monthKey(date: Date | number): string {

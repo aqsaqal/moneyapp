@@ -1,8 +1,25 @@
-// Add transaction modal — ports v4 AddView (lines 468-543).
-// Mode toggle (expense/income/transfer) + amount display + category grid +
-// account picker + numpad + quick-add pills + halal slot (islamic only).
+// Add transaction modal — v2 Smart Add.
+//
+// Median expense in 3 interactions:
+//   1. Tap FAB
+//   2. Type "12 coffee" (or speak it via mic)
+//   3. Tap "Add Expense"
+// Category + account are predicted via 4-layer chain in useSmartPredict.
+//
+// Layout:
+//   header: [×] [mode pills] [✓]
+//   amount: $ ▎ <big-number>
+//   note  : input + mic
+//   row   : SmartSuggestionRow (recent merchants + exact replays)
+//   strip : PredictedStrip (cat · account, tap to override)
+//     ↓ if expanded ↓
+//   override: classic cat grid + account picker
+//   numpad
+//   CTA
+//
+// Override path remains for power users who want explicit control.
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
@@ -11,15 +28,14 @@ import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { Numpad } from '@/components/Numpad';
 import { CategoryTile } from '@/components/CategoryTile';
 import { SuccessOverlay } from '@/components/SuccessOverlay';
-import { Icon } from '@/components/Icon';
+import { SmartSuggestionRow } from '@/components/SmartSuggestionRow';
+import { PredictedStrip } from '@/components/PredictedStrip';
+import { VoiceMicButton } from '@/components/VoiceMicButton';
 import { FeatureSlots } from '@/features';
-import {
-  useAccounts,
-  addTransaction,
-} from '@/hooks/useAppData';
-import { useFrequentTxns } from '@/hooks/useFrequentTxns';
-import { allExpenseCategories, allIncomeCategories, catInfo } from '@/constants/categories';
-import { formatMoney, type CurrencyCode } from '@/constants/currency';
+import { useAccounts, addTransaction } from '@/hooks/useAppData';
+import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
+import { allExpenseCategories, allIncomeCategories } from '@/constants/categories';
+import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { useHaptics } from '@/hooks/useHaptics';
 import type { Transaction } from '@/utils/db/schema';
@@ -30,17 +46,42 @@ export default function AddScreen() {
   const router = useRouter();
   const haptics = useHaptics();
   const accounts = useAccounts();
-  const frequents = useFrequentTxns(4);
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const locale = kv.get('locale') ?? 'en-US';
 
   const [mode, setMode] = useState<Mode>('expense');
   const [amount, setAmount] = useState('0');
-  const [category, setCategory] = useState<string | null>(null);
-  const [accountId, setAccountId] = useState<string>(accounts[0]?.id ?? 'cash');
-  const [toAccountId, setToAccountId] = useState<string>(accounts[1]?.id ?? 'savings');
   const [note, setNote] = useState('');
   const [draft, setDraft] = useState<Partial<Transaction>>({});
   const [success, setSuccess] = useState(false);
+  const [overrideOpen, setOverrideOpen] = useState(false);
+
+  // Smart prediction (only meaningful for expenses).
+  const predicted = useSmartPredict({
+    note,
+    amount: parseFloat(amount) || 0,
+  });
+
+  // Allow user override of predicted cat / account.
+  const [catOverride, setCatOverride] = useState<string | null>(null);
+  const [accountOverride, setAccountOverride] = useState<string | null>(null);
+
+  // Effective values feed the actual submit.
+  const effectiveCat = mode === 'transfer' ? null : catOverride ?? predicted.category;
+  const effectiveAcct =
+    accountOverride ?? predicted.accountId ?? accounts[0]?.id ?? 'cash';
+
+  // Transfer mode: from/to accounts (separate from prediction).
+  const [fromAcct, setFromAcct] = useState<string>(accounts[0]?.id ?? 'cash');
+  const [toAcct, setToAcct] = useState<string>(accounts[1]?.id ?? 'savings');
+
+  useEffect(() => {
+    // Set sensible from/to defaults once accounts load.
+    if (accounts.length >= 2) {
+      setFromAcct((p) => (accounts.find((a) => a.id === p) ? p : accounts[0].id));
+      setToAcct((p) => (accounts.find((a) => a.id === p) ? p : accounts[1].id));
+    }
+  }, [accounts]);
 
   const onKey = (k: string) => {
     if (k === 'C') return setAmount('0');
@@ -52,25 +93,35 @@ export default function AddScreen() {
   const submit = () => {
     const v = parseFloat(amount);
     if (!v) return;
+
     if (mode === 'transfer') {
-      if (accountId === toAccountId) return;
+      if (fromAcct === toAcct) return;
       addTransaction({
         type: 'transfer',
         amount: v,
-        accountId,
-        toAccountId,
+        accountId: fromAcct,
+        toAccountId: toAcct,
         note: note || null,
       });
     } else {
-      if (!category) return;
+      // Expense or income: needs category. Predicted strip should always
+      // populate one in normal use, but the user can override or, in the
+      // worst case, pick from the override grid.
+      if (!effectiveCat) {
+        // Force the override grid open so the user can pick.
+        setOverrideOpen(true);
+        return;
+      }
       addTransaction({
         type: mode,
         amount: v,
-        category,
-        accountId,
+        category: effectiveCat,
+        accountId: effectiveAcct,
         note: note || null,
         halalStatus: (draft.halalStatus as Transaction['halalStatus']) ?? null,
       });
+      // Remember the user's account choice so L4 fallback can lock in.
+      setDefaultAccount(effectiveAcct);
     }
     haptics.success();
     setSuccess(true);
@@ -90,7 +141,11 @@ export default function AddScreen() {
         </Pressable>
         <View style={styles.modeRow}>
           {(['expense', 'income', 'transfer'] as Mode[]).map((m) => (
-            <Pressable key={m} onPress={() => setMode(m)} style={[styles.modeTab, mode === m && styles.modeActive]}>
+            <Pressable
+              key={m}
+              onPress={() => setMode(m)}
+              style={[styles.modeTab, mode === m && styles.modeActive]}
+            >
               <Text style={[styles.modeText, mode === m && styles.modeTextActive]}>{m}</Text>
             </Pressable>
           ))}
@@ -101,91 +156,131 @@ export default function AddScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-        <Text style={styles.amount}>{currencyPrefix(currency)}{amount}</Text>
+        <Text
+          style={styles.amount}
+          accessibilityLabel={`Amount ${currencyPrefix(currency)}${amount}`}
+          accessibilityLiveRegion="polite"
+        >
+          {currencyPrefix(currency)}
+          {amount}
+        </Text>
 
-        <TextInput
-          value={note}
-          onChangeText={setNote}
-          placeholder="Note (optional)"
-          placeholderTextColor={theme.text3}
-          style={styles.note}
-        />
+        {/* Note input + voice mic. */}
+        <View style={styles.noteRow}>
+          <TextInput
+            value={note}
+            onChangeText={setNote}
+            placeholder="What was it for?"
+            placeholderTextColor={theme.text3}
+            style={styles.note}
+          />
+          <VoiceMicButton
+            locale={locale}
+            onResult={({ amount: a, note: n }) => {
+              if (a !== null) setAmount(String(a));
+              if (n) setNote(n);
+            }}
+          />
+        </View>
 
-        {mode === 'expense' && frequents.length > 0 && (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickRow}>
-            {frequents.map((q, i) => {
-              const c = catInfo(q.category);
-              return (
-                <Pressable
-                  key={i}
-                  onPress={() => {
-                    addTransaction({
-                      type: 'expense',
-                      amount: q.amount,
-                      category: q.category,
-                      accountId: q.accountId,
-                      note: q.note,
-                    });
-                    haptics.success();
-                    setSuccess(true);
-                    setTimeout(() => { setSuccess(false); router.back(); }, 700);
-                  }}
-                  style={[styles.quickPill, { borderColor: c.color }]}
-                >
-                  <Icon name={c.icon} size={14} color={c.color} />
-                  <Text style={styles.quickText}>{q.note || c.name} {formatMoney(q.amount, currency)}</Text>
-                </Pressable>
-              );
-            })}
-          </ScrollView>
+        {/* Smart suggestions: fuzzy merchants + exact replays. Skip for transfers. */}
+        {mode === 'expense' && (
+          <SmartSuggestionRow
+            currency={currency}
+            amountEntered={amount !== '0' && amount !== ''}
+            onPickExact={(t) => {
+              // 1-tap submit identical txn.
+              addTransaction({
+                type: 'expense',
+                amount: t.amount,
+                category: t.category,
+                accountId: t.accountId,
+                note: t.note,
+              });
+              haptics.success();
+              setSuccess(true);
+              setTimeout(() => { setSuccess(false); router.back(); }, 700);
+            }}
+            onPickFuzzy={(m) => {
+              // Fill note + override cat/account; user adjusts amount.
+              setNote(m.note);
+              setCatOverride(m.category);
+              setAccountOverride(m.accountId);
+            }}
+          />
         )}
 
-        {/* Account picker (or From/To for transfer) */}
-        {mode === 'transfer' ? (
+        {/* Transfer: from/to selectors */}
+        {mode === 'transfer' && (
           <View style={styles.transferRow}>
-            <AcctPicker label="From" accounts={accounts} value={accountId} onChange={setAccountId} />
+            <AcctPicker label="From" accounts={accounts} value={fromAcct} onChange={setFromAcct} />
             <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
-            <AcctPicker label="To" accounts={accounts} value={toAccountId} onChange={setToAccountId} />
+            <AcctPicker label="To" accounts={accounts} value={toAcct} onChange={setToAcct} />
           </View>
-        ) : (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.acctRow}>
-            {accounts.map((a) => (
-              <Pressable
-                key={a.id}
-                onPress={() => setAccountId(a.id)}
-                style={[styles.acctPill, accountId === a.id && { backgroundColor: a.color, borderColor: 'transparent' }]}
-              >
-                <Text style={[styles.acctText, accountId === a.id && { color: theme.bg }]}>{a.name}</Text>
-              </Pressable>
-            ))}
-          </ScrollView>
         )}
 
-        {/* Category grid (not in transfer mode) */}
+        {/* Predicted strip — expense/income only. */}
         {mode !== 'transfer' && (
-          <View style={styles.catGrid}>
-            {cats.map((c) => (
-              <CategoryTile
-                key={c.id}
-                cat={c}
-                selected={category === c.id}
-                onPress={() => setCategory(c.id)}
-              />
-            ))}
+          <PredictedStrip
+            category={effectiveCat}
+            accountId={effectiveAcct}
+            accounts={accounts}
+            source={predicted.source}
+            expanded={overrideOpen}
+            onToggle={() => setOverrideOpen((x) => !x)}
+          />
+        )}
+
+        {/* Override (cat grid + account picker) — collapsed by default. */}
+        {mode !== 'transfer' && overrideOpen && (
+          <View style={{ gap: spacing.md }}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.acctRow}
+            >
+              {accounts.map((a) => (
+                <Pressable
+                  key={a.id}
+                  onPress={() => setAccountOverride(a.id)}
+                  style={[
+                    styles.acctPill,
+                    effectiveAcct === a.id && {
+                      backgroundColor: a.color,
+                      borderColor: 'transparent',
+                    },
+                  ]}
+                >
+                  <Text style={[styles.acctText, effectiveAcct === a.id && { color: theme.bg }]}>
+                    {a.name}
+                  </Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+            <View style={styles.catGrid}>
+              {cats.map((c) => (
+                <CategoryTile
+                  key={c.id}
+                  cat={c}
+                  selected={effectiveCat === c.id}
+                  onPress={() => setCatOverride(c.id)}
+                />
+              ))}
+            </View>
           </View>
         )}
 
-        {/* Islamic AddTxExtras: halal selector. Generic: nothing renders. */}
-        <FeatureSlots.AddTxExtras txDraft={draft} onChange={(p) => setDraft({ ...draft, ...p })} />
+        {/* Islamic AddTxExtras — halal selector. Generic: nothing renders. */}
+        <FeatureSlots.AddTxExtras
+          txDraft={draft}
+          onChange={(p) => setDraft({ ...draft, ...p })}
+        />
 
         <Numpad onPress={onKey} />
 
         <Pressable
           onPress={submit}
-          style={({ pressed }) => [
-            styles.submit,
-            pressed && { transform: [{ scale: 0.97 }] },
-          ]}
+          style={({ pressed }) => [styles.submit, pressed && { transform: [{ scale: 0.97 }] }]}
         >
           <Text style={styles.submitText}>
             {mode === 'expense' ? 'Add Expense' : mode === 'income' ? 'Add Income' : 'Transfer'}
@@ -200,7 +295,17 @@ export default function AddScreen() {
   );
 }
 
-function AcctPicker({ label, accounts, value, onChange }: { label: string; accounts: { id: string; name: string }[]; value: string; onChange: (id: string) => void }) {
+function AcctPicker({
+  label,
+  accounts,
+  value,
+  onChange,
+}: {
+  label: string;
+  accounts: { id: string; name: string }[];
+  value: string;
+  onChange: (id: string) => void;
+}) {
   return (
     <View style={{ flex: 1 }}>
       <Text style={styles.transferLabel}>{label}</Text>
@@ -209,7 +314,10 @@ function AcctPicker({ label, accounts, value, onChange }: { label: string; accou
           <Pressable
             key={a.id}
             onPress={() => onChange(a.id)}
-            style={[styles.acctPill, value === a.id && { backgroundColor: theme.transfer, borderColor: 'transparent' }]}
+            style={[
+              styles.acctPill,
+              value === a.id && { backgroundColor: theme.transfer, borderColor: 'transparent' },
+            ]}
           >
             <Text style={[styles.acctText, value === a.id && { color: theme.bg }]}>{a.name}</Text>
           </Pressable>
@@ -220,7 +328,6 @@ function AcctPicker({ label, accounts, value, onChange }: { label: string; accou
 }
 
 function currencyPrefix(c: CurrencyCode): string {
-  // Compact prefix for the big amount display.
   if (c === 'USD') return '$';
   if (c === 'EUR') return '€';
   if (c === 'GBP') return '£';
@@ -229,24 +336,71 @@ function currencyPrefix(c: CurrencyCode): string {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', padding: spacing.lg },
-  modeRow: { flexDirection: 'row', gap: 4, padding: 3, borderRadius: radii.pill, backgroundColor: theme.bg2 },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: spacing.lg,
+  },
+  modeRow: {
+    flexDirection: 'row',
+    gap: 4,
+    padding: 3,
+    borderRadius: radii.pill,
+    backgroundColor: theme.bg2,
+  },
   modeTab: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: radii.pill },
   modeActive: { backgroundColor: theme.accent },
   modeText: { color: theme.text2, fontSize: sizes.sm, textTransform: 'capitalize' },
   modeTextActive: { color: theme.bg, fontWeight: '700' },
   scroll: { padding: spacing.lg, gap: spacing.lg },
-  amount: { color: theme.text1, fontSize: 56, fontFamily: font.displayBold, textAlign: 'center' },
-  note: { backgroundColor: theme.bg2, color: theme.text1, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radii.md, borderWidth: 1, borderColor: theme.border, fontFamily: font.body },
-  quickRow: { gap: 8 },
-  quickPill: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 6, borderRadius: radii.pill, borderWidth: 1, backgroundColor: theme.bg2 },
-  quickText: { color: theme.text1, fontSize: sizes.xs },
+  amount: {
+    color: theme.text1,
+    fontSize: 56,
+    fontFamily: font.displayBold,
+    textAlign: 'center',
+  },
+  noteRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: theme.bg2,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: theme.border,
+  },
+  note: {
+    flex: 1,
+    color: theme.text1,
+    fontFamily: font.body,
+    fontSize: sizes.md,
+    paddingVertical: 0,
+  },
   acctRow: { gap: 8 },
-  acctPill: { paddingHorizontal: 14, paddingVertical: 8, borderRadius: radii.pill, borderWidth: 1, borderColor: theme.border, backgroundColor: theme.bg2 },
+  acctPill: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg2,
+  },
   acctText: { color: theme.text2, fontSize: sizes.sm },
   catGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   transferRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   transferLabel: { color: theme.text2, fontSize: sizes.xs, marginBottom: 6 },
-  submit: { backgroundColor: theme.accent, padding: spacing.md, borderRadius: radii.lg, alignItems: 'center' },
-  submitText: { color: theme.bg, fontSize: sizes.lg, fontWeight: '700', fontFamily: font.display },
+  submit: {
+    backgroundColor: theme.accent,
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    alignItems: 'center',
+  },
+  submitText: {
+    color: theme.bg,
+    fontSize: sizes.lg,
+    fontWeight: '700',
+    fontFamily: font.display,
+  },
 });
