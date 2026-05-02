@@ -1,95 +1,122 @@
 // v2 Tab layout: Home | Plan | (FAB middle absolute) | Activity | Me.
+//
 // 4 tabs + FAB center-anchored absolute on top.
 //
-// Edge-to-edge note (Android Samsung gestures + 3-button nav, iOS home
-// indicator): the system nav bar overlays the bottom of the screen. We
-// expand the tab bar's bottom padding by `insets.bottom` so tab targets
-// sit ABOVE system gestures, not under them. The FAB lifts the same
-// amount so it stays vertically centered relative to the tab bar.
+// Custom tab bar lays out tabs as [Home, Plan, SPACER, Activity, Me] so the
+// inner two tabs (Plan, Activity) sit at the same distance from the FAB as
+// the outer two (Home, Me) do from each other — visually balanced.
+// React Navigation's default 4-tab layout splits the bar evenly, which
+// pushes Plan/Activity uncomfortably close to the FAB.
+//
+// Edge-to-edge: the system gesture / 3-button nav bar overlays the bottom
+// of the screen. We expand `paddingBottom` and `height` by insets.bottom
+// so tap targets sit above system gestures, not under them. The FAB lifts
+// the same amount.
 
 import React from 'react';
 import { Tabs, useRouter } from 'expo-router';
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type {
+  BottomTabBarProps,
+} from '@react-navigation/bottom-tabs';
 import { theme } from '@/constants/theme';
 import { PRIMARY_COLOR } from '@/constants/flavor';
 import { FabButton } from '@/components/FabButton';
 
 const TAB_BAR_HEIGHT = 64;
 const TAB_BAR_PAD_BOTTOM = 8;
-const FAB_BASELINE_BOTTOM = 24; // base lift above tab bar floor
+const FAB_BASELINE_BOTTOM = 24;
+const FAB_SPACER_WIDTH = 72;
+
+const TAB_ICONS: Record<
+  string,
+  React.ComponentProps<typeof MaterialCommunityIcons>['name']
+> = {
+  index: 'home-variant',
+  plan: 'calendar-check',
+  activity: 'format-list-bulleted',
+  me: 'account-circle-outline',
+};
+const TAB_LABELS: Record<string, string> = {
+  index: 'Home',
+  plan: 'Plan',
+  activity: 'Activity',
+  me: 'Me',
+};
+// Visual order in the bar — splits 2 + spacer + 2 around the FAB.
+const TAB_ORDER = ['index', 'plan', '__spacer__', 'activity', 'me'] as const;
+
+function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarProps) {
+  // Build map: route name → state.index, so we can render in our preferred order.
+  const routeByName = new Map(state.routes.map((r, i) => [r.name, { route: r, idx: i }]));
+
+  return (
+    <View
+      style={[
+        styles.tabBar,
+        {
+          height: TAB_BAR_HEIGHT + insets.bottom,
+          paddingBottom: TAB_BAR_PAD_BOTTOM + insets.bottom,
+        },
+      ]}
+    >
+      {TAB_ORDER.map((slot, i) => {
+        if (slot === '__spacer__') {
+          return <View key="spacer" style={{ width: FAB_SPACER_WIDTH }} pointerEvents="none" />;
+        }
+        const entry = routeByName.get(slot);
+        if (!entry) return null;
+        const { route, idx } = entry;
+        const focused = state.index === idx;
+        const { options } = descriptors[route.key];
+        const onPress = () => {
+          const event = navigation.emit({
+            type: 'tabPress',
+            target: route.key,
+            canPreventDefault: true,
+          });
+          if (!focused && !event.defaultPrevented) {
+            navigation.navigate(route.name as never);
+          }
+        };
+        const color = focused ? PRIMARY_COLOR : theme.text3;
+        return (
+          <Pressable
+            key={route.key}
+            onPress={onPress}
+            style={styles.tabItem}
+            accessibilityRole="button"
+            accessibilityState={focused ? { selected: true } : {}}
+            accessibilityLabel={TAB_LABELS[slot]}
+          >
+            <MaterialCommunityIcons name={TAB_ICONS[slot]} size={24} color={color} />
+            <Text style={[styles.tabLabel, { color }]}>{TAB_LABELS[slot]}</Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
 
 export default function TabsLayout() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-
-  // Push tab bar up by the system inset so its tap targets clear gesture nav.
-  const tabBarHeight = TAB_BAR_HEIGHT + insets.bottom;
-  const tabBarPaddingBottom = TAB_BAR_PAD_BOTTOM + insets.bottom;
-  // FAB sits roughly centered against the tab bar's visual middle.
   const fabBottom = FAB_BASELINE_BOTTOM + insets.bottom;
 
   return (
     <View style={styles.root}>
       <Tabs
-        screenOptions={{
-          headerShown: false,
-          tabBarActiveTintColor: PRIMARY_COLOR,
-          tabBarInactiveTintColor: theme.text3,
-          tabBarStyle: [
-            styles.tabBar,
-            { height: tabBarHeight, paddingBottom: tabBarPaddingBottom },
-          ],
-          tabBarLabelStyle: { fontSize: 11 },
-          tabBarItemStyle: { paddingHorizontal: 0 },
-        }}
+        tabBar={(props) => <CustomTabBar {...props} />}
+        screenOptions={{ headerShown: false }}
       >
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="home-variant" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="plan"
-          options={{
-            title: 'Plan',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="calendar-check" size={size} color={color} />
-            ),
-          }}
-        />
-        {/* No center "spacer" screen — the FAB is absolute-positioned and visually
-            sits between Plan and Activity. The 4 tab items split evenly across
-            the bar; the FAB lifts above. */}
-        <Tabs.Screen
-          name="activity"
-          options={{
-            title: 'Activity',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="format-list-bulleted" size={size} color={color} />
-            ),
-          }}
-        />
-        <Tabs.Screen
-          name="me"
-          options={{
-            title: 'Me',
-            tabBarIcon: ({ color, size }) => (
-              <MaterialCommunityIcons name="account-circle-outline" size={size} color={color} />
-            ),
-          }}
-        />
+        <Tabs.Screen name="index" options={{ title: 'Home' }} />
+        <Tabs.Screen name="plan" options={{ title: 'Plan' }} />
+        <Tabs.Screen name="activity" options={{ title: 'Activity' }} />
+        <Tabs.Screen name="me" options={{ title: 'Me' }} />
       </Tabs>
-      {/* Floating FAB — absolute, center-anchored, lifts above tab bar AND system nav. */}
-      <View
-        style={[styles.fabWrap, { bottom: fabBottom }]}
-        pointerEvents="box-none"
-      >
+      <View style={[styles.fabWrap, { bottom: fabBottom }]} pointerEvents="box-none">
         <FabButton onPress={() => router.push('/add')} />
       </View>
     </View>
@@ -99,10 +126,21 @@ export default function TabsLayout() {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: theme.bg },
   tabBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: theme.bg1,
     borderTopColor: theme.border,
     borderTopWidth: StyleSheet.hairlineWidth,
     paddingTop: 6,
+  },
+  tabItem: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 2,
+  },
+  tabLabel: {
+    fontSize: 11,
   },
   fabWrap: {
     position: 'absolute',

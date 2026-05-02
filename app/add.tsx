@@ -31,6 +31,7 @@ import { SuccessOverlay } from '@/components/SuccessOverlay';
 import { SmartSuggestionRow } from '@/components/SmartSuggestionRow';
 import { PredictedStrip } from '@/components/PredictedStrip';
 import { VoiceMicButton } from '@/components/VoiceMicButton';
+import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
 import { useAccounts, addTransaction } from '@/hooks/useAppData';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
@@ -212,12 +213,22 @@ export default function AddScreen() {
           />
         )}
 
-        {/* Transfer: from/to selectors */}
+        {/* Transfer: from / to as tap-to-pick rows. */}
         {mode === 'transfer' && (
           <View style={styles.transferRow}>
-            <AcctPicker label="From" accounts={accounts} value={fromAcct} onChange={setFromAcct} />
+            <TransferAcctRow
+              label="From"
+              accounts={accounts}
+              value={fromAcct}
+              onPick={setFromAcct}
+            />
             <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
-            <AcctPicker label="To" accounts={accounts} value={toAcct} onChange={setToAcct} />
+            <TransferAcctRow
+              label="To"
+              accounts={accounts}
+              value={toAcct}
+              onPick={setToAcct}
+            />
           </View>
         )}
 
@@ -265,7 +276,12 @@ export default function AddScreen() {
                   key={c.id}
                   cat={c}
                   selected={effectiveCat === c.id}
-                  onPress={() => setCatOverride(c.id)}
+                  onPress={() => {
+                    setCatOverride(c.id);
+                    // Auto-collapse the override panel after a category pick
+                    // — saves a separate tap to close.
+                    setOverrideOpen(false);
+                  }}
                 />
               ))}
             </View>
@@ -297,34 +313,44 @@ export default function AddScreen() {
   );
 }
 
-function AcctPicker({
+/** Compact transfer-mode account selector row.
+ *  Shows label + currently-picked account name. Tap → PickerSheet opens
+ *  with all accounts.
+ */
+function TransferAcctRow({
   label,
   accounts,
   value,
-  onChange,
+  onPick,
 }: {
   label: string;
-  accounts: { id: string; name: string }[];
+  accounts: { id: string; name: string; color: string }[];
   value: string;
-  onChange: (id: string) => void;
+  onPick: (id: string) => void;
 }) {
+  const [open, setOpen] = useState(false);
+  const acct = accounts.find((a) => a.id === value);
   return (
     <View style={{ flex: 1 }}>
       <Text style={styles.transferLabel}>{label}</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }}>
-        {accounts.map((a) => (
-          <Pressable
-            key={a.id}
-            onPress={() => onChange(a.id)}
-            style={[
-              styles.acctPill,
-              value === a.id && { backgroundColor: theme.transfer, borderColor: 'transparent' },
-            ]}
-          >
-            <Text style={[styles.acctText, value === a.id && { color: theme.bg }]}>{a.name}</Text>
-          </Pressable>
-        ))}
-      </ScrollView>
+      <Pressable
+        onPress={() => setOpen(true)}
+        style={[styles.transferRowChip, acct && { borderColor: `${acct.color}88` }]}
+        accessibilityRole="button"
+        accessibilityLabel={`${label}: ${acct?.name ?? 'pick account'}`}
+      >
+        <View style={[styles.transferDot, { backgroundColor: acct?.color ?? theme.text3 }]} />
+        <Text style={styles.transferRowText}>{acct?.name ?? 'Pick account'}</Text>
+        <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
+      </Pressable>
+      <PickerSheet
+        visible={open}
+        title={`${label} account`}
+        options={accounts.map((a) => ({ value: a.id, label: a.name, iconColor: a.color, icon: 'wallet-outline' }))}
+        selected={value}
+        onPick={onPick}
+        onClose={() => setOpen(false)}
+      />
     </View>
   );
 }
@@ -393,6 +419,19 @@ const styles = StyleSheet.create({
   catGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   transferRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   transferLabel: { color: theme.text2, fontSize: sizes.xs, marginBottom: 6 },
+  transferRowChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg2,
+  },
+  transferDot: { width: 10, height: 10, borderRadius: 5 },
+  transferRowText: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.body, flex: 1 },
   submit: {
     backgroundColor: theme.accent,
     padding: spacing.md,

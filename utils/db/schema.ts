@@ -32,7 +32,9 @@ export const transactions = sqliteTable(
 export const accounts = sqliteTable('accounts', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
-  type: text('type', { enum: ['cash', 'bank', 'credit', 'savings'] }).notNull(),
+  // 'debt' = generic liability (loan, mortgage, owed money). Distinct from
+  // 'credit' (credit card) which has a creditLimit and is paid back monthly.
+  type: text('type', { enum: ['cash', 'bank', 'credit', 'savings', 'debt'] }).notNull(),
   balance: real('balance').notNull(),
   creditLimit: real('credit_limit'),
   icon: text('icon').notNull(),

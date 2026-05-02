@@ -15,10 +15,14 @@ import {
   SectionHeader,
   SummaryCard,
   SettingRow,
+  AddRow,
   sectionStyles,
 } from '@/components/Sections';
+import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import { AccountSheet } from '@/components/AccountSheet';
 import { FeatureSlots } from '@/features';
 import { useAccounts } from '@/hooks/useAppData';
+import type { Account } from '@/utils/db/schema';
 import {
   isBiometricEnabled,
   setBiometricEnabled,
@@ -65,9 +69,17 @@ function AccountsSection() {
   const assets = accounts.filter((a) => a.balance >= 0).reduce((s, a) => s + a.balance, 0);
   const debt = accounts.filter((a) => a.balance < 0).reduce((s, a) => s + Math.abs(a.balance), 0);
   const net = assets - debt;
+
+  // null = creating new; Account = editing; undefined = sheet closed
+  const [editing, setEditing] = useState<Account | null | undefined>(undefined);
+
   return (
     <View style={{ gap: spacing.md }}>
-      <SectionHeader title="Accounts" />
+      <SectionHeader
+        title="Accounts"
+        onAdd={() => setEditing(null)}
+        addLabel="Add account"
+      />
 
       {/* Net balance moved from Home → here in v2. */}
       <View style={styles.netCard}>
@@ -83,7 +95,13 @@ function AccountsSection() {
       </View>
 
       {accounts.map((a) => (
-        <View key={a.id} style={styles.acctCard}>
+        <Pressable
+          key={a.id}
+          style={styles.acctCard}
+          onPress={() => setEditing(a)}
+          accessibilityRole="button"
+          accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, currency)}`}
+        >
           <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
             <MaterialCommunityIcons name="wallet-outline" size={20} color={a.color} />
           </View>
@@ -107,8 +125,14 @@ function AccountsSection() {
           <Text style={[styles.acctBal, { color: a.balance >= 0 ? theme.accent : theme.expense }]}>
             {formatMoney(a.balance, currency)}
           </Text>
-        </View>
+        </Pressable>
       ))}
+
+      <AccountSheet
+        visible={editing !== undefined}
+        account={editing ?? undefined}
+        onClose={() => setEditing(undefined)}
+      />
     </View>
   );
 }
@@ -155,35 +179,22 @@ function SettingsSection() {
   const [locale, setLocale] = useState<string>(kv.get('locale') ?? 'en-US');
   const [arabicNum, setArabicNum] = useState<boolean>(kv.getBool('arabicNumerals', true));
 
+  // Picker sheet open state — single shared pattern for Language & Currency.
+  const [picker, setPicker] = useState<null | 'lang' | 'currency'>(null);
+
+  const localeLabel = LOCALES.find((l) => l.code === locale)?.name ?? locale;
+  const currencyLabel = `${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`;
+
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <SectionHeader title="Language" />
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={sectionStyles.chipRow}
-      >
-        {LOCALES.map((l) => (
-          <Pressable
-            key={l.code}
-            onPress={() => {
-              setLocale(l.code);
-              changeLocale(l.code);
-            }}
-            style={[
-              sectionStyles.chip,
-              locale === l.code && { backgroundColor: theme.accent, borderColor: 'transparent' },
-            ]}
-            accessibilityRole="button"
-            accessibilityState={{ selected: locale === l.code }}
-            accessibilityLabel={`Language: ${l.name}${l.rtl ? ', right-to-left' : ''}`}
-          >
-            <Text style={[sectionStyles.chipText, locale === l.code && { color: theme.bg }]}>
-              {l.name}
-            </Text>
-          </Pressable>
-        ))}
-      </ScrollView>
+      <SectionHeader title="Preferences" />
+
+      <SettingRow
+        label="Language"
+        hint={localeLabel}
+        icon="translate"
+        onPress={() => setPicker('lang')}
+      />
 
       {locale.startsWith('ar') && (
         <SettingRow
@@ -206,30 +217,12 @@ function SettingsSection() {
         />
       )}
 
-      <SectionHeader title="Currency" />
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={sectionStyles.chipRow}
-      >
-        {(Object.keys(CURRENCIES) as CurrencyCode[]).map((c) => (
-          <Pressable
-            key={c}
-            onPress={() => {
-              kv.set('currency', c);
-              setCurrency(c);
-            }}
-            style={[
-              sectionStyles.chip,
-              currency === c && { backgroundColor: theme.accent, borderColor: 'transparent' },
-            ]}
-            accessibilityRole="button"
-            accessibilityState={{ selected: currency === c }}
-          >
-            <Text style={[sectionStyles.chipText, currency === c && { color: theme.bg }]}>{c}</Text>
-          </Pressable>
-        ))}
-      </ScrollView>
+      <SettingRow
+        label="Currency"
+        hint={currencyLabel}
+        icon="currency-usd"
+        onPress={() => setPicker('currency')}
+      />
 
       <SectionHeader title="Security" />
       <SettingRow
@@ -266,6 +259,37 @@ function SettingsSection() {
         label="Export transactions (CSV)"
         icon="export"
         onPress={() => exportData('csv')}
+      />
+
+      <PickerSheet
+        visible={picker === 'lang'}
+        title="Language"
+        options={LOCALES.map<PickerOption<string>>((l) => ({
+          value: l.code,
+          label: l.name,
+          hint: l.rtl ? 'Right-to-left' : undefined,
+        }))}
+        selected={locale}
+        onPick={(code) => {
+          setLocale(code);
+          changeLocale(code);
+        }}
+        onClose={() => setPicker(null)}
+      />
+      <PickerSheet
+        visible={picker === 'currency'}
+        title="Currency"
+        options={(Object.keys(CURRENCIES) as CurrencyCode[]).map<PickerOption<CurrencyCode>>((c) => ({
+          value: c,
+          label: `${c} · ${CURRENCIES[c].symbolNative}`,
+          hint: CURRENCIES[c].name,
+        }))}
+        selected={currency}
+        onPick={(c) => {
+          kv.set('currency', c);
+          setCurrency(c);
+        }}
+        onClose={() => setPicker(null)}
       />
     </View>
   );

@@ -5,13 +5,14 @@
 // sub-tabs). The temporal axis is "what do I plan to spend / what's coming"
 // — Activity owns "what already happened."
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { RecurringRow } from '@/components/RecurringRow';
 import { SectionHeader, SummaryCard, AddRow, sectionStyles } from '@/components/Sections';
+import { RecurringSheet } from '@/components/RecurringSheet';
 import { FeatureSlots } from '@/features';
 import {
   useBudgets,
@@ -28,6 +29,7 @@ import { catInfo } from '@/constants/categories';
 import { monthKey, formatMoney } from '@/utils/format';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
+import type { Recurring } from '@/utils/db/schema';
 
 export default function PlanScreen() {
   const router = useRouter();
@@ -49,12 +51,19 @@ export default function PlanScreen() {
 
 // ---- Recurring section ----
 
+type RecurringSheetState =
+  | { kind: 'closed' }
+  | { kind: 'edit'; rec: Recurring }
+  | { kind: 'create'; type: 'expense' | 'income' };
+
 function RecurringSection() {
   const recurring = useRecurring();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const key = monthKey();
   const paid = usePaidItemsForMonth(key);
   const paidIds = useMemo(() => new Set(paid.map((p) => p.recurringId)), [paid]);
+
+  const [sheet, setSheet] = useState<RecurringSheetState>({ kind: 'closed' });
 
   const exp = recurring.filter((r) => r.type === 'expense');
   const inc = recurring.filter((r) => r.type === 'income');
@@ -76,7 +85,11 @@ function RecurringSection() {
         </Text>
       </View>
 
-      <SectionHeader title="Expenses" />
+      <SectionHeader
+        title="Expenses"
+        onAdd={() => setSheet({ kind: 'create', type: 'expense' })}
+        addLabel="Add expense bill"
+      />
       <View style={{ gap: spacing.sm }}>
         {exp.map((r) => (
           <RecurringRow
@@ -84,13 +97,18 @@ function RecurringSection() {
             rec={r}
             paid={paidIds.has(r.id)}
             onTogglePaid={() => (paidIds.has(r.id) ? unmarkRecurringPaid(r.id, key) : markRecurringPaid(r))}
+            onEdit={() => setSheet({ kind: 'edit', rec: r })}
             onDelete={() => deleteRecurring(r.id)}
             currency={currency}
           />
         ))}
       </View>
 
-      <SectionHeader title="Income" />
+      <SectionHeader
+        title="Income"
+        onAdd={() => setSheet({ kind: 'create', type: 'income' })}
+        addLabel="Add income"
+      />
       <View style={{ gap: spacing.sm }}>
         {inc.map((r) => (
           <RecurringRow
@@ -98,11 +116,19 @@ function RecurringSection() {
             rec={r}
             paid={paidIds.has(r.id)}
             onTogglePaid={() => (paidIds.has(r.id) ? unmarkRecurringPaid(r.id, key) : markRecurringPaid(r))}
+            onEdit={() => setSheet({ kind: 'edit', rec: r })}
             onDelete={() => deleteRecurring(r.id)}
             currency={currency}
           />
         ))}
       </View>
+
+      <RecurringSheet
+        visible={sheet.kind !== 'closed'}
+        recurring={sheet.kind === 'edit' ? sheet.rec : undefined}
+        defaultType={sheet.kind === 'create' ? sheet.type : undefined}
+        onClose={() => setSheet({ kind: 'closed' })}
+      />
     </View>
   );
 }
@@ -118,7 +144,11 @@ function BudgetsSection() {
 
   return (
     <View style={{ gap: spacing.md }}>
-      <SectionHeader title="Budgets" />
+      <SectionHeader
+        title="Budgets"
+        onAdd={promptAddBudget}
+        addLabel="Add budget"
+      />
       {budgets.map((b) => {
         const spent = totalsMap.get(b.category) ?? 0;
         const pct = b.limit > 0 ? Math.min(spent / b.limit, 1) : 0;
@@ -151,7 +181,6 @@ function BudgetsSection() {
           </View>
         );
       })}
-      <AddRow label="Add Budget" onPress={promptAddBudget} />
     </View>
   );
 }

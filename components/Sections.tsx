@@ -9,9 +9,37 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 
-/** Uppercase, letter-spaced section heading. Pairs with a 4-8pt gap below. */
-export function SectionHeader({ title, style }: { title: string; style?: ViewStyle }) {
-  return <Text style={[sectionStyles.section, style as never]}>{title}</Text>;
+/** Uppercase, letter-spaced section heading. Optional trailing "+" tap target
+ *  (`onAdd`) for sections with quick-add affordance (Plan → Expenses/Income/
+ *  Budgets, etc.). */
+export function SectionHeader({
+  title,
+  style,
+  onAdd,
+  addLabel,
+}: {
+  title: string;
+  style?: ViewStyle;
+  onAdd?: () => void;
+  addLabel?: string;
+}) {
+  if (!onAdd) {
+    return <Text style={[sectionStyles.section, style as never]}>{title}</Text>;
+  }
+  return (
+    <View style={[sectionStyles.headerRow, style as never]}>
+      <Text style={sectionStyles.section}>{title}</Text>
+      <Pressable
+        onPress={onAdd}
+        hitSlop={10}
+        accessibilityRole="button"
+        accessibilityLabel={addLabel ?? `Add ${title.toLowerCase()}`}
+        style={({ pressed }) => [sectionStyles.headerAdd, pressed && { opacity: 0.6 }]}
+      >
+        <MaterialCommunityIcons name="plus" size={18} color={theme.accent} />
+      </Pressable>
+    </View>
+  );
 }
 
 /** Half-width side-by-side card showing a labelled monetary total. */
@@ -100,6 +128,19 @@ export function SettingRow({
 
 export const sectionStyles = StyleSheet.create({
   section: { color: theme.text2, fontSize: sizes.sm, textTransform: 'uppercase', letterSpacing: 1 },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  headerAdd: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: `${theme.accent}22`,
+  },
   summaryRow: { flexDirection: 'row', gap: spacing.md },
   summary: {
     flex: 1,

@@ -328,6 +328,27 @@ export function setHalalStatus(id: string, status: Transaction['halalStatus']): 
 
 // ---- Budgets ----
 
+// ---- Accounts ----
+
+export function upsertAccount(a: typeof accounts.$inferInsert): void {
+  const db = getDB();
+  const existing = db.select().from(accounts).where(eq(accounts.id, a.id)).get();
+  if (existing) db.update(accounts).set(a).where(eq(accounts.id, a.id)).run();
+  else db.insert(accounts).values(a).run();
+  bump();
+}
+
+export function deleteAccount(id: string): void {
+  const db = getDB();
+  // Caller should warn the user — deleting an account orphans its txns'
+  // accountId reference. We intentionally don't cascade-delete txns; that's
+  // user data. Caller can choose to reassign first.
+  db.delete(accounts).where(eq(accounts.id, id)).run();
+  bump();
+}
+
+// ---- Budgets ----
+
 export function upsertBudget(b: NewBudget): void {
   const db = getDB();
   const existing = db.select().from(budgets).where(eq(budgets.category, b.category)).get();
