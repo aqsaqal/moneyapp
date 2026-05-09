@@ -13,6 +13,7 @@ import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { TransactionRow } from '@/components/TransactionRow';
 import { SearchBar } from '@/components/SearchBar';
 import { StatCard, sectionStyles } from '@/components/Sections';
+import { MonthlyRecap } from '@/components/MonthlyRecap';
 import { FeatureSlots } from '@/features';
 import {
   useTransactions,
@@ -30,6 +31,7 @@ export default function Activity() {
   const [search, setSearch] = useState('');
   const [halalFilter, setHalalFilter] = useState<string | null>(null);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  const [recapOpen, setRecapOpen] = useState(false);
 
   const txns = useTransactions({
     category: filterCat,
@@ -72,10 +74,22 @@ export default function Activity() {
           currency={currency}
           open={analyticsOpen}
           onToggle={() => setAnalyticsOpen((x) => !x)}
+          onShareRecap={() => setRecapOpen(true)}
         />
         <FeatureSlots.ActivityHeaderExtras />
         {grouped.length === 0 && (
-          <Text style={styles.empty}>No transactions match your filters.</Text>
+          <View style={styles.emptyWrap}>
+            <Text style={styles.emptyTitle}>
+              {search || filterCat || halalFilter
+                ? 'Nothing here yet'
+                : 'Your first transaction is one tap away'}
+            </Text>
+            <Text style={styles.emptyHint}>
+              {search || filterCat || halalFilter
+                ? 'Try clearing the search or chip filter to see everything.'
+                : 'Tap the + below — type "12 coffee" or hold the mic.'}
+            </Text>
+          </View>
         )}
         {grouped.map(([day, ts]) => (
           <View key={day} style={styles.group}>
@@ -89,6 +103,7 @@ export default function Activity() {
         ))}
         <View style={{ height: 100 }} />
       </ScrollView>
+      <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
     </SafeAreaView>
   );
 }
@@ -99,10 +114,12 @@ function AnalyticsHeader({
   currency,
   open,
   onToggle,
+  onShareRecap,
 }: {
   currency: CurrencyCode;
   open: boolean;
   onToggle: () => void;
+  onShareRecap: () => void;
 }) {
   const key = monthKey();
   const monthTxns = useTransactions({ monthKey: key });
@@ -156,6 +173,15 @@ function AnalyticsHeader({
                 );
               })}
           </View>
+          <Pressable
+            onPress={onShareRecap}
+            style={({ pressed }) => [styles.recapBtn, pressed && { opacity: 0.7 }]}
+            accessibilityRole="button"
+            accessibilityLabel="Open monthly recap"
+          >
+            <MaterialCommunityIcons name="share-variant" size={16} color={theme.accent} />
+            <Text style={styles.recapText}>Share this month</Text>
+          </Pressable>
         </>
       )}
     </View>
@@ -223,4 +249,25 @@ const styles = StyleSheet.create({
   group: { gap: spacing.sm },
   dayLabel: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body, textTransform: 'uppercase' },
   empty: { color: theme.text3, textAlign: 'center', marginTop: spacing.xxl },
+  emptyWrap: {
+    alignItems: 'center',
+    gap: 6,
+    marginTop: spacing.xxl,
+    paddingHorizontal: spacing.lg,
+  },
+  emptyTitle: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi, textAlign: 'center' },
+  emptyHint: { color: theme.text3, fontSize: sizes.sm, textAlign: 'center' },
+  recapBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    marginTop: spacing.sm,
+    paddingVertical: 10,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: `${theme.accent}11`,
+  },
+  recapText: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },
 });

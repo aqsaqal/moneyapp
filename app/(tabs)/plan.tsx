@@ -91,6 +91,11 @@ function RecurringSection() {
         addLabel="Add expense bill"
       />
       <View style={{ gap: spacing.sm }}>
+        {exp.length === 0 && (
+          <Text style={styles.emptyHint}>
+            Track rent, subs, bills you pay every month — tap + above.
+          </Text>
+        )}
         {exp.map((r) => (
           <RecurringRow
             key={r.id}
@@ -110,6 +115,11 @@ function RecurringSection() {
         addLabel="Add income"
       />
       <View style={{ gap: spacing.sm }}>
+        {inc.length === 0 && (
+          <Text style={styles.emptyHint}>
+            Salary, freelance, rent received — anything that lands every month.
+          </Text>
+        )}
         {inc.map((r) => (
           <RecurringRow
             key={r.id}
@@ -149,6 +159,11 @@ function BudgetsSection() {
         onAdd={promptAddBudget}
         addLabel="Add budget"
       />
+      {budgets.length === 0 && (
+        <Text style={styles.emptyHint}>
+          Pick a category, pick a ceiling. We'll warn you when you're getting close.
+        </Text>
+      )}
       {budgets.map((b) => {
         const spent = totalsMap.get(b.category) ?? 0;
         const pct = b.limit > 0 ? Math.min(spent / b.limit, 1) : 0;
@@ -233,6 +248,7 @@ const styles = StyleSheet.create({
   },
   disposableLabel: { color: theme.text2, fontSize: sizes.sm },
   disposableValue: { fontSize: sizes.xl, fontFamily: font.display, fontWeight: '700' },
+  emptyHint: { color: theme.text3, fontSize: sizes.sm, paddingHorizontal: 4, lineHeight: 20 },
   budgetCard: {
     padding: spacing.md,
     borderRadius: radii.lg,

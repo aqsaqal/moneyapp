@@ -18,10 +18,19 @@ import { monthKey } from '@/utils/format';
 
 export type PredictSource = 'l1-keyword' | 'l2-memory' | 'l3-time' | 'l4-default';
 
+export interface PredictEvidence {
+  token: string;
+  /** How many past adds support this token → category mapping. */
+  count: number;
+}
+
 export interface Prediction {
   category: string | null;
   accountId: string | null;
   source: PredictSource | null;
+  /** Surface to the user as "Predicted from N past 'X' adds" — populated
+   *  when L1 or L2 found a strong signal, undefined otherwise. */
+  evidence?: PredictEvidence;
 }
 
 // L1 — static keyword → category map. Lowercase tokens. Order doesn't matter
@@ -81,20 +90,42 @@ function predictFromNote(note: string): string | null {
 }
 
 /** L2 — look up merchant_memory by exact token match. Highest count wins. */
-function predictFromMemory(note: string): { category: string; accountId: string } | null {
+function predictFromMemory(note: string): { category: string; accountId: string; token: string; count: number } | null {
   if (!note) return null;
   const tokens = tokenize(note);
   if (tokens.length === 0) return null;
   const raw = getRawDB();
   const placeholders = tokens.map(() => '?').join(',');
-  const row = raw.getFirstSync<{ category: string; account_id: string }>(
-    `SELECT category, account_id FROM merchant_memory
+  const row = raw.getFirstSync<{ category: string; account_id: string; text: string; count: number }>(
+    `SELECT category, account_id, text, count FROM merchant_memory
       WHERE text IN (${placeholders})
       ORDER BY count DESC, last_used DESC
       LIMIT 1`,
     tokens,
   );
-  return row ? { category: row.category, accountId: row.account_id } : null;
+  return row
+    ? { category: row.category, accountId: row.account_id, token: row.text, count: row.count }
+    : null;
+}
+
+/** Count how many past expenses have a matching keyword for a given category.
+ *  Used to surface "Predicted from N past 'coffee' adds" on the success card. */
+function countL1Evidence(note: string, category: string): { token: string; count: number } | null {
+  const tokens = tokenize(note);
+  for (const tok of tokens) {
+    if (KEYWORDS[tok] === category) {
+      const raw = getRawDB();
+      const row = raw.getFirstSync<{ c: number }>(
+        `SELECT COUNT(*) AS c FROM transactions
+          WHERE type = 'expense'
+            AND category = ?
+            AND lower(note) LIKE ?`,
+        [category, `%${tok}%`],
+      );
+      return { token: tok, count: row?.c ?? 0 };
+    }
+  }
+  return null;
 }
 
 /** L3 — match the most recent transaction at this hour-of-day on this weekday
@@ -167,16 +198,25 @@ export function useSmartPredict({
     if (l1) {
       // L1 doesn't tell us the account; layer on memory if any, else default.
       const mem = predictFromMemory(note);
+      const ev = countL1Evidence(note, l1);
       return {
         category: l1,
         accountId: mem?.accountId ?? defaultAccountId,
         source: 'l1-keyword',
+        evidence: ev && ev.count >= 2 ? ev : undefined,
       };
     }
 
     // L2 — merchant memory
     const l2 = predictFromMemory(note);
-    if (l2) return { category: l2.category, accountId: l2.accountId, source: 'l2-memory' };
+    if (l2) {
+      return {
+        category: l2.category,
+        accountId: l2.accountId,
+        source: 'l2-memory',
+        evidence: l2.count >= 2 ? { token: l2.token, count: l2.count } : undefined,
+      };
+    }
 
     // L3 — time window
     const l3 = predictFromTimeWindow(amount);

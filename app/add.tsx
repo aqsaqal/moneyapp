@@ -55,6 +55,7 @@ export default function AddScreen() {
   const [note, setNote] = useState('');
   const [draft, setDraft] = useState<Partial<Transaction>>({});
   const [success, setSuccess] = useState(false);
+  const [successCaption, setSuccessCaption] = useState<string | null>(null);
   const [overrideOpen, setOverrideOpen] = useState(false);
 
   // Smart prediction (only meaningful for expenses).
@@ -123,13 +124,23 @@ export default function AddScreen() {
       });
       // Remember the user's account choice so L4 fallback can lock in.
       setDefaultAccount(effectiveAcct);
+      // Delight moment: when the prediction had real prior evidence and the
+      // user didn't override, surface the source so they feel the magic.
+      const usedPrediction = !catOverride && predicted.source && predicted.evidence;
+      if (usedPrediction && predicted.evidence) {
+        const ev = predicted.evidence;
+        setSuccessCaption(`Predicted from ${ev.count} past “${ev.token}” add${ev.count === 1 ? '' : 's'}`);
+      } else {
+        setSuccessCaption(null);
+      }
     }
     haptics.success();
     setSuccess(true);
     setTimeout(() => {
       setSuccess(false);
+      setSuccessCaption(null);
       router.back();
-    }, 700);
+    }, 900);
   };
 
   const cats = mode === 'income' ? allIncomeCategories() : allExpenseCategories();
@@ -308,7 +319,7 @@ export default function AddScreen() {
         <View style={{ height: 32 }} />
       </ScrollView>
 
-      <SuccessOverlay visible={success} />
+      <SuccessOverlay visible={success} caption={successCaption} />
     </SafeAreaView>
   );
 }

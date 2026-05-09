@@ -17,7 +17,12 @@ if (fs.existsSync(envPath)) {
 const flavor = process.env.APP_FLAVOR ?? 'generic';
 const isIslamic = flavor === 'islamic';
 
-// Only reference asset files that exist. For now, rely on Expo defaults (drop icon/splash blocks).
+// Per-flavor branded icons — generated from scripts/generate-icons.py.
+const ICON = `./assets/${isIslamic ? 'islamic' : 'generic'}/icon.png`;
+const ADAPTIVE_ICON = `./assets/${isIslamic ? 'islamic' : 'generic'}/adaptive-icon.png`;
+const SPLASH_ICON = `./assets/${isIslamic ? 'islamic' : 'generic'}/splash-icon.png`;
+const SPLASH_BG = isIslamic ? '#0E2B25' : '#0F172A';
+
 const config: ExpoConfig = {
   name: process.env.APP_NAME ?? 'Flow',
   slug: isIslamic ? 'amanah' : 'flow',
@@ -26,9 +31,16 @@ const config: ExpoConfig = {
   orientation: 'portrait',
   userInterfaceStyle: 'dark',
   newArchEnabled: true,
+  icon: ICON,
+  splash: {
+    image: SPLASH_ICON,
+    resizeMode: 'contain',
+    backgroundColor: SPLASH_BG,
+  },
   ios: {
     bundleIdentifier: process.env.APP_BUNDLE_ID ?? 'com.moneyflow.generic',
     supportsTablet: false,
+    icon: ICON,
     infoPlist: {
       // Phase 7 (Smart Add): voice-to-add via @react-native-voice/voice.
       // Apple Speech runs on-device for short utterances on iOS 17+.
@@ -41,6 +53,10 @@ const config: ExpoConfig = {
   android: {
     package: process.env.APP_BUNDLE_ID ?? 'com.moneyflow.generic',
     edgeToEdgeEnabled: true,
+    adaptiveIcon: {
+      foregroundImage: ADAPTIVE_ICON,
+      backgroundColor: SPLASH_BG,
+    },
     // Phase 7 (Smart Add): voice-to-add. RECORD_AUDIO is the only new permission;
     // Android Speech Recognizer service handles the rest.
     permissions: [

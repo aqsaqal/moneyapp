@@ -20,22 +20,16 @@ import { theme, font, sizes, radii } from '@/constants/theme';
 import { useHaptics } from '@/hooks/useHaptics';
 
 // Lazy-imported so the dev client without native module installed doesn't crash.
+// We DON'T probe `NativeModules.Voice` here — under the new architecture that
+// reference can be null even when the module works fine via the interop
+// layer. Real availability is decided by `Voice.isAvailable()` at mount.
 type VoiceModule = typeof import('@react-native-voice/voice').default;
 let _voice: VoiceModule | null = null;
 function getVoice(): VoiceModule | null {
   if (_voice) return _voice;
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const mod = require('@react-native-voice/voice').default as VoiceModule;
-    // The library's wrapper instance always loads; the underlying NativeModule
-    // (`NativeModules.Voice`) may still be null when the native side hasn't
-    // been compiled into this build (e.g. older APK predating the dep). In
-    // that case we want to behave like "not available" — the wrapper will
-    // throw "cannot read property 'startSpeech' of null" otherwise.
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { NativeModules } = require('react-native');
-    if (!NativeModules?.Voice) return null;
-    _voice = mod;
+    _voice = require('@react-native-voice/voice').default;
     return _voice;
   } catch {
     return null;
@@ -146,14 +140,10 @@ export function VoiceMicButton({
   const haptics = useHaptics();
   const [recording, setRecording] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [unsupported, setUnsupported] = useState(false);
   const Voice = getVoice();
 
   useEffect(() => {
-    if (!Voice) {
-      setUnsupported(true);
-      return;
-    }
+    if (!Voice) return;
     Voice.onSpeechStart = () => setRecording(true);
     Voice.onSpeechEnd = () => setRecording(false);
     Voice.onSpeechError = (e) => {
@@ -165,20 +155,18 @@ export function VoiceMicButton({
       const text = (e.value && e.value[0]) ?? '';
       if (text) onResult(parseVoiceInput(text));
     };
-    // Probe availability so we can hide on sim / unsupported devices instead
-    // of waiting for the user to tap and see a red error.
-    Voice.isAvailable()
-      .then((ok) => setUnsupported(!ok))
-      .catch(() => setUnsupported(true));
     return () => {
       Voice.destroy().then(Voice.removeAllListeners).catch(() => {});
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [Voice, onResult]);
 
+  // Always render the mic. On tap, try to start; surface a friendly inline
+  // error if the recognizer isn't usable (Simulator, missing services, etc.)
+  // — better than silently hiding the affordance.
   const tap = async () => {
-    if (!Voice || unsupported) {
-      setError('Voice not available on this device.');
+    if (!Voice) {
+      setError('Voice not available in this build.');
       return;
     }
     setError(null);
@@ -195,7 +183,7 @@ export function VoiceMicButton({
     }
   };
 
-  if (unsupported) return null;
+  if (!Voice) return null;
 
   return (
     <View style={style}>

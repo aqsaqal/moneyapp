@@ -6,7 +6,7 @@
 // succeeded), and the haptic still fires.
 
 import React, { useEffect } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -15,16 +15,19 @@ import Animated, {
   withDelay,
 } from 'react-native-reanimated';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { theme } from '@/constants/theme';
+import { theme, font, sizes } from '@/constants/theme';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 const CONFETTI_COUNT = 8;
 
 export interface SuccessOverlayProps {
   visible: boolean;
+  /** Short delight caption shown below the check, e.g.
+   *  "Predicted from 12 past 'coffee' adds". Truncates if longer. */
+  caption?: string | null;
 }
 
-export function SuccessOverlay({ visible }: SuccessOverlayProps) {
+export function SuccessOverlay({ visible, caption }: SuccessOverlayProps) {
   const reducedMotion = useReducedMotion();
   const scale = useSharedValue(0);
   const rotate = useSharedValue(-45);
@@ -63,6 +66,11 @@ export function SuccessOverlay({ visible }: SuccessOverlayProps) {
       <Animated.View style={[styles.check, checkStyle]}>
         <MaterialCommunityIcons name="check" size={48} color={theme.bg} />
       </Animated.View>
+      {caption ? (
+        <Animated.View style={[styles.captionWrap, checkStyle]} pointerEvents="none">
+          <Text style={styles.captionText} numberOfLines={2}>{caption}</Text>
+        </Animated.View>
+      ) : null}
       {/* Confetti only when motion is allowed. */}
       {!reducedMotion &&
         Array.from({ length: CONFETTI_COUNT }).map((_, i) => (
@@ -121,5 +129,23 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
+  },
+  captionWrap: {
+    position: 'absolute',
+    bottom: '38%',
+    left: 24,
+    right: 24,
+    alignItems: 'center',
+  },
+  captionText: {
+    color: theme.text2,
+    fontSize: sizes.sm,
+    fontFamily: font.body,
+    textAlign: 'center',
+    backgroundColor: `${theme.bg2}cc`,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 999,
+    overflow: 'hidden',
   },
 });
