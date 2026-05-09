@@ -10,6 +10,11 @@
   "common.loading": "جارٍ التحميل…",
   "common.tryAgain": "حاول مرة أخرى",
 
+  "onboarding.welcome": "مرحبًا بك في",
+  "onboarding.chooseLanguage": "اختر اللغة",
+  "onboarding.chooseCurrency": "اختر العملة",
+  "onboarding.getStarted": "ابدأ",
+
   "tabs.home": "الرئيسية",
   "tabs.plan": "الخطة",
   "tabs.activity": "النشاط",

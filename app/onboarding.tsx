@@ -11,6 +11,8 @@ import { APP_NAME } from '@/constants/flavor';
 import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
 import { defaultCurrencyForRegion, defaultLocaleForRegion } from '@/constants/regionCurrency';
 import { kv } from '@/utils/kv';
+import { setLocale as setI18nLocale, type LocaleCode } from '@/utils/i18n';
+import { useT } from '@/hooks/useT';
 
 const LOCALES = [
   { code: 'en-US', name: 'English', rtl: false },
@@ -54,8 +56,14 @@ function detectCurrency(): CurrencyCode {
 
 export default function Onboarding() {
   const router = useRouter();
+  const t = useT();
   // Auto-detect from device locale + region. User can override.
-  const [locale, setLocale] = useState<string>(() => detectLocale());
+  const [locale, setLocale] = useState<string>(() => {
+    const detected = detectLocale();
+    // Set i18n active locale so onboarding labels render in detected language.
+    setI18nLocale(detected as LocaleCode);
+    return detected;
+  });
   const [currency, setCurrency] = useState<CurrencyCode>(() => detectCurrency());
 
   const finish = async () => {
@@ -84,15 +92,20 @@ export default function Onboarding() {
   return (
     <SafeAreaView style={styles.safe}>
       <ScrollView contentContainerStyle={styles.scroll}>
-        <Text style={styles.welcome}>Welcome to</Text>
+        <Text style={styles.welcome}>{t('onboarding.welcome')}</Text>
         <Text style={styles.brand}>{APP_NAME}</Text>
 
-        <Text style={styles.section}>Choose Your Language</Text>
+        <Text style={styles.section}>{t('onboarding.chooseLanguage')}</Text>
         <View style={{ gap: 8 }}>
           {LOCALES.map((l) => (
             <Pressable
               key={l.code}
-              onPress={() => setLocale(l.code)}
+              onPress={() => {
+                setLocale(l.code);
+                // Live-preview the new language while still on onboarding so the
+                // user sees their choice take effect before tapping Get Started.
+                setI18nLocale(l.code as LocaleCode);
+              }}
               style={[styles.option, locale === l.code && styles.optionActive]}
             >
               <Text style={[styles.optionText, locale === l.code && { color: theme.bg }]}>{l.name}</Text>
@@ -101,7 +114,7 @@ export default function Onboarding() {
           ))}
         </View>
 
-        <Text style={styles.section}>Choose Your Currency</Text>
+        <Text style={styles.section}>{t('onboarding.chooseCurrency')}</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8 }}>
           {(Object.keys(CURRENCIES) as CurrencyCode[]).map((c) => (
             <Pressable
@@ -117,7 +130,7 @@ export default function Onboarding() {
         </ScrollView>
 
         <Pressable onPress={finish} style={styles.cta}>
-          <Text style={styles.ctaText}>Get Started</Text>
+          <Text style={styles.ctaText}>{t('onboarding.getStarted')}</Text>
         </Pressable>
       </ScrollView>
     </SafeAreaView>

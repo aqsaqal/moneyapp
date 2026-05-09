@@ -10,6 +10,11 @@
   "common.loading": "Loading…",
   "common.tryAgain": "Try again",
 
+  "onboarding.welcome": "Welcome to",
+  "onboarding.chooseLanguage": "Choose Your Language",
+  "onboarding.chooseCurrency": "Choose Your Currency",
+  "onboarding.getStarted": "Get Started",
+
   "tabs.home": "Home",
   "tabs.plan": "Plan",
   "tabs.activity": "Activity",

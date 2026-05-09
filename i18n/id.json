@@ -10,6 +10,11 @@
   "common.loading": "Memuat…",
   "common.tryAgain": "Coba lagi",
 
+  "onboarding.welcome": "Selamat datang di",
+  "onboarding.chooseLanguage": "Pilih Bahasa",
+  "onboarding.chooseCurrency": "Pilih Mata Uang",
+  "onboarding.getStarted": "Mulai",
+
   "tabs.home": "Beranda",
   "tabs.plan": "Rencana",
   "tabs.activity": "Aktivitas",

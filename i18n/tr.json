@@ -10,6 +10,11 @@
   "common.loading": "Yükleniyor…",
   "common.tryAgain": "Tekrar dene",
 
+  "onboarding.welcome": "Hoş geldin",
+  "onboarding.chooseLanguage": "Dilini Seç",
+  "onboarding.chooseCurrency": "Para Birimini Seç",
+  "onboarding.getStarted": "Başla",
+
   "tabs.home": "Ana Sayfa",
   "tabs.plan": "Plan",
   "tabs.activity": "Hareketler",
