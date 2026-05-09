@@ -26,7 +26,16 @@ function getVoice(): VoiceModule | null {
   if (_voice) return _voice;
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    _voice = require('@react-native-voice/voice').default;
+    const mod = require('@react-native-voice/voice').default as VoiceModule;
+    // The library's wrapper instance always loads; the underlying NativeModule
+    // (`NativeModules.Voice`) may still be null when the native side hasn't
+    // been compiled into this build (e.g. older APK predating the dep). In
+    // that case we want to behave like "not available" — the wrapper will
+    // throw "cannot read property 'startSpeech' of null" otherwise.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { NativeModules } = require('react-native');
+    if (!NativeModules?.Voice) return null;
+    _voice = mod;
     return _voice;
   } catch {
     return null;
@@ -112,6 +121,22 @@ export interface VoiceMicButtonProps {
   style?: StyleProp<ViewStyle>;
 }
 
+function friendlyError(raw: unknown): string {
+  const msg = String(typeof raw === 'object' && raw && 'message' in raw ? (raw as { message: string }).message : raw);
+  // iOS SFSpeechRecognizer error 1700 / 300 family: recognizer not available
+  // on this device. Almost always the iOS Simulator (no Apple speech services
+  // wired up) — guide the user to a real device instead of dumping the code.
+  if (/^\s*300\b|recognizer/i.test(msg)) {
+    return 'Voice not supported on this simulator — try a real device.';
+  }
+  // Android: native module missing → "cannot read property 'startSpeech' of null".
+  if (/startSpeech/i.test(msg) || /null is not an object/i.test(msg)) {
+    return 'Voice not available in this build.';
+  }
+  if (/permission|denied/i.test(msg)) return 'Microphone permission denied.';
+  return msg;
+}
+
 export function VoiceMicButton({
   onResult,
   locale = 'en-US',
@@ -121,21 +146,30 @@ export function VoiceMicButton({
   const haptics = useHaptics();
   const [recording, setRecording] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [unsupported, setUnsupported] = useState(false);
   const Voice = getVoice();
 
   useEffect(() => {
-    if (!Voice) return;
+    if (!Voice) {
+      setUnsupported(true);
+      return;
+    }
     Voice.onSpeechStart = () => setRecording(true);
     Voice.onSpeechEnd = () => setRecording(false);
     Voice.onSpeechError = (e) => {
       setRecording(false);
-      setError(e.error?.message ?? 'speech error');
+      setError(friendlyError(e.error));
     };
     Voice.onSpeechResults = (e) => {
       setRecording(false);
       const text = (e.value && e.value[0]) ?? '';
       if (text) onResult(parseVoiceInput(text));
     };
+    // Probe availability so we can hide on sim / unsupported devices instead
+    // of waiting for the user to tap and see a red error.
+    Voice.isAvailable()
+      .then((ok) => setUnsupported(!ok))
+      .catch(() => setUnsupported(true));
     return () => {
       Voice.destroy().then(Voice.removeAllListeners).catch(() => {});
     };
@@ -143,8 +177,8 @@ export function VoiceMicButton({
   }, [Voice, onResult]);
 
   const tap = async () => {
-    if (!Voice) {
-      setError('Voice module unavailable in this build');
+    if (!Voice || unsupported) {
+      setError('Voice not available on this device.');
       return;
     }
     setError(null);
@@ -156,10 +190,12 @@ export function VoiceMicButton({
         await Voice.start(locale);
       }
     } catch (e) {
-      setError(String(e));
+      setError(friendlyError(e));
       setRecording(false);
     }
   };
+
+  if (unsupported) return null;
 
   return (
     <View style={style}>
