@@ -32,12 +32,15 @@ export default function Activity() {
   const [halalFilter, setHalalFilter] = useState<string | null>(null);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [recapOpen, setRecapOpen] = useState(false);
+  const [pageLimit, setPageLimit] = useState(200);
 
   const txns = useTransactions({
     category: filterCat,
     search: search || undefined,
     halalStatus: halalFilter,
+    limit: pageLimit,
   });
+  const reachedLimit = txns.length >= pageLimit;
 
   const grouped = useMemo(() => {
     const g = new Map<string, typeof txns>();
@@ -101,6 +104,16 @@ export default function Activity() {
             </View>
           </View>
         ))}
+        {reachedLimit && (
+          <Pressable
+            onPress={() => setPageLimit((n) => n + 200)}
+            style={({ pressed }) => [styles.loadMore, pressed && { opacity: 0.7 }]}
+            accessibilityRole="button"
+            accessibilityLabel="Load more transactions"
+          >
+            <Text style={styles.loadMoreText}>Load more</Text>
+          </Pressable>
+        )}
         <View style={{ height: 100 }} />
       </ScrollView>
       <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
@@ -270,4 +283,15 @@ const styles = StyleSheet.create({
     backgroundColor: `${theme.accent}11`,
   },
   recapText: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  loadMore: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: spacing.md,
+    marginTop: spacing.md,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg2,
+  },
+  loadMoreText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.bodySemi },
 });

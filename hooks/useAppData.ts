@@ -81,8 +81,15 @@ export interface UseTransactionsOpts {
   type?: 'expense' | 'income' | 'transfer' | null;
   search?: string;
   halalStatus?: string | null;
+  /** Hard cap on rows returned. Default: see DEFAULT_TX_LIMIT below. */
   limit?: number;
 }
+
+/** Default page size for transaction queries when no limit is passed.
+ *  Activity tab can still page beyond this via the "Load more" affordance.
+ *  Without a default, a heavy user (10k+ tx) pulls everything into JS each
+ *  re-render, OOMs older devices. */
+export const DEFAULT_TX_LIMIT = 200;
 
 function monthRange(key: string): [number, number] {
   const [y, m] = key.split('-').map(Number);
@@ -110,7 +117,10 @@ export function useTransactions(opts: UseTransactionsOpts = {}): Transaction[] {
     }
     const where = clauses.length ? and(...clauses) : undefined;
     let q = db.select().from(transactions).where(where).orderBy(desc(transactions.date));
-    if (opts.limit) q = q.limit(opts.limit) as typeof q;
+    // Always cap. The caller can override with an explicit limit; otherwise
+    // we apply the safety default to keep memory bounded.
+    const cap = opts.limit ?? DEFAULT_TX_LIMIT;
+    q = q.limit(cap) as typeof q;
     return q.all();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version, opts.monthKey, opts.category, opts.accountId, opts.type, opts.search, opts.halalStatus, opts.limit]);
