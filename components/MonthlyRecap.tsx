@@ -39,6 +39,7 @@ import {
   useDailySpend,
 } from '@/hooks/useAppData';
 import { useStreak } from '@/hooks/useStreak';
+import { useT } from '@/hooks/useT';
 import { kv } from '@/utils/kv';
 import { monthKey as monthKeyOf } from '@/utils/format';
 
@@ -50,6 +51,7 @@ export interface MonthlyRecapProps {
 }
 
 export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
+  const t = useT();
   const cardRef = useRef<View>(null);
   const [sharing, setSharing] = useState(false);
 
@@ -96,19 +98,19 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
       <SafeAreaView style={styles.safe} edges={['top']}>
         <View style={styles.header}>
-          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel="Close">
+          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
             <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
           </Pressable>
-          <Text style={styles.title}>Recap</Text>
+          <Text style={styles.title}>{t('recap.title')}</Text>
           <Pressable
             onPress={share}
             hitSlop={10}
             disabled={sharing}
-            accessibilityLabel="Share recap"
+            accessibilityLabel={t('common.share')}
             style={({ pressed }) => [styles.shareBtn, pressed && { opacity: 0.6 }]}
           >
             <MaterialCommunityIcons name="share-variant" size={18} color={theme.bg} />
-            <Text style={styles.shareText}>{sharing ? '…' : 'Share'}</Text>
+            <Text style={styles.shareText}>{sharing ? '…' : t('common.share')}</Text>
           </Pressable>
         </View>
 
@@ -122,11 +124,11 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
             <View style={styles.card}>
               <View style={styles.cardHeader}>
                 <Text style={styles.brand}>{APP_NAME}</Text>
-                <Text style={styles.month}>Your {monthLabel}</Text>
+                <Text style={styles.month}>{t('recap.your', { month: monthLabel })}</Text>
               </View>
 
               <View style={styles.netBlock}>
-                <Text style={styles.netLabel}>Net flow</Text>
+                <Text style={styles.netLabel}>{t('recap.netFlow')}</Text>
                 <Text
                   style={[
                     styles.netValue,
@@ -144,30 +146,27 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
               </View>
 
               <View style={styles.grid}>
-                <Stat label="Days tracked" value={`${daysTracked} / ${daily.length}`} />
-                <Stat label="Streak" value={streak > 0 ? `${streak} day${streak === 1 ? '' : 's'}` : '—'} />
+                <Stat label={t('recap.daysTracked')} value={`${daysTracked} / ${daily.length}`} />
+                <Stat label={t('recap.streak')} value={streak > 0 ? String(streak) : '—'} />
                 <Stat
-                  label="Top category"
+                  label={t('recap.topCategory')}
                   value={topCatInfo ? topCatInfo.name : '—'}
                   accent={topCatInfo?.color}
                 />
                 <Stat
-                  label={topCat ? `${topCatInfo?.name ?? 'Top'} spend` : 'Top spend'}
+                  label={t('recap.topSpend')}
                   value={topCat ? formatMoney(topCat.total, currency) : '—'}
                 />
               </View>
 
               <View style={styles.footer}>
                 <View style={[styles.dot, { backgroundColor: PRIMARY_COLOR }]} />
-                <Text style={styles.footerText}>Tracked privately on-device with {APP_NAME}.</Text>
+                <Text style={styles.footerText}>{t('recap.footer', { appName: APP_NAME })}</Text>
               </View>
             </View>
           </ViewShot>
 
-          <Text style={styles.privacyNote}>
-            Only the totals shown above are in the image. No account names, notes, or
-            individual transactions are included.
-          </Text>
+          <Text style={styles.privacyNote}>{t('recap.privacyNote')}</Text>
         </ScrollView>
       </SafeAreaView>
     </Modal>

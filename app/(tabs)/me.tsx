@@ -34,6 +34,8 @@ import { formatMoney } from '@/utils/format';
 import { exportData } from '@/utils/dataExport';
 import { APP_NAME } from '@/constants/flavor';
 import { PRIVACY_POLICY_URL, TERMS_URL, SUPPORT_EMAIL } from '@/constants/legal';
+import { useT } from '@/hooks/useT';
+import { setLocale as setI18nLocale, type LocaleCode } from '@/utils/i18n';
 
 const LOCALES = [
   { code: 'en-US', name: 'English', rtl: false },
@@ -45,10 +47,11 @@ const LOCALES = [
 
 export default function MeScreen() {
   const router = useRouter();
+  const t = useT();
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.top}>
-        <Text style={styles.title}>Me</Text>
+        <Text style={styles.title}>{t('me.title')}</Text>
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <AccountsSection />
@@ -65,6 +68,7 @@ export default function MeScreen() {
 // ---- Accounts ----
 
 function AccountsSection() {
+  const t = useT();
   const accounts = useAccounts();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const assets = accounts.filter((a) => a.balance >= 0).reduce((s, a) => s + a.balance, 0);
@@ -77,22 +81,22 @@ function AccountsSection() {
   return (
     <View style={{ gap: spacing.md }}>
       <SectionHeader
-        title="Accounts"
+        title={t('me.section.accounts')}
         onAdd={() => setEditing(null)}
-        addLabel="Add account"
+        addLabel={t('common.add')}
       />
 
       {/* Net balance moved from Home → here in v2. */}
       <View style={styles.netCard}>
-        <Text style={styles.netLabel}>Net balance</Text>
+        <Text style={styles.netLabel}>{t('me.netBalance')}</Text>
         <Text style={[styles.netValue, { color: net >= 0 ? theme.accent : theme.expense }]}>
           {formatMoney(net, currency)}
         </Text>
       </View>
 
       <View style={sectionStyles.summaryRow}>
-        <SummaryCard label="Assets" value={assets} color={theme.accent} currency={currency} />
-        <SummaryCard label="Debt" value={debt} color={theme.expense} currency={currency} />
+        <SummaryCard label={t('me.assets')} value={assets} color={theme.accent} currency={currency} />
+        <SummaryCard label={t('me.debt')} value={debt} color={theme.expense} currency={currency} />
       </View>
 
       {accounts.map((a) => (
@@ -140,19 +144,23 @@ function AccountsSection() {
 
 // ---- Settings ----
 
-function changeLocale(next: string) {
+// Translate-and-restart flow. Uses i18n.t() so the dialog itself is in the
+// CURRENT language, not the new one. Saves locale + flips i18n active locale
+// + RTL direction + reloads via expo-updates.
+function changeLocale(next: string, tFn: (k: string) => string) {
   const cur = kv.get('locale');
   if (cur === next) return;
   Alert.alert(
-    'Change language?',
-    'The app will restart to apply the new language and right-to-left direction.',
+    tFn('me.lang.changeTitle'),
+    tFn('me.lang.changeBody'),
     [
-      { text: 'Cancel', style: 'cancel' },
+      { text: tFn('common.cancel'), style: 'cancel' },
       {
-        text: 'Restart',
+        text: tFn('me.lang.restart'),
         style: 'default',
         onPress: async () => {
           kv.set('locale', next);
+          setI18nLocale(next as LocaleCode);
           if (Platform.OS !== 'web') {
             const shouldBeRTL = next.startsWith('ar');
             if (shouldBeRTL !== I18nManager.isRTL) {
@@ -164,7 +172,7 @@ function changeLocale(next: string) {
               const Updates = require('expo-updates');
               await Updates.reloadAsync();
             } catch {
-              Alert.alert('Restart needed', 'Please close and reopen the app.');
+              Alert.alert(tFn('me.lang.changeTitle'), tFn('me.lang.restartManual'));
             }
           }
         },
@@ -174,6 +182,7 @@ function changeLocale(next: string) {
 }
 
 function SettingsSection() {
+  const t = useT();
   const supported = useBiometricSupported();
   const [bio, setBio] = useState(isBiometricEnabled());
   const [currency, setCurrency] = useState<CurrencyCode>((kv.get('currency') ?? 'USD') as CurrencyCode);
@@ -188,10 +197,10 @@ function SettingsSection() {
 
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <SectionHeader title="Preferences" />
+      <SectionHeader title={t('me.section.preferences')} />
 
       <SettingRow
-        label="Language"
+        label={t('me.language')}
         hint={localeLabel}
         icon="translate"
         onPress={() => setPicker('lang')}
@@ -199,8 +208,8 @@ function SettingsSection() {
 
       {locale.startsWith('ar') && (
         <SettingRow
-          label="Arabic-Indic numerals"
-          hint="Display ٠١٢٣٤٥٦٧٨٩ instead of 0123456789"
+          label={t('me.arabicNumerals')}
+          hint={t('me.arabicNumerals.hint')}
           trailing={
             <Pressable
               onPress={() => {
@@ -219,19 +228,19 @@ function SettingsSection() {
       )}
 
       <SettingRow
-        label="Currency"
+        label={t('me.currency')}
         hint={currencyLabel}
         icon="currency-usd"
         onPress={() => setPicker('currency')}
       />
 
-      <SectionHeader title="Security" />
+      <SectionHeader title={t('me.section.security')} />
       <SettingRow
-        label="Biometric Unlock"
+        label={t('me.biometric')}
         hint={
           supported
-            ? 'Face ID / fingerprint required to open the app'
-            : 'Not available on this device'
+            ? t('me.biometric.hintSupported')
+            : t('me.biometric.hintUnsupported')
         }
         trailing={
           <Pressable
@@ -250,36 +259,36 @@ function SettingsSection() {
         }
       />
 
-      <SectionHeader title="Data" />
+      <SectionHeader title={t('me.section.data')} />
       <SettingRow
-        label="Export all data (JSON)"
+        label={t('me.export.json')}
         icon="export"
         onPress={() => exportData('json')}
       />
       <SettingRow
-        label="Export transactions (CSV)"
+        label={t('me.export.csv')}
         icon="export"
         onPress={() => exportData('csv')}
       />
 
       <PickerSheet
         visible={picker === 'lang'}
-        title="Language"
+        title={t('me.language')}
         options={LOCALES.map<PickerOption<string>>((l) => ({
           value: l.code,
           label: l.name,
-          hint: l.rtl ? 'Right-to-left' : undefined,
+          hint: l.rtl ? '←' : undefined,
         }))}
         selected={locale}
         onPick={(code) => {
           setLocale(code);
-          changeLocale(code);
+          changeLocale(code, t);
         }}
         onClose={() => setPicker(null)}
       />
       <PickerSheet
         visible={picker === 'currency'}
-        title="Currency"
+        title={t('me.currency')}
         options={(Object.keys(CURRENCIES) as CurrencyCode[]).map<PickerOption<CurrencyCode>>((c) => ({
           value: c,
           label: `${c} · ${CURRENCIES[c].symbolNative}`,
@@ -299,29 +308,28 @@ function SettingsSection() {
 // ---- About ----
 
 function AboutSection() {
+  const t = useT();
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <SectionHeader title="About" />
+      <SectionHeader title={t('me.section.about')} />
       <SettingRow label={APP_NAME} hint="Version 1.0.0" />
       <SettingRow
-        label="Privacy Policy"
+        label={t('me.privacyPolicy')}
         icon="shield-lock-outline"
         onPress={() => Linking.openURL(PRIVACY_POLICY_URL).catch(() => {})}
       />
       <SettingRow
-        label="Terms of Use"
+        label={t('me.terms')}
         icon="file-document-outline"
         onPress={() => Linking.openURL(TERMS_URL).catch(() => {})}
       />
       <SettingRow
-        label="Contact support"
+        label={t('me.support')}
         hint={SUPPORT_EMAIL}
         icon="email-outline"
         onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`).catch(() => {})}
       />
-      <Text style={styles.disclaimer}>
-        For personal use only. Not financial, tax, or religious advice.
-      </Text>
+      <Text style={styles.disclaimer}>{t('me.disclaimer')}</Text>
     </View>
   );
 }

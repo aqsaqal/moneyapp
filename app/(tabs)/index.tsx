@@ -31,6 +31,7 @@ import {
   useRecurring as useRecurringList,
 } from '@/hooks/useAppData';
 import { useStreak } from '@/hooks/useStreak';
+import { useT } from '@/hooks/useT';
 import { monthKey } from '@/utils/format';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
@@ -40,6 +41,7 @@ export default function Home() {
     return <Redirect href="/onboarding" />;
   }
   const router = useRouter();
+  const t = useT();
   const now = new Date();
   const thisMonth = monthKey(now);
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
@@ -100,15 +102,15 @@ export default function Home() {
         {recentTxns.length > 0 && (
           <View style={styles.section}>
             <View style={styles.recentHead}>
-              <Text style={styles.sectionTitle}>Recent</Text>
+              <Text style={styles.sectionTitle}>{t('home.recent')}</Text>
               <Pressable
                 onPress={() => router.push('/activity')}
                 hitSlop={10}
                 accessibilityRole="link"
-                accessibilityLabel="View all activity"
+                accessibilityLabel={t('home.viewAll')}
               >
                 <View style={styles.viewAll}>
-                  <Text style={styles.viewAllText}>View all</Text>
+                  <Text style={styles.viewAllText}>{t('home.viewAll')}</Text>
                   <MaterialCommunityIcons name="chevron-right" size={16} color={theme.accent} />
                 </View>
               </Pressable>

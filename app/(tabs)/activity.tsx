@@ -15,6 +15,7 @@ import { SearchBar } from '@/components/SearchBar';
 import { StatCard, sectionStyles } from '@/components/Sections';
 import { MonthlyRecap } from '@/components/MonthlyRecap';
 import { FeatureSlots } from '@/features';
+import { useT } from '@/hooks/useT';
 import {
   useTransactions,
   useDailySpend,
@@ -26,6 +27,7 @@ import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
 
 export default function Activity() {
+  const t = useT();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [filterCat, setFilterCat] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -56,10 +58,10 @@ export default function Activity() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.top}>
-        <Text style={styles.title}>Activity</Text>
-        <SearchBar value={search} onChange={setSearch} placeholder="Search notes / categories" />
+        <Text style={styles.title}>{t('activity.title')}</Text>
+        <SearchBar value={search} onChange={setSearch} placeholder={t('activity.searchPlaceholder')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
-          <FilterChip label="All" active={!filterCat} onPress={() => setFilterCat(null)} />
+          <FilterChip label={t('activity.allChip')} active={!filterCat} onPress={() => setFilterCat(null)} />
           {EXPENSE_CATEGORIES.slice(0, 10).map((c) => (
             <FilterChip
               key={c.id}
@@ -84,13 +86,13 @@ export default function Activity() {
           <View style={styles.emptyWrap}>
             <Text style={styles.emptyTitle}>
               {search || filterCat || halalFilter
-                ? 'Nothing here yet'
-                : 'Your first transaction is one tap away'}
+                ? t('activity.empty.filtered.title')
+                : t('activity.empty.fresh.title')}
             </Text>
             <Text style={styles.emptyHint}>
               {search || filterCat || halalFilter
-                ? 'Try clearing the search or chip filter to see everything.'
-                : 'Tap the + below — type "12 coffee" or hold the mic.'}
+                ? t('activity.empty.filtered.hint')
+                : t('activity.empty.fresh.hint')}
             </Text>
           </View>
         )}
@@ -109,9 +111,9 @@ export default function Activity() {
             onPress={() => setPageLimit((n) => n + 200)}
             style={({ pressed }) => [styles.loadMore, pressed && { opacity: 0.7 }]}
             accessibilityRole="button"
-            accessibilityLabel="Load more transactions"
+            accessibilityLabel={t('activity.loadMore')}
           >
-            <Text style={styles.loadMoreText}>Load more</Text>
+            <Text style={styles.loadMoreText}>{t('activity.loadMore')}</Text>
           </Pressable>
         )}
         <View style={{ height: 100 }} />
@@ -134,6 +136,7 @@ function AnalyticsHeader({
   onToggle: () => void;
   onShareRecap: () => void;
 }) {
+  const t = useT();
   const key = monthKey();
   const monthTxns = useTransactions({ monthKey: key });
   const daily = useDailySpend(key);
@@ -155,7 +158,7 @@ function AnalyticsHeader({
         accessibilityRole="button"
         accessibilityState={{ expanded: open }}
       >
-        <Text style={styles.analyticsTitle}>This month at a glance</Text>
+        <Text style={styles.analyticsTitle}>{t('activity.glance')}</Text>
         <MaterialCommunityIcons
           name={open ? 'chevron-up' : 'chevron-down'}
           size={20}
@@ -165,10 +168,10 @@ function AnalyticsHeader({
       {open && (
         <>
           <View style={sectionStyles.statGrid}>
-            <StatCard label="Avg/Day" value={formatMoney(avgDaily, currency)} />
-            <StatCard label="Projected" value={formatMoney(projected, currency)} />
-            <StatCard label="Total" value={formatMoney(totalSpend, currency)} />
-            <StatCard label="Categories" value={String(totals.length)} />
+            <StatCard label={t('activity.stat.avgDay')} value={formatMoney(avgDaily, currency)} />
+            <StatCard label={t('activity.stat.projected')} value={formatMoney(projected, currency)} />
+            <StatCard label={t('activity.stat.total')} value={formatMoney(totalSpend, currency)} />
+            <StatCard label={t('activity.stat.categories')} value={String(totals.length)} />
           </View>
           <View style={{ gap: 4, marginTop: spacing.sm }}>
             {totals
@@ -193,7 +196,7 @@ function AnalyticsHeader({
             accessibilityLabel="Open monthly recap"
           >
             <MaterialCommunityIcons name="share-variant" size={16} color={theme.accent} />
-            <Text style={styles.recapText}>Share this month</Text>
+            <Text style={styles.recapText}>{t('activity.shareMonth')}</Text>
           </Pressable>
         </>
       )}

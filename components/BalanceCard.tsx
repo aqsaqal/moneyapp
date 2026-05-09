@@ -12,6 +12,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, radii, font, sizes, spacing } from '@/constants/theme';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
+import { t } from '@/utils/i18n';
 
 // =============================================================================
 // v2 — DisposableHeroCard (Home)
@@ -49,7 +50,7 @@ export function DisposableHeroCard({
       accessibilityLabel={`Disposable balance ${formatMoney(disposable, currency)}${monthLabel ? ` for ${monthLabel}` : ''}`}
     >
       <Text style={styles.heroLabel}>
-        {monthLabel ? `${monthLabel} · ` : ''}Disposable
+        {t('home.disposable', { month: monthLabel ?? '' }).replace(/^\s*·\s*/, '')}
       </Text>
       <Text
         style={[styles.heroAmount, { color: positive ? theme.text1 : theme.expense }]}
@@ -59,8 +60,8 @@ export function DisposableHeroCard({
         {formatMoney(disposable, currency)}
       </Text>
       <Text style={styles.heroSubline}>
-        {formatMoney(income, currency)} in · {formatMoney(expense, currency)} out
-        {typeof daysLeft === 'number' ? ` · ${daysLeft} days left` : ''}
+        {formatMoney(income, currency)} · {formatMoney(expense, currency)}
+        {typeof daysLeft === 'number' ? ` · ${t('home.daysLeft', { n: daysLeft })}` : ''}
       </Text>
     </View>
   );

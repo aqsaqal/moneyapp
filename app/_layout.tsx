@@ -18,6 +18,7 @@ import { useAppLock, isBiometricEnabled } from '@/hooks/useBiometricLock';
 import { kv } from '@/utils/kv';
 import { LockScreen } from '@/components/LockScreen';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { setLocale, type LocaleCode } from '@/utils/i18n';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -46,6 +47,9 @@ export default function RootLayout() {
 
   const [dbReady, setDbReady] = useState(false);
   useEffect(() => {
+    // Sync the i18n active locale with whatever the user picked previously.
+    const stored = kv.get('locale') as LocaleCode | undefined;
+    if (stored) setLocale(stored);
     bootAppData().then(() => {
       // Dev backdoor: skip onboarding when EXPO_PUBLIC_BYPASS_ONBOARDING=1.
       // Babel inlines process.env.EXPO_PUBLIC_BYPASS_ONBOARDING at build time,

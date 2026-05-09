@@ -18,6 +18,7 @@ import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } fro
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, font, sizes, radii } from '@/constants/theme';
 import { useHaptics } from '@/hooks/useHaptics';
+import { t as i18nT } from '@/utils/i18n';
 
 // Lazy-imported so the dev client without native module installed doesn't crash.
 // We DON'T probe `NativeModules.Voice` here — under the new architecture that
@@ -117,17 +118,11 @@ export interface VoiceMicButtonProps {
 
 function friendlyError(raw: unknown): string {
   const msg = String(typeof raw === 'object' && raw && 'message' in raw ? (raw as { message: string }).message : raw);
-  // iOS SFSpeechRecognizer error 1700 / 300 family: recognizer not available
-  // on this device. Almost always the iOS Simulator (no Apple speech services
-  // wired up) — guide the user to a real device instead of dumping the code.
-  if (/^\s*300\b|recognizer/i.test(msg)) {
-    return 'Voice not supported on this simulator — try a real device.';
-  }
+  // iOS SFSpeechRecognizer error 1700 / 300 family: recognizer not available.
+  if (/^\s*300\b|recognizer/i.test(msg)) return i18nT('voice.unsupported.sim');
   // Android: native module missing → "cannot read property 'startSpeech' of null".
-  if (/startSpeech/i.test(msg) || /null is not an object/i.test(msg)) {
-    return 'Voice not available in this build.';
-  }
-  if (/permission|denied/i.test(msg)) return 'Microphone permission denied.';
+  if (/startSpeech/i.test(msg) || /null is not an object/i.test(msg)) return i18nT('voice.unsupported.build');
+  if (/permission|denied/i.test(msg)) return i18nT('voice.permissionDenied');
   return msg;
 }
 
@@ -166,7 +161,7 @@ export function VoiceMicButton({
   // — better than silently hiding the affordance.
   const tap = async () => {
     if (!Voice) {
-      setError('Voice not available in this build.');
+      setError(i18nT('voice.unsupported.build'));
       return;
     }
     setError(null);

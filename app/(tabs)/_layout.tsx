@@ -24,6 +24,7 @@ import type {
 import { theme } from '@/constants/theme';
 import { PRIMARY_COLOR } from '@/constants/flavor';
 import { FabButton } from '@/components/FabButton';
+import { useT } from '@/hooks/useT';
 
 const TAB_BAR_HEIGHT = 64;
 const TAB_BAR_PAD_BOTTOM = 8;
@@ -39,16 +40,17 @@ const TAB_ICONS: Record<
   activity: 'format-list-bulleted',
   me: 'account-circle-outline',
 };
-const TAB_LABELS: Record<string, string> = {
-  index: 'Home',
-  plan: 'Plan',
-  activity: 'Activity',
-  me: 'Me',
+const TAB_LABEL_KEYS: Record<string, string> = {
+  index: 'tabs.home',
+  plan: 'tabs.plan',
+  activity: 'tabs.activity',
+  me: 'tabs.me',
 };
 // Visual order in the bar — splits 2 + spacer + 2 around the FAB.
 const TAB_ORDER = ['index', 'plan', '__spacer__', 'activity', 'me'] as const;
 
 function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarProps) {
+  const t = useT();
   // Build map: route name → state.index, so we can render in our preferred order.
   const routeByName = new Map(state.routes.map((r, i) => [r.name, { route: r, idx: i }]));
 
@@ -82,6 +84,7 @@ function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarPr
           }
         };
         const color = focused ? PRIMARY_COLOR : theme.text3;
+        const label = t(TAB_LABEL_KEYS[slot]);
         return (
           <Pressable
             key={route.key}
@@ -89,10 +92,10 @@ function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarPr
             style={styles.tabItem}
             accessibilityRole="button"
             accessibilityState={focused ? { selected: true } : {}}
-            accessibilityLabel={TAB_LABELS[slot]}
+            accessibilityLabel={label}
           >
             <MaterialCommunityIcons name={TAB_ICONS[slot]} size={24} color={color} />
-            <Text style={[styles.tabLabel, { color }]}>{TAB_LABELS[slot]}</Text>
+            <Text style={[styles.tabLabel, { color }]}>{label}</Text>
           </Pressable>
         );
       })}

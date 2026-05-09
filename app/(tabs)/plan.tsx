@@ -29,14 +29,16 @@ import { catInfo } from '@/constants/categories';
 import { monthKey, formatMoney } from '@/utils/format';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
+import { useT } from '@/hooks/useT';
 import type { Recurring } from '@/utils/db/schema';
 
 export default function PlanScreen() {
   const router = useRouter();
+  const t = useT();
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.top}>
-        <Text style={styles.title}>Plan</Text>
+        <Text style={styles.title}>{t('plan.title')}</Text>
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <RecurringSection />
@@ -57,6 +59,7 @@ type RecurringSheetState =
   | { kind: 'create'; type: 'expense' | 'income' };
 
 function RecurringSection() {
+  const t = useT();
   const recurring = useRecurring();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const key = monthKey();
@@ -74,27 +77,25 @@ function RecurringSection() {
   return (
     <View style={{ gap: spacing.lg }}>
       <View style={sectionStyles.summaryRow}>
-        <SummaryCard label="Fixed Out" value={totalFixedExp} color={theme.expense} currency={currency} />
-        <SummaryCard label="Fixed In" value={totalFixedInc} color={theme.accent} currency={currency} />
+        <SummaryCard label={t('plan.fixedOut')} value={totalFixedExp} color={theme.expense} currency={currency} />
+        <SummaryCard label={t('plan.fixedIn')} value={totalFixedInc} color={theme.accent} currency={currency} />
       </View>
 
       <View style={styles.disposableCard}>
-        <Text style={styles.disposableLabel}>Remaining bills this month</Text>
+        <Text style={styles.disposableLabel}>{t('plan.remainingBills')}</Text>
         <Text style={[styles.disposableValue, { color: theme.warning }]}>
           {formatMoney(remaining, currency)}
         </Text>
       </View>
 
       <SectionHeader
-        title="Expenses"
+        title={t('plan.expenses')}
         onAdd={() => setSheet({ kind: 'create', type: 'expense' })}
-        addLabel="Add expense bill"
+        addLabel={t('common.add')}
       />
       <View style={{ gap: spacing.sm }}>
         {exp.length === 0 && (
-          <Text style={styles.emptyHint}>
-            Track rent, subs, bills you pay every month — tap + above.
-          </Text>
+          <Text style={styles.emptyHint}>{t('plan.empty.expenses')}</Text>
         )}
         {exp.map((r) => (
           <RecurringRow
@@ -110,15 +111,13 @@ function RecurringSection() {
       </View>
 
       <SectionHeader
-        title="Income"
+        title={t('plan.income')}
         onAdd={() => setSheet({ kind: 'create', type: 'income' })}
-        addLabel="Add income"
+        addLabel={t('common.add')}
       />
       <View style={{ gap: spacing.sm }}>
         {inc.length === 0 && (
-          <Text style={styles.emptyHint}>
-            Salary, freelance, rent received — anything that lands every month.
-          </Text>
+          <Text style={styles.emptyHint}>{t('plan.empty.income')}</Text>
         )}
         {inc.map((r) => (
           <RecurringRow
@@ -146,6 +145,7 @@ function RecurringSection() {
 // ---- Budgets section ----
 
 function BudgetsSection() {
+  const t = useT();
   const budgets = useBudgets();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const key = monthKey();
@@ -155,14 +155,12 @@ function BudgetsSection() {
   return (
     <View style={{ gap: spacing.md }}>
       <SectionHeader
-        title="Budgets"
+        title={t('plan.budgets')}
         onAdd={promptAddBudget}
-        addLabel="Add budget"
+        addLabel={t('common.add')}
       />
       {budgets.length === 0 && (
-        <Text style={styles.emptyHint}>
-          Pick a category, pick a ceiling. We'll warn you when you're getting close.
-        </Text>
+        <Text style={styles.emptyHint}>{t('plan.empty.budgets')}</Text>
       )}
       {budgets.map((b) => {
         const spent = totalsMap.get(b.category) ?? 0;

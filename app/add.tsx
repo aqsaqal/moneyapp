@@ -35,6 +35,7 @@ import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
 import { useAccounts, addTransaction } from '@/hooks/useAppData';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
+import { useT } from '@/hooks/useT';
 import { allExpenseCategories, allIncomeCategories } from '@/constants/categories';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
@@ -45,6 +46,7 @@ type Mode = 'expense' | 'income' | 'transfer';
 
 export default function AddScreen() {
   const router = useRouter();
+  const t = useT();
   const haptics = useHaptics();
   const accounts = useAccounts();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
@@ -129,7 +131,8 @@ export default function AddScreen() {
       const usedPrediction = !catOverride && predicted.source && predicted.evidence;
       if (usedPrediction && predicted.evidence) {
         const ev = predicted.evidence;
-        setSuccessCaption(`Predicted from ${ev.count} past “${ev.token}” add${ev.count === 1 ? '' : 's'}`);
+        const key = ev.count === 1 ? 'add.predicted.one' : 'add.predicted';
+        setSuccessCaption(t(key, { n: ev.count, token: ev.token }));
       } else {
         setSuccessCaption(null);
       }
@@ -158,7 +161,7 @@ export default function AddScreen() {
               onPress={() => setMode(m)}
               style={[styles.modeTab, mode === m && styles.modeActive]}
             >
-              <Text style={[styles.modeText, mode === m && styles.modeTextActive]}>{m}</Text>
+              <Text style={[styles.modeText, mode === m && styles.modeTextActive]}>{t(`add.${m}`)}</Text>
             </Pressable>
           ))}
         </View>
@@ -184,7 +187,7 @@ export default function AddScreen() {
           <TextInput
             value={note}
             onChangeText={setNote}
-            placeholder="What was it for?"
+            placeholder={t('add.notePlaceholder')}
             placeholderTextColor={theme.text3}
             style={styles.note}
           />
@@ -228,14 +231,14 @@ export default function AddScreen() {
         {mode === 'transfer' && (
           <View style={styles.transferRow}>
             <TransferAcctRow
-              label="From"
+              label={t('add.transfer.from')}
               accounts={accounts}
               value={fromAcct}
               onPick={setFromAcct}
             />
             <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
             <TransferAcctRow
-              label="To"
+              label={t('add.transfer.to')}
               accounts={accounts}
               value={toAcct}
               onPick={setToAcct}
@@ -312,7 +315,7 @@ export default function AddScreen() {
           style={({ pressed }) => [styles.submit, pressed && { transform: [{ scale: 0.97 }] }]}
         >
           <Text style={styles.submitText}>
-            {mode === 'expense' ? 'Add Expense' : mode === 'income' ? 'Add Income' : 'Transfer'}
+            {t(mode === 'expense' ? 'add.cta.expense' : mode === 'income' ? 'add.cta.income' : 'add.cta.transfer')}
           </Text>
         </Pressable>
 

@@ -12,6 +12,7 @@ import React from 'react';
 import { Alert, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
+import { t as i18nT } from '@/utils/i18n';
 
 interface State {
   error: Error | null;
@@ -63,18 +64,15 @@ export class ErrorBoundary extends React.Component<Props, State> {
         <View style={styles.iconWrap}>
           <MaterialCommunityIcons name="alert-circle-outline" size={56} color={theme.warning} />
         </View>
-        <Text style={styles.title}>Something went wrong</Text>
-        <Text style={styles.body}>
-          The app hit an unexpected error. Your data is safe — it lives on this
-          device. Tap reload to start fresh.
-        </Text>
+        <Text style={styles.title}>{i18nT('errorBoundary.title')}</Text>
+        <Text style={styles.body}>{i18nT('errorBoundary.body')}</Text>
         <Pressable
           onPress={this.reload}
           style={({ pressed }) => [styles.btn, pressed && { opacity: 0.85 }]}
           accessibilityRole="button"
-          accessibilityLabel="Reload the app"
+          accessibilityLabel={i18nT('errorBoundary.reload')}
         >
-          <Text style={styles.btnText}>Reload</Text>
+          <Text style={styles.btnText}>{i18nT('errorBoundary.reload')}</Text>
         </Pressable>
         {__DEV__ && (
           <Pressable onPress={this.copyDetails} hitSlop={10} style={styles.detailLink}>
