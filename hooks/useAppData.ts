@@ -25,6 +25,7 @@ import {
 } from '@/utils/db/schema';
 import { monthKey } from '@/utils/format';
 import { seedIfEmpty } from '@/utils/db/seed';
+import { onProfileChange } from '@/utils/profiles';
 
 // Single process-wide version counter that all hooks watch. Bumped on every
 // mutation so useEffect-driven re-queries fire.
@@ -35,6 +36,15 @@ function bump() {
   version += 1;
   listeners.forEach((l) => l());
 }
+
+// Profile switch invalidates everything: getDB() will reopen against the
+// new profile's .db file, so we also need every subscribed query to re-run.
+// One-time wiring at module load.
+onProfileChange(() => {
+  // Re-seed in case the new profile is empty.
+  void seedIfEmpty();
+  bump();
+});
 function useVersion(): number {
   const [, setV] = useState(0);
   useEffect(() => {

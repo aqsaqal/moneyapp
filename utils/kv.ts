@@ -63,6 +63,8 @@ export interface KVSchema {
   islamicHijriCalendar: string;// 'ummalqura' | 'tabular'
   defaultAccountId: string;    // remembered after first 5 successful adds (Phase 7)
   arabicNumerals: string;      // '1' | '0' — opt-in for Arabic-Indic digits in formatMoney (Phase 8)
+  activeProfileId: string;     // Phase 10b: which profile's SQLite is active
+  profiles: string;            // JSON array of Profile objects (utils/profiles.ts)
 }
 
 export const kv = {

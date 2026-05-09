@@ -14,7 +14,7 @@
 //   - 18-tile CategoryGrid with MoM deltas (now on Activity analytics header)
 //   - 4 recent rows (now 3 + "View all" to Activity)
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, useRouter } from 'expo-router';
@@ -32,6 +32,8 @@ import {
 } from '@/hooks/useAppData';
 import { useStreak } from '@/hooks/useStreak';
 import { useT } from '@/hooks/useT';
+import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
+import { ProfileSheet } from '@/components/ProfileSheet';
 import { monthKey } from '@/utils/format';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
@@ -42,6 +44,9 @@ export default function Home() {
   }
   const router = useRouter();
   const t = useT();
+  const activeProfile = useActiveProfile();
+  const profiles = useProfiles();
+  const [profileSheetOpen, setProfileSheetOpen] = useState(false);
   const now = new Date();
   const thisMonth = monthKey(now);
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
@@ -72,15 +77,33 @@ export default function Home() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* Brand + streak */}
+        {/* Brand + profile chip + streak */}
         <View style={styles.header}>
           <View style={{ flex: 1 }}>
             <Text style={styles.brand}>{APP_NAME}</Text>
             {/* Hijri-first hero (islamic only). Generic: nothing. */}
             <FeatureSlots.HomeHeroExtras />
           </View>
+          {profiles.length > 1 && (
+            <Pressable
+              onPress={() => setProfileSheetOpen(true)}
+              style={[styles.profileChip, { borderColor: activeProfile.color }]}
+              accessibilityRole="button"
+              accessibilityLabel={`Profile: ${activeProfile.name}, tap to switch`}
+            >
+              <MaterialCommunityIcons name={activeProfile.icon as never} size={14} color={activeProfile.color} />
+              <Text style={[styles.profileChipText, { color: activeProfile.color }]} numberOfLines={1}>
+                {activeProfile.name}
+              </Text>
+            </Pressable>
+          )}
           {streak > 0 && <StreakBadge count={streak} />}
         </View>
+        <ProfileSheet
+          visible={profileSheetOpen}
+          mode={profileSheetOpen ? { kind: 'switch', profiles, activeId: activeProfile.id } : null}
+          onClose={() => setProfileSheetOpen(false)}
+        />
 
         {/* THE one number */}
         <DisposableHeroCard
@@ -149,4 +172,19 @@ const styles = StyleSheet.create({
   },
   viewAll: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   viewAllText: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.body },
+  profileChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 999,
+    borderWidth: 1,
+    maxWidth: 140,
+  },
+  profileChipText: {
+    fontSize: sizes.xs,
+    fontFamily: font.bodySemi,
+  },
 });
+

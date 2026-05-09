@@ -27,8 +27,25 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import ViewShot, { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
+
+// Lazy-import view-shot so a JS bundle loaded into a native binary that
+// predates the dep doesn't crash the entire route on module-eval. When
+// the native side is missing we fall back to a "View as image" preview
+// without sharing.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let _viewShot: { ViewShot: any; captureRef: any } | null = null;
+function getViewShot() {
+  if (_viewShot) return _viewShot;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const mod = require('react-native-view-shot');
+    _viewShot = { ViewShot: mod.default ?? mod.ViewShot, captureRef: mod.captureRef };
+    return _viewShot;
+  } catch {
+    return null;
+  }
+}
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { APP_NAME, PRIMARY_COLOR } from '@/constants/flavor';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
@@ -73,10 +90,14 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
 
   const share = async () => {
     if (sharing) return;
+    const vs = getViewShot();
+    if (!vs) {
+      Alert.alert('Share unavailable', 'Reinstall the app to enable sharing.');
+      return;
+    }
     setSharing(true);
     try {
-      // captureRef returns a temporary PNG path on iOS + Android.
-      const uri = await captureRef(cardRef, { format: 'png', quality: 0.95, result: 'tmpfile' });
+      const uri = await vs.captureRef(cardRef, { format: 'png', quality: 0.95, result: 'tmpfile' });
       const ok = await Sharing.isAvailableAsync();
       if (!ok) {
         Alert.alert('Share unavailable', 'Sharing is not available on this device.');
@@ -115,12 +136,11 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
         </View>
 
         <ScrollView contentContainerStyle={styles.scroll}>
-          {/* Captured area — keep it stable: no scroll, no animations inside. */}
-          <ViewShot
-            ref={cardRef}
-            options={{ format: 'png', quality: 0.95 }}
-            style={styles.cardWrap}
-          >
+          {/* Captured area — keep it stable: no scroll, no animations inside.
+              Wrap with ViewShot only when the native module is loadable; on
+              older binaries we skip the wrapper, the card still renders, but
+              Share is disabled (handled in share()). */}
+          <RecapShotWrapper ref={cardRef} style={styles.cardWrap}>
             <View style={styles.card}>
               <View style={styles.cardHeader}>
                 <Text style={styles.brand}>{APP_NAME}</Text>
@@ -164,7 +184,7 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
                 <Text style={styles.footerText}>{t('recap.footer', { appName: APP_NAME })}</Text>
               </View>
             </View>
-          </ViewShot>
+          </RecapShotWrapper>
 
           <Text style={styles.privacyNote}>{t('recap.privacyNote')}</Text>
         </ScrollView>
@@ -172,6 +192,28 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
     </Modal>
   );
 }
+
+/** Wraps the captured card in a `ViewShot` when the native module is loaded.
+ *  When it's not (older binary), renders a plain View — the card displays
+ *  fine and Share is disabled at the action level. */
+const RecapShotWrapper = React.forwardRef<View, { style?: View['props']['style']; children: React.ReactNode }>(
+  function RecapShotWrapperImpl({ style, children }, ref) {
+    const vs = getViewShot();
+    if (vs) {
+      const VS = vs.ViewShot;
+      return (
+        <VS ref={ref} options={{ format: 'png', quality: 0.95 }} style={style}>
+          {children}
+        </VS>
+      );
+    }
+    return (
+      <View ref={ref} style={style}>
+        {children}
+      </View>
+    );
+  },
+);
 
 function Stat({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (

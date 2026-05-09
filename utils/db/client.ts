@@ -1,21 +1,32 @@
 // Drizzle + expo-sqlite client.
 // Single process-wide DB handle; lazy-initialized on first access.
+// The DB filename is profile-aware: each profile gets its own .db file.
 
 import { Platform } from 'react-native';
 import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system/legacy';
 import { drizzle } from 'drizzle-orm/expo-sqlite';
 import * as schema from './schema';
-
-const DB_NAME = 'moneyflow.db';
+import { dbNameForProfile, getActiveProfileId } from '@/utils/profiles';
 
 let _expo: SQLite.SQLiteDatabase | null = null;
 let _db: ReturnType<typeof drizzle<typeof schema>> | null = null;
+let _openedProfileId: string | null = null;
 
 export function getDB() {
+  const activeId = getActiveProfileId();
+  // Reopen if profile changed since last call.
+  if (_db && _expo && _openedProfileId !== activeId) {
+    try { _expo.closeSync(); } catch { /* already closed */ }
+    _expo = null;
+    _db = null;
+    _openedProfileId = null;
+  }
   if (!_db || !_expo) {
-    _expo = SQLite.openDatabaseSync(DB_NAME, { enableChangeListener: true });
+    const name = dbNameForProfile(activeId);
+    _expo = SQLite.openDatabaseSync(name, { enableChangeListener: true });
     _db = drizzle(_expo, { schema });
+    _openedProfileId = activeId;
     createTables(_expo);
     excludeFromBackup();
   }
@@ -138,8 +149,13 @@ function createTables(db: SQLite.SQLiteDatabase) {
 
 /** Close and reset. Useful for tests and "erase all data" flows. */
 export function resetDB() {
-  _expo?.closeSync();
-  SQLite.deleteDatabaseSync(DB_NAME);
+  if (_expo) {
+    try { _expo.closeSync(); } catch { /* already closed */ }
+  }
+  if (_openedProfileId) {
+    try { SQLite.deleteDatabaseSync(dbNameForProfile(_openedProfileId)); } catch { /* gone */ }
+  }
   _expo = null;
   _db = null;
+  _openedProfileId = null;
 }

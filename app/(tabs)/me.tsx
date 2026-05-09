@@ -20,6 +20,7 @@ import {
 } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { AccountSheet } from '@/components/AccountSheet';
+import { ProfileSheet } from '@/components/ProfileSheet';
 import { FeatureSlots } from '@/features';
 import { useAccounts } from '@/hooks/useAppData';
 import type { Account } from '@/utils/db/schema';
@@ -36,6 +37,8 @@ import { APP_NAME } from '@/constants/flavor';
 import { PRIVACY_POLICY_URL, TERMS_URL, SUPPORT_EMAIL } from '@/constants/legal';
 import { useT } from '@/hooks/useT';
 import { setLocale as setI18nLocale, type LocaleCode } from '@/utils/i18n';
+import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
+import type { Profile } from '@/utils/profiles';
 
 const LOCALES = [
   { code: 'en-US', name: 'English', rtl: false },
@@ -54,6 +57,7 @@ export default function MeScreen() {
         <Text style={styles.title}>{t('me.title')}</Text>
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <ProfilesSection />
         <AccountsSection />
         <SettingsSection />
         {/* Islamic: mazhab + prayer-method visible rows. Generic: nothing. */}
@@ -62,6 +66,70 @@ export default function MeScreen() {
         <View style={{ height: 100 }} />
       </ScrollView>
     </SafeAreaView>
+  );
+}
+
+// ---- Profiles ----
+
+type ProfileSheetMode =
+  | { kind: 'closed' }
+  | { kind: 'switch'; profiles: Profile[]; activeId: string }
+  | { kind: 'edit'; profile: Profile }
+  | { kind: 'create' };
+
+function ProfilesSection() {
+  const t = useT();
+  const profiles = useProfiles();
+  const active = useActiveProfile();
+  const [sheet, setSheet] = useState<ProfileSheetMode>({ kind: 'closed' });
+
+  return (
+    <View style={{ gap: spacing.md }}>
+      <SectionHeader
+        title="Profiles"
+        onAdd={() => setSheet({ kind: 'create' })}
+        addLabel={t('common.add')}
+      />
+      <View style={{ gap: spacing.sm }}>
+        {profiles.map((p) => (
+          <Pressable
+            key={p.id}
+            onPress={() => setSheet({ kind: 'edit', profile: p })}
+            style={[
+              styles.profileRow,
+              p.id === active.id && { borderColor: p.color },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel={`${p.name}${p.id === active.id ? ', active' : ''}`}
+          >
+            <View style={[styles.iconBox, { backgroundColor: `${p.color}22` }]}>
+              <MaterialCommunityIcons name={p.icon as never} size={20} color={p.color} />
+            </View>
+            <Text style={styles.acctName}>{p.name}</Text>
+            {p.id === active.id ? (
+              <Text style={[styles.acctType, { color: p.color }]}>active</Text>
+            ) : (
+              <Pressable
+                hitSlop={10}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  setSheet({ kind: 'switch', profiles, activeId: active.id });
+                }}
+                accessibilityLabel="Switch"
+              >
+                <MaterialCommunityIcons name="swap-horizontal" size={18} color={theme.text2} />
+              </Pressable>
+            )}
+          </Pressable>
+        ))}
+      </View>
+
+      <ProfileSheet
+        visible={sheet.kind !== 'closed'}
+        mode={sheet.kind === 'closed' ? null : sheet}
+        onClose={() => setSheet({ kind: 'closed' })}
+      />
+    </View>
   );
 }
 
@@ -371,6 +439,16 @@ const styles = StyleSheet.create({
   acctName: { color: theme.text1, fontSize: sizes.md },
   acctType: { color: theme.text3, fontSize: sizes.xs, textTransform: 'capitalize' },
   acctBal: { fontSize: sizes.lg, fontFamily: font.display, fontWeight: '700' },
+  profileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+  },
   barBg: { height: 6, backgroundColor: theme.bg3, borderRadius: 3, overflow: 'hidden' },
   barFill: { height: '100%', borderRadius: 3 },
   disclaimer: {

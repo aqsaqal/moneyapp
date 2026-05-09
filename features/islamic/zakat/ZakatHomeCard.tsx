@@ -14,7 +14,7 @@ export function ZakatHomeCard() {
   const z = useZakatCalculation();
   const router = useRouter();
   return (
-    <Pressable onPress={() => router.push('/(islamic)/zakat')} style={styles.card}>
+    <Pressable onPress={() => router.push('/(islamic)/zakat' as never)} style={styles.card}>
       <View style={styles.row}>
         <View style={styles.iconBox}>
           <MaterialCommunityIcons name="hand-heart" size={22} color={theme.gold} />
