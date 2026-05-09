@@ -57,9 +57,12 @@ export async function seedIfEmpty() {
       note: notes[(i + 5) % notes.length],
     });
   }
+  // Income + transfer dated strictly in the past so newly-added user
+  // transactions sort to the top of Activity / Recent.
+  const incomeDaysAgo = [28, 14, 4]; // Salary 28d ago, Design gig 14d, Dividends 4d
   for (let i = 0; i < 3; i++) {
     const d = new Date(now);
-    d.setDate(1 + i * 10);
+    d.setDate(d.getDate() - incomeDaysAgo[i]);
     toInsert.push({
       id: `si${i}`,
       type: 'income',
@@ -71,13 +74,15 @@ export async function seedIfEmpty() {
       note: i === 0 ? 'Salary' : i === 1 ? 'Design gig' : 'Dividends',
     });
   }
+  const transferDate = new Date(now);
+  transferDate.setDate(transferDate.getDate() - 7);
   toInsert.push({
     id: 'st0',
     type: 'transfer',
     amount: 200,
     accountId: 'bank',
     toAccountId: 'savings',
-    date: new Date(now.getFullYear(), now.getMonth(), 5).getTime(),
+    date: transferDate.getTime(),
     createdAt: Date.now(),
     note: 'Monthly savings',
   });
