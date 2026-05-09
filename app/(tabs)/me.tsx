@@ -256,9 +256,18 @@ function SettingsSection() {
   const [currency, setCurrency] = useState<CurrencyCode>((kv.get('currency') ?? 'USD') as CurrencyCode);
   const [locale, setLocale] = useState<string>(kv.get('locale') ?? 'en-US');
   const [arabicNum, setArabicNum] = useState<boolean>(kv.getBool('arabicNumerals', true));
+  const [themeMode, setThemeModeState] = useState<string>(kv.get('themeMode') ?? 'system');
 
   // Picker sheet open state — single shared pattern for Language & Currency.
-  const [picker, setPicker] = useState<null | 'lang' | 'currency'>(null);
+  const [picker, setPicker] = useState<null | 'lang' | 'currency' | 'theme'>(null);
+
+  const themeModeLabel = (() => {
+    switch (themeMode) {
+      case 'dark': return t('me.appearance.dark');
+      case 'light': return t('me.appearance.light');
+      default: return t('me.appearance.system');
+    }
+  })();
 
   const localeLabel = LOCALES.find((l) => l.code === locale)?.name ?? locale;
   const currencyLabel = `${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`;
@@ -300,6 +309,13 @@ function SettingsSection() {
         hint={currencyLabel}
         icon="currency-usd"
         onPress={() => setPicker('currency')}
+      />
+
+      <SettingRow
+        label={t('me.appearance')}
+        hint={themeModeLabel}
+        icon="palette-outline"
+        onPress={() => setPicker('theme')}
       />
 
       <SectionHeader title={t('me.section.security')} />
@@ -351,6 +367,44 @@ function SettingsSection() {
         onPick={(code) => {
           setLocale(code);
           changeLocale(code, t);
+        }}
+        onClose={() => setPicker(null)}
+      />
+      <PickerSheet
+        visible={picker === 'theme'}
+        title={t('me.appearance')}
+        options={[
+          { value: 'system', label: t('me.appearance.system'), icon: 'theme-light-dark' },
+          { value: 'dark', label: t('me.appearance.dark'), icon: 'weather-night' },
+          { value: 'light', label: t('me.appearance.light'), icon: 'white-balance-sunny' },
+        ]}
+        selected={themeMode}
+        onPick={(mode) => {
+          if (mode === themeMode) return;
+          kv.set('themeMode', mode);
+          setThemeModeState(mode);
+          // Reload so StyleSheet.create() captures the new palette. Same
+          // pattern as the language picker.
+          Alert.alert(
+            t('me.lang.changeTitle'),
+            t('me.lang.changeBody'),
+            [
+              { text: t('common.cancel'), style: 'cancel' },
+              {
+                text: t('me.lang.restart'),
+                style: 'default',
+                onPress: async () => {
+                  try {
+                    // eslint-disable-next-line @typescript-eslint/no-require-imports
+                    const Updates = require('expo-updates');
+                    await Updates.reloadAsync();
+                  } catch {
+                    Alert.alert(t('me.lang.changeTitle'), t('me.lang.restartManual'));
+                  }
+                },
+              },
+            ],
+          );
         }}
         onClose={() => setPicker(null)}
       />

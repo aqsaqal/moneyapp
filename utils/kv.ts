@@ -56,7 +56,7 @@ export interface KVSchema {
   rtlSetForLocale: string;     // last locale we called forceRTL for (prevents reload loop)
   biometricEnabled: string;    // '1' | '0'
   onboardingCompleted: string; // '1' | '0'
-  themeMode: string;           // 'dark' | 'light' (v1: dark-only)
+  themeMode: string;           // 'system' | 'dark' | 'light'
   islamicPrayerMethod: string; // adhan-js method id (islamic only)
   islamicCity: string;         // city for prayer calculation (islamic only)
   islamicCoords: string;       // JSON {lat:number,lon:number}

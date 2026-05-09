@@ -1,36 +1,95 @@
-// Theme — ported from v4 lines 17-21 (CSS custom properties).
-// PRIMARY_COLOR comes from flavor.ts so the Islamic flavor's #00C9A7 flows through
-// automatically without any conditional UI code.
+// Theme — light + dark palettes; selected at module-init time from
+// kv.themeMode + the OS color scheme. Switching mode requires an app
+// reload because StyleSheet.create() captures color values at evaluation.
+//
+// PRIMARY_COLOR comes from flavor.ts so the Islamic flavor's gold flows
+// through automatically.
 
+import { Appearance } from 'react-native';
 import { PRIMARY_COLOR } from './flavor';
+import { kv } from '@/utils/kv';
 
-export const theme = {
+export type ThemeMode = 'system' | 'dark' | 'light';
+export type Palette = {
+  bg: string;
+  bg1: string;
+  bg2: string;
+  bg3: string;
+  bg4: string;
+  accent: string;
+  accentDim: string;
+  accentMid: string;
+  income: string;
+  expense: string;
+  warning: string;
+  indigo: string;
+  transfer: string;
+  text1: string;
+  text2: string;
+  text3: string;
+  border: string;
+  gold: string;
+};
+
+const dark: Palette = {
   bg: '#08080F',
   bg1: '#0E0E18',
   bg2: '#161622',
   bg3: '#1E1E2E',
   bg4: '#282840',
-
   accent: PRIMARY_COLOR,
   accentDim: `${PRIMARY_COLOR}20`,
   accentMid: `${PRIMARY_COLOR}44`,
-
   income: PRIMARY_COLOR,
   expense: '#FF6B8A',
   warning: '#FFBE44',
   indigo: '#818CF8',
   transfer: '#60A5FA',
-
   text1: '#EAEAF2',
   text2: '#8888AA',
   text3: '#55556A',
-
   border: '#252538',
-
-  // Islamic-flavor only (gold). In generic builds this value is present as a
-  // constant but never read — it's not a security secret.
   gold: '#D4AF37',
-} as const;
+};
+
+const light: Palette = {
+  bg: '#F7F7FA',
+  bg1: '#FFFFFF',
+  bg2: '#F0F0F5',
+  bg3: '#E5E5EE',
+  bg4: '#DADAE6',
+  accent: PRIMARY_COLOR,
+  accentDim: `${PRIMARY_COLOR}20`,
+  accentMid: `${PRIMARY_COLOR}44`,
+  income: PRIMARY_COLOR,
+  expense: '#E11D48',
+  warning: '#D97706',
+  indigo: '#4F46E5',
+  transfer: '#2563EB',
+  text1: '#111827',
+  text2: '#4B5563',
+  text3: '#9CA3AF',
+  border: '#E5E7EB',
+  gold: '#B7831A',
+};
+
+function resolveActivePalette(): Palette {
+  const stored = (kv.get('themeMode') ?? 'system') as ThemeMode;
+  const sys = Appearance.getColorScheme();
+  if (stored === 'light') return light;
+  if (stored === 'dark') return dark;
+  return sys === 'light' ? light : dark;
+}
+
+/** Active palette — captured at module-init. Changing themeMode and
+ *  reloading the app re-runs this resolution; in-session changes are
+ *  applied via Updates.reloadAsync(). */
+export const theme: Palette = resolveActivePalette();
+
+export const palettes = { dark, light };
+export function activeThemeIsLight(): boolean {
+  return theme === light;
+}
 
 export const spacing = {
   xs: 4,
