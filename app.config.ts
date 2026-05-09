@@ -41,13 +41,34 @@ const config: ExpoConfig = {
     bundleIdentifier: process.env.APP_BUNDLE_ID ?? 'com.moneyflow.generic',
     supportsTablet: false,
     icon: ICON,
+    requireFullScreen: true,
     infoPlist: {
-      // Phase 7 (Smart Add): voice-to-add via @react-native-voice/voice.
-      // Apple Speech runs on-device for short utterances on iOS 17+.
-      NSSpeechRecognitionUsageDescription:
-        'Used to dictate transaction notes (e.g. "twelve fifty coffee"). On-device on iOS 17+.',
+      // iPhone-only — keeps App Store from demanding iPad screenshots.
+      UIDeviceFamily: [1],
+      // Microphone strings — wording reviewed for Apple privacy nutrition.
+      // Audio path:
+      //   - iOS 17+: on-device when Voice.start() succeeds via Apple Speech;
+      //   - older iOS: routed through Apple speech servers per OS contract.
       NSMicrophoneUsageDescription:
-        'Used to record short voice notes that are transcribed into transactions. Audio is not sent to our servers.',
+        'When you tap the voice button to dictate an expense, the microphone is used only for that utterance. Audio is processed by the system speech service and never recorded or sent to MoneyFlow servers.',
+      NSSpeechRecognitionUsageDescription:
+        'Speech recognition converts your dictated expense into text. On iOS 17+ this runs on-device when supported; on older iOS, audio is sent to Apple for transcription per the system speech service.',
+    },
+    privacyManifests: {
+      // Required-reason API declarations (Apple submission requirement, 2024+).
+      // These cover MMKV/UserDefaults reads, SQLite/file timestamps, system
+      // boot time used by JS performance.now(), and disk-space checks. None
+      // of these access user data — they're system-info APIs Apple wants
+      // explicitly justified.
+      NSPrivacyAccessedAPITypes: [
+        { NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryUserDefaults', NSPrivacyAccessedAPITypeReasons: ['CA92.1'] },
+        { NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryFileTimestamp', NSPrivacyAccessedAPITypeReasons: ['C617.1'] },
+        { NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategorySystemBootTime', NSPrivacyAccessedAPITypeReasons: ['35F9.1'] },
+        { NSPrivacyAccessedAPIType: 'NSPrivacyAccessedAPICategoryDiskSpace', NSPrivacyAccessedAPITypeReasons: ['E174.1'] },
+      ],
+      NSPrivacyTracking: false,
+      NSPrivacyTrackingDomains: [],
+      NSPrivacyCollectedDataTypes: [],
     },
   },
   android: {
@@ -57,11 +78,22 @@ const config: ExpoConfig = {
       foregroundImage: ADAPTIVE_ICON,
       backgroundColor: SPLASH_BG,
     },
-    // Phase 7 (Smart Add): voice-to-add. RECORD_AUDIO is the only new permission;
-    // Android Speech Recognizer service handles the rest.
+    // RECORD_AUDIO: Phase 7 voice-to-add via Android SpeechRecognizer.
+    // We *don't* declare READ/WRITE_EXTERNAL_STORAGE — scoped storage
+    // (API 30+) makes them ineffective and Play Console flags them.
+    // We also exclude SYSTEM_ALERT_WINDOW (some legacy deps merge it in).
     permissions: [
       'android.permission.RECORD_AUDIO',
     ],
+    blockedPermissions: [
+      'android.permission.READ_EXTERNAL_STORAGE',
+      'android.permission.WRITE_EXTERNAL_STORAGE',
+      'android.permission.SYSTEM_ALERT_WINDOW',
+    ],
+    // Disable Auto Backup + Device Transfer for the financial DB. Without
+    // this, `adb backup` (or any MDM that takes a full backup) extracts
+    // the unencrypted moneyflow.db and MMKV in the clear.
+    allowBackup: false,
   },
   plugins: [
     'expo-router',

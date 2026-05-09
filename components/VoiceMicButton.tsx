@@ -175,7 +175,17 @@ export function VoiceMicButton({
       if (recording) {
         await Voice.stop();
       } else {
-        await Voice.start(locale);
+        // EXTRA_PREFER_OFFLINE: ask Android's SpeechRecognizer to keep audio
+        // on-device when possible. Honored by Pixel/Samsung/most Android 12+;
+        // ignored by older recognizers (which then fall back to cloud per
+        // their own policy — disclosed in privacy policy).
+        // RECOGNIZER_LANGUAGE_PREFERENCE: pin to the user's locale.
+        await Voice.start(locale, {
+          EXTRA_PREFER_OFFLINE: true,
+          // iOS: same intent, controlled via SFSpeechRecognitionRequest
+          // .requiresOnDeviceRecognition (handled internally by the lib).
+          requiresOnDeviceRecognition: true,
+        } as never);
       }
     } catch (e) {
       setError(friendlyError(e));

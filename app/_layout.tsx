@@ -17,6 +17,7 @@ import { bootAppData } from '@/hooks/useAppData';
 import { useAppLock, isBiometricEnabled } from '@/hooks/useBiometricLock';
 import { kv } from '@/utils/kv';
 import { LockScreen } from '@/components/LockScreen';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -90,18 +91,20 @@ export default function RootLayout() {
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
         <StatusBar style="light" />
-        <LockGate>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: theme.bg },
-            }}
-          >
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="add" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
-            <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
-          </Stack>
-        </LockGate>
+        <ErrorBoundary>
+          <LockGate>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: theme.bg },
+              }}
+            >
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="add" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+              <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
+            </Stack>
+          </LockGate>
+        </ErrorBoundary>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

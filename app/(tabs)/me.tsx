@@ -6,7 +6,7 @@
 // daily-glance answer).
 
 import React, { useState } from 'react';
-import { Alert, I18nManager, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, I18nManager, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -33,6 +33,7 @@ import { kv } from '@/utils/kv';
 import { formatMoney } from '@/utils/format';
 import { exportData } from '@/utils/dataExport';
 import { APP_NAME } from '@/constants/flavor';
+import { PRIVACY_POLICY_URL, TERMS_URL, SUPPORT_EMAIL } from '@/constants/legal';
 
 const LOCALES = [
   { code: 'en-US', name: 'English', rtl: false },
@@ -302,6 +303,25 @@ function AboutSection() {
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
       <SectionHeader title="About" />
       <SettingRow label={APP_NAME} hint="Version 1.0.0" />
+      <SettingRow
+        label="Privacy Policy"
+        icon="shield-lock-outline"
+        onPress={() => Linking.openURL(PRIVACY_POLICY_URL).catch(() => {})}
+      />
+      <SettingRow
+        label="Terms of Use"
+        icon="file-document-outline"
+        onPress={() => Linking.openURL(TERMS_URL).catch(() => {})}
+      />
+      <SettingRow
+        label="Contact support"
+        hint={SUPPORT_EMAIL}
+        icon="email-outline"
+        onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`).catch(() => {})}
+      />
+      <Text style={styles.disclaimer}>
+        For personal use only. Not financial, tax, or religious advice.
+      </Text>
     </View>
   );
 }
@@ -345,4 +365,12 @@ const styles = StyleSheet.create({
   acctBal: { fontSize: sizes.lg, fontFamily: font.display, fontWeight: '700' },
   barBg: { height: 6, backgroundColor: theme.bg3, borderRadius: 3, overflow: 'hidden' },
   barFill: { height: '100%', borderRadius: 3 },
+  disclaimer: {
+    color: theme.text3,
+    fontSize: sizes.xs,
+    textAlign: 'center',
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.sm,
+    lineHeight: 16,
+  },
 });

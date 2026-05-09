@@ -20,6 +20,8 @@
     "build:generic:android": "npm run prep:generic && eas build --profile generic --platform android",
     "build:islamic:ios": "npm run prep:islamic && eas build --profile islamic --platform ios",
     "build:islamic:android": "npm run prep:islamic && eas build --profile islamic --platform android",
+    "build:aab:generic": "bash scripts/build-aab.sh generic",
+    "build:aab:islamic": "bash scripts/build-aab.sh islamic",
     "verify:tree-shake": "bash scripts/verify-tree-shake.sh",
     "db:generate": "drizzle-kit generate",
     "typecheck": "tsc --noEmit",
