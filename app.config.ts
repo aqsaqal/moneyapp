@@ -53,6 +53,11 @@ const config: ExpoConfig = {
         'When you tap the voice button to dictate an expense, the microphone is used only for that utterance. Audio is processed by the system speech service and never recorded or sent to MoneyFlow servers.',
       NSSpeechRecognitionUsageDescription:
         'Speech recognition converts your dictated expense into text. On iOS 17+ this runs on-device when supported; on older iOS, audio is sent to Apple for transcription per the system speech service.',
+      // Phase 10m receipt OCR — image picker camera + library access.
+      NSCameraUsageDescription:
+        'Used to capture receipts. The photo stays on your device; on-device text recognition extracts the total and merchant. No image data leaves the device.',
+      NSPhotoLibraryUsageDescription:
+        'Used to import a receipt photo from your library so the app can read the total. The image is processed on-device.',
     },
     privacyManifests: {
       // Required-reason API declarations (Apple submission requirement, 2024+).
@@ -84,6 +89,7 @@ const config: ExpoConfig = {
     // We also exclude SYSTEM_ALERT_WINDOW (some legacy deps merge it in).
     permissions: [
       'android.permission.RECORD_AUDIO',
+      'android.permission.CAMERA',
     ],
     blockedPermissions: [
       'android.permission.READ_EXTERNAL_STORAGE',

@@ -132,6 +132,8 @@
   "voice.permission.body": "Ketuk butang di bawah untuk mendikte transaksi. Audio diproses oleh perkhidmatan pertuturan peranti dan tidak dihantar ke pelayan kami. Kamu boleh tarik balik kebenaran ini bila-bila di Tetapan.",
   "voice.permission.ok": "Teruskan",
   "voice.permission.deny": "Bukan sekarang",
+  "receipt.scan": "Imbas resit",
+  "receipt.failed": "Tidak dapat membaca resit",
 
   "errorBoundary.title": "Sesuatu tidak kena",
   "errorBoundary.body": "Aplikasi mengalami ralat tidak dijangka. Data anda selamat — semuanya pada peranti ini. Ketuk muat semula untuk mula semula.",

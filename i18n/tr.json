@@ -132,6 +132,8 @@
   "voice.permission.body": "Aşağıdaki düğmeye dokunarak harcamayı söyle. Ses cihazının konuşma servisi tarafından işlenir ve sunucularımıza gönderilmez. İzni daha sonra Ayarlar'dan kaldırabilirsin.",
   "voice.permission.ok": "Devam",
   "voice.permission.deny": "Şimdi değil",
+  "receipt.scan": "Fişi tara",
+  "receipt.failed": "Fiş okunamadı",
 
   "errorBoundary.title": "Bir şey ters gitti",
   "errorBoundary.body": "Uygulama beklenmedik bir hata aldı. Verilerin güvende — hepsi cihazında. Yeniden başlatmak için dokun.",

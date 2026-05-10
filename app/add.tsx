@@ -31,6 +31,7 @@ import { SuccessOverlay } from '@/components/SuccessOverlay';
 import { SmartSuggestionRow } from '@/components/SmartSuggestionRow';
 import { PredictedStrip } from '@/components/PredictedStrip';
 import { VoiceMicButton } from '@/components/VoiceMicButton';
+import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
 import { useAccounts, addTransaction } from '@/hooks/useAppData';
@@ -123,6 +124,7 @@ export default function AddScreen() {
         accountId: effectiveAcct,
         note: note || null,
         halalStatus: (draft.halalStatus as Transaction['halalStatus']) ?? null,
+        receiptImagePath: (draft.receiptImagePath as string | undefined) ?? null,
       });
       // Remember the user's account choice so L4 fallback can lock in.
       setDefaultAccount(effectiveAcct);
@@ -196,6 +198,13 @@ export default function AddScreen() {
             onResult={({ amount: a, note: n }) => {
               if (a !== null) setAmount(String(a));
               if (n) setNote(n);
+            }}
+          />
+          <ReceiptScanButton
+            onScanned={({ amount: a, note: n, receiptUri }) => {
+              if (a !== null) setAmount(String(a));
+              if (n) setNote(n);
+              setDraft((d) => ({ ...d, receiptImagePath: receiptUri }));
             }}
           />
         </View>

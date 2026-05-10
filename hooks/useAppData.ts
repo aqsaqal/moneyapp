@@ -257,6 +257,8 @@ export interface AddTxnInput {
   halalStatus?: string | null;
   date?: number;
   recurringId?: string | null;
+  /** Phase 10m: optional URI of the receipt image stored on the device. */
+  receiptImagePath?: string | null;
 }
 
 export function addTransaction(input: AddTxnInput): Transaction {
@@ -274,6 +276,7 @@ export function addTransaction(input: AddTxnInput): Transaction {
     note: input.note ?? null,
     halalStatus: input.halalStatus ?? null,
     recurringId: input.recurringId ?? null,
+    receiptImagePath: input.receiptImagePath ?? null,
     date: input.date ?? now,
     createdAt: now,
   };

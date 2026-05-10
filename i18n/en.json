@@ -132,6 +132,8 @@
   "voice.permission.body": "Tap the button below to dictate your expense. Audio is processed by your device's speech service and never sent to our servers. You can revoke this permission anytime in Settings.",
   "voice.permission.ok": "Continue",
   "voice.permission.deny": "Not now",
+  "receipt.scan": "Scan receipt",
+  "receipt.failed": "Couldn't read the receipt",
 
   "errorBoundary.title": "Something went wrong",
   "errorBoundary.body": "The app hit an unexpected error. Your data is safe — it lives on this device. Tap reload to start fresh.",
