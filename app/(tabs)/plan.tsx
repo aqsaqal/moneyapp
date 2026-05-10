@@ -30,6 +30,7 @@ import { monthKey, formatMoney } from '@/utils/format';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { useT } from '@/hooks/useT';
+import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import type { Recurring } from '@/utils/db/schema';
 
 export default function PlanScreen() {
@@ -39,6 +40,7 @@ export default function PlanScreen() {
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.top}>
         <Text style={styles.title}>{t('plan.title')}</Text>
+        <HeaderSettingsButton />
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <RecurringSection />
@@ -231,7 +233,12 @@ function promptAddBudget() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
-  top: { padding: spacing.lg, gap: spacing.md },
+  top: {
+    padding: spacing.lg,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: { color: theme.text1, fontSize: sizes.xxxl, fontFamily: font.displayBold },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
   disposableCard: {

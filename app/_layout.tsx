@@ -108,6 +108,7 @@ export default function RootLayout() {
             >
               <Stack.Screen name="(tabs)" />
               <Stack.Screen name="add" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+              <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
               <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
             </Stack>
           </LockGate>

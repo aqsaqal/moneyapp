@@ -71,6 +71,8 @@
   "me.appearance.system": "حسب النظام",
   "me.appearance.dark": "داكن",
   "me.appearance.light": "فاتح",
+
+  "settings.title": "الإعدادات",
   "me.export.json": "تصدير كل البيانات (JSON)",
   "me.export.csv": "تصدير المعاملات (CSV)",
   "me.privacyPolicy": "سياسة الخصوصية",

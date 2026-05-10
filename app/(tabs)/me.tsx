@@ -1,68 +1,43 @@
-// Me — identity / setup. Accounts up top (frequent), then Settings, then
-// (islamic) MeTabExtras (mazhab + prayer-method rows), then About.
+// Me — identity tab. Owns Profiles + Accounts only.
 //
-// v2 IA: extracted from v1 app/(tabs)/more.tsx (AccountsTab + SettingsTab).
-// Net Balance moves here from Home (it's a "see all my money" answer, not a
-// daily-glance answer).
+// v2 Phase 10g: settings/preferences/security/data/about + islamic mazhab+
+// method rows moved to a dedicated /settings modal screen, reachable via
+// the cog button in every tab's header. Me is now a 2-section identity
+// view: switch profiles, manage accounts.
 
 import React, { useState } from 'react';
-import { Alert, DevSettings, I18nManager, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import {
   SectionHeader,
   SummaryCard,
-  SettingRow,
-  AddRow,
   sectionStyles,
 } from '@/components/Sections';
-import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { AccountSheet } from '@/components/AccountSheet';
 import { ProfileSheet } from '@/components/ProfileSheet';
-import { FeatureSlots } from '@/features';
+import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { useAccounts } from '@/hooks/useAppData';
 import type { Account } from '@/utils/db/schema';
-import {
-  isBiometricEnabled,
-  setBiometricEnabled,
-  useBiometricSupported,
-} from '@/hooks/useBiometricLock';
-import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
+import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { formatMoney } from '@/utils/format';
-import { exportData } from '@/utils/dataExport';
-import { APP_NAME } from '@/constants/flavor';
-import { PRIVACY_POLICY_URL, TERMS_URL, SUPPORT_EMAIL } from '@/constants/legal';
 import { useT } from '@/hooks/useT';
-import { setLocale as setI18nLocale, type LocaleCode } from '@/utils/i18n';
 import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
 import type { Profile } from '@/utils/profiles';
 
-const LOCALES = [
-  { code: 'en-US', name: 'English', rtl: false },
-  { code: 'ar-SA', name: 'العربية', rtl: true },
-  { code: 'tr-TR', name: 'Türkçe', rtl: false },
-  { code: 'id-ID', name: 'Bahasa Indonesia', rtl: false },
-  { code: 'ms-MY', name: 'Bahasa Melayu', rtl: false },
-];
-
 export default function MeScreen() {
-  const router = useRouter();
   const t = useT();
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.top}>
         <Text style={styles.title}>{t('me.title')}</Text>
+        <HeaderSettingsButton />
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <ProfilesSection />
         <AccountsSection />
-        <SettingsSection />
-        {/* Islamic: mazhab + prayer-method visible rows. Generic: nothing. */}
-        <FeatureSlots.MeTabExtras onNavigate={(p) => router.push(p as never)} />
-        <AboutSection />
         <View style={{ height: 100 }} />
       </ScrollView>
     </SafeAreaView>
@@ -147,14 +122,13 @@ function AccountsSection() {
   const [editing, setEditing] = useState<Account | null | undefined>(undefined);
 
   return (
-    <View style={{ gap: spacing.md }}>
+    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
       <SectionHeader
         title={t('me.section.accounts')}
         onAdd={() => setEditing(null)}
         addLabel={t('common.add')}
       />
 
-      {/* Net balance moved from Home → here in v2. */}
       <View style={styles.netCard}>
         <Text style={styles.netLabel}>{t('me.netBalance')}</Text>
         <Text style={[styles.netValue, { color: net >= 0 ? theme.accent : theme.expense }]}>
@@ -210,265 +184,14 @@ function AccountsSection() {
   );
 }
 
-// ---- Settings ----
-
-// Translate-and-restart flow. Uses i18n.t() so the dialog itself is in the
-// CURRENT language, not the new one. Saves locale + flips i18n active locale
-// + RTL direction + reloads via expo-updates.
-function changeLocale(next: string, tFn: (k: string) => string) {
-  const cur = kv.get('locale');
-  if (cur === next) return;
-  Alert.alert(
-    tFn('me.lang.changeTitle'),
-    tFn('me.lang.changeBody'),
-    [
-      { text: tFn('common.cancel'), style: 'cancel' },
-      {
-        text: tFn('me.lang.restart'),
-        style: 'default',
-        onPress: async () => {
-          kv.set('locale', next);
-          setI18nLocale(next as LocaleCode);
-          if (Platform.OS !== 'web') {
-            const shouldBeRTL = next.startsWith('ar');
-            if (shouldBeRTL !== I18nManager.isRTL) {
-              I18nManager.forceRTL(shouldBeRTL);
-              kv.set('rtlSetForLocale', next);
-            }
-            if (__DEV__ && DevSettings?.reload) {
-              DevSettings.reload();
-              return;
-            }
-            try {
-              // eslint-disable-next-line @typescript-eslint/no-require-imports
-              const Updates = require('expo-updates');
-              await Updates.reloadAsync();
-            } catch {
-              Alert.alert(tFn('me.lang.changeTitle'), tFn('me.lang.restartManual'));
-            }
-          }
-        },
-      },
-    ],
-  );
-}
-
-function SettingsSection() {
-  const t = useT();
-  const supported = useBiometricSupported();
-  const [bio, setBio] = useState(isBiometricEnabled());
-  const [currency, setCurrency] = useState<CurrencyCode>((kv.get('currency') ?? 'USD') as CurrencyCode);
-  const [locale, setLocale] = useState<string>(kv.get('locale') ?? 'en-US');
-  const [arabicNum, setArabicNum] = useState<boolean>(kv.getBool('arabicNumerals', true));
-  const [themeMode, setThemeModeState] = useState<string>(kv.get('themeMode') ?? 'system');
-
-  // Picker sheet open state — single shared pattern for Language & Currency.
-  const [picker, setPicker] = useState<null | 'lang' | 'currency' | 'theme'>(null);
-
-  const themeModeLabel = (() => {
-    switch (themeMode) {
-      case 'dark': return t('me.appearance.dark');
-      case 'light': return t('me.appearance.light');
-      default: return t('me.appearance.system');
-    }
-  })();
-
-  const localeLabel = LOCALES.find((l) => l.code === locale)?.name ?? locale;
-  const currencyLabel = `${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`;
-
-  return (
-    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <SectionHeader title={t('me.section.preferences')} />
-
-      <SettingRow
-        label={t('me.language')}
-        hint={localeLabel}
-        icon="translate"
-        onPress={() => setPicker('lang')}
-      />
-
-      {locale.startsWith('ar') && (
-        <SettingRow
-          label={t('me.arabicNumerals')}
-          hint={t('me.arabicNumerals.hint')}
-          trailing={
-            <Pressable
-              onPress={() => {
-                const next = !arabicNum;
-                setArabicNum(next);
-                kv.setBool('arabicNumerals', next);
-              }}
-              style={[sectionStyles.toggle, arabicNum && { backgroundColor: theme.accent }]}
-              accessibilityRole="switch"
-              accessibilityState={{ checked: arabicNum }}
-            >
-              <View style={[sectionStyles.toggleKnob, arabicNum && { transform: [{ translateX: 18 }] }]} />
-            </Pressable>
-          }
-        />
-      )}
-
-      <SettingRow
-        label={t('me.currency')}
-        hint={currencyLabel}
-        icon="currency-usd"
-        onPress={() => setPicker('currency')}
-      />
-
-      <SettingRow
-        label={t('me.appearance')}
-        hint={themeModeLabel}
-        icon="palette-outline"
-        onPress={() => setPicker('theme')}
-      />
-
-      <SectionHeader title={t('me.section.security')} />
-      <SettingRow
-        label={t('me.biometric')}
-        hint={
-          supported
-            ? t('me.biometric.hintSupported')
-            : t('me.biometric.hintUnsupported')
-        }
-        trailing={
-          <Pressable
-            onPress={() => {
-              if (supported) {
-                setBiometricEnabled(!bio);
-                setBio(!bio);
-              }
-            }}
-            style={[sectionStyles.toggle, bio && { backgroundColor: theme.accent }]}
-            accessibilityRole="switch"
-            accessibilityState={{ checked: bio, disabled: !supported }}
-          >
-            <View style={[sectionStyles.toggleKnob, bio && { transform: [{ translateX: 18 }] }]} />
-          </Pressable>
-        }
-      />
-
-      <SectionHeader title={t('me.section.data')} />
-      <SettingRow
-        label={t('me.export.json')}
-        icon="export"
-        onPress={() => exportData('json')}
-      />
-      <SettingRow
-        label={t('me.export.csv')}
-        icon="export"
-        onPress={() => exportData('csv')}
-      />
-
-      <PickerSheet
-        visible={picker === 'lang'}
-        title={t('me.language')}
-        options={LOCALES.map<PickerOption<string>>((l) => ({
-          value: l.code,
-          label: l.name,
-          hint: l.rtl ? '←' : undefined,
-        }))}
-        selected={locale}
-        onPick={(code) => {
-          setLocale(code);
-          changeLocale(code, t);
-        }}
-        onClose={() => setPicker(null)}
-      />
-      <PickerSheet
-        visible={picker === 'theme'}
-        title={t('me.appearance')}
-        options={[
-          { value: 'system', label: t('me.appearance.system'), icon: 'theme-light-dark' },
-          { value: 'dark', label: t('me.appearance.dark'), icon: 'weather-night' },
-          { value: 'light', label: t('me.appearance.light'), icon: 'white-balance-sunny' },
-        ]}
-        selected={themeMode}
-        onPick={(mode) => {
-          if (mode === themeMode) return;
-          kv.set('themeMode', mode);
-          setThemeModeState(mode);
-          // Reload so StyleSheet.create() captures the new palette. In dev
-          // (Metro), DevSettings.reload() is fast and reliable. In prod
-          // builds we fall back to expo-updates if available, and finally
-          // ask the user to quit/relaunch.
-          Alert.alert(
-            t('me.lang.changeTitle'),
-            t('me.lang.changeBody'),
-            [
-              { text: t('common.cancel'), style: 'cancel' },
-              {
-                text: t('me.lang.restart'),
-                style: 'default',
-                onPress: async () => {
-                  if (__DEV__ && DevSettings?.reload) {
-                    DevSettings.reload();
-                    return;
-                  }
-                  try {
-                    // eslint-disable-next-line @typescript-eslint/no-require-imports
-                    const Updates = require('expo-updates');
-                    await Updates.reloadAsync();
-                  } catch {
-                    Alert.alert(t('me.lang.changeTitle'), t('me.lang.restartManual'));
-                  }
-                },
-              },
-            ],
-          );
-        }}
-        onClose={() => setPicker(null)}
-      />
-      <PickerSheet
-        visible={picker === 'currency'}
-        title={t('me.currency')}
-        options={(Object.keys(CURRENCIES) as CurrencyCode[]).map<PickerOption<CurrencyCode>>((c) => ({
-          value: c,
-          label: `${c} · ${CURRENCIES[c].symbolNative}`,
-          hint: CURRENCIES[c].name,
-        }))}
-        selected={currency}
-        onPick={(c) => {
-          kv.set('currency', c);
-          setCurrency(c);
-        }}
-        onClose={() => setPicker(null)}
-      />
-    </View>
-  );
-}
-
-// ---- About ----
-
-function AboutSection() {
-  const t = useT();
-  return (
-    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <SectionHeader title={t('me.section.about')} />
-      <SettingRow label={APP_NAME} hint="Version 1.0.0" />
-      <SettingRow
-        label={t('me.privacyPolicy')}
-        icon="shield-lock-outline"
-        onPress={() => Linking.openURL(PRIVACY_POLICY_URL).catch(() => {})}
-      />
-      <SettingRow
-        label={t('me.terms')}
-        icon="file-document-outline"
-        onPress={() => Linking.openURL(TERMS_URL).catch(() => {})}
-      />
-      <SettingRow
-        label={t('me.support')}
-        hint={SUPPORT_EMAIL}
-        icon="email-outline"
-        onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`).catch(() => {})}
-      />
-      <Text style={styles.disclaimer}>{t('me.disclaimer')}</Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
-  top: { padding: spacing.lg, gap: spacing.md },
+  top: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: spacing.lg,
+  },
   title: { color: theme.text1, fontSize: sizes.xxxl, fontFamily: font.displayBold },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
   netCard: {
@@ -515,12 +238,4 @@ const styles = StyleSheet.create({
   },
   barBg: { height: 6, backgroundColor: theme.bg3, borderRadius: 3, overflow: 'hidden' },
   barFill: { height: '100%', borderRadius: 3 },
-  disclaimer: {
-    color: theme.text3,
-    fontSize: sizes.xs,
-    textAlign: 'center',
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.sm,
-    lineHeight: 16,
-  },
 });

@@ -71,6 +71,8 @@
   "me.appearance.system": "Ikut sistem",
   "me.appearance.dark": "Gelap",
   "me.appearance.light": "Cerah",
+
+  "settings.title": "Tetapan",
   "me.export.json": "Eksport semua data (JSON)",
   "me.export.csv": "Eksport transaksi (CSV)",
   "me.privacyPolicy": "Dasar Privasi",

@@ -71,6 +71,8 @@
   "me.appearance.system": "Match system",
   "me.appearance.dark": "Dark",
   "me.appearance.light": "Light",
+
+  "settings.title": "Settings",
   "me.export.json": "Export all data (JSON)",
   "me.export.csv": "Export transactions (CSV)",
   "me.privacyPolicy": "Privacy Policy",

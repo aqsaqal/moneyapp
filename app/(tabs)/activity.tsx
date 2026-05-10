@@ -15,6 +15,7 @@ import { SearchBar } from '@/components/SearchBar';
 import { StatCard, sectionStyles } from '@/components/Sections';
 import { MonthlyRecap } from '@/components/MonthlyRecap';
 import { TransactionSheet } from '@/components/TransactionSheet';
+import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { FeatureSlots } from '@/features';
 import { useT } from '@/hooks/useT';
 import type { Transaction } from '@/utils/db/schema';
@@ -61,7 +62,10 @@ export default function Activity() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.top}>
-        <Text style={styles.title}>{t('activity.title')}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>{t('activity.title')}</Text>
+          <HeaderSettingsButton />
+        </View>
         <SearchBar value={search} onChange={setSearch} placeholder={t('activity.searchPlaceholder')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
           <FilterChip label={t('activity.allChip')} active={!filterCat} onPress={() => setFilterCat(null)} />
@@ -248,6 +252,7 @@ function FilterChip({
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
   top: { padding: spacing.lg, gap: spacing.md },
+  titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   title: { color: theme.text1, fontSize: sizes.xxxl, fontFamily: font.displayBold },
   chipRow: { gap: 8, paddingVertical: 4 },
   chip: {

@@ -35,6 +35,7 @@ import { useT } from '@/hooks/useT';
 import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
 import { ProfileSheet } from '@/components/ProfileSheet';
 import { TransactionSheet } from '@/components/TransactionSheet';
+import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { monthKey } from '@/utils/format';
 import type { Transaction } from '@/utils/db/schema';
 import { type CurrencyCode } from '@/constants/currency';
@@ -101,6 +102,7 @@ export default function Home() {
             </Pressable>
           )}
           {streak > 0 && <StreakBadge count={streak} />}
+          <HeaderSettingsButton />
         </View>
         <ProfileSheet
           visible={profileSheetOpen}
