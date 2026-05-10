@@ -99,6 +99,10 @@
   "voice.unsupported.sim": "Suara tidak disokong pada simulator ini — cuba pada peranti sebenar.",
   "voice.unsupported.build": "Suara tidak tersedia dalam binaan ini.",
   "voice.permissionDenied": "Kebenaran mikrofon ditolak.",
+  "voice.permission.title": "Benarkan mikrofon?",
+  "voice.permission.body": "Ketuk butang di bawah untuk mendikte transaksi. Audio diproses oleh perkhidmatan pertuturan peranti dan tidak dihantar ke pelayan kami. Kamu boleh tarik balik kebenaran ini bila-bila di Tetapan.",
+  "voice.permission.ok": "Teruskan",
+  "voice.permission.deny": "Bukan sekarang",
 
   "errorBoundary.title": "Sesuatu tidak kena",
   "errorBoundary.body": "Aplikasi mengalami ralat tidak dijangka. Data anda selamat — semuanya pada peranti ini. Ketuk muat semula untuk mula semula.",

@@ -99,6 +99,10 @@
   "voice.unsupported.sim": "Voice not supported on this simulator — try a real device.",
   "voice.unsupported.build": "Voice not available in this build.",
   "voice.permissionDenied": "Microphone permission denied.",
+  "voice.permission.title": "Allow microphone?",
+  "voice.permission.body": "Tap the button below to dictate your expense. Audio is processed by your device's speech service and never sent to our servers. You can revoke this permission anytime in Settings.",
+  "voice.permission.ok": "Continue",
+  "voice.permission.deny": "Not now",
 
   "errorBoundary.title": "Something went wrong",
   "errorBoundary.body": "The app hit an unexpected error. Your data is safe — it lives on this device. Tap reload to start fresh.",

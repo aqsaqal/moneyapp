@@ -65,6 +65,7 @@ export interface KVSchema {
   arabicNumerals: string;      // '1' | '0' — opt-in for Arabic-Indic digits in formatMoney (Phase 8)
   activeProfileId: string;     // Phase 10b: which profile's SQLite is active
   profiles: string;            // JSON array of Profile objects (utils/profiles.ts)
+  voicePromptShown: string;    // '1' once the explainer was acknowledged (Phase 10h)
 }
 
 export const kv = {

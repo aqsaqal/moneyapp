@@ -18,6 +18,7 @@ import { useAppLock, isBiometricEnabled } from '@/hooks/useBiometricLock';
 import { kv } from '@/utils/kv';
 import { LockScreen } from '@/components/LockScreen';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { HomeSkeleton } from '@/components/Skeleton';
 import { setLocale, type LocaleCode } from '@/utils/i18n';
 import { ensureDefaultProfile } from '@/utils/profiles';
 
@@ -91,7 +92,15 @@ export default function RootLayout() {
   }, []);
 
   if (!fontsLoaded || !dbReady) {
-    return null;
+    // Skeleton placeholder so the user never stares at a blank screen
+    // between splash dismissal and first real frame. The splash itself
+    // covers most of the boot — this catches the brief font-loading +
+    // DB-seed window after splash hides.
+    return (
+      <View style={styles.root}>
+        <HomeSkeleton />
+      </View>
+    );
   }
 
   return (

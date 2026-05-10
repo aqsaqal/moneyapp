@@ -14,11 +14,12 @@
 // via a small word→digit table covering 0-99 + decimals.
 
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, font, sizes, radii } from '@/constants/theme';
 import { useHaptics } from '@/hooks/useHaptics';
 import { t as i18nT } from '@/utils/i18n';
+import { kv } from '@/utils/kv';
 
 // Lazy-imported so the dev client without native module installed doesn't crash.
 // We DON'T probe `NativeModules.Voice` here — under the new architecture that
@@ -159,6 +160,25 @@ export function VoiceMicButton({
   // Always render the mic. On tap, try to start; surface a friendly inline
   // error if the recognizer isn't usable (Simulator, missing services, etc.)
   // — better than silently hiding the affordance.
+  const startRecording = async () => {
+    if (!Voice) return;
+    try {
+      // EXTRA_PREFER_OFFLINE: ask Android's SpeechRecognizer to keep audio
+      // on-device when possible. Honored by Pixel/Samsung/most Android 12+;
+      // ignored by older recognizers (which then fall back to cloud per
+      // their own policy — disclosed in privacy policy).
+      // requiresOnDeviceRecognition: same intent on iOS via
+      // SFSpeechRecognitionRequest (handled internally by the lib).
+      await Voice.start(locale, {
+        EXTRA_PREFER_OFFLINE: true,
+        requiresOnDeviceRecognition: true,
+      } as never);
+    } catch (e) {
+      setError(friendlyError(e));
+      setRecording(false);
+    }
+  };
+
   const tap = async () => {
     if (!Voice) {
       setError(i18nT('voice.unsupported.build'));
@@ -166,26 +186,38 @@ export function VoiceMicButton({
     }
     setError(null);
     haptics.tap();
-    try {
-      if (recording) {
+    if (recording) {
+      try {
         await Voice.stop();
-      } else {
-        // EXTRA_PREFER_OFFLINE: ask Android's SpeechRecognizer to keep audio
-        // on-device when possible. Honored by Pixel/Samsung/most Android 12+;
-        // ignored by older recognizers (which then fall back to cloud per
-        // their own policy — disclosed in privacy policy).
-        // RECOGNIZER_LANGUAGE_PREFERENCE: pin to the user's locale.
-        await Voice.start(locale, {
-          EXTRA_PREFER_OFFLINE: true,
-          // iOS: same intent, controlled via SFSpeechRecognitionRequest
-          // .requiresOnDeviceRecognition (handled internally by the lib).
-          requiresOnDeviceRecognition: true,
-        } as never);
+      } catch (e) {
+        setError(friendlyError(e));
+        setRecording(false);
       }
-    } catch (e) {
-      setError(friendlyError(e));
-      setRecording(false);
+      return;
     }
+    // First-tap explainer: show our own privacy-respecting copy BEFORE the
+    // OS permission prompt fires. Once acknowledged we never show it again.
+    // The OS dialog still appears immediately after — this just gives the
+    // user the "why" instead of the bare "Allow access?" prompt.
+    if (!kv.getBool('voicePromptShown', false)) {
+      Alert.alert(
+        i18nT('voice.permission.title'),
+        i18nT('voice.permission.body'),
+        [
+          { text: i18nT('voice.permission.deny'), style: 'cancel' },
+          {
+            text: i18nT('voice.permission.ok'),
+            style: 'default',
+            onPress: () => {
+              kv.setBool('voicePromptShown', true);
+              void startRecording();
+            },
+          },
+        ],
+      );
+      return;
+    }
+    void startRecording();
   };
 
   if (!Voice) return null;

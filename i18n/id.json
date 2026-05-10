@@ -99,6 +99,10 @@
   "voice.unsupported.sim": "Suara tidak didukung di simulator ini — coba di perangkat sungguhan.",
   "voice.unsupported.build": "Suara tidak tersedia di build ini.",
   "voice.permissionDenied": "Izin mikrofon ditolak.",
+  "voice.permission.title": "Izinkan mikrofon?",
+  "voice.permission.body": "Ketuk tombol di bawah untuk mendiktekan transaksi. Audio diproses oleh layanan bicara perangkat dan tidak dikirim ke server kami. Kamu bisa cabut izin kapan saja di Pengaturan.",
+  "voice.permission.ok": "Lanjut",
+  "voice.permission.deny": "Tidak sekarang",
 
   "errorBoundary.title": "Terjadi kesalahan",
   "errorBoundary.body": "Aplikasi mengalami kesalahan tak terduga. Datamu aman — semua tersimpan di perangkat ini. Ketuk muat ulang untuk memulai lagi.",

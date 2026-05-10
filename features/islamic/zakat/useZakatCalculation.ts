@@ -95,3 +95,56 @@ export function useZakatCalculation(): ZakatCalculationResult {
     };
   }, [accounts, currency, state, mazhab]);
 }
+
+/** Non-hook variant for callers that need a one-shot read (HomeActionCard
+ *  computes its insight inside useMemo and can't call the hook). Returns a
+ *  thin summary tailored to the action card — full result is via the hook. */
+export function computeHawlForActiveState(): {
+  isComplete: boolean;
+  daysRemaining: number;
+  zakatDue: number;
+  zakatDueProjected: number;
+  netEligible: number;
+  meetsNisab: boolean;
+} | null {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const dbMod = require('@/utils/db/client') as typeof import('@/utils/db/client');
+    const raw = dbMod.getRawDB();
+    const accountRows = raw.getAllSync(
+      `SELECT type, balance FROM accounts`,
+    ) as Array<{ type: string; balance: number }>;
+    const cashAssets = accountRows
+      .filter((a: { type: string }) => a.type !== 'credit')
+      .reduce((s: number, a: { balance: number }) => s + Math.max(0, a.balance), 0);
+    const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+    const state = getZakatState();
+    const mazhab = MAZHABS[state.mazhab];
+    const prices = FALLBACK_PRICES_PER_GRAM[currency] ?? FALLBACK_PRICES_PER_GRAM.USD;
+    const grossEligible =
+      cashAssets +
+      state.manualGold * prices.gold +
+      state.manualSilver * prices.silver +
+      state.manualInventory +
+      state.manualInvestments +
+      state.manualReceivables;
+    const netEligible = Math.max(0, grossEligible - state.manualDebts);
+    const nisabValue = calculateNisab(state.nisabBasis, currency);
+    const meetsNisab = mazhab.combineGoldSilver
+      ? netEligible >= nisabValue
+      : netEligible >= nisabValue;
+    const hawl = computeHawl(new Date(state.hawlStartIso));
+    const zakatDue = hawl.isComplete && meetsNisab ? netEligible * ZAKAT_RATE : 0;
+    const zakatDueProjected = meetsNisab ? netEligible * ZAKAT_RATE : 0;
+    return {
+      isComplete: hawl.isComplete,
+      daysRemaining: hawl.daysRemaining,
+      zakatDue,
+      zakatDueProjected,
+      netEligible,
+      meetsNisab,
+    };
+  } catch {
+    return null;
+  }
+}

@@ -31,12 +31,14 @@ import { monthKey } from '@/utils/format';
 import { kv } from '@/utils/kv';
 
 interface Insight {
-  kind: 'overbudget' | 'bill-soon' | 'bill-overdue';
+  kind: 'overbudget' | 'bill-soon' | 'bill-overdue' | 'hawl-approaching' | 'hawl-due';
   icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
   iconColor: string;
   borderColor: string;
   title: string;
   detail: string;
+  /** Where tapping the card sends the user. Defaults to /plan. */
+  route?: '/plan' | '/(islamic)/zakat';
 }
 
 export function HomeActionCard() {
@@ -112,6 +114,43 @@ export function HomeActionCard() {
       };
     }
 
+    // 4. Islamic only — hawl approaching (≤30 days) or due. Babel inlines
+    // process.env.APP_FLAVOR; in generic builds this whole branch DCEs, and
+    // the require() never executes / pulls in @umalqura/core.
+    if (process.env.APP_FLAVOR === 'islamic') {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const { computeHawlForActiveState } = require('@/features/islamic/zakat/useZakatCalculation');
+        const z = computeHawlForActiveState?.();
+        if (z?.isComplete) {
+          return {
+            kind: 'hawl-due',
+            icon: 'hand-heart',
+            iconColor: theme.gold,
+            borderColor: `${theme.gold}55`,
+            title: z.zakatDue > 0 ? 'Zakat due now' : 'Hawl complete — review zakat',
+            detail: z.zakatDue > 0
+              ? `${formatMoney(z.zakatDue, currency)} on ${formatMoney(z.netEligible, currency)} eligible wealth`
+              : `Wealth below nisab — no zakat due this hawl`,
+            route: '/(islamic)/zakat',
+          };
+        }
+        if (z && z.daysRemaining > 0 && z.daysRemaining <= 30) {
+          return {
+            kind: 'hawl-approaching',
+            icon: 'calendar-clock',
+            iconColor: theme.gold,
+            borderColor: `${theme.gold}55`,
+            title: `Hawl in ${z.daysRemaining} days`,
+            detail: `Review zakat — projected ${formatMoney(z.zakatDueProjected ?? 0, currency)}`,
+            route: '/(islamic)/zakat',
+          };
+        }
+      } catch {
+        /* swallow — hawl card is best-effort, never block Home rendering. */
+      }
+    }
+
     return null;
   }, [budgets, totals, recurring, paid, currency]);
 
@@ -119,10 +158,10 @@ export function HomeActionCard() {
 
   return (
     <Pressable
-      onPress={() => router.push('/plan')}
+      onPress={() => router.push((insight.route ?? '/plan') as never)}
       style={[styles.card, { borderColor: insight.borderColor }]}
       accessibilityRole="button"
-      accessibilityLabel={`${insight.title}. ${insight.detail}. Tap to open Plan.`}
+      accessibilityLabel={`${insight.title}. ${insight.detail}.`}
     >
       <MaterialCommunityIcons name={insight.icon} size={22} color={insight.iconColor} />
       <View style={{ flex: 1 }}>
