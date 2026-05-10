@@ -105,6 +105,18 @@ function createTables(db: SQLite.SQLiteDatabase) {
       fetched_at INTEGER NOT NULL
     );
 
+    -- Phase 10l: savings goals anchored to an account.
+    CREATE TABLE IF NOT EXISTS goals (
+      id TEXT PRIMARY KEY NOT NULL,
+      name TEXT NOT NULL,
+      target_amount REAL NOT NULL,
+      target_date INTEGER,
+      account_id TEXT NOT NULL,
+      color TEXT NOT NULL,
+      icon TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS budgets (
       id TEXT PRIMARY KEY NOT NULL,
       category TEXT NOT NULL,

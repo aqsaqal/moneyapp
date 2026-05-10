@@ -55,6 +55,22 @@ export const fxRates = sqliteTable('fx_rates', {
   fetchedAt: integer('fetched_at').notNull(),
 });
 
+// Phase 10l: savings goals. Each goal is anchored to an account; progress
+// is computed from that account's current balance against `targetAmount`.
+// Anchoring to an account (vs. a free-floating progress counter) means
+// every transfer/income to that account automatically advances the goal
+// — no separate "log a contribution" step.
+export const goals = sqliteTable('goals', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  targetAmount: real('target_amount').notNull(),
+  targetDate: integer('target_date'),     // unix ms; null = open-ended
+  accountId: text('account_id').notNull(),
+  color: text('color').notNull(),
+  icon: text('icon').notNull(),
+  createdAt: integer('created_at').notNull(),
+});
+
 export const budgets = sqliteTable('budgets', {
   id: text('id').primaryKey(),
   category: text('category').notNull(),
@@ -124,6 +140,9 @@ export type NewPaidItem = typeof paidItems.$inferInsert;
 
 export type MerchantMemoryRow = typeof merchantMemory.$inferSelect;
 export type NewMerchantMemoryRow = typeof merchantMemory.$inferInsert;
+
+export type Goal = typeof goals.$inferSelect;
+export type NewGoal = typeof goals.$inferInsert;
 
 // Convenience: monthKey for a given date (YYYY-MM).
 export function monthKey(date: Date | number): string {

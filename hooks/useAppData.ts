@@ -12,12 +12,15 @@ import { getDB, getRawDB } from '@/utils/db/client';
 import {
   accounts,
   budgets,
+  goals,
   paidItems,
   recurring,
   transactions,
   type Account,
   type Budget,
+  type Goal,
   type NewBudget,
+  type NewGoal,
   type NewTransaction,
   type PaidItem,
   type Recurring,
@@ -152,6 +155,16 @@ export function useRecurring(): Recurring[] {
   useVersion();
   const db = getDB();
   return useMemo(() => db.select().from(recurring).all(), [version]);
+}
+
+export function useGoals(): Goal[] {
+  useVersion();
+  const db = getDB();
+  return useMemo(
+    () => db.select().from(goals).orderBy(goals.createdAt).all(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [version],
+  );
 }
 
 export function usePaidItemsForMonth(key: string): PaidItem[] {
@@ -417,6 +430,21 @@ export function upsertBudget(b: NewBudget): void {
 
 export function deleteBudget(id: string): void {
   getDB().delete(budgets).where(eq(budgets.id, id)).run();
+  bump();
+}
+
+// ---- Goals (Phase 10l) ----
+
+export function upsertGoal(g: NewGoal): void {
+  const db = getDB();
+  const existing = db.select().from(goals).where(eq(goals.id, g.id)).get();
+  if (existing) db.update(goals).set(g).where(eq(goals.id, g.id)).run();
+  else db.insert(goals).values(g).run();
+  bump();
+}
+
+export function deleteGoal(id: string): void {
+  getDB().delete(goals).where(eq(goals.id, id)).run();
   bump();
 }
 

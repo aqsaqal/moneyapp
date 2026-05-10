@@ -25,9 +25,13 @@ import {
   upsertBudget,
   deleteBudget,
   upsertRecurring,
+  useGoals,
+  useAccounts,
 } from '@/hooks/useAppData';
 import { useSubscriptionAudit, type DetectedCandidate, type StaleSubscription } from '@/hooks/useSubscriptionAudit';
+import { GoalSheet } from '@/components/GoalSheet';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import type { Goal } from '@/utils/db/schema';
 import { catInfo } from '@/constants/categories';
 import { monthKey, formatMoney } from '@/utils/format';
 import { type CurrencyCode } from '@/constants/currency';
@@ -48,6 +52,7 @@ export default function PlanScreen() {
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <RecurringSection />
         <SubscriptionAuditSection />
+        <GoalsSection />
         <BudgetsSection />
         {/* Islamic: Zakat + Sadaqa nav rows. Generic: renders nothing. */}
         <FeatureSlots.PlanTabExtras onNavigate={(p) => router.push(p as never)} />
@@ -235,6 +240,86 @@ function promptAddBudget() {
   });
 }
 
+// ---- Goals (Phase 10l) ----
+
+function GoalsSection() {
+  const t = useT();
+  const goals = useGoals();
+  const accounts = useAccounts();
+  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const accountById = useMemo(() => new Map(accounts.map((a) => [a.id, a])), [accounts]);
+
+  // null = creating; Goal = editing; undefined = closed.
+  const [editing, setEditing] = useState<Goal | null | undefined>(undefined);
+
+  return (
+    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+      <SectionHeader
+        title={t('plan.goals.title')}
+        onAdd={() => setEditing(null)}
+        addLabel={t('plan.goals.add')}
+      />
+      {goals.length === 0 && (
+        <Text style={styles.emptyHint}>{t('plan.goals.empty')}</Text>
+      )}
+      {goals.map((g) => {
+        const acct = accountById.get(g.accountId);
+        const current = Math.max(0, acct?.balance ?? 0);
+        const pct = g.targetAmount > 0 ? Math.min(current / g.targetAmount, 1) : 0;
+        const remaining = Math.max(0, g.targetAmount - current);
+        const daysLeft = g.targetDate
+          ? Math.max(0, Math.ceil((g.targetDate - Date.now()) / 86_400_000))
+          : null;
+        return (
+          <Pressable
+            key={g.id}
+            onPress={() => setEditing(g)}
+            style={[styles.goalCard, { borderColor: `${g.color}55` }]}
+            accessibilityRole="button"
+            accessibilityLabel={`${g.name}, ${Math.round(pct * 100)}% of target`}
+          >
+            <View style={styles.goalHead}>
+              <View style={[styles.goalIcon, { backgroundColor: `${g.color}22` }]}>
+                <MaterialCommunityIcons name={g.icon as never} size={20} color={g.color} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.goalName}>{g.name}</Text>
+                <Text style={styles.goalSub}>
+                  {formatMoney(current, currency)} / {formatMoney(g.targetAmount, currency)} · {acct?.name ?? '—'}
+                </Text>
+              </View>
+              <Text style={[styles.goalPct, { color: g.color }]}>{Math.round(pct * 100)}%</Text>
+            </View>
+            <View style={[styles.barBg, { marginTop: 8 }]}>
+              <View
+                style={[
+                  styles.barFill,
+                  { width: `${pct * 100}%`, backgroundColor: g.color },
+                ]}
+              />
+            </View>
+            <Text style={styles.goalFooter}>
+              {pct >= 1
+                ? t('plan.goals.reached')
+                : daysLeft != null
+                  ? t('plan.goals.remainingByDate', {
+                      amount: formatMoney(remaining, currency),
+                      days: daysLeft,
+                    })
+                  : t('plan.goals.remaining', { amount: formatMoney(remaining, currency) })}
+            </Text>
+          </Pressable>
+        );
+      })}
+      <GoalSheet
+        visible={editing !== undefined}
+        goal={editing ?? undefined}
+        onClose={() => setEditing(undefined)}
+      />
+    </View>
+  );
+}
+
 // ---- Subscription audit (Phase 10i) ----
 
 function SubscriptionAuditSection() {
@@ -409,6 +494,24 @@ const styles = StyleSheet.create({
   auditTitle: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.bodySemi },
   auditDetail: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
   auditCta: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  goalCard: {
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+  },
+  goalHead: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  goalIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: radii.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  goalName: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi },
+  goalSub: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
+  goalPct: { fontSize: sizes.md, fontFamily: font.displayBold },
+  goalFooter: { color: theme.text2, fontSize: sizes.xs, marginTop: 6 },
   budgetCard: {
     padding: spacing.md,
     borderRadius: radii.lg,
