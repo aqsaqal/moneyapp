@@ -24,7 +24,10 @@ import {
   deleteRecurring,
   upsertBudget,
   deleteBudget,
+  upsertRecurring,
 } from '@/hooks/useAppData';
+import { useSubscriptionAudit, type DetectedCandidate, type StaleSubscription } from '@/hooks/useSubscriptionAudit';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { catInfo } from '@/constants/categories';
 import { monthKey, formatMoney } from '@/utils/format';
 import { type CurrencyCode } from '@/constants/currency';
@@ -44,6 +47,7 @@ export default function PlanScreen() {
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <RecurringSection />
+        <SubscriptionAuditSection />
         <BudgetsSection />
         {/* Islamic: Zakat + Sadaqa nav rows. Generic: renders nothing. */}
         <FeatureSlots.PlanTabExtras onNavigate={(p) => router.push(p as never)} />
@@ -231,6 +235,126 @@ function promptAddBudget() {
   });
 }
 
+// ---- Subscription audit (Phase 10i) ----
+
+function SubscriptionAuditSection() {
+  const t = useT();
+  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const audit = useSubscriptionAudit();
+  const hasContent =
+    audit.detected.length > 0 ||
+    audit.stale.length > 0 ||
+    audit.annualBurn > 0;
+  if (!hasContent) return null;
+
+  const promote = (c: DetectedCandidate) => {
+    Alert.alert(
+      t('plan.audit.promote.title'),
+      t('plan.audit.promote.body', { token: c.token, amount: formatMoney(c.amount, currency) }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.add'),
+          style: 'default',
+          onPress: () => {
+            const cat = catInfo(c.category);
+            upsertRecurring({
+              id: `r${Date.now()}`,
+              type: 'expense',
+              name: c.token.charAt(0).toUpperCase() + c.token.slice(1),
+              amount: c.amount,
+              category: c.category,
+              accountId: c.accountId,
+              dayOfMonth: c.dayOfMonth,
+              icon: cat.icon,
+              color: cat.color,
+            });
+          },
+        },
+      ],
+    );
+  };
+
+  const dismissStale = (s: StaleSubscription) => {
+    Alert.alert(
+      t('plan.audit.stale.title', { name: s.recurring.name }),
+      t('plan.audit.stale.body'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => deleteRecurring(s.recurring.id),
+        },
+      ],
+    );
+  };
+
+  return (
+    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+      <SectionHeader title={t('plan.audit.title')} />
+
+      {audit.annualBurn > 0 && (
+        <View style={styles.burnCard}>
+          <Text style={styles.burnLabel}>{t('plan.audit.annual')}</Text>
+          <Text style={styles.burnValue}>{formatMoney(audit.annualBurn, currency)}</Text>
+        </View>
+      )}
+
+      {audit.detected.map((c) => {
+        const cat = catInfo(c.category);
+        return (
+          <Pressable
+            key={c.id}
+            style={[styles.auditCard, { borderColor: `${theme.warning}55` }]}
+            onPress={() => promote(c)}
+            accessibilityRole="button"
+            accessibilityLabel={`${c.token} suggested as recurring, ${formatMoney(c.amount, currency)}, tap to add`}
+          >
+            <View style={[styles.auditIcon, { backgroundColor: `${cat.color}22` }]}>
+              <MaterialCommunityIcons name="lightbulb-outline" size={18} color={theme.warning} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.auditTitle}>{t('plan.audit.detected', { token: c.token })}</Text>
+              <Text style={styles.auditDetail}>
+                {formatMoney(c.amount, currency)} · {t('plan.audit.detected.subtitle', { months: c.monthsSeen })}
+              </Text>
+            </View>
+            <Text style={styles.auditCta}>{t('common.add')}</Text>
+          </Pressable>
+        );
+      })}
+
+      {audit.stale.map((s) => {
+        const days = s.daysSinceLastSeen;
+        const detail = days == null
+          ? t('plan.audit.stale.never')
+          : t('plan.audit.stale.days', { n: days });
+        return (
+          <Pressable
+            key={s.recurring.id}
+            style={[styles.auditCard, { borderColor: `${theme.expense}55` }]}
+            onPress={() => dismissStale(s)}
+            accessibilityRole="button"
+            accessibilityLabel={`${s.recurring.name} not seen in ${days ?? 'a while'}, tap to review`}
+          >
+            <View style={[styles.auditIcon, { backgroundColor: `${theme.expense}22` }]}>
+              <MaterialCommunityIcons name="alert-octagon-outline" size={18} color={theme.expense} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.auditTitle}>
+                {t('plan.audit.stale.headline', { name: s.recurring.name })}
+              </Text>
+              <Text style={styles.auditDetail}>{detail}</Text>
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={18} color={theme.text3} />
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
   top: {
@@ -254,6 +378,37 @@ const styles = StyleSheet.create({
   disposableLabel: { color: theme.text2, fontSize: sizes.sm },
   disposableValue: { fontSize: sizes.xl, fontFamily: font.display, fontWeight: '700' },
   emptyHint: { color: theme.text3, fontSize: sizes.sm, paddingHorizontal: 4, lineHeight: 20 },
+  burnCard: {
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  burnLabel: { color: theme.text2, fontSize: sizes.sm },
+  burnValue: { color: theme.text1, fontSize: sizes.xl, fontFamily: font.displayBold },
+  auditCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+  },
+  auditIcon: {
+    width: 36,
+    height: 36,
+    borderRadius: radii.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  auditTitle: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  auditDetail: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
+  auditCta: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },
   budgetCard: {
     padding: spacing.md,
     borderRadius: radii.lg,
