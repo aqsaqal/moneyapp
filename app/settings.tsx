@@ -43,6 +43,8 @@ import {
 import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { exportData } from '@/utils/dataExport';
+import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
+import { monthKey as monthKeyOf } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
 import { APP_NAME } from '@/constants/flavor';
 import { PRIVACY_POLICY_URL, TERMS_URL, SUPPORT_EMAIL } from '@/constants/legal';
@@ -340,6 +342,8 @@ function SecuritySection() {
 
 function DataSection() {
   const t = useT();
+  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const now = new Date();
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
       <SectionHeader title={t('me.section.data')} />
@@ -352,6 +356,22 @@ function DataSection() {
         label={t('me.export.csv')}
         icon="export"
         onPress={() => exportData('csv')}
+      />
+      <SettingRow
+        label={t('me.export.pdfMonth')}
+        hint={now.toLocaleString('en', { month: 'long', year: 'numeric' })}
+        icon="file-pdf-box"
+        onPress={() => {
+          void exportMonthlyPdf(monthKeyOf(now), currency);
+        }}
+      />
+      <SettingRow
+        label={t('me.export.pdfYear')}
+        hint={String(now.getFullYear())}
+        icon="file-document-multiple-outline"
+        onPress={() => {
+          void exportYearlyPdf(now.getFullYear(), currency);
+        }}
       />
     </View>
   );

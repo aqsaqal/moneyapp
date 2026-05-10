@@ -104,6 +104,8 @@
   "settings.fx.daysAgo": "On — rates fetched {n}d ago.",
   "me.export.json": "Export all data (JSON)",
   "me.export.csv": "Export transactions (CSV)",
+  "me.export.pdfMonth": "PDF report — this month",
+  "me.export.pdfYear": "PDF report — full year",
   "me.privacyPolicy": "Privacy Policy",
   "me.terms": "Terms of Use",
   "me.support": "Contact support",

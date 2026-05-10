@@ -104,6 +104,8 @@
   "settings.fx.daysAgo": "Açık — {n} gün önce getirildi.",
   "me.export.json": "Tüm verileri dışa aktar (JSON)",
   "me.export.csv": "İşlemleri dışa aktar (CSV)",
+  "me.export.pdfMonth": "PDF rapor — bu ay",
+  "me.export.pdfYear": "PDF rapor — tüm yıl",
   "me.privacyPolicy": "Gizlilik Politikası",
   "me.terms": "Kullanım Koşulları",
   "me.support": "Destekle iletişime geç",

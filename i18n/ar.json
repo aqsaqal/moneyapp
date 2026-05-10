@@ -104,6 +104,8 @@
   "settings.fx.daysAgo": "مفعّل — منذ {n} يومًا.",
   "me.export.json": "تصدير كل البيانات (JSON)",
   "me.export.csv": "تصدير المعاملات (CSV)",
+  "me.export.pdfMonth": "تقرير PDF — الشهر الحالي",
+  "me.export.pdfYear": "تقرير PDF — السنة كاملة",
   "me.privacyPolicy": "سياسة الخصوصية",
   "me.terms": "شروط الاستخدام",
   "me.support": "تواصل مع الدعم",

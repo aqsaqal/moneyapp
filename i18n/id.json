@@ -104,6 +104,8 @@
   "settings.fx.daysAgo": "Aktif — {n} hari lalu.",
   "me.export.json": "Ekspor semua data (JSON)",
   "me.export.csv": "Ekspor transaksi (CSV)",
+  "me.export.pdfMonth": "Laporan PDF — bulan ini",
+  "me.export.pdfYear": "Laporan PDF — setahun penuh",
   "me.privacyPolicy": "Kebijakan Privasi",
   "me.terms": "Ketentuan Penggunaan",
   "me.support": "Hubungi dukungan",
