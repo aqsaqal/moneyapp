@@ -24,6 +24,7 @@
   "home.viewAll": "عرض الكل",
   "home.disposable": "{month} · المتبقّي",
   "home.daysLeft": "متبقي {n} يومًا",
+  "home.forecast": "متوقّع آخر الشهر: {amount}",
 
   "activity.title": "النشاط",
   "activity.searchPlaceholder": "ابحث في الملاحظات / الفئات",
@@ -108,6 +109,8 @@
   "me.appearance.light": "فاتح",
 
   "settings.title": "الإعدادات",
+  "settings.categories.title": "فئات مخصّصة",
+  "settings.categories.empty": "أنشئ فئاتك بأسماء وأيقونات وألوان من اختيارك.",
   "settings.fx.label": "تحديث أسعار العملات تلقائيًا",
   "settings.fx.bodyOff": "متوقف — الإجماليات بالعملات الأخرى تبقى بعملتها الأصلية.",
   "settings.fx.refreshing": "جلب أحدث الأسعار…",

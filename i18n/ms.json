@@ -24,6 +24,7 @@
   "home.viewAll": "Lihat semua",
   "home.disposable": "{month} · Boleh dibelanja",
   "home.daysLeft": "Tinggal {n} hari",
+  "home.forecast": "Unjuran hujung bulan: {amount}",
 
   "activity.title": "Aktiviti",
   "activity.searchPlaceholder": "Cari nota / kategori",
@@ -108,6 +109,8 @@
   "me.appearance.light": "Cerah",
 
   "settings.title": "Tetapan",
+  "settings.categories.title": "Kategori tersuai",
+  "settings.categories.empty": "Cipta kategori sendiri dengan nama, ikon dan warna pilihan.",
   "settings.fx.label": "Auto-segar kadar tukar",
   "settings.fx.bodyOff": "Mati — jumlah berbilang mata wang kekal dalam mata wang asal.",
   "settings.fx.refreshing": "Mengambil kadar terkini…",

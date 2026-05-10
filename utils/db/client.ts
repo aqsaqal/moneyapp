@@ -140,6 +140,16 @@ function createTables(db: SQLite.SQLiteDatabase) {
       net REAL NOT NULL
     );
 
+    -- Phase 10s: user-defined categories overlaying the seeded set.
+    CREATE TABLE IF NOT EXISTS custom_categories (
+      id TEXT PRIMARY KEY NOT NULL,
+      name TEXT NOT NULL,
+      icon TEXT NOT NULL,
+      color TEXT NOT NULL,
+      type TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS budgets (
       id TEXT PRIMARY KEY NOT NULL,
       category TEXT NOT NULL,

@@ -24,6 +24,7 @@
   "home.viewAll": "Tümünü gör",
   "home.disposable": "{month} · Kullanılabilir",
   "home.daysLeft": "{n} gün kaldı",
+  "home.forecast": "Ay sonu tahmini: {amount}",
 
   "activity.title": "Hareketler",
   "activity.searchPlaceholder": "Notlarda / kategorilerde ara",
@@ -108,6 +109,8 @@
   "me.appearance.light": "Açık",
 
   "settings.title": "Ayarlar",
+  "settings.categories.title": "Özel kategoriler",
+  "settings.categories.empty": "Kendi kategorilerini ad, ikon ve renkle oluştur.",
   "settings.fx.label": "Döviz kuru otomatik güncelleme",
   "settings.fx.bodyOff": "Kapalı — çoklu para toplamları kendi para birimlerinde kalır.",
   "settings.fx.refreshing": "En son kurlar getiriliyor…",

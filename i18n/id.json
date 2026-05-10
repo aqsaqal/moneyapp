@@ -24,6 +24,7 @@
   "home.viewAll": "Lihat semua",
   "home.disposable": "{month} · Tersisa",
   "home.daysLeft": "Sisa {n} hari",
+  "home.forecast": "Proyeksi akhir bulan: {amount}",
 
   "activity.title": "Aktivitas",
   "activity.searchPlaceholder": "Cari catatan / kategori",
@@ -108,6 +109,8 @@
   "me.appearance.light": "Terang",
 
   "settings.title": "Pengaturan",
+  "settings.categories.title": "Kategori kustom",
+  "settings.categories.empty": "Buat kategori sendiri dengan nama, ikon, dan warna pilihanmu.",
   "settings.fx.label": "Auto-refresh kurs",
   "settings.fx.bodyOff": "Mati — total multi-mata-uang tetap dalam mata uangnya masing-masing.",
   "settings.fx.refreshing": "Mengambil kurs terbaru…",

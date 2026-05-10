@@ -41,17 +41,44 @@ export const INCOME_CATEGORIES: CategoryDef[] = [
 ];
 
 // Runtime helpers that merge in Islamic categories when FeatureSlots.CategoryExtras
-// is populated. In generic builds, CategoryExtras is {expense:[],income:[]} so the
-// helpers return the pure core list.
+// is populated, plus user-defined custom categories from Phase 10s.
+// catInfo() prefers customs when ids overlap with seeded.
 
 import { FeatureSlots } from '@/features';
+import { getRawDB } from '@/utils/db/client';
+
+interface CustomRow {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  type: 'expense' | 'income';
+}
+
+function readCustoms(type: 'expense' | 'income'): CategoryDef[] {
+  try {
+    const raw = getRawDB();
+    const rows = raw.getAllSync(
+      `SELECT id, name, icon, color, type FROM custom_categories WHERE type = ? ORDER BY created_at`,
+      [type],
+    ) as CustomRow[];
+    return rows.map((r) => ({ id: r.id, name: r.name, icon: r.icon, color: r.color }));
+  } catch {
+    return [];
+  }
+}
 
 export function allExpenseCategories(): CategoryDef[] {
-  return [...EXPENSE_CATEGORIES, ...FeatureSlots.CategoryExtras.expense];
+  // Order: customs first (so they shadow seeded by id) → seeded → islamic.
+  const customs = readCustoms('expense');
+  const seededFiltered = EXPENSE_CATEGORIES.filter((c) => !customs.some((x) => x.id === c.id));
+  return [...customs, ...seededFiltered, ...FeatureSlots.CategoryExtras.expense];
 }
 
 export function allIncomeCategories(): CategoryDef[] {
-  return [...INCOME_CATEGORIES, ...FeatureSlots.CategoryExtras.income];
+  const customs = readCustoms('income');
+  const seededFiltered = INCOME_CATEGORIES.filter((c) => !customs.some((x) => x.id === c.id));
+  return [...customs, ...seededFiltered, ...FeatureSlots.CategoryExtras.income];
 }
 
 const FALLBACK: CategoryDef = { id: 'unknown', name: 'Other', icon: 'MoreHorizontal', color: '#8888AA' };

@@ -14,7 +14,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
-import { upsertDebt, deleteDebt } from '@/hooks/useAppData';
+import { upsertDebt, deleteDebt, useAccounts } from '@/hooks/useAppData';
+import { SettingRow } from '@/components/Sections';
+import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { useT } from '@/hooks/useT';
 import type { Debt } from '@/utils/db/schema';
 
@@ -43,12 +45,15 @@ export interface DebtSheetProps {
 export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
   const t = useT();
   const editing = !!debt;
+  const accounts = useAccounts();
   const [name, setName] = useState(debt?.name ?? '');
   const [balance, setBalance] = useState(String(debt?.balance ?? ''));
   const [apr, setApr] = useState(String(debt?.apr ?? ''));
   const [minPayment, setMinPayment] = useState(String(debt?.minPayment ?? ''));
   const [color, setColor] = useState(debt?.color ?? PALETTE[0]);
   const [icon, setIcon] = useState<string>(debt?.icon ?? ICONS[0]);
+  const [accountId, setAccountId] = useState<string | null>(debt?.accountId ?? null);
+  const [accountPicker, setAccountPicker] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -58,7 +63,10 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
     setMinPayment(String(debt?.minPayment ?? ''));
     setColor(debt?.color ?? PALETTE[0]);
     setIcon(debt?.icon ?? ICONS[0]);
+    setAccountId(debt?.accountId ?? null);
   }, [visible, debt]);
+
+  const linkedAcct = accountId ? accounts.find((a) => a.id === accountId) : null;
 
   const save = () => {
     const b = parseFloat(balance.replace(',', '.'));
@@ -74,7 +82,7 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
       balance: b,
       apr: a,
       minPayment: m,
-      accountId: null,
+      accountId,
       color,
       icon,
       createdAt: debt?.createdAt ?? Date.now(),
@@ -160,6 +168,32 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
               style={styles.input}
             />
           </View>
+
+          <SettingRow
+            label="Linked account (optional)"
+            hint={linkedAcct ? `${linkedAcct.name} — transfers auto-update balance` : 'Manual balance only'}
+            icon="link-variant"
+            iconColor={linkedAcct?.color ?? theme.text3}
+            onPress={() => setAccountPicker(true)}
+          />
+
+          <PickerSheet
+            visible={accountPicker}
+            title="Linked account"
+            options={[
+              { value: '', label: 'None — track manually', icon: 'link-variant-off' },
+              ...accounts.map<PickerOption<string>>((a) => ({
+                value: a.id,
+                label: a.name,
+                hint: a.type,
+                iconColor: a.color,
+                icon: 'wallet-outline',
+              })),
+            ]}
+            selected={accountId ?? ''}
+            onPick={(id) => setAccountId(id || null)}
+            onClose={() => setAccountPicker(false)}
+          />
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>COLOR</Text>
             <View style={styles.swatchRow}>

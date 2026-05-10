@@ -46,6 +46,9 @@ import { exportData } from '@/utils/dataExport';
 import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
 import { monthKey as monthKeyOf } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
+import { useCustomCategories } from '@/hooks/useAppData';
+import { CustomCategorySheet } from '@/components/CustomCategorySheet';
+import type { CustomCategory } from '@/utils/db/schema';
 import { APP_NAME } from '@/constants/flavor';
 import { PRIVACY_POLICY_URL, TERMS_URL, SUPPORT_EMAIL } from '@/constants/legal';
 import { useT } from '@/hooks/useT';
@@ -77,6 +80,7 @@ export default function SettingsScreen() {
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <PreferencesSection />
+        <CategoriesSection />
         <SecuritySection />
         {/* Islamic flavor: mazhab + prayer-method rows. Generic: nothing. */}
         <FeatureSlots.MeTabExtras onNavigate={(p) => router.push(p as never)} />
@@ -297,6 +301,44 @@ function FxRefreshRow() {
         </Pressable>
       }
     />
+  );
+}
+
+// ---- Custom categories (Phase 10s) ----
+
+function CategoriesSection() {
+  const t = useT();
+  const customs = useCustomCategories();
+  const [editing, setEditing] = useState<CustomCategory | null | undefined>(undefined);
+
+  return (
+    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+      <SectionHeader
+        title={t('settings.categories.title')}
+        onAdd={() => setEditing(null)}
+        addLabel={t('common.add')}
+      />
+      {customs.length === 0 && (
+        <Text style={{ color: theme.text3, fontSize: sizes.sm, paddingHorizontal: 4, lineHeight: 20 }}>
+          {t('settings.categories.empty')}
+        </Text>
+      )}
+      {customs.map((c) => (
+        <SettingRow
+          key={c.id}
+          label={c.name}
+          hint={c.type === 'expense' ? 'Expense' : 'Income'}
+          icon={c.icon as never}
+          iconColor={c.color}
+          onPress={() => setEditing(c)}
+        />
+      ))}
+      <CustomCategorySheet
+        visible={editing !== undefined}
+        category={editing ?? undefined}
+        onClose={() => setEditing(undefined)}
+      />
+    </View>
   );
 }
 

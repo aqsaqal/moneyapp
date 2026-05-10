@@ -12,6 +12,7 @@ import { getDB, getRawDB } from '@/utils/db/client';
 import {
   accounts,
   budgets,
+  customCategories,
   debts,
   goals,
   paidItems,
@@ -19,9 +20,11 @@ import {
   transactions,
   type Account,
   type Budget,
+  type CustomCategory,
   type Debt,
   type Goal,
   type NewBudget,
+  type NewCustomCategory,
   type NewDebt,
   type NewGoal,
   type NewTransaction,
@@ -197,6 +200,29 @@ export function useDebts(): Debt[] {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [version],
   );
+}
+
+export function useCustomCategories(): CustomCategory[] {
+  useVersion();
+  const db = getDB();
+  return useMemo(
+    () => db.select().from(customCategories).orderBy(customCategories.createdAt).all(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [version],
+  );
+}
+
+export function upsertCustomCategory(c: NewCustomCategory): void {
+  const db = getDB();
+  const existing = db.select().from(customCategories).where(eq(customCategories.id, c.id)).get();
+  if (existing) db.update(customCategories).set(c).where(eq(customCategories.id, c.id)).run();
+  else db.insert(customCategories).values(c).run();
+  bump();
+}
+
+export function deleteCustomCategory(id: string): void {
+  getDB().delete(customCategories).where(eq(customCategories.id, id)).run();
+  bump();
 }
 
 export function usePaidItemsForMonth(key: string): PaidItem[] {

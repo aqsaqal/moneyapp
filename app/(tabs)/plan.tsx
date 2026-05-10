@@ -329,22 +329,39 @@ function GoalsSection() {
 function DebtsSection() {
   const t = useT();
   const debts = useDebts();
+  const accounts = useAccounts();
+  const accountById = useMemo(() => new Map(accounts.map((a) => [a.id, a])), [accounts]);
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [editing, setEditing] = useState<Debt | null | undefined>(undefined);
   const [strategy, setStrategy] = useState<Strategy>('avalanche');
 
-  const totals = useMemo(() => debtTotals(debts), [debts]);
+  // When a debt has accountId set, derive balance from the linked account
+  // so that transfers paying it down propagate through addTransaction's
+  // existing account-balance reconciliation. Otherwise use the static
+  // value the user typed in DebtSheet.
+  const liveDebts = useMemo(
+    () =>
+      debts.map((d) => ({
+        ...d,
+        balance: d.accountId
+          ? Math.abs(accountById.get(d.accountId)?.balance ?? d.balance)
+          : d.balance,
+      })),
+    [debts, accountById],
+  );
+
+  const totals = useMemo(() => debtTotals(liveDebts), [liveDebts]);
   // Default monthly budget = sum of mins + 10% headroom; lets the projection
   // show "if you stick to minimums" by default.
   const budget = totals.minPayment * 1.1;
   const projection = useMemo(() => {
-    if (debts.length === 0) return null;
+    if (liveDebts.length === 0) return null;
     return projectPayoff(
-      debts.map((d) => ({ id: d.id, balance: d.balance, apr: d.apr, minPayment: d.minPayment })),
+      liveDebts.map((d) => ({ id: d.id, balance: d.balance, apr: d.apr, minPayment: d.minPayment })),
       budget,
       strategy,
     );
-  }, [debts, budget, strategy]);
+  }, [liveDebts, budget, strategy]);
 
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
@@ -409,26 +426,34 @@ function DebtsSection() {
         </View>
       )}
 
-      {debts.map((d) => (
-        <Pressable
-          key={d.id}
-          onPress={() => setEditing(d)}
-          style={[styles.debtCard, { borderColor: `${d.color}55` }]}
-          accessibilityRole="button"
-          accessibilityLabel={`${d.name}, ${formatMoney(d.balance, currency)} at ${d.apr}% APR`}
-        >
-          <View style={[styles.goalIcon, { backgroundColor: `${d.color}22` }]}>
-            <MaterialCommunityIcons name={d.icon as never} size={20} color={d.color} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.goalName}>{d.name}</Text>
-            <Text style={styles.goalSub}>
-              {formatMoney(d.balance, currency)} · {d.apr.toFixed(2)}% APR · min {formatMoney(d.minPayment, currency)}
-            </Text>
-          </View>
-          <MaterialCommunityIcons name="chevron-right" size={18} color={theme.text3} />
-        </Pressable>
-      ))}
+      {liveDebts.map((d) => {
+        const linked = d.accountId ? accountById.get(d.accountId) : null;
+        return (
+          <Pressable
+            key={d.id}
+            onPress={() => setEditing(debts.find((x) => x.id === d.id))}
+            style={[styles.debtCard, { borderColor: `${d.color}55` }]}
+            accessibilityRole="button"
+            accessibilityLabel={`${d.name}, ${formatMoney(d.balance, currency)} at ${d.apr}% APR`}
+          >
+            <View style={[styles.goalIcon, { backgroundColor: `${d.color}22` }]}>
+              <MaterialCommunityIcons name={d.icon as never} size={20} color={d.color} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.goalName}>{d.name}</Text>
+              <Text style={styles.goalSub}>
+                {formatMoney(d.balance, currency)} · {d.apr.toFixed(2)}% APR · min {formatMoney(d.minPayment, currency)}
+              </Text>
+              {linked && (
+                <Text style={[styles.goalSub, { color: linked.color }]}>
+                  ↔ {linked.name} (live)
+                </Text>
+              )}
+            </View>
+            <MaterialCommunityIcons name="chevron-right" size={18} color={theme.text3} />
+          </Pressable>
+        );
+      })}
 
       <DebtSheet
         visible={editing !== undefined}

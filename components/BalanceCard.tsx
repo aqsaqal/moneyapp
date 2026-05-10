@@ -25,6 +25,9 @@ export interface DisposableHeroCardProps {
   daysLeft?: number;
   monthLabel?: string;
   currency?: CurrencyCode;
+  /** Phase 10u — projected end-of-month disposable based on the current
+   *  trajectory. Rendered as a small line under the hero amount when set. */
+  forecast?: number;
 }
 
 /**
@@ -41,6 +44,7 @@ export function DisposableHeroCard({
   daysLeft,
   monthLabel,
   currency = 'USD',
+  forecast,
 }: DisposableHeroCardProps) {
   const positive = disposable >= 0;
   return (
@@ -63,6 +67,11 @@ export function DisposableHeroCard({
         {formatMoney(income, currency)} · {formatMoney(expense, currency)}
         {typeof daysLeft === 'number' ? ` · ${t('home.daysLeft', { n: daysLeft })}` : ''}
       </Text>
+      {typeof forecast === 'number' && (
+        <Text style={[styles.heroForecast, { color: forecast >= 0 ? theme.accent : theme.expense }]}>
+          {t('home.forecast', { amount: formatMoney(forecast, currency) })}
+        </Text>
+      )}
     </View>
   );
 }
@@ -163,6 +172,11 @@ const styles = StyleSheet.create({
     fontSize: sizes.sm,
     fontFamily: font.body,
     marginTop: 2,
+  },
+  heroForecast: {
+    fontSize: sizes.sm,
+    fontFamily: font.bodySemi,
+    marginTop: 6,
   },
 
   // v1 (kept)

@@ -76,7 +76,27 @@ export default function Home() {
 
   const monthLabel = now.toLocaleString('en', { month: 'long' });
   const dim = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const daysLeft = Math.max(0, dim - now.getDate());
+  const daysElapsed = now.getDate();
+  const daysLeft = Math.max(0, dim - daysElapsed);
+
+  // Phase 10u — cashflow forecast. Project end-of-month disposable based
+  // on:
+  //   - what's already been spent + earned this month (committed)
+  //   - average daily *variable* spend so far × days left (forecast var)
+  //   - remaining recurring expenses not yet paid (forecast bills)
+  // Returns null when there's not enough data (first day of the month).
+  const forecast = useMemo(() => {
+    if (daysElapsed < 1 || daysLeft === 0) return null;
+    const avgDailyVar = expense / daysElapsed;
+    const projectedVar = avgDailyVar * daysLeft;
+    // Remaining recurring expenses for this month: bills with
+    // dayOfMonth >= today that aren't already counted in `expense` because
+    // recurring → transactions are created when marked paid.
+    const remainingBills = recurring
+      .filter((r) => r.type === 'expense' && r.dayOfMonth > daysElapsed)
+      .reduce((s, r) => s + r.amount, 0);
+    return disposable - projectedVar - remainingBills;
+  }, [expense, daysElapsed, daysLeft, disposable, recurring]);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -118,6 +138,7 @@ export default function Home() {
           daysLeft={daysLeft}
           monthLabel={monthLabel}
           currency={currency}
+          forecast={forecast ?? undefined}
         />
 
         {/* Islamic flavor: ZakatHomeCard + RamadanHomeCard. Generic: nothing. */}

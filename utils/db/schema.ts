@@ -65,6 +65,19 @@ export const fxRates = sqliteTable('fx_rates', {
   fetchedAt: integer('fetched_at').notNull(),
 });
 
+// Phase 10s: user-defined categories. Layered ON TOP of the seeded
+// EXPENSE_CATEGORIES / INCOME_CATEGORIES from constants/categories — id
+// space is shared, so a custom row with id='coffee' would shadow the
+// seeded one. catInfo() prefers customs when both exist.
+export const customCategories = sqliteTable('custom_categories', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  icon: text('icon').notNull(),
+  color: text('color').notNull(),
+  type: text('type', { enum: ['expense', 'income'] }).notNull(),
+  createdAt: integer('created_at').notNull(),
+});
+
 // Phase 10p: daily net-worth snapshots so the Activity analytics can chart
 // "net worth over time". Keyed by ISO date (YYYY-MM-DD) — at most one row
 // per day. Captured at app boot whenever the active profile's "today" row
@@ -187,6 +200,9 @@ export type Debt = typeof debts.$inferSelect;
 export type NewDebt = typeof debts.$inferInsert;
 
 export type NetWorthSnapshot = typeof netWorthSnapshots.$inferSelect;
+
+export type CustomCategory = typeof customCategories.$inferSelect;
+export type NewCustomCategory = typeof customCategories.$inferInsert;
 
 // Convenience: monthKey for a given date (YYYY-MM).
 export function monthKey(date: Date | number): string {
