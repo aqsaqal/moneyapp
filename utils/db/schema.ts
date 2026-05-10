@@ -55,6 +55,24 @@ export const fxRates = sqliteTable('fx_rates', {
   fetchedAt: integer('fetched_at').notNull(),
 });
 
+// Phase 10o: liability tracker. Distinct from `accounts` of type='debt'
+// because we need APR + minimum-payment metadata to do payoff math —
+// account balances alone don't carry that. The `accountId` is optional;
+// when set, the account's balance is treated as the live debt balance
+// (so paying it down via a transfer automatically reduces the debt).
+// Otherwise `balance` is the source of truth.
+export const debts = sqliteTable('debts', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  balance: real('balance').notNull(),         // current outstanding (positive)
+  apr: real('apr').notNull(),                 // annual percentage rate, e.g. 18.99
+  minPayment: real('min_payment').notNull(),  // monthly minimum payment
+  accountId: text('account_id'),              // optional link to an `accounts` row
+  color: text('color').notNull(),
+  icon: text('icon').notNull(),
+  createdAt: integer('created_at').notNull(),
+});
+
 // Phase 10l: savings goals. Each goal is anchored to an account; progress
 // is computed from that account's current balance against `targetAmount`.
 // Anchoring to an account (vs. a free-floating progress counter) means
@@ -143,6 +161,9 @@ export type NewMerchantMemoryRow = typeof merchantMemory.$inferInsert;
 
 export type Goal = typeof goals.$inferSelect;
 export type NewGoal = typeof goals.$inferInsert;
+
+export type Debt = typeof debts.$inferSelect;
+export type NewDebt = typeof debts.$inferInsert;
 
 // Convenience: monthKey for a given date (YYYY-MM).
 export function monthKey(date: Date | number): string {

@@ -117,6 +117,19 @@ function createTables(db: SQLite.SQLiteDatabase) {
       created_at INTEGER NOT NULL
     );
 
+    -- Phase 10o: liability tracker — debts with APR + min payment.
+    CREATE TABLE IF NOT EXISTS debts (
+      id TEXT PRIMARY KEY NOT NULL,
+      name TEXT NOT NULL,
+      balance REAL NOT NULL,
+      apr REAL NOT NULL,
+      min_payment REAL NOT NULL,
+      account_id TEXT,
+      color TEXT NOT NULL,
+      icon TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS budgets (
       id TEXT PRIMARY KEY NOT NULL,
       category TEXT NOT NULL,

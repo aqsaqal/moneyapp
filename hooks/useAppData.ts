@@ -12,14 +12,17 @@ import { getDB, getRawDB } from '@/utils/db/client';
 import {
   accounts,
   budgets,
+  debts,
   goals,
   paidItems,
   recurring,
   transactions,
   type Account,
   type Budget,
+  type Debt,
   type Goal,
   type NewBudget,
+  type NewDebt,
   type NewGoal,
   type NewTransaction,
   type PaidItem,
@@ -162,6 +165,16 @@ export function useGoals(): Goal[] {
   const db = getDB();
   return useMemo(
     () => db.select().from(goals).orderBy(goals.createdAt).all(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [version],
+  );
+}
+
+export function useDebts(): Debt[] {
+  useVersion();
+  const db = getDB();
+  return useMemo(
+    () => db.select().from(debts).orderBy(debts.createdAt).all(),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [version],
   );
@@ -448,6 +461,21 @@ export function upsertGoal(g: NewGoal): void {
 
 export function deleteGoal(id: string): void {
   getDB().delete(goals).where(eq(goals.id, id)).run();
+  bump();
+}
+
+// ---- Debts (Phase 10o) ----
+
+export function upsertDebt(d: NewDebt): void {
+  const db = getDB();
+  const existing = db.select().from(debts).where(eq(debts.id, d.id)).get();
+  if (existing) db.update(debts).set(d).where(eq(debts.id, d.id)).run();
+  else db.insert(debts).values(d).run();
+  bump();
+}
+
+export function deleteDebt(id: string): void {
+  getDB().delete(debts).where(eq(debts.id, id)).run();
   bump();
 }
 

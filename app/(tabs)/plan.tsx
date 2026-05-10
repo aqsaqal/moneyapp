@@ -27,11 +27,14 @@ import {
   upsertRecurring,
   useGoals,
   useAccounts,
+  useDebts,
 } from '@/hooks/useAppData';
 import { useSubscriptionAudit, type DetectedCandidate, type StaleSubscription } from '@/hooks/useSubscriptionAudit';
 import { GoalSheet } from '@/components/GoalSheet';
+import { DebtSheet } from '@/components/DebtSheet';
+import { projectPayoff, debtTotals, type Strategy } from '@/utils/debtPayoff';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import type { Goal } from '@/utils/db/schema';
+import type { Goal, Debt } from '@/utils/db/schema';
 import { catInfo } from '@/constants/categories';
 import { monthKey, formatMoney } from '@/utils/format';
 import { type CurrencyCode } from '@/constants/currency';
@@ -53,6 +56,7 @@ export default function PlanScreen() {
         <RecurringSection />
         <SubscriptionAuditSection />
         <GoalsSection />
+        <DebtsSection />
         <BudgetsSection />
         {/* Islamic: Zakat + Sadaqa nav rows. Generic: renders nothing. */}
         <FeatureSlots.PlanTabExtras onNavigate={(p) => router.push(p as never)} />
@@ -320,6 +324,121 @@ function GoalsSection() {
   );
 }
 
+// ---- Debts (Phase 10o) ----
+
+function DebtsSection() {
+  const t = useT();
+  const debts = useDebts();
+  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const [editing, setEditing] = useState<Debt | null | undefined>(undefined);
+  const [strategy, setStrategy] = useState<Strategy>('avalanche');
+
+  const totals = useMemo(() => debtTotals(debts), [debts]);
+  // Default monthly budget = sum of mins + 10% headroom; lets the projection
+  // show "if you stick to minimums" by default.
+  const budget = totals.minPayment * 1.1;
+  const projection = useMemo(() => {
+    if (debts.length === 0) return null;
+    return projectPayoff(
+      debts.map((d) => ({ id: d.id, balance: d.balance, apr: d.apr, minPayment: d.minPayment })),
+      budget,
+      strategy,
+    );
+  }, [debts, budget, strategy]);
+
+  return (
+    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+      <SectionHeader
+        title={t('plan.debts.title')}
+        onAdd={() => setEditing(null)}
+        addLabel={t('plan.debts.add')}
+      />
+
+      {debts.length === 0 && (
+        <Text style={styles.emptyHint}>{t('plan.debts.empty')}</Text>
+      )}
+
+      {debts.length > 0 && (
+        <View style={styles.debtSummary}>
+          <View style={styles.debtSummaryRow}>
+            <Text style={styles.debtSummaryLabel}>{t('plan.debts.totalBalance')}</Text>
+            <Text style={[styles.debtSummaryValue, { color: theme.expense }]}>
+              {formatMoney(totals.balance, currency)}
+            </Text>
+          </View>
+          <View style={styles.debtSummaryRow}>
+            <Text style={styles.debtSummaryLabel}>{t('plan.debts.totalMin')}</Text>
+            <Text style={styles.debtSummaryValue}>
+              {formatMoney(totals.minPayment, currency)}
+            </Text>
+          </View>
+          {projection && (
+            <>
+              <View style={styles.debtStrategyRow}>
+                <Pressable
+                  onPress={() => setStrategy('avalanche')}
+                  style={[styles.stratChip, strategy === 'avalanche' && styles.stratChipActive]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: strategy === 'avalanche' }}
+                >
+                  <Text style={[styles.stratText, strategy === 'avalanche' && styles.stratTextActive]}>
+                    {t('plan.debts.avalanche')}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => setStrategy('snowball')}
+                  style={[styles.stratChip, strategy === 'snowball' && styles.stratChipActive]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: strategy === 'snowball' }}
+                >
+                  <Text style={[styles.stratText, strategy === 'snowball' && styles.stratTextActive]}>
+                    {t('plan.debts.snowball')}
+                  </Text>
+                </Pressable>
+              </View>
+              <Text style={styles.debtProjection}>
+                {projection.months == null
+                  ? t('plan.debts.tooSlow')
+                  : t('plan.debts.payoffIn', {
+                      months: projection.months,
+                      interest: formatMoney(projection.totalInterest, currency),
+                    })}
+              </Text>
+            </>
+          )}
+        </View>
+      )}
+
+      {debts.map((d) => (
+        <Pressable
+          key={d.id}
+          onPress={() => setEditing(d)}
+          style={[styles.debtCard, { borderColor: `${d.color}55` }]}
+          accessibilityRole="button"
+          accessibilityLabel={`${d.name}, ${formatMoney(d.balance, currency)} at ${d.apr}% APR`}
+        >
+          <View style={[styles.goalIcon, { backgroundColor: `${d.color}22` }]}>
+            <MaterialCommunityIcons name={d.icon as never} size={20} color={d.color} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.goalName}>{d.name}</Text>
+            <Text style={styles.goalSub}>
+              {formatMoney(d.balance, currency)} · {d.apr.toFixed(2)}% APR · min {formatMoney(d.minPayment, currency)}
+            </Text>
+          </View>
+          <MaterialCommunityIcons name="chevron-right" size={18} color={theme.text3} />
+        </Pressable>
+      ))}
+
+      <DebtSheet
+        visible={editing !== undefined}
+        debt={editing ?? undefined}
+        onClose={() => setEditing(undefined)}
+      />
+    </View>
+  );
+}
+
 // ---- Subscription audit (Phase 10i) ----
 
 function SubscriptionAuditSection() {
@@ -512,6 +631,42 @@ const styles = StyleSheet.create({
   goalSub: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
   goalPct: { fontSize: sizes.md, fontFamily: font.displayBold },
   goalFooter: { color: theme.text2, fontSize: sizes.xs, marginTop: 6 },
+  debtSummary: {
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+    gap: 8,
+  },
+  debtSummaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
+  debtSummaryLabel: { color: theme.text2, fontSize: sizes.sm },
+  debtSummaryValue: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi },
+  debtStrategyRow: { flexDirection: 'row', gap: 8, marginTop: 6 },
+  stratChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg1,
+  },
+  stratChipActive: {
+    backgroundColor: theme.accent,
+    borderColor: 'transparent',
+  },
+  stratText: { color: theme.text2, fontSize: sizes.sm },
+  stratTextActive: { color: theme.bg, fontFamily: font.bodySemi },
+  debtProjection: { color: theme.text2, fontSize: sizes.sm, marginTop: 6 },
+  debtCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+  },
   budgetCard: {
     padding: spacing.md,
     borderRadius: radii.lg,
