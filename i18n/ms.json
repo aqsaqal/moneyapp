@@ -61,6 +61,8 @@
   "plan.audit.stale.never": "Tiada transaksi sepadan — dicipta tapi tidak pernah dibayar.",
   "plan.audit.stale.title": "Buang {name}?",
   "plan.audit.stale.body": "Berhenti menjejaki langganan ini. Pembayaran lalu tetap dalam sejarah.",
+  "insights.strip.label": "Trend kategori berbanding bulan lalu",
+  "insights.strip.new": "baru",
 
   "me.title": "Saya",
   "me.section.accounts": "Akaun",

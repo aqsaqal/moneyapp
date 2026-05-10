@@ -61,6 +61,8 @@
   "plan.audit.stale.never": "No matching transaction yet — created but never paid.",
   "plan.audit.stale.title": "Remove {name}?",
   "plan.audit.stale.body": "Stop tracking this recurring item. Past payments stay in your history.",
+  "insights.strip.label": "Category trends compared to last month",
+  "insights.strip.new": "new",
 
   "me.title": "Me",
   "me.section.accounts": "Accounts",

@@ -61,6 +61,8 @@
   "plan.audit.stale.never": "Eşleşen işlem yok — oluşturuldu ama ödenmedi.",
   "plan.audit.stale.title": "{name} kaldırılsın mı?",
   "plan.audit.stale.body": "Bu düzenli ödemeyi takip etmeyi bırak. Geçmiş ödemeler geçmişinde kalır.",
+  "insights.strip.label": "Geçen aya göre kategori eğilimleri",
+  "insights.strip.new": "yeni",
 
   "me.title": "Profil",
   "me.section.accounts": "Hesaplar",

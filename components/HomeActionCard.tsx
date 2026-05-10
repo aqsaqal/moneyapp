@@ -26,19 +26,20 @@ import {
   useRecurring,
   usePaidItemsForMonth,
 } from '@/hooks/useAppData';
+import { useInsights } from '@/hooks/useInsights';
 import { catInfo } from '@/constants/categories';
 import { monthKey } from '@/utils/format';
 import { kv } from '@/utils/kv';
 
 interface Insight {
-  kind: 'overbudget' | 'bill-soon' | 'bill-overdue' | 'hawl-approaching' | 'hawl-due';
+  kind: 'overbudget' | 'bill-soon' | 'bill-overdue' | 'hawl-approaching' | 'hawl-due' | 'category-spike';
   icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
   iconColor: string;
   borderColor: string;
   title: string;
   detail: string;
   /** Where tapping the card sends the user. Defaults to /plan. */
-  route?: '/plan' | '/(islamic)/zakat';
+  route?: '/plan' | '/activity' | '/(islamic)/zakat';
 }
 
 export function HomeActionCard() {
@@ -49,6 +50,7 @@ export function HomeActionCard() {
   const totals = useMonthTotalsByCategory(key, 'expense');
   const recurring = useRecurring();
   const paid = usePaidItemsForMonth(key);
+  const { spike } = useInsights();
 
   const insight = useMemo<Insight | null>(() => {
     const today = new Date();
@@ -114,7 +116,23 @@ export function HomeActionCard() {
       };
     }
 
-    // 4. Islamic only — hawl approaching (≤30 days) or due. Babel inlines
+    // 4. Category spike — current month >2σ above the rolling 12-month
+    //    mean for any category. Surfaces only if no budget/bill issue
+    //    already won the slot above (a single-card screen).
+    if (spike) {
+      const ratio = spike.thisMonth / spike.rolling12Mean;
+      return {
+        kind: 'category-spike',
+        icon: 'chart-line-variant',
+        iconColor: spike.color,
+        borderColor: `${spike.color}55`,
+        title: `${spike.name} spend up ${Math.round((ratio - 1) * 100)}%`,
+        detail: `${formatMoney(spike.thisMonth, currency)} this month · ${formatMoney(spike.rolling12Mean, currency)} typical`,
+        route: '/activity',
+      };
+    }
+
+    // 5. Islamic only — hawl approaching (≤30 days) or due. Babel inlines
     // process.env.APP_FLAVOR; in generic builds this whole branch DCEs, and
     // the require() never executes / pulls in @umalqura/core.
     if (process.env.APP_FLAVOR === 'islamic') {
@@ -152,7 +170,7 @@ export function HomeActionCard() {
     }
 
     return null;
-  }, [budgets, totals, recurring, paid, currency]);
+  }, [budgets, totals, recurring, paid, currency, spike]);
 
   if (!insight) return null;
 

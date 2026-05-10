@@ -16,6 +16,7 @@ import { StatCard, sectionStyles } from '@/components/Sections';
 import { MonthlyRecap } from '@/components/MonthlyRecap';
 import { TransactionSheet } from '@/components/TransactionSheet';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
+import { InsightsStrip } from '@/components/InsightsStrip';
 import { FeatureSlots } from '@/features';
 import { useT } from '@/hooks/useT';
 import type { Transaction } from '@/utils/db/schema';
@@ -82,6 +83,7 @@ export default function Activity() {
         </ScrollView>
       </View>
       <ScrollView contentContainerStyle={styles.scroll}>
+        <InsightsStrip />
         <AnalyticsHeader
           currency={currency}
           open={analyticsOpen}

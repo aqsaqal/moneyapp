@@ -61,6 +61,8 @@
   "plan.audit.stale.never": "لا توجد عملية مطابقة — أُنشِئ ولم يُدفع قط.",
   "plan.audit.stale.title": "إزالة {name}؟",
   "plan.audit.stale.body": "إيقاف تتبّع هذا الاشتراك. تبقى المدفوعات السابقة في السجل.",
+  "insights.strip.label": "اتجاهات الفئات مقارنة بالشهر الماضي",
+  "insights.strip.new": "جديد",
 
   "me.title": "حسابي",
   "me.section.accounts": "الحسابات",
