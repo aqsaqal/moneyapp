@@ -27,16 +27,69 @@ if [ ${#TESTS[@]} -eq 0 ]; then
   exit 0
 fi
 
-# Compile all tests in one tsc invocation (faster than per-file).
-npx tsc "${TESTS[@]}" \
-  --outDir "$OUTDIR" \
-  --module commonjs --target es2020 \
-  --moduleResolution node --esModuleInterop --skipLibCheck \
-  --rootDir . 2>&1
+# Compile all tests via a temp tsconfig that mirrors the project's path
+# aliases (`@/*` → `./*`) so feature modules can import from `@/utils/...`
+# the same way the app bundle does. tsc rejects --paths on the CLI, so a
+# tsconfig file is the supported path.
+TSCONFIG="$OUTDIR/tsconfig.tests.json"
+{
+  echo '{'
+  echo '  "compilerOptions": {'
+  echo '    "outDir": "'"$OUTDIR"'/dist",'
+  echo '    "module": "commonjs",'
+  echo '    "target": "es2020",'
+  echo '    "moduleResolution": "node",'
+  echo '    "esModuleInterop": true,'
+  echo '    "skipLibCheck": true,'
+  echo '    "baseUrl": "'"$ROOT"'",'
+  echo '    "paths": { "@/*": ["./*"] },'
+  echo '    "rootDir": "'"$ROOT"'",'
+  echo '    "resolveJsonModule": true,'
+  echo '    "typeRoots": ["'"$ROOT"'/node_modules/@types"],'
+  echo '    "types": ["node"]'
+  echo '  },'
+  echo -n '  "files": ['
+  for i in "${!TESTS[@]}"; do
+    [ "$i" -gt 0 ] && echo -n ','
+    echo -n "\"$ROOT/${TESTS[$i]}\""
+  done
+  echo ']'
+  echo '}'
+} > "$TSCONFIG"
+
+npx tsc -p "$TSCONFIG" 2>&1
+DIST_ROOT="$OUTDIR/dist"
+
+# tsc leaves `@/...` imports literal in the emitted JS — Node can't resolve
+# them. Rewrite via a tiny Node post-processor (not tsc-alias, which only
+# scans the original include glob and misses transitive deps compiled
+# through `files`). For each .js, replace `require("@/x/y")` with the
+# relative path from that file to OUTDIR/dist/x/y.
+node -e "
+  const fs = require('fs'), path = require('path');
+  const dist = process.argv[1];
+  function walk(d) {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const p = path.join(d, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.isFile() && p.endsWith('.js')) {
+        const src = fs.readFileSync(p, 'utf8');
+        const fixed = src.replace(/require\(\"@\/(.*?)\"\)/g, (_, sub) => {
+          const target = path.join(dist, sub);
+          let rel = path.relative(path.dirname(p), target);
+          if (!rel.startsWith('.')) rel = './' + rel;
+          return 'require(\"' + rel + '\")';
+        });
+        if (fixed !== src) fs.writeFileSync(p, fixed);
+      }
+    }
+  }
+  walk(dist);
+" "$DIST_ROOT"
 
 ANY_FAILED=0
 for src in "${TESTS[@]}"; do
-  out="$OUTDIR/${src%.ts}.js"
+  out="$DIST_ROOT/${src%.ts}.js"
   echo ""
   echo "▶ $src"
   if ! NODE_PATH="$ROOT/node_modules" node "$out"; then

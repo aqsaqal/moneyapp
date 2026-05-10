@@ -80,6 +80,7 @@
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
     "patch-package": "^8.0.1",
+    "tsc-alias": "^1.8.17",
     "typescript": "~5.9.2"
   },
   "private": true

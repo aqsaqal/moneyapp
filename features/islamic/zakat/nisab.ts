@@ -1,5 +1,11 @@
 // Nisab thresholds and per-currency fallback prices.
-// Per plan §6 decision 4: hardcode + opt-in refresh from goldapi.io.
+// Per plan §6 decision 4: hardcode + opt-in refresh from a metals API.
+//
+// This module stays free of @/utils/* imports so the unit test runner
+// can compile it without dragging in expo-sqlite + MMKV. Live spot
+// prices flow in via an optional `metalsCache` parameter from the
+// hook layer (useZakatCalculation), which is the only caller that
+// can reach the cache.
 
 export const GOLD_GRAMS = 87.48;       // gold nisab
 export const SILVER_GRAMS = 612.36;    // silver nisab
@@ -22,7 +28,28 @@ export const FALLBACK_PRICES_PER_GRAM: Record<string, { gold: number; silver: nu
 
 export type NisabBasis = 'gold' | 'silver';
 
-export function calculateNisab(basis: NisabBasis, currency: string = 'USD'): number {
+export interface LiveSpot {
+  /** USD per gram, fetched live by the hook layer. */
+  goldPerGramUsd: number;
+  silverPerGramUsd: number;
+  /** Convert a USD amount to the target currency using the live FX
+   *  cache. Pass an identity converter when no FX is available. */
+  usdTo: (usd: number, currency: string) => number;
+}
+
+export function calculateNisab(
+  basis: NisabBasis,
+  currency: string = 'USD',
+  spot?: LiveSpot,
+): number {
+  // Prefer freshly-cached USD spot prices when present, then convert to the
+  // user's currency via the FX cache. Falls back to the hardcoded table
+  // when either is missing.
+  if (spot) {
+    const pricePerGramUsd = basis === 'gold' ? spot.goldPerGramUsd : spot.silverPerGramUsd;
+    const grams = basis === 'gold' ? GOLD_GRAMS : SILVER_GRAMS;
+    return spot.usdTo(grams * pricePerGramUsd, currency);
+  }
   const price = FALLBACK_PRICES_PER_GRAM[currency] ?? FALLBACK_PRICES_PER_GRAM.USD;
   return basis === 'gold' ? GOLD_GRAMS * price.gold : SILVER_GRAMS * price.silver;
 }

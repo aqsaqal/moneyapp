@@ -20,6 +20,10 @@ export const transactions = sqliteTable(
     halalStatus: text('halal_status'),     // optional; islamic only sets/reads
     // Reserved for v2.3 receipt OCR. Nullable + additive — no migration cost.
     receiptImagePath: text('receipt_image_path'),
+    // Phase 10q.3 — zakat distribution recipient (one of 8 asnaf).
+    // Null on every non-zakat/sadaqa transaction. Generic builds never
+    // write or read this column; it's harmless dead weight there.
+    asnaf: text('asnaf'),
   },
   (t) => ({
     dateIdx: index('tx_date_idx').on(t.date),
@@ -44,6 +48,12 @@ export const accounts = sqliteTable('accounts', {
   // global display currency (kv.currency). Lets a single user hold accounts
   // in mixed currencies without forcing all balances onto one ledger unit.
   currency: text('currency'),
+  // Phase 10q: islamic-only flag indicating the account earns interest
+  // (riba). Surfaces a footer warning in the Accounts list and an
+  // advisory line on the Zakat calculator. The column exists in both
+  // flavors but is only set / read in the islamic build — keeping it
+  // schema-wide avoids a flavor-specific migration.
+  isRiba: integer('is_riba'),  // 0 / 1; null = unset (default no warning)
 });
 
 // Phase 10k: cached daily exchange rates from frankfurter.app. Rows are

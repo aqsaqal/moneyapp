@@ -6,14 +6,16 @@
 // proper picker sheet (consistent with Language / Currency in Me).
 
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, font, sizes, radii, spacing } from '@/constants/theme';
-import { SectionHeader, SettingRow } from '@/components/Sections';
+import { sectionStyles, SectionHeader, SettingRow } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { MAZHABS, type Mazhab } from '../zakat/mazhab';
 import { getZakatState, setZakatState } from '../zakat/zakatState';
 import { getMethod, setMethod, type CalcMethodId } from '../ramadan/prayerTimes';
+import { kv } from '@/utils/kv';
+import { loadMetalsCache, refreshMetals } from '../zakat/metalsRefresh';
 
 interface NavSlotProps {
   onNavigate: (path: string) => void;
@@ -38,6 +40,17 @@ export function MeTabExtras(_: NavSlotProps) {
   const [zState, setZState] = useState(getZakatState());
   const [method, setMethodState] = useState<CalcMethodId>(getMethod());
   const [picker, setPicker] = useState<null | 'mazhab' | 'method'>(null);
+  const [nisabAuto, setNisabAuto] = useState(kv.getBool('islamic.nisabAutoRefresh', false));
+  const [nisabFetched, setNisabFetched] = useState<number>(loadMetalsCache()?.fetchedAt ?? 0);
+  const [nisabBusy, setNisabBusy] = useState(false);
+
+  const fmtAge = (() => {
+    if (!nisabFetched) return 'never';
+    const h = Math.floor((Date.now() - nisabFetched) / 3_600_000);
+    if (h < 1) return 'just now';
+    if (h < 24) return `${h}h ago`;
+    return `${Math.floor(h / 24)}d ago`;
+  })();
 
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
@@ -57,6 +70,44 @@ export function MeTabExtras(_: NavSlotProps) {
         icon="moon-waxing-crescent"
         iconColor={theme.accent}
         onPress={() => setPicker('method')}
+      />
+
+      <SettingRow
+        label="Refresh nisab spot prices"
+        hint={
+          nisabBusy
+            ? 'Fetching gold + silver…'
+            : nisabAuto
+              ? `On — fetched ${fmtAge}`
+              : 'Off — using fallback prices'
+        }
+        icon="cached"
+        iconColor={theme.gold}
+        trailing={
+          <Pressable
+            onPress={async () => {
+              const next = !nisabAuto;
+              kv.setBool('islamic.nisabAutoRefresh', next);
+              setNisabAuto(next);
+              if (next) {
+                setNisabBusy(true);
+                try {
+                  const c = await refreshMetals();
+                  setNisabFetched(c.fetchedAt);
+                } catch (e) {
+                  Alert.alert("Couldn't refresh", String(e));
+                } finally {
+                  setNisabBusy(false);
+                }
+              }
+            }}
+            style={[sectionStyles.toggle, nisabAuto && { backgroundColor: theme.accent }]}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: nisabAuto }}
+          >
+            <View style={[sectionStyles.toggleKnob, nisabAuto && { transform: [{ translateX: 18 }] }]} />
+          </Pressable>
+        }
       />
 
       <PickerSheet

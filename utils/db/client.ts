@@ -79,7 +79,8 @@ function createTables(db: SQLite.SQLiteDatabase) {
       created_at INTEGER NOT NULL,
       recurring_id TEXT,
       halal_status TEXT,
-      receipt_image_path TEXT
+      receipt_image_path TEXT,
+      asnaf TEXT
     );
     CREATE INDEX IF NOT EXISTS tx_date_idx ON transactions(date);
     CREATE INDEX IF NOT EXISTS tx_category_idx ON transactions(category);
@@ -95,7 +96,8 @@ function createTables(db: SQLite.SQLiteDatabase) {
       icon TEXT NOT NULL,
       color TEXT NOT NULL,
       sort_order INTEGER NOT NULL DEFAULT 0,
-      currency TEXT
+      currency TEXT,
+      is_riba INTEGER
     );
 
     -- Phase 10k: per-account currency + FX cache.
@@ -175,23 +177,30 @@ function createTables(db: SQLite.SQLiteDatabase) {
     CREATE INDEX IF NOT EXISTS mm_count_idx ON merchant_memory(count DESC);
   `);
 
-  // Phase 7 — additive column on existing transactions table.
+  // Phase 7 + 10q.3 — additive columns on existing transactions table.
   // SQLite ALTER TABLE ADD COLUMN is idempotent only if guarded; check first.
   try {
     const cols = db.getAllSync<{ name: string }>(`PRAGMA table_info(transactions)`);
-    const hasReceipt = cols.some((c) => c.name === 'receipt_image_path');
-    if (!hasReceipt) {
+    if (!cols.some((c) => c.name === 'receipt_image_path')) {
       db.execSync(`ALTER TABLE transactions ADD COLUMN receipt_image_path TEXT;`);
+    }
+    if (!cols.some((c) => c.name === 'asnaf')) {
+      db.execSync(`ALTER TABLE transactions ADD COLUMN asnaf TEXT;`);
     }
   } catch {
     /* swallow — fresh DB will already have the column from CREATE TABLE if we add it there in a future major. */
   }
 
   // Phase 10k — additive currency column on existing accounts table.
+  // Phase 10q — additive is_riba flag; both columns are guarded so they
+  // can land in any order across upgrade paths.
   try {
     const cols = db.getAllSync<{ name: string }>(`PRAGMA table_info(accounts)`);
     if (!cols.some((c) => c.name === 'currency')) {
       db.execSync(`ALTER TABLE accounts ADD COLUMN currency TEXT;`);
+    }
+    if (!cols.some((c) => c.name === 'is_riba')) {
+      db.execSync(`ALTER TABLE accounts ADD COLUMN is_riba INTEGER;`);
     }
   } catch {
     /* swallow */

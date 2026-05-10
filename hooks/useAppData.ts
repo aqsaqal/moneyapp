@@ -80,6 +80,19 @@ export function bootAppData(): Promise<void> {
       // Phase 10p: capture today's net-worth snapshot once per app launch.
       // No-op when today's row already exists.
       try { snapshotTodayIfMissing(); } catch { /* never block boot on this */ }
+      // Phase 10q.2: islamic-only metals refresh when the toggle is on
+      // and the cache is stale. Fire-and-forget, non-blocking.
+      if (process.env.APP_FLAVOR === 'islamic') {
+        try {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const { isStale, refreshMetals } = require('@/features/islamic/zakat/metalsRefresh');
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const { kv: kvMod } = require('@/utils/kv');
+          if (kvMod.getBool('islamic.nisabAutoRefresh', false) && isStale()) {
+            void refreshMetals().catch(() => {/* offline / quota — keep fallback */});
+          }
+        } catch { /* never block boot */ }
+      }
       booted = true;
     })();
   }
@@ -278,6 +291,8 @@ export interface AddTxnInput {
   recurringId?: string | null;
   /** Phase 10m: optional URI of the receipt image stored on the device. */
   receiptImagePath?: string | null;
+  /** Phase 10q.3: optional asnaf tag for zakat/sadaqa/qurban recipients. */
+  asnaf?: string | null;
 }
 
 export function addTransaction(input: AddTxnInput): Transaction {
@@ -296,6 +311,7 @@ export function addTransaction(input: AddTxnInput): Transaction {
     halalStatus: input.halalStatus ?? null,
     recurringId: input.recurringId ?? null,
     receiptImagePath: input.receiptImagePath ?? null,
+    asnaf: input.asnaf ?? null,
     date: input.date ?? now,
     createdAt: now,
   };

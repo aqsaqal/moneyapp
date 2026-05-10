@@ -204,6 +204,16 @@ function AccountsSection() {
         );
       })}
 
+      {process.env.APP_FLAVOR === 'islamic' && accounts.some((a) => a.isRiba === 1) && (
+        <View style={styles.ribaFooter}>
+          <MaterialCommunityIcons name="alert-circle-outline" size={16} color={theme.warning} />
+          <Text style={styles.ribaFooterText}>
+            One or more accounts are flagged as earning interest. Consult a scholar
+            for the right zakat treatment.
+          </Text>
+        </View>
+      )}
+
       <AccountSheet
         visible={editing !== undefined}
         account={editing ?? undefined}
@@ -267,4 +277,15 @@ const styles = StyleSheet.create({
   },
   barBg: { height: 6, backgroundColor: theme.bg3, borderRadius: 3, overflow: 'hidden' },
   barFill: { height: '100%', borderRadius: 3 },
+  ribaFooter: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    padding: spacing.md,
+    backgroundColor: `${theme.warning}11`,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: `${theme.warning}55`,
+  },
+  ribaFooterText: { flex: 1, color: theme.warning, fontSize: sizes.xs, lineHeight: 16 },
 });

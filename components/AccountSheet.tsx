@@ -61,6 +61,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const [currency, setCurrency] = useState<CurrencyCode>(
     (account?.currency as CurrencyCode | null | undefined) ?? defaultCurrency,
   );
+  const [isRiba, setIsRiba] = useState<boolean>(account?.isRiba === 1);
   const [typePicker, setTypePicker] = useState(false);
   const [currencyPicker, setCurrencyPicker] = useState(false);
 
@@ -73,6 +74,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
       setLimit(String(account?.creditLimit ?? ''));
       setColor(account?.color ?? TYPES.find((t) => t.value === (account?.type ?? 'cash'))!.defaultColor);
       setCurrency((account?.currency as CurrencyCode | null | undefined) ?? defaultCurrency);
+      setIsRiba(account?.isRiba === 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, account]);
@@ -96,6 +98,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
       color,
       sortOrder: account?.sortOrder ?? Date.now(),
       currency: currency === defaultCurrency ? null : currency,
+      isRiba: process.env.APP_FLAVOR === 'islamic' ? (isRiba ? 1 : 0) : null,
     });
     onClose();
   };
@@ -187,6 +190,35 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
             icon="currency-usd"
             onPress={() => setCurrencyPicker(true)}
           />
+
+          {/* Islamic-only riba flag. Babel inlines APP_FLAVOR; the entire
+              JSX below DCEs in generic builds. */}
+          {process.env.APP_FLAVOR === 'islamic' && (
+            <Pressable
+              onPress={() => setIsRiba((v) => !v)}
+              style={[
+                styles.ribaRow,
+                isRiba && { backgroundColor: `${theme.warning}11`, borderColor: `${theme.warning}55` },
+              ]}
+              accessibilityRole="switch"
+              accessibilityState={{ checked: isRiba }}
+            >
+              <MaterialCommunityIcons
+                name={isRiba ? 'alert-circle' : 'alert-circle-outline'}
+                size={18}
+                color={isRiba ? theme.warning : theme.text2}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.ribaLabel}>Earns interest (riba)</Text>
+                <Text style={styles.ribaHint}>
+                  Flagged accounts surface a footer warning in your Accounts list.
+                </Text>
+              </View>
+              <View style={[styles.toggle, isRiba && { backgroundColor: theme.warning }]}>
+                <View style={[styles.toggleKnob, isRiba && { transform: [{ translateX: 18 }] }]} />
+              </View>
+            </Pressable>
+          )}
 
           <PickerSheet
             visible={currencyPicker}
@@ -303,4 +335,18 @@ const styles = StyleSheet.create({
     marginTop: spacing.lg,
   },
   deleteText: { color: theme.expense, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  ribaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+  },
+  ribaLabel: { color: theme.text1, fontSize: sizes.md },
+  ribaHint: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
+  toggle: { width: 40, height: 22, borderRadius: 11, padding: 2, backgroundColor: theme.bg3, justifyContent: 'center' },
+  toggleKnob: { width: 18, height: 18, borderRadius: 9, backgroundColor: theme.text1 },
 });

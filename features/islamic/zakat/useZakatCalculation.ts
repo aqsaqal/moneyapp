@@ -18,10 +18,23 @@ import { useMemo } from 'react';
 import { useAccounts } from '@/hooks/useAppData';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
-import { calculateNisab, FALLBACK_PRICES_PER_GRAM, ZAKAT_RATE } from './nisab';
+import { calculateNisab, FALLBACK_PRICES_PER_GRAM, ZAKAT_RATE, type LiveSpot } from './nisab';
 import { MAZHABS } from './mazhab';
 import { computeHawl, type HawlStatus } from './hawl';
 import { getZakatState, type ZakatStateShape } from './zakatState';
+import { loadMetalsCache } from './metalsRefresh';
+import { convert } from '@/utils/fx';
+
+/** Bridge live spot + FX cache into the pure nisab calculator. */
+function buildLiveSpot(): LiveSpot | undefined {
+  const cache = loadMetalsCache();
+  if (!cache) return undefined;
+  return {
+    goldPerGramUsd: cache.pricesUsdPerGram.gold,
+    silverPerGramUsd: cache.pricesUsdPerGram.silver,
+    usdTo: (usd, currency) => convert(usd, 'USD', currency),
+  };
+}
 
 export interface ZakatCalculationResult {
   state: ZakatStateShape;
@@ -67,7 +80,7 @@ export function useZakatCalculation(): ZakatCalculationResult {
     const netEligible = Math.max(0, grossEligible - state.manualDebts);
 
     // Combined or separated nisab check per mazhab.
-    const nisabValue = calculateNisab(state.nisabBasis, currency);
+    const nisabValue = calculateNisab(state.nisabBasis, currency, buildLiveSpot());
     const meetsNisab = mazhab.combineGoldSilver
       ? netEligible >= nisabValue
       : netEligible >= nisabValue;
@@ -129,7 +142,7 @@ export function computeHawlForActiveState(): {
       state.manualInvestments +
       state.manualReceivables;
     const netEligible = Math.max(0, grossEligible - state.manualDebts);
-    const nisabValue = calculateNisab(state.nisabBasis, currency);
+    const nisabValue = calculateNisab(state.nisabBasis, currency, buildLiveSpot());
     const meetsNisab = mazhab.combineGoldSilver
       ? netEligible >= nisabValue
       : netEligible >= nisabValue;

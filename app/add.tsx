@@ -125,6 +125,7 @@ export default function AddScreen() {
         note: note || null,
         halalStatus: (draft.halalStatus as Transaction['halalStatus']) ?? null,
         receiptImagePath: (draft.receiptImagePath as string | undefined) ?? null,
+        asnaf: (draft as { asnaf?: string | null }).asnaf ?? null,
       });
       // Remember the user's account choice so L4 fallback can lock in.
       setDefaultAccount(effectiveAcct);
@@ -311,9 +312,11 @@ export default function AddScreen() {
           </View>
         )}
 
-        {/* Islamic AddTxExtras — halal selector. Generic: nothing renders. */}
+        {/* Islamic AddTxExtras — halal selector + asnaf for giving categories.
+            Generic: nothing renders. We pass `category: effectiveCat` so the
+            asnaf picker can gate itself to zakat/sadaqa/qurban. */}
         <FeatureSlots.AddTxExtras
-          txDraft={draft}
+          txDraft={{ ...draft, category: effectiveCat }}
           onChange={(p) => setDraft({ ...draft, ...p })}
         />
 
