@@ -23,6 +23,8 @@ import type { Account } from '@/utils/db/schema';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { formatMoney } from '@/utils/format';
+import { convert, isApproximate } from '@/utils/fx';
+import { useFxRates } from '@/hooks/useFxRates';
 import { useT } from '@/hooks/useT';
 import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
 import type { Profile } from '@/utils/profiles';
@@ -114,9 +116,31 @@ function AccountsSection() {
   const t = useT();
   const accounts = useAccounts();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
-  const assets = accounts.filter((a) => a.balance >= 0).reduce((s, a) => s + a.balance, 0);
-  const debt = accounts.filter((a) => a.balance < 0).reduce((s, a) => s + Math.abs(a.balance), 0);
+  // Subscribe to FX bumps so balances re-convert when the cache updates.
+  useFxRates();
+
+  // Mixed-currency totals: convert each account into the user's display
+  // currency before summing. When a leg is uncached we still sum, but
+  // mark the total as approximate.
+  let approxFlag = false;
+  const accountCurrency = (a: Account) =>
+    (a.currency as string | null | undefined) ?? currency;
+  const assets = accounts
+    .filter((a) => a.balance >= 0)
+    .reduce((s, a) => {
+      const ac = accountCurrency(a);
+      if (isApproximate(ac, currency)) approxFlag = true;
+      return s + convert(a.balance, ac, currency);
+    }, 0);
+  const debt = accounts
+    .filter((a) => a.balance < 0)
+    .reduce((s, a) => {
+      const ac = accountCurrency(a);
+      if (isApproximate(ac, currency)) approxFlag = true;
+      return s + Math.abs(convert(a.balance, ac, currency));
+    }, 0);
   const net = assets - debt;
+  const approx = approxFlag;
 
   // null = creating new; Account = editing; undefined = sheet closed
   const [editing, setEditing] = useState<Account | null | undefined>(undefined);
@@ -132,7 +156,7 @@ function AccountsSection() {
       <View style={styles.netCard}>
         <Text style={styles.netLabel}>{t('me.netBalance')}</Text>
         <Text style={[styles.netValue, { color: net >= 0 ? theme.accent : theme.expense }]}>
-          {formatMoney(net, currency)}
+          {approx ? '≈ ' : ''}{formatMoney(net, currency)}
         </Text>
       </View>
 
@@ -141,39 +165,44 @@ function AccountsSection() {
         <SummaryCard label={t('me.debt')} value={debt} color={theme.expense} currency={currency} />
       </View>
 
-      {accounts.map((a) => (
-        <Pressable
-          key={a.id}
-          style={styles.acctCard}
-          onPress={() => setEditing(a)}
-          accessibilityRole="button"
-          accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, currency)}`}
-        >
-          <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
-            <MaterialCommunityIcons name="wallet-outline" size={20} color={a.color} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.acctName}>{a.name}</Text>
-            <Text style={styles.acctType}>{a.type}</Text>
-            {a.creditLimit && (
-              <View style={[styles.barBg, { marginTop: 6 }]}>
-                <View
-                  style={[
-                    styles.barFill,
-                    {
-                      width: `${Math.min(Math.abs(a.balance) / a.creditLimit, 1) * 100}%`,
-                      backgroundColor: theme.expense,
-                    },
-                  ]}
-                />
-              </View>
-            )}
-          </View>
-          <Text style={[styles.acctBal, { color: a.balance >= 0 ? theme.accent : theme.expense }]}>
-            {formatMoney(a.balance, currency)}
-          </Text>
-        </Pressable>
-      ))}
+      {accounts.map((a) => {
+        const ac = accountCurrency(a) as CurrencyCode;
+        return (
+          <Pressable
+            key={a.id}
+            style={styles.acctCard}
+            onPress={() => setEditing(a)}
+            accessibilityRole="button"
+            accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}`}
+          >
+            <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
+              <MaterialCommunityIcons name="wallet-outline" size={20} color={a.color} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.acctName}>{a.name}</Text>
+              <Text style={styles.acctType}>
+                {a.type}{ac !== currency ? ` · ${ac}` : ''}
+              </Text>
+              {a.creditLimit && (
+                <View style={[styles.barBg, { marginTop: 6 }]}>
+                  <View
+                    style={[
+                      styles.barFill,
+                      {
+                        width: `${Math.min(Math.abs(a.balance) / a.creditLimit, 1) * 100}%`,
+                        backgroundColor: theme.expense,
+                      },
+                    ]}
+                  />
+                </View>
+              )}
+            </View>
+            <Text style={[styles.acctBal, { color: a.balance >= 0 ? theme.accent : theme.expense }]}>
+              {formatMoney(a.balance, ac)}
+            </Text>
+          </Pressable>
+        );
+      })}
 
       <AccountSheet
         visible={editing !== undefined}

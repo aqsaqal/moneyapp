@@ -43,6 +43,7 @@ import {
 import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { exportData } from '@/utils/dataExport';
+import { useFxRates } from '@/hooks/useFxRates';
 import { APP_NAME } from '@/constants/flavor';
 import { PRIVACY_POLICY_URL, TERMS_URL, SUPPORT_EMAIL } from '@/constants/legal';
 import { useT } from '@/hooks/useT';
@@ -260,6 +261,43 @@ function PreferencesSection() {
   );
 }
 
+// ---- FX auto-refresh (Phase 10k) ----
+
+function FxRefreshRow() {
+  const t = useT();
+  const [on, setOn] = useState(kv.getBool('fxAutoRefresh', false));
+  const fx = useFxRates();
+  const fmtAge = (() => {
+    if (!fx.lastFetched) return t('settings.fx.never');
+    const diffH = Math.floor((Date.now() - fx.lastFetched) / 3_600_000);
+    if (diffH < 1) return t('settings.fx.justNow');
+    if (diffH < 24) return t('settings.fx.hoursAgo', { n: diffH });
+    return t('settings.fx.daysAgo', { n: Math.floor(diffH / 24) });
+  })();
+  return (
+    <SettingRow
+      label={t('settings.fx.label')}
+      hint={fx.refreshing ? t('settings.fx.refreshing') : on ? fmtAge : t('settings.fx.bodyOff')}
+      icon="cached"
+      trailing={
+        <Pressable
+          onPress={() => {
+            const next = !on;
+            kv.setBool('fxAutoRefresh', next);
+            setOn(next);
+            if (next) void fx.refresh();
+          }}
+          style={[sectionStyles.toggle, on && { backgroundColor: theme.accent }]}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: on }}
+        >
+          <View style={[sectionStyles.toggleKnob, on && { transform: [{ translateX: 18 }] }]} />
+        </Pressable>
+      }
+    />
+  );
+}
+
 // ---- Security ----
 
 function SecuritySection() {
@@ -268,6 +306,8 @@ function SecuritySection() {
   const [bio, setBio] = useState(isBiometricEnabled());
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+      <FxRefreshRow />
+
       <SectionHeader title={t('me.section.security')} />
       <SettingRow
         label={t('me.biometric')}

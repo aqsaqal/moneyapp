@@ -24,6 +24,8 @@ import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { SettingRow } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { upsertAccount, deleteAccount } from '@/hooks/useAppData';
+import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
+import { kv } from '@/utils/kv';
 import type { Account } from '@/utils/db/schema';
 
 export type AccountType = 'cash' | 'bank' | 'credit' | 'savings' | 'debt';
@@ -50,12 +52,17 @@ export interface AccountSheetProps {
 
 export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const editing = !!account;
+  const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [type, setType] = useState<AccountType>(account?.type ?? 'cash');
   const [name, setName] = useState(account?.name ?? '');
   const [balance, setBalance] = useState(String(account?.balance ?? ''));
   const [limit, setLimit] = useState(String(account?.creditLimit ?? ''));
   const [color, setColor] = useState(account?.color ?? '#00E09E');
+  const [currency, setCurrency] = useState<CurrencyCode>(
+    (account?.currency as CurrencyCode | null | undefined) ?? defaultCurrency,
+  );
   const [typePicker, setTypePicker] = useState(false);
+  const [currencyPicker, setCurrencyPicker] = useState(false);
 
   // Reset form when the sheet opens for a different account.
   useEffect(() => {
@@ -65,7 +72,9 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
       setBalance(String(account?.balance ?? ''));
       setLimit(String(account?.creditLimit ?? ''));
       setColor(account?.color ?? TYPES.find((t) => t.value === (account?.type ?? 'cash'))!.defaultColor);
+      setCurrency((account?.currency as CurrencyCode | null | undefined) ?? defaultCurrency);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, account]);
 
   const typeMeta = useMemo(() => TYPES.find((t) => t.value === type)!, [type]);
@@ -86,6 +95,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
       icon: typeMeta.icon,
       color,
       sortOrder: account?.sortOrder ?? Date.now(),
+      currency: currency === defaultCurrency ? null : currency,
     });
     onClose();
   };
@@ -170,6 +180,26 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
               />
             </View>
           )}
+
+          <SettingRow
+            label="Currency"
+            hint={`${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`}
+            icon="currency-usd"
+            onPress={() => setCurrencyPicker(true)}
+          />
+
+          <PickerSheet
+            visible={currencyPicker}
+            title="Currency"
+            options={(Object.keys(CURRENCIES) as CurrencyCode[]).map<PickerOption<CurrencyCode>>((c) => ({
+              value: c,
+              label: `${c} · ${CURRENCIES[c].symbolNative}`,
+              hint: CURRENCIES[c].name,
+            }))}
+            selected={currency}
+            onPick={setCurrency}
+            onClose={() => setCurrencyPicker(false)}
+          />
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>Color</Text>

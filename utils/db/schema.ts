@@ -40,6 +40,19 @@ export const accounts = sqliteTable('accounts', {
   icon: text('icon').notNull(),
   color: text('color').notNull(),
   sortOrder: integer('sort_order').notNull().default(0),
+  // Phase 10k: per-account currency (ISO 4217). NULL = inherit the user's
+  // global display currency (kv.currency). Lets a single user hold accounts
+  // in mixed currencies without forcing all balances onto one ledger unit.
+  currency: text('currency'),
+});
+
+// Phase 10k: cached daily exchange rates from frankfurter.app. Rows are
+// always base=USD (we cross-rate via USD on the JS side). Refreshed at
+// most once per 24h, gated behind kv.fxAutoRefresh.
+export const fxRates = sqliteTable('fx_rates', {
+  quote: text('quote').primaryKey(),     // ISO 4217 (e.g. 'EUR', 'GBP')
+  rate: real('rate').notNull(),          // 1 USD = `rate` quote-currency units
+  fetchedAt: integer('fetched_at').notNull(),
 });
 
 export const budgets = sqliteTable('budgets', {

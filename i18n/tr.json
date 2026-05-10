@@ -86,6 +86,13 @@
   "me.appearance.light": "Açık",
 
   "settings.title": "Ayarlar",
+  "settings.fx.label": "Döviz kuru otomatik güncelleme",
+  "settings.fx.bodyOff": "Kapalı — çoklu para toplamları kendi para birimlerinde kalır.",
+  "settings.fx.refreshing": "En son kurlar getiriliyor…",
+  "settings.fx.never": "Açık — henüz kur getirilmedi.",
+  "settings.fx.justNow": "Açık — kurlar az önce getirildi.",
+  "settings.fx.hoursAgo": "Açık — {n} saat önce getirildi.",
+  "settings.fx.daysAgo": "Açık — {n} gün önce getirildi.",
   "me.export.json": "Tüm verileri dışa aktar (JSON)",
   "me.export.csv": "İşlemleri dışa aktar (CSV)",
   "me.privacyPolicy": "Gizlilik Politikası",

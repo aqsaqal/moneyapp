@@ -86,6 +86,13 @@
   "me.appearance.light": "Terang",
 
   "settings.title": "Pengaturan",
+  "settings.fx.label": "Auto-refresh kurs",
+  "settings.fx.bodyOff": "Mati — total multi-mata-uang tetap dalam mata uangnya masing-masing.",
+  "settings.fx.refreshing": "Mengambil kurs terbaru…",
+  "settings.fx.never": "Aktif — kurs belum diambil.",
+  "settings.fx.justNow": "Aktif — baru saja diperbarui.",
+  "settings.fx.hoursAgo": "Aktif — {n} jam lalu.",
+  "settings.fx.daysAgo": "Aktif — {n} hari lalu.",
   "me.export.json": "Ekspor semua data (JSON)",
   "me.export.csv": "Ekspor transaksi (CSV)",
   "me.privacyPolicy": "Kebijakan Privasi",

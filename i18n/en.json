@@ -86,6 +86,13 @@
   "me.appearance.light": "Light",
 
   "settings.title": "Settings",
+  "settings.fx.label": "FX auto-refresh",
+  "settings.fx.bodyOff": "Off — multi-currency totals stay in their native currency.",
+  "settings.fx.refreshing": "Fetching latest rates…",
+  "settings.fx.never": "On — no rates fetched yet.",
+  "settings.fx.justNow": "On — rates fetched just now.",
+  "settings.fx.hoursAgo": "On — rates fetched {n}h ago.",
+  "settings.fx.daysAgo": "On — rates fetched {n}d ago.",
   "me.export.json": "Export all data (JSON)",
   "me.export.csv": "Export transactions (CSV)",
   "me.privacyPolicy": "Privacy Policy",

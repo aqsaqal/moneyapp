@@ -86,6 +86,13 @@
   "me.appearance.light": "Cerah",
 
   "settings.title": "Tetapan",
+  "settings.fx.label": "Auto-segar kadar tukar",
+  "settings.fx.bodyOff": "Mati — jumlah berbilang mata wang kekal dalam mata wang asal.",
+  "settings.fx.refreshing": "Mengambil kadar terkini…",
+  "settings.fx.never": "Aktif — kadar belum diambil.",
+  "settings.fx.justNow": "Aktif — kadar baru saja diambil.",
+  "settings.fx.hoursAgo": "Aktif — {n} jam lalu.",
+  "settings.fx.daysAgo": "Aktif — {n} hari lalu.",
   "me.export.json": "Eksport semua data (JSON)",
   "me.export.csv": "Eksport transaksi (CSV)",
   "me.privacyPolicy": "Dasar Privasi",

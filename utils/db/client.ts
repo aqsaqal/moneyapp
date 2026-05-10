@@ -94,7 +94,15 @@ function createTables(db: SQLite.SQLiteDatabase) {
       credit_limit REAL,
       icon TEXT NOT NULL,
       color TEXT NOT NULL,
-      sort_order INTEGER NOT NULL DEFAULT 0
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      currency TEXT
+    );
+
+    -- Phase 10k: per-account currency + FX cache.
+    CREATE TABLE IF NOT EXISTS fx_rates (
+      quote TEXT PRIMARY KEY NOT NULL,
+      rate REAL NOT NULL,
+      fetched_at INTEGER NOT NULL
     );
 
     CREATE TABLE IF NOT EXISTS budgets (
@@ -144,6 +152,16 @@ function createTables(db: SQLite.SQLiteDatabase) {
     }
   } catch {
     /* swallow — fresh DB will already have the column from CREATE TABLE if we add it there in a future major. */
+  }
+
+  // Phase 10k — additive currency column on existing accounts table.
+  try {
+    const cols = db.getAllSync<{ name: string }>(`PRAGMA table_info(accounts)`);
+    if (!cols.some((c) => c.name === 'currency')) {
+      db.execSync(`ALTER TABLE accounts ADD COLUMN currency TEXT;`);
+    }
+  } catch {
+    /* swallow */
   }
 }
 

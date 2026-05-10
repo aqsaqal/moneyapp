@@ -66,6 +66,7 @@ export interface KVSchema {
   activeProfileId: string;     // Phase 10b: which profile's SQLite is active
   profiles: string;            // JSON array of Profile objects (utils/profiles.ts)
   voicePromptShown: string;    // '1' once the explainer was acknowledged (Phase 10h)
+  fxAutoRefresh: string;       // '1' = fetch FX rates daily from frankfurter.app (Phase 10k)
 }
 
 export const kv = {

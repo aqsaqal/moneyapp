@@ -86,6 +86,13 @@
   "me.appearance.light": "فاتح",
 
   "settings.title": "الإعدادات",
+  "settings.fx.label": "تحديث أسعار العملات تلقائيًا",
+  "settings.fx.bodyOff": "متوقف — الإجماليات بالعملات الأخرى تبقى بعملتها الأصلية.",
+  "settings.fx.refreshing": "جلب أحدث الأسعار…",
+  "settings.fx.never": "مفعّل — لم يتم الجلب بعد.",
+  "settings.fx.justNow": "مفعّل — تم التحديث الآن.",
+  "settings.fx.hoursAgo": "مفعّل — منذ {n} ساعة.",
+  "settings.fx.daysAgo": "مفعّل — منذ {n} يومًا.",
   "me.export.json": "تصدير كل البيانات (JSON)",
   "me.export.csv": "تصدير المعاملات (CSV)",
   "me.privacyPolicy": "سياسة الخصوصية",

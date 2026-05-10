@@ -27,14 +27,13 @@ When you tap the voice-entry button:
 
 We disclose this so you can make an informed choice; you can ignore the voice button and type instead.
 
-## 3. Optional features that touch the network (Amanah only)
+## 3. Optional features that touch the network
 
-The Islamic build, Amanah, has two features that may make a network request **if you opt in**:
+The following features may make a network request **if you opt in**. Each is **off by default** and toggled in Settings. Disabling them eliminates all outbound network activity.
 
-- **Nisab refresh** (gold price). When enabled, the App fetches the current gold price per gram from `https://www.goldapi.io`. Only the request URL leaves the device; no user data is included. The response is a single number, stored locally.
-- **Prayer-time calendar** (precomputed). Times are computed on-device using the `adhan` library; no network call is made.
-
-The default for both features is **off**. They are toggled in Settings. Disabling them eliminates all outbound network activity.
+- **FX auto-refresh** (Flow + Amanah). When enabled, the App fetches the latest USD-anchored exchange rates from `https://api.frankfurter.app` once per day. Only the request URL leaves the device; no user data, account names, or balances are included. The response is a list of currency rates, cached locally and overwritten on next refresh.
+- **Nisab refresh** (Amanah only — gold price). When enabled, the App fetches the current gold price per gram from `https://www.goldapi.io`. Only the request URL leaves the device; no user data is included. The response is a single number, stored locally.
+- **Prayer-time calendar** (Amanah). Times are computed on-device using the `adhan` library; no network call is made.
 
 ## 4. Permissions we request
 
