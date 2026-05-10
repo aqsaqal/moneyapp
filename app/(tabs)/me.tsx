@@ -6,7 +6,7 @@
 // daily-glance answer).
 
 import React, { useState } from 'react';
-import { Alert, I18nManager, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, DevSettings, I18nManager, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -235,6 +235,10 @@ function changeLocale(next: string, tFn: (k: string) => string) {
               I18nManager.forceRTL(shouldBeRTL);
               kv.set('rtlSetForLocale', next);
             }
+            if (__DEV__ && DevSettings?.reload) {
+              DevSettings.reload();
+              return;
+            }
             try {
               // eslint-disable-next-line @typescript-eslint/no-require-imports
               const Updates = require('expo-updates');
@@ -383,8 +387,10 @@ function SettingsSection() {
           if (mode === themeMode) return;
           kv.set('themeMode', mode);
           setThemeModeState(mode);
-          // Reload so StyleSheet.create() captures the new palette. Same
-          // pattern as the language picker.
+          // Reload so StyleSheet.create() captures the new palette. In dev
+          // (Metro), DevSettings.reload() is fast and reliable. In prod
+          // builds we fall back to expo-updates if available, and finally
+          // ask the user to quit/relaunch.
           Alert.alert(
             t('me.lang.changeTitle'),
             t('me.lang.changeBody'),
@@ -394,6 +400,10 @@ function SettingsSection() {
                 text: t('me.lang.restart'),
                 style: 'default',
                 onPress: async () => {
+                  if (__DEV__ && DevSettings?.reload) {
+                    DevSettings.reload();
+                    return;
+                  }
                   try {
                     // eslint-disable-next-line @typescript-eslint/no-require-imports
                     const Updates = require('expo-updates');
