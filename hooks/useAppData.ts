@@ -336,9 +336,47 @@ export function deleteTransaction(id: string): void {
   bump();
 }
 
+/** Update a transaction with full balance reconciliation. If amount, type,
+ *  accountId, or toAccountId change, the old account-balance impact is
+ *  reversed and the new one re-applied within a single SQLite transaction
+ *  so partial states never persist. Pure-metadata edits (note, category,
+ *  halalStatus, date) skip the balance dance. */
 export function updateTransaction(id: string, patch: Partial<Transaction>): void {
   const db = getDB();
-  db.update(transactions).set(patch).where(eq(transactions.id, id)).run();
+  const raw = getRawDB();
+  const existing = db.select().from(transactions).where(eq(transactions.id, id)).get();
+  if (!existing) return;
+
+  const next = { ...existing, ...patch };
+  const balanceTouched =
+    patch.amount !== undefined && patch.amount !== existing.amount ||
+    patch.type !== undefined && patch.type !== existing.type ||
+    patch.accountId !== undefined && patch.accountId !== existing.accountId ||
+    patch.toAccountId !== undefined && patch.toAccountId !== existing.toAccountId;
+
+  raw.withTransactionSync(() => {
+    if (balanceTouched) {
+      // 1. Reverse old balance effects.
+      if (existing.type === 'transfer' && existing.toAccountId) {
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.toAccountId)).run();
+      } else if (existing.type === 'income') {
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
+      } else {
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
+      }
+      // 2. Apply new balance effects.
+      if (next.type === 'transfer' && next.toAccountId) {
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${next.amount}` }).where(eq(accounts.id, next.accountId)).run();
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${next.amount}` }).where(eq(accounts.id, next.toAccountId)).run();
+      } else if (next.type === 'income') {
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${next.amount}` }).where(eq(accounts.id, next.accountId)).run();
+      } else {
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${next.amount}` }).where(eq(accounts.id, next.accountId)).run();
+      }
+    }
+    db.update(transactions).set(patch).where(eq(transactions.id, id)).run();
+  });
   bump();
 }
 

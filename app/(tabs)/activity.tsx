@@ -14,8 +14,10 @@ import { TransactionRow } from '@/components/TransactionRow';
 import { SearchBar } from '@/components/SearchBar';
 import { StatCard, sectionStyles } from '@/components/Sections';
 import { MonthlyRecap } from '@/components/MonthlyRecap';
+import { TransactionSheet } from '@/components/TransactionSheet';
 import { FeatureSlots } from '@/features';
 import { useT } from '@/hooks/useT';
+import type { Transaction } from '@/utils/db/schema';
 import {
   useTransactions,
   useDailySpend,
@@ -35,6 +37,7 @@ export default function Activity() {
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [recapOpen, setRecapOpen] = useState(false);
   const [pageLimit, setPageLimit] = useState(200);
+  const [editing, setEditing] = useState<Transaction | null>(null);
 
   const txns = useTransactions({
     category: filterCat,
@@ -100,8 +103,13 @@ export default function Activity() {
           <View key={day} style={styles.group}>
             <Text style={styles.dayLabel}>{day}</Text>
             <View style={{ gap: 2 }}>
-              {ts.map((t) => (
-                <TransactionRow key={t.id} t={t} currency={currency} />
+              {ts.map((tx) => (
+                <TransactionRow
+                  key={tx.id}
+                  t={tx}
+                  currency={currency}
+                  onPressMore={() => setEditing(tx)}
+                />
               ))}
             </View>
           </View>
@@ -119,6 +127,11 @@ export default function Activity() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
+      <TransactionSheet
+        visible={editing !== null}
+        transaction={editing ?? undefined}
+        onClose={() => setEditing(null)}
+      />
     </SafeAreaView>
   );
 }
