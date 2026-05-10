@@ -82,6 +82,9 @@
   "plan.audit.stale.body": "Stop tracking this recurring item. Past payments stay in your history.",
   "insights.strip.label": "Category trends compared to last month",
   "insights.strip.new": "new",
+  "insights.netWorth.title": "Net worth",
+  "insights.netWorth.empty": "Track for a few days to see your net worth trend.",
+  "insights.netWorth.window": "Last {n} days",
 
   "me.title": "Me",
   "me.section.accounts": "Accounts",

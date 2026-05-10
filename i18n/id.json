@@ -82,6 +82,9 @@
   "plan.audit.stale.body": "Berhenti melacak langganan ini. Pembayaran lama tetap ada di riwayat.",
   "insights.strip.label": "Tren kategori dibanding bulan lalu",
   "insights.strip.new": "baru",
+  "insights.netWorth.title": "Kekayaan bersih",
+  "insights.netWorth.empty": "Lacak beberapa hari untuk melihat tren kekayaan bersihmu.",
+  "insights.netWorth.window": "{n} hari terakhir",
 
   "me.title": "Saya",
   "me.section.accounts": "Akun",

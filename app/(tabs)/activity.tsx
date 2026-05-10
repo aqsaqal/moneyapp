@@ -17,6 +17,7 @@ import { MonthlyRecap } from '@/components/MonthlyRecap';
 import { TransactionSheet } from '@/components/TransactionSheet';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { InsightsStrip } from '@/components/InsightsStrip';
+import { NetWorthChart } from '@/components/NetWorthChart';
 import { FeatureSlots } from '@/features';
 import { useT } from '@/hooks/useT';
 import type { Transaction } from '@/utils/db/schema';
@@ -208,6 +209,7 @@ function AnalyticsHeader({
                 );
               })}
           </View>
+          <NetWorthChart />
           <Pressable
             onPress={onShareRecap}
             style={({ pressed }) => [styles.recapBtn, pressed && { opacity: 0.7 }]}

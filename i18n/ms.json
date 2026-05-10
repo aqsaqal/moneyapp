@@ -82,6 +82,9 @@
   "plan.audit.stale.body": "Berhenti menjejaki langganan ini. Pembayaran lalu tetap dalam sejarah.",
   "insights.strip.label": "Trend kategori berbanding bulan lalu",
   "insights.strip.new": "baru",
+  "insights.netWorth.title": "Nilai bersih",
+  "insights.netWorth.empty": "Jejaki beberapa hari untuk melihat trend nilai bersih anda.",
+  "insights.netWorth.window": "{n} hari lepas",
 
   "me.title": "Saya",
   "me.section.accounts": "Akaun",

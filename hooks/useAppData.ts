@@ -32,6 +32,7 @@ import {
 import { monthKey } from '@/utils/format';
 import { seedIfEmpty } from '@/utils/db/seed';
 import { onProfileChange } from '@/utils/profiles';
+import { snapshotTodayIfMissing } from '@/utils/netWorthSnapshot';
 
 // Single process-wide version counter that all hooks watch. Bumped on every
 // mutation so useEffect-driven re-queries fire.
@@ -49,6 +50,8 @@ function bump() {
 onProfileChange(() => {
   // Re-seed in case the new profile is empty.
   void seedIfEmpty();
+  // Capture today's snapshot for the freshly-active profile.
+  try { snapshotTodayIfMissing(); } catch { /* swallow */ }
   bump();
 });
 function useVersion(): number {
@@ -74,6 +77,9 @@ export function bootAppData(): Promise<void> {
     bootPromise = (async () => {
       getDB(); // opens + creates tables
       await seedIfEmpty();
+      // Phase 10p: capture today's net-worth snapshot once per app launch.
+      // No-op when today's row already exists.
+      try { snapshotTodayIfMissing(); } catch { /* never block boot on this */ }
       booted = true;
     })();
   }

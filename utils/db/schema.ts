@@ -55,6 +55,17 @@ export const fxRates = sqliteTable('fx_rates', {
   fetchedAt: integer('fetched_at').notNull(),
 });
 
+// Phase 10p: daily net-worth snapshots so the Activity analytics can chart
+// "net worth over time". Keyed by ISO date (YYYY-MM-DD) — at most one row
+// per day. Captured at app boot whenever the active profile's "today" row
+// is missing; subsequent boots in the same day just no-op.
+export const netWorthSnapshots = sqliteTable('net_worth_snapshots', {
+  date: text('date').primaryKey(),  // YYYY-MM-DD (local time, profile-scoped)
+  assets: real('assets').notNull(),
+  debt: real('debt').notNull(),
+  net: real('net').notNull(),
+});
+
 // Phase 10o: liability tracker. Distinct from `accounts` of type='debt'
 // because we need APR + minimum-payment metadata to do payoff math —
 // account balances alone don't carry that. The `accountId` is optional;
@@ -164,6 +175,8 @@ export type NewGoal = typeof goals.$inferInsert;
 
 export type Debt = typeof debts.$inferSelect;
 export type NewDebt = typeof debts.$inferInsert;
+
+export type NetWorthSnapshot = typeof netWorthSnapshots.$inferSelect;
 
 // Convenience: monthKey for a given date (YYYY-MM).
 export function monthKey(date: Date | number): string {

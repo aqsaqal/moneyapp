@@ -130,6 +130,14 @@ function createTables(db: SQLite.SQLiteDatabase) {
       created_at INTEGER NOT NULL
     );
 
+    -- Phase 10p: daily net-worth snapshot for chart-over-time.
+    CREATE TABLE IF NOT EXISTS net_worth_snapshots (
+      date TEXT PRIMARY KEY NOT NULL,
+      assets REAL NOT NULL,
+      debt REAL NOT NULL,
+      net REAL NOT NULL
+    );
+
     CREATE TABLE IF NOT EXISTS budgets (
       id TEXT PRIMARY KEY NOT NULL,
       category TEXT NOT NULL,

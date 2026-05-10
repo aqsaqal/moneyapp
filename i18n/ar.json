@@ -82,6 +82,9 @@
   "plan.audit.stale.body": "إيقاف تتبّع هذا الاشتراك. تبقى المدفوعات السابقة في السجل.",
   "insights.strip.label": "اتجاهات الفئات مقارنة بالشهر الماضي",
   "insights.strip.new": "جديد",
+  "insights.netWorth.title": "صافي الثروة",
+  "insights.netWorth.empty": "تابِع لبضعة أيام لتظهر اتجاهات صافي ثروتك.",
+  "insights.netWorth.window": "آخر {n} يومًا",
 
   "me.title": "حسابي",
   "me.section.accounts": "الحسابات",

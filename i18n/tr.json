@@ -82,6 +82,9 @@
   "plan.audit.stale.body": "Bu düzenli ödemeyi takip etmeyi bırak. Geçmiş ödemeler geçmişinde kalır.",
   "insights.strip.label": "Geçen aya göre kategori eğilimleri",
   "insights.strip.new": "yeni",
+  "insights.netWorth.title": "Net varlık",
+  "insights.netWorth.empty": "Net varlık eğilimini görmek için birkaç gün takip et.",
+  "insights.netWorth.window": "Son {n} gün",
 
   "me.title": "Profil",
   "me.section.accounts": "Hesaplar",
