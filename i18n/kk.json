@@ -149,6 +149,8 @@
   "add.cta.transfer": "Аудару",
   "add.transfer.from": "Қайдан",
   "add.transfer.to": "Қайда",
+  "add.fromCategory": "Санаттан",
+  "add.toCategory": "Санатқа",
 
   "voice.unsupported.sim": "Дауыс симуляторда қолжетімсіз — нақты құрылғыны қолданыңыз.",
   "voice.unsupported.build": "Бұл құрастыруда дауыс қолжетімсіз.",

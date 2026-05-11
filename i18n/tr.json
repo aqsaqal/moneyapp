@@ -146,6 +146,8 @@
   "add.cta.transfer": "Transfer Et",
   "add.transfer.from": "Kimden",
   "add.transfer.to": "Kime",
+  "add.fromCategory": "Kategoriden",
+  "add.toCategory": "Kategoriye",
 
   "voice.unsupported.sim": "Sesli giriş bu emülatörde desteklenmiyor — gerçek bir cihazda dene.",
   "voice.unsupported.build": "Sesli giriş bu sürümde mevcut değil.",

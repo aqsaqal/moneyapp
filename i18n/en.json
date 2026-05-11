@@ -149,6 +149,8 @@
   "add.cta.transfer": "Transfer",
   "add.transfer.from": "From",
   "add.transfer.to": "To",
+  "add.fromCategory": "From category",
+  "add.toCategory": "To category",
 
   "voice.unsupported.sim": "Voice not supported on this simulator — try a real device.",
   "voice.unsupported.build": "Voice not available in this build.",

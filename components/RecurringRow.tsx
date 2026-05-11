@@ -14,10 +14,12 @@ export interface RecurringRowProps {
   onTogglePaid: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  /** Phase 10v: tap the row body to open Smart Add prefilled. */
+  onTapPay?: () => void;
   currency?: CurrencyCode;
 }
 
-export function RecurringRow({ rec, paid, onTogglePaid, onEdit, onDelete, currency = 'USD' }: RecurringRowProps) {
+export function RecurringRow({ rec, paid, onTogglePaid, onEdit, onDelete, onTapPay, currency = 'USD' }: RecurringRowProps) {
   return (
     <View style={styles.row}>
       <Pressable onPress={onTogglePaid} style={styles.check} accessibilityRole="button">
@@ -27,18 +29,25 @@ export function RecurringRow({ rec, paid, onTogglePaid, onEdit, onDelete, curren
           color={paid ? theme.accent : theme.text3}
         />
       </Pressable>
-      <View style={[styles.iconBox, { backgroundColor: `${rec.color}22` }]}>
-        <Icon name={rec.icon} size={16} color={rec.color} />
-      </View>
-      <View style={{ flex: 1 }}>
-        <Text style={[styles.name, paid && { textDecorationLine: 'line-through', color: theme.text3 }]} numberOfLines={1}>
-          {rec.name}
+      <Pressable
+        style={styles.body}
+        onPress={onTapPay}
+        accessibilityRole="button"
+        accessibilityLabel={`${rec.name}, ${formatMoney(rec.amount, currency)}, due day ${rec.dayOfMonth}, tap to log`}
+      >
+        <View style={[styles.iconBox, { backgroundColor: `${rec.color}22` }]}>
+          <Icon name={rec.icon} size={16} color={rec.color} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.name, paid && { textDecorationLine: 'line-through', color: theme.text3 }]} numberOfLines={1}>
+            {rec.name}
+          </Text>
+          <Text style={styles.sub}>Day {rec.dayOfMonth}</Text>
+        </View>
+        <Text style={[styles.amount, { color: rec.type === 'income' ? theme.accent : theme.text1 }]}>
+          {formatMoney(rec.amount, currency)}
         </Text>
-        <Text style={styles.sub}>Day {rec.dayOfMonth}</Text>
-      </View>
-      <Text style={[styles.amount, { color: rec.type === 'income' ? theme.accent : theme.text1 }]}>
-        {formatMoney(rec.amount, currency)}
-      </Text>
+      </Pressable>
       {onEdit && (
         <Pressable onPress={onEdit} hitSlop={8} accessibilityLabel="Edit">
           <MaterialCommunityIcons name="pencil" size={16} color={theme.text3} />
@@ -63,6 +72,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
   },
   check: { padding: 2 },
+  body: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 },
   iconBox: {
     width: 32,
     height: 32,

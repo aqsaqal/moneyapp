@@ -146,6 +146,8 @@
   "add.cta.transfer": "تحويل",
   "add.transfer.from": "من",
   "add.transfer.to": "إلى",
+  "add.fromCategory": "من فئة",
+  "add.toCategory": "إلى فئة",
 
   "voice.unsupported.sim": "الإدخال الصوتي غير مدعوم على هذا المحاكي — جرّب على جهاز حقيقي.",
   "voice.unsupported.build": "الإدخال الصوتي غير متوفر في هذه النسخة.",

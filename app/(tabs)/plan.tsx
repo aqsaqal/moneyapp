@@ -72,8 +72,17 @@ type RecurringSheetState =
   | { kind: 'edit'; rec: Recurring }
   | { kind: 'create'; type: 'expense' | 'income' };
 
+/** Build a base64-encoded JSON prefill blob for /add. Used by every
+ *  Plan-tab row that should open Smart Add with the right defaults. */
+function buildPrefill(data: Record<string, unknown>): string {
+  const json = JSON.stringify(data);
+  if (typeof globalThis.btoa === 'function') return globalThis.btoa(json);
+  return Buffer.from(json, 'utf8').toString('base64');
+}
+
 function RecurringSection() {
   const t = useT();
+  const router = useRouter();
   const recurring = useRecurring();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const key = monthKey();
@@ -134,6 +143,18 @@ function RecurringSection() {
                 onTogglePaid={() => (paidIds.has(r.id) ? unmarkRecurringPaid(r.id, key) : markRecurringPaid(r))}
                 onEdit={() => setSheet({ kind: 'edit', rec: r })}
                 onDelete={() => deleteRecurring(r.id)}
+                onTapPay={() => router.push({
+                  pathname: '/add',
+                  params: {
+                    prefill: buildPrefill({
+                      type: 'expense',
+                      amount: r.amount,
+                      accountId: r.accountId,
+                      category: r.category,
+                      note: r.name,
+                    }),
+                  },
+                } as never)}
                 currency={currency}
               />
               {stale && (
@@ -191,6 +212,18 @@ function RecurringSection() {
             onTogglePaid={() => (paidIds.has(r.id) ? unmarkRecurringPaid(r.id, key) : markRecurringPaid(r))}
             onEdit={() => setSheet({ kind: 'edit', rec: r })}
             onDelete={() => deleteRecurring(r.id)}
+            onTapPay={() => router.push({
+              pathname: '/add',
+              params: {
+                prefill: buildPrefill({
+                  type: 'income',
+                  amount: r.amount,
+                  accountId: r.accountId,
+                  category: r.category,
+                  note: r.name,
+                }),
+              },
+            } as never)}
             currency={currency}
           />
         ))}
@@ -377,6 +410,7 @@ function GoalsSection() {
 
 function DebtsSection() {
   const t = useT();
+  const router = useRouter();
   const debts = useDebts();
   const accounts = useAccounts();
   const accountById = useMemo(() => new Map(accounts.map((a) => [a.id, a])), [accounts]);
@@ -480,10 +514,32 @@ function DebtsSection() {
         return (
           <Pressable
             key={d.id}
-            onPress={() => setEditing(debts.find((x) => x.id === d.id))}
+            onPress={() => router.push({
+              pathname: '/add',
+              params: {
+                prefill: buildPrefill(
+                  // When linked to an account, log a transfer that pays it
+                  // down. Otherwise log a generic expense the user can
+                  // categorize themselves.
+                  d.accountId
+                    ? {
+                        type: 'transfer',
+                        toAccountId: d.accountId,
+                        amount: d.minPayment > 0 ? d.minPayment : undefined,
+                        note: d.name,
+                      }
+                    : {
+                        type: 'expense',
+                        amount: d.minPayment > 0 ? d.minPayment : undefined,
+                        note: d.name,
+                      },
+                ),
+              },
+            } as never)}
+            onLongPress={() => setEditing(debts.find((x) => x.id === d.id))}
             style={[styles.debtCard, { borderColor: `${d.color}55` }]}
             accessibilityRole="button"
-            accessibilityLabel={`${d.name}, ${formatMoney(d.balance, currency)} at ${d.apr}% APR`}
+            accessibilityLabel={`${d.name}, ${formatMoney(d.balance, currency)} at ${d.apr}% APR, tap to log payment, long-press to edit`}
           >
             <View style={[styles.goalIcon, { backgroundColor: `${d.color}22` }]}>
               <MaterialCommunityIcons name={d.icon as never} size={20} color={d.color} />

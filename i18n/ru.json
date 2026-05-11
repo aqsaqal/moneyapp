@@ -149,6 +149,8 @@
   "add.cta.transfer": "Перевести",
   "add.transfer.from": "Откуда",
   "add.transfer.to": "Куда",
+  "add.fromCategory": "Из категории",
+  "add.toCategory": "В категорию",
 
   "voice.unsupported.sim": "Голос не поддерживается на симуляторе — попробуйте на реальном устройстве.",
   "voice.unsupported.build": "Голос недоступен в этой сборке.",

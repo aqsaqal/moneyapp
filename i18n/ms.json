@@ -146,6 +146,8 @@
   "add.cta.transfer": "Pindahkan",
   "add.transfer.from": "Dari",
   "add.transfer.to": "Ke",
+  "add.fromCategory": "Dari kategori",
+  "add.toCategory": "Ke kategori",
 
   "voice.unsupported.sim": "Suara tidak disokong pada simulator ini — cuba pada peranti sebenar.",
   "voice.unsupported.build": "Suara tidak tersedia dalam binaan ini.",

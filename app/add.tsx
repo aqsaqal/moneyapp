@@ -22,7 +22,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { Numpad } from '@/components/Numpad';
@@ -76,10 +76,36 @@ export default function AddScreen() {
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const locale = kv.get('locale') ?? 'en-US';
 
-  const [mode, setMode] = useState<Mode>('expense');
-  const [amount, setAmount] = useState('0');
-  const [note, setNote] = useState('');
-  const [txDate, setTxDate] = useState<Date>(new Date());
+  // Phase 10v: when launched from a Plan item (recurring bill, goal,
+  // debt) the caller passes ?prefill=<base64 JSON> so we open with the
+  // amount / category / account / type / currency / date populated.
+  const params = useLocalSearchParams<{ prefill?: string }>();
+  const prefill = useMemo(() => {
+    if (!params.prefill) return null;
+    try {
+      const decoded =
+        typeof globalThis.atob === 'function'
+          ? globalThis.atob(params.prefill)
+          : Buffer.from(params.prefill, 'base64').toString('utf8');
+      return JSON.parse(decoded) as {
+        type?: Mode;
+        amount?: number;
+        accountId?: string;
+        toAccountId?: string;
+        category?: string;
+        note?: string;
+        originalCurrency?: string;
+        date?: number;
+      };
+    } catch {
+      return null;
+    }
+  }, [params.prefill]);
+
+  const [mode, setMode] = useState<Mode>(prefill?.type ?? 'expense');
+  const [amount, setAmount] = useState(prefill?.amount ? String(prefill.amount) : '0');
+  const [note, setNote] = useState(prefill?.note ?? '');
+  const [txDate, setTxDate] = useState<Date>(prefill?.date ? new Date(prefill.date) : new Date());
   const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [draft, setDraft] = useState<Partial<Transaction>>({});
   const [success, setSuccess] = useState(false);
@@ -92,13 +118,15 @@ export default function AddScreen() {
     amount: parseFloat(amount) || 0,
   });
 
-  // Allow user override of predicted cat / account.
-  const [catOverride, setCatOverride] = useState<string | null>(null);
-  const [accountOverride, setAccountOverride] = useState<string | null>(null);
+  // Allow user override of predicted cat / account. Prefill seeds them.
+  const [catOverride, setCatOverride] = useState<string | null>(prefill?.category ?? null);
+  const [accountOverride, setAccountOverride] = useState<string | null>(prefill?.accountId ?? null);
   // Multi-currency entry: when the user is spending in a currency different
   // from their account's currency, they enter the original currency's
   // amount and we convert via the FX cache to the account currency at save.
-  const [entryCurrency, setEntryCurrency] = useState<CurrencyCode | null>(null);
+  const [entryCurrency, setEntryCurrency] = useState<CurrencyCode | null>(
+    (prefill?.originalCurrency as CurrencyCode | undefined) ?? null,
+  );
   const [currencyPickerOpen, setCurrencyPickerOpen] = useState(false);
 
   // Effective values feed the actual submit.
@@ -359,8 +387,13 @@ export default function AddScreen() {
           />
         )}
 
-        {/* Transfer: from / to as tap-to-pick rows. */}
-        {mode === 'transfer' && (
+        {/* Two pickers always visible, From + To, mirroring the 1money
+            pattern. Layout per mode:
+              expense   →  From account · To category
+              income    →  From category · To account
+              transfer  →  From account · To account
+            Predicted values populate initially; tap to change. */}
+        {mode === 'transfer' ? (
           <View style={styles.transferRow}>
             <TransferAcctRow
               label={t('add.transfer.from')}
@@ -376,61 +409,41 @@ export default function AddScreen() {
               onPick={setToAcct}
             />
           </View>
-        )}
-
-        {/* Predicted strip — expense/income only. */}
-        {mode !== 'transfer' && (
-          <PredictedStrip
-            category={effectiveCat}
-            accountId={effectiveAcct}
-            accounts={accounts}
-            source={predicted.source}
-            expanded={overrideOpen}
-            onToggle={() => setOverrideOpen((x) => !x)}
-          />
-        )}
-
-        {/* Override (cat grid + account picker) — collapsed by default. */}
-        {mode !== 'transfer' && overrideOpen && (
-          <View style={{ gap: spacing.md }}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.acctRow}
-            >
-              {accounts.map((a) => (
-                <Pressable
-                  key={a.id}
-                  onPress={() => setAccountOverride(a.id)}
-                  style={[
-                    styles.acctPill,
-                    effectiveAcct === a.id && {
-                      backgroundColor: a.color,
-                      borderColor: 'transparent',
-                    },
-                  ]}
-                >
-                  <Text style={[styles.acctText, effectiveAcct === a.id && { color: theme.bg }]}>
-                    {a.name}
-                  </Text>
-                </Pressable>
-              ))}
-            </ScrollView>
-            <View style={styles.catGrid}>
-              {cats.map((c) => (
-                <CategoryTile
-                  key={c.id}
-                  cat={c}
-                  selected={effectiveCat === c.id}
-                  onPress={() => {
-                    setCatOverride(c.id);
-                    // Auto-collapse the override panel after a category pick
-                    // — saves a separate tap to close.
-                    setOverrideOpen(false);
-                  }}
+        ) : (
+          <View style={styles.transferRow}>
+            {mode === 'expense' ? (
+              <>
+                <TransferAcctRow
+                  label={t('add.transfer.from')}
+                  accounts={accounts}
+                  value={effectiveAcct}
+                  onPick={setAccountOverride}
                 />
-              ))}
-            </View>
+                <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
+                <CategoryPickerRow
+                  label={t('add.toCategory')}
+                  cats={cats}
+                  value={effectiveCat}
+                  onPick={setCatOverride}
+                />
+              </>
+            ) : (
+              <>
+                <CategoryPickerRow
+                  label={t('add.fromCategory')}
+                  cats={cats}
+                  value={effectiveCat}
+                  onPick={setCatOverride}
+                />
+                <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
+                <TransferAcctRow
+                  label={t('add.transfer.to')}
+                  accounts={accounts}
+                  value={effectiveAcct}
+                  onPick={setAccountOverride}
+                />
+              </>
+            )}
           </View>
         )}
 
@@ -496,6 +509,46 @@ function TransferAcctRow({
         title={`${label} account`}
         options={accounts.map((a) => ({ value: a.id, label: a.name, iconColor: a.color, icon: 'wallet-outline' }))}
         selected={value}
+        onPick={onPick}
+        onClose={() => setOpen(false)}
+      />
+    </View>
+  );
+}
+
+/** Same pattern as TransferAcctRow, but for picking a category. Used in
+ *  expense + income flows so the layout always reads as From → To. */
+function CategoryPickerRow({
+  label,
+  cats,
+  value,
+  onPick,
+}: {
+  label: string;
+  cats: { id: string; name: string; color: string }[];
+  value: string | null;
+  onPick: (id: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const cat = value ? cats.find((c) => c.id === value) : undefined;
+  return (
+    <View style={{ flex: 1 }}>
+      <Text style={styles.transferLabel}>{label}</Text>
+      <Pressable
+        onPress={() => setOpen(true)}
+        style={[styles.transferRowChip, cat && { borderColor: `${cat.color}88` }]}
+        accessibilityRole="button"
+        accessibilityLabel={`${label}: ${cat?.name ?? 'pick category'}`}
+      >
+        <View style={[styles.transferDot, { backgroundColor: cat?.color ?? theme.text3 }]} />
+        <Text style={styles.transferRowText}>{cat?.name ?? 'Pick category'}</Text>
+        <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
+      </Pressable>
+      <PickerSheet
+        visible={open}
+        title={label}
+        options={cats.map((c) => ({ value: c.id, label: c.name, iconColor: c.color }))}
+        selected={value ?? ''}
         onPick={onPick}
         onClose={() => setOpen(false)}
       />
