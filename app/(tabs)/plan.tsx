@@ -54,7 +54,6 @@ export default function PlanScreen() {
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <RecurringSection />
-        <SubscriptionAuditSection />
         <GoalsSection />
         <DebtsSection />
         <BudgetsSection />
@@ -80,6 +79,9 @@ function RecurringSection() {
   const key = monthKey();
   const paid = usePaidItemsForMonth(key);
   const paidIds = useMemo(() => new Set(paid.map((p) => p.recurringId)), [paid]);
+  // Phase 10g+: audit signals now live INSIDE this section (annual burn,
+  // detected, stale) — see useSubscriptionAudit.
+  const audit = useSubscriptionAudit();
 
   const [sheet, setSheet] = useState<RecurringSheetState>({ kind: 'closed' });
 
@@ -100,7 +102,14 @@ function RecurringSection() {
       </View>
 
       <View style={styles.disposableCard}>
-        <Text style={styles.disposableLabel}>{t('plan.remainingBills')}</Text>
+        <View>
+          <Text style={styles.disposableLabel}>{t('plan.remainingBills')}</Text>
+          {audit.annualBurn > 0 && (
+            <Text style={styles.annualHint}>
+              {formatMoney(audit.annualBurn, currency)} {t('plan.audit.annual.suffix')}
+            </Text>
+          )}
+        </View>
         <Text style={[styles.disposableValue, { color: theme.warning }]}>
           {formatMoney(remaining, currency)}
         </Text>
@@ -112,19 +121,56 @@ function RecurringSection() {
         addLabel={t('common.add')}
       />
       <View style={{ gap: spacing.sm }}>
-        {exp.length === 0 && (
+        {exp.length === 0 && audit.detected.length === 0 && (
           <Text style={styles.emptyHint}>{t('plan.empty.expenses')}</Text>
         )}
-        {exp.map((r) => (
-          <RecurringRow
-            key={r.id}
-            rec={r}
-            paid={paidIds.has(r.id)}
-            onTogglePaid={() => (paidIds.has(r.id) ? unmarkRecurringPaid(r.id, key) : markRecurringPaid(r))}
-            onEdit={() => setSheet({ kind: 'edit', rec: r })}
-            onDelete={() => deleteRecurring(r.id)}
-            currency={currency}
-          />
+        {exp.map((r) => {
+          const stale = audit.stale.find((s) => s.recurring.id === r.id);
+          return (
+            <View key={r.id}>
+              <RecurringRow
+                rec={r}
+                paid={paidIds.has(r.id)}
+                onTogglePaid={() => (paidIds.has(r.id) ? unmarkRecurringPaid(r.id, key) : markRecurringPaid(r))}
+                onEdit={() => setSheet({ kind: 'edit', rec: r })}
+                onDelete={() => deleteRecurring(r.id)}
+                currency={currency}
+              />
+              {stale && (
+                <View style={styles.staleHint}>
+                  <MaterialCommunityIcons name="alert-octagon-outline" size={14} color={theme.expense} />
+                  <Text style={styles.staleHintText}>
+                    {stale.daysSinceLastSeen == null
+                      ? t('plan.audit.stale.never')
+                      : t('plan.audit.stale.days', { n: stale.daysSinceLastSeen })}
+                  </Text>
+                </View>
+              )}
+            </View>
+          );
+        })}
+        {/* Detected candidates appear inline at the tail of the expenses
+            list as suggestion rows. Tap → confirm → promote into a formal
+            recurring entry. */}
+        {audit.detected.map((c) => (
+          <Pressable
+            key={c.id}
+            onPress={() => promoteDetected(c, currency, t)}
+            style={styles.suggestionRow}
+            accessibilityRole="button"
+            accessibilityLabel={`${c.token} suggested as recurring, ${formatMoney(c.amount, currency)}, tap to add`}
+          >
+            <MaterialCommunityIcons name="lightbulb-outline" size={16} color={theme.warning} />
+            <View style={{ flex: 1 }}>
+              <Text style={styles.suggestionName}>
+                {t('plan.audit.detected', { token: c.token })}
+              </Text>
+              <Text style={styles.suggestionSub}>
+                {formatMoney(c.amount, currency)} · {t('plan.audit.detected.subtitle', { months: c.monthsSeen })}
+              </Text>
+            </View>
+            <Text style={styles.suggestionCta}>{t('common.add')}</Text>
+          </Pressable>
         ))}
       </View>
 
@@ -467,123 +513,39 @@ function DebtsSection() {
   );
 }
 
-// ---- Subscription audit (Phase 10i) ----
-
-function SubscriptionAuditSection() {
-  const t = useT();
-  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
-  const audit = useSubscriptionAudit();
-  const hasContent =
-    audit.detected.length > 0 ||
-    audit.stale.length > 0 ||
-    audit.annualBurn > 0;
-  if (!hasContent) return null;
-
-  const promote = (c: DetectedCandidate) => {
-    Alert.alert(
-      t('plan.audit.promote.title'),
-      t('plan.audit.promote.body', { token: c.token, amount: formatMoney(c.amount, currency) }),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.add'),
-          style: 'default',
-          onPress: () => {
-            const cat = catInfo(c.category);
-            upsertRecurring({
-              id: `r${Date.now()}`,
-              type: 'expense',
-              name: c.token.charAt(0).toUpperCase() + c.token.slice(1),
-              amount: c.amount,
-              category: c.category,
-              accountId: c.accountId,
-              dayOfMonth: c.dayOfMonth,
-              icon: cat.icon,
-              color: cat.color,
-            });
-          },
+// Promote a detected subscription candidate into a formal recurring entry.
+// Confirm-alert keeps the original behaviour for v1; a future iteration can
+// swap this for the RecurringSheet pre-filled so the user can edit before
+// saving.
+function promoteDetected(
+  c: DetectedCandidate,
+  currency: CurrencyCode,
+  t: (k: string, v?: Record<string, string | number>) => string,
+) {
+  Alert.alert(
+    t('plan.audit.promote.title'),
+    t('plan.audit.promote.body', { token: c.token, amount: formatMoney(c.amount, currency) }),
+    [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('common.add'),
+        style: 'default',
+        onPress: () => {
+          const cat = catInfo(c.category);
+          upsertRecurring({
+            id: `r${Date.now()}`,
+            type: 'expense',
+            name: c.token.charAt(0).toUpperCase() + c.token.slice(1),
+            amount: c.amount,
+            category: c.category,
+            accountId: c.accountId,
+            dayOfMonth: c.dayOfMonth,
+            icon: cat.icon,
+            color: cat.color,
+          });
         },
-      ],
-    );
-  };
-
-  const dismissStale = (s: StaleSubscription) => {
-    Alert.alert(
-      t('plan.audit.stale.title', { name: s.recurring.name }),
-      t('plan.audit.stale.body'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.delete'),
-          style: 'destructive',
-          onPress: () => deleteRecurring(s.recurring.id),
-        },
-      ],
-    );
-  };
-
-  return (
-    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <SectionHeader title={t('plan.audit.title')} />
-
-      {audit.annualBurn > 0 && (
-        <View style={styles.burnCard}>
-          <Text style={styles.burnLabel}>{t('plan.audit.annual')}</Text>
-          <Text style={styles.burnValue}>{formatMoney(audit.annualBurn, currency)}</Text>
-        </View>
-      )}
-
-      {audit.detected.map((c) => {
-        const cat = catInfo(c.category);
-        return (
-          <Pressable
-            key={c.id}
-            style={[styles.auditCard, { borderColor: `${theme.warning}55` }]}
-            onPress={() => promote(c)}
-            accessibilityRole="button"
-            accessibilityLabel={`${c.token} suggested as recurring, ${formatMoney(c.amount, currency)}, tap to add`}
-          >
-            <View style={[styles.auditIcon, { backgroundColor: `${cat.color}22` }]}>
-              <MaterialCommunityIcons name="lightbulb-outline" size={18} color={theme.warning} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.auditTitle}>{t('plan.audit.detected', { token: c.token })}</Text>
-              <Text style={styles.auditDetail}>
-                {formatMoney(c.amount, currency)} · {t('plan.audit.detected.subtitle', { months: c.monthsSeen })}
-              </Text>
-            </View>
-            <Text style={styles.auditCta}>{t('common.add')}</Text>
-          </Pressable>
-        );
-      })}
-
-      {audit.stale.map((s) => {
-        const days = s.daysSinceLastSeen;
-        const detail = days == null
-          ? t('plan.audit.stale.never')
-          : t('plan.audit.stale.days', { n: days });
-        return (
-          <Pressable
-            key={s.recurring.id}
-            style={[styles.auditCard, { borderColor: `${theme.expense}55` }]}
-            onPress={() => dismissStale(s)}
-            accessibilityRole="button"
-            accessibilityLabel={`${s.recurring.name} not seen in ${days ?? 'a while'}, tap to review`}
-          >
-            <View style={[styles.auditIcon, { backgroundColor: `${theme.expense}22` }]}>
-              <MaterialCommunityIcons name="alert-octagon-outline" size={18} color={theme.expense} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.auditTitle}>
-                {t('plan.audit.stale.headline', { name: s.recurring.name })}
-              </Text>
-              <Text style={styles.auditDetail}>{detail}</Text>
-            </View>
-            <MaterialCommunityIcons name="chevron-right" size={18} color={theme.text3} />
-          </Pressable>
-        );
-      })}
-    </View>
+      },
+    ],
   );
 }
 
@@ -610,37 +572,30 @@ const styles = StyleSheet.create({
   disposableLabel: { color: theme.text2, fontSize: sizes.sm },
   disposableValue: { fontSize: sizes.xl, fontFamily: font.display, fontWeight: '700' },
   emptyHint: { color: theme.text3, fontSize: sizes.sm, paddingHorizontal: 4, lineHeight: 20 },
-  burnCard: {
-    padding: spacing.md,
-    borderRadius: radii.lg,
-    backgroundColor: theme.bg2,
+  annualHint: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
+  suggestionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 10,
+    borderRadius: radii.md,
     borderWidth: 1,
     borderColor: theme.border,
+    borderStyle: 'dashed',
+    backgroundColor: `${theme.warning}08`,
+  },
+  suggestionName: { color: theme.text1, fontSize: sizes.sm },
+  suggestionSub: { color: theme.text3, fontSize: sizes.xs, marginTop: 1 },
+  suggestionCta: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  staleHint: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 4,
   },
-  burnLabel: { color: theme.text2, fontSize: sizes.sm },
-  burnValue: { color: theme.text1, fontSize: sizes.xl, fontFamily: font.displayBold },
-  auditCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    padding: spacing.md,
-    borderRadius: radii.lg,
-    backgroundColor: theme.bg2,
-    borderWidth: 1,
-  },
-  auditIcon: {
-    width: 36,
-    height: 36,
-    borderRadius: radii.md,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  auditTitle: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.bodySemi },
-  auditDetail: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
-  auditCta: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  staleHintText: { color: theme.expense, fontSize: sizes.xs, flex: 1 },
   goalCard: {
     padding: spacing.md,
     borderRadius: radii.lg,

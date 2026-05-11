@@ -72,6 +72,7 @@
   "plan.debts.tooSlow": "Cicilan minimum saja tidak akan melunasi dalam 50 tahun.",
   "plan.audit.title": "Audit langganan",
   "plan.audit.annual": "Biaya langganan tahunan",
+  "plan.audit.annual.suffix": "/ tahun di tagihan tetap",
   "plan.audit.detected": "Sepertinya langganan: {token}",
   "plan.audit.detected.subtitle": "Ditagih {months} bulan berturut-turut",
   "plan.audit.promote.title": "Tambah sebagai langganan tetap?",

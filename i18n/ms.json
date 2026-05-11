@@ -72,6 +72,7 @@
   "plan.debts.tooSlow": "Hanya bayaran minimum tidak akan melunaskan dalam 50 tahun.",
   "plan.audit.title": "Audit langganan",
   "plan.audit.annual": "Kos langganan tahunan",
+  "plan.audit.annual.suffix": "/ tahun untuk berulang",
   "plan.audit.detected": "Nampak macam langganan: {token}",
   "plan.audit.detected.subtitle": "Dicaj {months} bulan berturut-turut",
   "plan.audit.promote.title": "Tambah sebagai berulang?",

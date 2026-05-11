@@ -75,6 +75,7 @@
   "me.account.riba.footer": "One or more accounts are flagged as earning interest. Consult a scholar for the right zakat treatment.",
   "plan.audit.title": "Subscription audit",
   "plan.audit.annual": "Annual subscription cost",
+  "plan.audit.annual.suffix": "/ year in recurring",
   "plan.audit.detected": "Looks like a subscription: {token}",
   "plan.audit.detected.subtitle": "Charged {months} months in a row",
   "plan.audit.promote.title": "Add as recurring?",

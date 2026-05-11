@@ -75,6 +75,7 @@
   "me.account.riba.footer": "Один или несколько счетов отмечены как процентные. Обратитесь к учёному за корректным расчётом.",
   "plan.audit.title": "Аудит подписок",
   "plan.audit.annual": "Годовая стоимость подписок",
+  "plan.audit.annual.suffix": "/ год регулярных платежей",
   "plan.audit.detected": "Похоже на подписку: {token}",
   "plan.audit.detected.subtitle": "Списания {months} мес. подряд",
   "plan.audit.promote.title": "Добавить как регулярный?",

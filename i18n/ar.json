@@ -72,6 +72,7 @@
   "plan.debts.tooSlow": "الحد الأدنى وحده لن ينهي هذه الديون خلال 50 عامًا.",
   "plan.audit.title": "مراجعة الاشتراكات",
   "plan.audit.annual": "تكلفة الاشتراكات السنوية",
+  "plan.audit.annual.suffix": "/ سنويًا للمتكرّر",
   "plan.audit.detected": "يبدو كاشتراك: {token}",
   "plan.audit.detected.subtitle": "خُصِم {months} شهرًا متتالية",
   "plan.audit.promote.title": "إضافة كاشتراك؟",

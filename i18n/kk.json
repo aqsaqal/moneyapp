@@ -75,6 +75,7 @@
   "me.account.riba.footer": "Бір немесе бірнеше шот пайыздық деп белгіленді. Дұрыс есеп үшін ғалымға жүгініңіз.",
   "plan.audit.title": "Жазылым тексерісі",
   "plan.audit.annual": "Жазылымдардың жылдық құны",
+  "plan.audit.annual.suffix": "/ жыл тұрақты төлемдер",
   "plan.audit.detected": "Жазылым сияқты: {token}",
   "plan.audit.detected.subtitle": "{months} ай қатарынан есептелді",
   "plan.audit.promote.title": "Тұрақты ретінде қосу керек пе?",

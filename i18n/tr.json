@@ -72,6 +72,7 @@
   "plan.debts.tooSlow": "Sadece asgariyle bu borçlar 50 yılda kapanmaz.",
   "plan.audit.title": "Abonelik denetimi",
   "plan.audit.annual": "Yıllık abonelik maliyeti",
+  "plan.audit.annual.suffix": "/ yıl, düzenli ödemelerde",
   "plan.audit.detected": "Aboneliğe benziyor: {token}",
   "plan.audit.detected.subtitle": "Üst üste {months} ay tahsil edildi",
   "plan.audit.promote.title": "Düzenli olarak ekle?",
