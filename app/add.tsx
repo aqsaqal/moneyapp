@@ -20,7 +20,7 @@
 // Override path remains for power users who want explicit control.
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -40,6 +40,20 @@ import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { convert } from '@/utils/fx';
 import { CURRENCIES } from '@/constants/currency';
+// Lazy-imported so a binary that predates the native module shows a
+// graceful fallback instead of crashing.
+type DateTimePickerModule = typeof import('@react-native-community/datetimepicker').default;
+let _datePicker: DateTimePickerModule | null = null;
+function getDatePicker(): DateTimePickerModule | null {
+  if (_datePicker) return _datePicker;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    _datePicker = require('@react-native-community/datetimepicker').default as DateTimePickerModule;
+    return _datePicker;
+  } catch {
+    return null;
+  }
+}
 import { allExpenseCategories, allIncomeCategories } from '@/constants/categories';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
@@ -47,6 +61,12 @@ import { useHaptics } from '@/hooks/useHaptics';
 import type { Transaction } from '@/utils/db/schema';
 
 type Mode = 'expense' | 'income' | 'transfer';
+
+function isSameDay(a: Date, b: Date): boolean {
+  return a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate();
+}
 
 export default function AddScreen() {
   const router = useRouter();
@@ -59,6 +79,8 @@ export default function AddScreen() {
   const [mode, setMode] = useState<Mode>('expense');
   const [amount, setAmount] = useState('0');
   const [note, setNote] = useState('');
+  const [txDate, setTxDate] = useState<Date>(new Date());
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [draft, setDraft] = useState<Partial<Transaction>>({});
   const [success, setSuccess] = useState(false);
   const [successCaption, setSuccessCaption] = useState<string | null>(null);
@@ -139,6 +161,7 @@ export default function AddScreen() {
         accountId: fromAcct,
         toAccountId: toAcct,
         note: note || null,
+        date: txDate.getTime(),
         originalAmount,
         originalCurrency,
       });
@@ -157,6 +180,7 @@ export default function AddScreen() {
         category: effectiveCat,
         accountId: effectiveAcct,
         note: note || null,
+        date: txDate.getTime(),
         halalStatus: (draft.halalStatus as Transaction['halalStatus']) ?? null,
         receiptImagePath: (draft.receiptImagePath as string | undefined) ?? null,
         asnaf: (draft as { asnaf?: string | null }).asnaf ?? null,
@@ -240,6 +264,41 @@ export default function AddScreen() {
             withdrawn from {accountCurrency}
           </Text>
         )}
+        {/* Date chip — defaults to "today"; tap to pick a past or future
+            date for back-filling. The day matters for analytics, budgets,
+            and the day-grouped Activity list. */}
+        <Pressable
+          onPress={() => setDatePickerOpen(true)}
+          style={styles.dateRow}
+          accessibilityRole="button"
+          accessibilityLabel={`Date ${txDate.toDateString()}, tap to change`}
+        >
+          <MaterialCommunityIcons name="calendar-outline" size={16} color={theme.text2} />
+          <Text style={styles.dateText}>
+            {isSameDay(txDate, new Date())
+              ? `Today · ${txDate.toLocaleDateString()}`
+              : txDate.toLocaleDateString()}
+          </Text>
+        </Pressable>
+        {datePickerOpen && (() => {
+          const DateTimePicker = getDatePicker();
+          if (!DateTimePicker) {
+            setDatePickerOpen(false);
+            return null;
+          }
+          return (
+            <DateTimePicker
+              value={txDate}
+              mode="date"
+              display={Platform.OS === 'ios' ? 'inline' : 'default'}
+              maximumDate={new Date(Date.now() + 365 * 86_400_000)}
+              onChange={(event, selected) => {
+                setDatePickerOpen(false);
+                if (event.type === 'set' && selected) setTxDate(selected);
+              }}
+            />
+          );
+        })()}
         <CurrencyPickerSheet
           visible={currencyPickerOpen}
           title={t('me.currency')}
@@ -502,6 +561,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: -8,
   },
+  dateRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg2,
+  },
+  dateText: { color: theme.text1, fontSize: 13, fontFamily: 'PlusJakartaSans_600SemiBold' },
   noteRow: {
     flexDirection: 'row',
     alignItems: 'center',
