@@ -22,6 +22,11 @@ export const REGION_TO_CURRENCY: Record<string, CurrencyCode> = {
   MY: 'MYR', // Malaysia
   // Anatolia
   TR: 'TRY', // Turkey
+  // Central Asia / CIS
+  KZ: 'KZT', // Kazakhstan
+  RU: 'RUB', // Russia
+  KG: 'KZT', // Kyrgyzstan — KGS not yet listed; KZT is the nearest neighbour
+  UZ: 'RUB', // Uzbekistan — UZS not yet listed
   // English-speaking defaults (already in v1)
   US: 'USD',
   GB: 'GBP',
@@ -45,6 +50,8 @@ export const REGION_TO_LOCALE: Record<string, string> = {
   ID: 'id-ID',
   MY: 'ms-MY',
   TR: 'tr-TR',
+  KZ: 'kk-KZ',
+  RU: 'ru-RU',
 };
 
 export function defaultCurrencyForRegion(region: string | null | undefined): CurrencyCode {

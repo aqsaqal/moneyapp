@@ -22,8 +22,10 @@ import ar from '@/i18n/ar.json';
 import tr from '@/i18n/tr.json';
 import id from '@/i18n/id.json';
 import ms from '@/i18n/ms.json';
+import ru from '@/i18n/ru.json';
+import kk from '@/i18n/kk.json';
 
-export type LocaleCode = 'en-US' | 'ar-SA' | 'tr-TR' | 'id-ID' | 'ms-MY';
+export type LocaleCode = 'en-US' | 'ar-SA' | 'tr-TR' | 'id-ID' | 'ms-MY' | 'ru-RU' | 'kk-KZ';
 export type Dictionary = Record<string, string>;
 
 // Stable English source. All other locales fall back to this on missing keys.
@@ -35,6 +37,8 @@ const DICTS: Partial<Record<LocaleCode, Dictionary>> = {
   'tr-TR': tr as Dictionary,
   'id-ID': id as Dictionary,
   'ms-MY': ms as Dictionary,
+  'ru-RU': ru as Dictionary,
+  'kk-KZ': kk as Dictionary,
 };
 
 let currentLocale: LocaleCode = (kv.get('locale') as LocaleCode) ?? 'en-US';

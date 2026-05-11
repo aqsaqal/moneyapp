@@ -24,6 +24,8 @@ export const FALLBACK_PRICES_PER_GRAM: Record<string, { gold: number; silver: nu
   TRY: { gold: 3450, silver: 40 },
   PKR: { gold: 24700, silver: 290 },
   EGP: { gold: 4360, silver: 51 },
+  KZT: { gold: 45000, silver: 530 },
+  RUB: { gold: 8200, silver: 97 },
 };
 
 export type NisabBasis = 'gold' | 'silver';

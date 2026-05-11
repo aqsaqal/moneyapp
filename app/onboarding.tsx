@@ -20,6 +20,8 @@ const LOCALES = [
   { code: 'tr-TR', name: 'Türkçe', rtl: false },
   { code: 'id-ID', name: 'Bahasa Indonesia', rtl: false },
   { code: 'ms-MY', name: 'Bahasa Melayu', rtl: false },
+  { code: 'ru-RU', name: 'Русский', rtl: false },
+  { code: 'kk-KZ', name: 'Қазақша', rtl: false },
 ];
 
 /** Pick the closest supported locale for a system locale (e.g., 'ar-EG' → 'ar-SA'

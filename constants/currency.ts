@@ -6,7 +6,7 @@
 
 import { kv } from '@/utils/kv';
 
-export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'SAR' | 'AED' | 'MYR' | 'IDR' | 'TRY' | 'PKR' | 'EGP';
+export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'SAR' | 'AED' | 'MYR' | 'IDR' | 'TRY' | 'PKR' | 'EGP' | 'KZT' | 'RUB';
 
 export interface CurrencyDef {
   code: CurrencyCode;
@@ -27,6 +27,8 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyDef> = {
   TRY: { code: 'TRY', name: 'Turkish Lira', symbol: '₺', symbolNative: '₺', decimalDigits: 2 },
   PKR: { code: 'PKR', name: 'Pakistani Rupee', symbol: '₨', symbolNative: '₨', decimalDigits: 2 },
   EGP: { code: 'EGP', name: 'Egyptian Pound', symbol: '£E', symbolNative: 'ج.م', decimalDigits: 2 },
+  KZT: { code: 'KZT', name: 'Kazakhstani Tenge', symbol: '₸', symbolNative: '₸', decimalDigits: 2 },
+  RUB: { code: 'RUB', name: 'Russian Ruble', symbol: '₽', symbolNative: '₽', decimalDigits: 2 },
 };
 
 /** Effective locale for number formatting — applies the user's
