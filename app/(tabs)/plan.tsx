@@ -330,6 +330,7 @@ function promptAddBudget() {
 
 function GoalsSection() {
   const t = useT();
+  const router = useRouter();
   const goals = useGoals();
   const accounts = useAccounts();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
@@ -359,10 +360,21 @@ function GoalsSection() {
         return (
           <Pressable
             key={g.id}
-            onPress={() => setEditing(g)}
+            onPress={() => router.push({
+              pathname: '/add',
+              params: {
+                prefill: buildPrefill({
+                  type: 'transfer',
+                  toAccountId: g.accountId,
+                  amount: remaining > 0 ? remaining : undefined,
+                  note: g.name,
+                }),
+              },
+            } as never)}
+            onLongPress={() => setEditing(g)}
             style={[styles.goalCard, { borderColor: `${g.color}55` }]}
             accessibilityRole="button"
-            accessibilityLabel={`${g.name}, ${Math.round(pct * 100)}% of target`}
+            accessibilityLabel={`${g.name}, ${Math.round(pct * 100)}% of target, tap to contribute, long-press to edit`}
           >
             <View style={styles.goalHead}>
               <View style={[styles.goalIcon, { backgroundColor: `${g.color}22` }]}>
