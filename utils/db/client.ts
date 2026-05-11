@@ -80,7 +80,9 @@ function createTables(db: SQLite.SQLiteDatabase) {
       recurring_id TEXT,
       halal_status TEXT,
       receipt_image_path TEXT,
-      asnaf TEXT
+      asnaf TEXT,
+      original_amount REAL,
+      original_currency TEXT
     );
     CREATE INDEX IF NOT EXISTS tx_date_idx ON transactions(date);
     CREATE INDEX IF NOT EXISTS tx_category_idx ON transactions(category);
@@ -196,6 +198,12 @@ function createTables(db: SQLite.SQLiteDatabase) {
     }
     if (!cols.some((c) => c.name === 'asnaf')) {
       db.execSync(`ALTER TABLE transactions ADD COLUMN asnaf TEXT;`);
+    }
+    if (!cols.some((c) => c.name === 'original_amount')) {
+      db.execSync(`ALTER TABLE transactions ADD COLUMN original_amount REAL;`);
+    }
+    if (!cols.some((c) => c.name === 'original_currency')) {
+      db.execSync(`ALTER TABLE transactions ADD COLUMN original_currency TEXT;`);
     }
   } catch {
     /* swallow — fresh DB will already have the column from CREATE TABLE if we add it there in a future major. */

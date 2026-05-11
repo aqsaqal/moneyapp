@@ -24,6 +24,14 @@ export const transactions = sqliteTable(
     // Null on every non-zakat/sadaqa transaction. Generic builds never
     // write or read this column; it's harmless dead weight there.
     asnaf: text('asnaf'),
+    // Multi-currency transactions: when the user spent in a currency
+    // different from their account's currency, `amount` stays in the
+    // account's currency (so balance math works), and these two fields
+    // capture the original input — e.g. EUR 500 charged on a USD card
+    // becomes amount=588.73, originalAmount=500, originalCurrency='EUR'.
+    // Null on same-currency transactions.
+    originalAmount: real('original_amount'),
+    originalCurrency: text('original_currency'),
   },
   (t) => ({
     dateIdx: index('tx_date_idx').on(t.date),

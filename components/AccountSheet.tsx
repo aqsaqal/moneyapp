@@ -23,6 +23,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { SettingRow } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { upsertAccount, deleteAccount } from '@/hooks/useAppData';
 import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
@@ -220,14 +221,9 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
             </Pressable>
           )}
 
-          <PickerSheet
+          <CurrencyPickerSheet
             visible={currencyPicker}
             title="Currency"
-            options={(Object.keys(CURRENCIES) as CurrencyCode[]).map<PickerOption<CurrencyCode>>((c) => ({
-              value: c,
-              label: `${c} · ${CURRENCIES[c].symbolNative}`,
-              hint: CURRENCIES[c].name,
-            }))}
             selected={currency}
             onPick={setCurrency}
             onClose={() => setCurrencyPicker(false)}

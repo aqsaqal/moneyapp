@@ -37,6 +37,9 @@ import { FeatureSlots } from '@/features';
 import { useAccounts, addTransaction } from '@/hooks/useAppData';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
+import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
+import { convert } from '@/utils/fx';
+import { CURRENCIES } from '@/constants/currency';
 import { allExpenseCategories, allIncomeCategories } from '@/constants/categories';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
@@ -70,6 +73,11 @@ export default function AddScreen() {
   // Allow user override of predicted cat / account.
   const [catOverride, setCatOverride] = useState<string | null>(null);
   const [accountOverride, setAccountOverride] = useState<string | null>(null);
+  // Multi-currency entry: when the user is spending in a currency different
+  // from their account's currency, they enter the original currency's
+  // amount and we convert via the FX cache to the account currency at save.
+  const [entryCurrency, setEntryCurrency] = useState<CurrencyCode | null>(null);
+  const [currencyPickerOpen, setCurrencyPickerOpen] = useState(false);
 
   // Effective values feed the actual submit.
   const effectiveCat = mode === 'transfer' ? null : catOverride ?? predicted.category;
@@ -95,18 +103,44 @@ export default function AddScreen() {
     setAmount((a) => (a === '0' ? k : a + k));
   };
 
+  // The account's own currency. When entryCurrency differs from this we
+  // compute the account-currency `amount` via FX and persist the original
+  // amount + currency alongside.
+  const acctCurrencyFor = (id: string): CurrencyCode => {
+    const a = accounts.find((x) => x.id === id);
+    return ((a?.currency as CurrencyCode | null) ?? currency) as CurrencyCode;
+  };
+  const accountCurrency = acctCurrencyFor(
+    mode === 'transfer' ? fromAcct : effectiveAcct,
+  );
+  // entryCurrency defaults to the account's currency. When the user picks
+  // a different one, we surface the converted account-currency value
+  // beneath the amount as a small subline.
+  const effectiveEntryCurrency: CurrencyCode = entryCurrency ?? accountCurrency;
+  const isMixed = effectiveEntryCurrency !== accountCurrency;
+
   const submit = () => {
     const v = parseFloat(amount);
     if (!v) return;
+
+    // For mixed-currency entries: amount the user typed is in
+    // entryCurrency; we persist `amount` in account currency.
+    const accountAmount = isMixed
+      ? convert(v, effectiveEntryCurrency, accountCurrency)
+      : v;
+    const originalAmount = isMixed ? v : null;
+    const originalCurrency = isMixed ? effectiveEntryCurrency : null;
 
     if (mode === 'transfer') {
       if (fromAcct === toAcct) return;
       addTransaction({
         type: 'transfer',
-        amount: v,
+        amount: accountAmount,
         accountId: fromAcct,
         toAccountId: toAcct,
         note: note || null,
+        originalAmount,
+        originalCurrency,
       });
     } else {
       // Expense or income: needs category. Predicted strip should always
@@ -119,13 +153,15 @@ export default function AddScreen() {
       }
       addTransaction({
         type: mode,
-        amount: v,
+        amount: accountAmount,
         category: effectiveCat,
         accountId: effectiveAcct,
         note: note || null,
         halalStatus: (draft.halalStatus as Transaction['halalStatus']) ?? null,
         receiptImagePath: (draft.receiptImagePath as string | undefined) ?? null,
         asnaf: (draft as { asnaf?: string | null }).asnaf ?? null,
+        originalAmount,
+        originalCurrency,
       });
       // Remember the user's account choice so L4 fallback can lock in.
       setDefaultAccount(effectiveAcct);
@@ -174,16 +210,43 @@ export default function AddScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-        <Text
-          style={styles.amount}
-          accessibilityLabel={`Amount ${currencyPrefix(currency)}${amount}`}
-          accessibilityLiveRegion="polite"
-          adjustsFontSizeToFit
-          numberOfLines={1}
-        >
-          {currencyPrefix(currency)}
-          {amount}
-        </Text>
+        <View style={styles.amountRow}>
+          <Text
+            style={styles.amount}
+            accessibilityLabel={`Amount ${currencyPrefix(effectiveEntryCurrency)}${amount}`}
+            accessibilityLiveRegion="polite"
+            adjustsFontSizeToFit
+            numberOfLines={1}
+          >
+            {currencyPrefix(effectiveEntryCurrency)}
+            {amount}
+          </Text>
+          <Pressable
+            onPress={() => setCurrencyPickerOpen(true)}
+            style={styles.currencyChip}
+            accessibilityRole="button"
+            accessibilityLabel={`Currency ${effectiveEntryCurrency}, tap to change`}
+          >
+            <Text style={styles.currencyChipText}>{effectiveEntryCurrency}</Text>
+            <MaterialCommunityIcons name="chevron-down" size={14} color={theme.text2} />
+          </Pressable>
+        </View>
+        {isMixed && Number(amount) > 0 && (
+          <Text style={styles.fxConvertedLine}>
+            ≈ {currencyPrefix(accountCurrency)}
+            {convert(parseFloat(amount) || 0, effectiveEntryCurrency, accountCurrency).toFixed(
+              CURRENCIES[accountCurrency].decimalDigits,
+            )}{' '}
+            withdrawn from {accountCurrency}
+          </Text>
+        )}
+        <CurrencyPickerSheet
+          visible={currencyPickerOpen}
+          title={t('me.currency')}
+          selected={effectiveEntryCurrency}
+          onPick={(c) => setEntryCurrency(c)}
+          onClose={() => setCurrencyPickerOpen(false)}
+        />
 
         {/* Note input + voice mic. */}
         <View style={styles.noteRow}>
@@ -413,6 +476,31 @@ const styles = StyleSheet.create({
     fontSize: 56,
     fontFamily: font.displayBold,
     textAlign: 'center',
+    flexShrink: 1,
+  },
+  amountRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  currencyChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg2,
+  },
+  currencyChipText: { color: theme.text1, fontSize: 13, fontFamily: 'PlusJakartaSans_600SemiBold' },
+  fxConvertedLine: {
+    color: theme.text3,
+    fontSize: 13,
+    textAlign: 'center',
+    marginTop: -8,
   },
   noteRow: {
     flexDirection: 'row',

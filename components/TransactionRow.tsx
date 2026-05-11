@@ -96,10 +96,28 @@ export function TransactionRow({ t, currency = 'USD', onPressMore }: Transaction
               </Text>
             )}
           </View>
-          <Text style={[styles.amount, { color: amountColor }]}>
-            {sign}
-            {formatMoney(t.amount, currency)}
-          </Text>
+          <View style={styles.amountStack}>
+            {/* Multi-currency: when the user spent in a different currency
+                than the account, show the original amount LARGE and the
+                account-currency withdrawal SMALL beneath — matches the
+                1money pattern. Same-currency txns just show one number. */}
+            {t.originalAmount != null && t.originalCurrency && t.originalCurrency !== currency ? (
+              <>
+                <Text style={[styles.amount, { color: amountColor }]}>
+                  {sign}
+                  {formatMoney(t.originalAmount, t.originalCurrency as CurrencyCode)}
+                </Text>
+                <Text style={styles.amountSub}>
+                  {formatMoney(t.amount, currency)}
+                </Text>
+              </>
+            ) : (
+              <Text style={[styles.amount, { color: amountColor }]}>
+                {sign}
+                {formatMoney(t.amount, currency)}
+              </Text>
+            )}
+          </View>
         </Pressable>
       </Swipeable>
       {sheetOpen && (
@@ -158,6 +176,13 @@ const styles = StyleSheet.create({
     fontSize: sizes.md,
     fontFamily: font.display,
     fontWeight: '700',
+  },
+  amountStack: { alignItems: 'flex-end' },
+  amountSub: {
+    color: theme.text3,
+    fontSize: sizes.xs,
+    fontFamily: font.body,
+    marginTop: 2,
   },
   swipeAction: {
     backgroundColor: theme.expense,

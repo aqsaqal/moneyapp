@@ -319,6 +319,11 @@ export interface AddTxnInput {
   receiptImagePath?: string | null;
   /** Phase 10q.3: optional asnaf tag for zakat/sadaqa/qurban recipients. */
   asnaf?: string | null;
+  /** Multi-currency: when the user paid in a different currency than the
+   *  account, `amount` is in account-currency (FX-converted) and these
+   *  preserve the original entry. */
+  originalAmount?: number | null;
+  originalCurrency?: string | null;
 }
 
 export function addTransaction(input: AddTxnInput): Transaction {
@@ -338,6 +343,8 @@ export function addTransaction(input: AddTxnInput): Transaction {
     recurringId: input.recurringId ?? null,
     receiptImagePath: input.receiptImagePath ?? null,
     asnaf: input.asnaf ?? null,
+    originalAmount: input.originalAmount ?? null,
+    originalCurrency: input.originalCurrency ?? null,
     date: input.date ?? now,
     createdAt: now,
   };

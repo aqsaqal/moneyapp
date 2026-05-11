@@ -34,6 +34,7 @@ import {
   sectionStyles,
 } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { FeatureSlots } from '@/features';
 import {
   isBiometricEnabled,
@@ -250,14 +251,9 @@ function PreferencesSection() {
         }}
         onClose={() => setPicker(null)}
       />
-      <PickerSheet
+      <CurrencyPickerSheet
         visible={picker === 'currency'}
         title={t('me.currency')}
-        options={(Object.keys(CURRENCIES) as CurrencyCode[]).map<PickerOption<CurrencyCode>>((c) => ({
-          value: c,
-          label: `${c} · ${CURRENCIES[c].symbolNative}`,
-          hint: CURRENCIES[c].name,
-        }))}
         selected={currency}
         onPick={(c) => {
           kv.set('currency', c);
