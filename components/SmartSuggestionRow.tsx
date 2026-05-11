@@ -15,7 +15,7 @@ import { Icon } from './Icon';
 import { theme, font, sizes, radii } from '@/constants/theme';
 import { catInfo } from '@/constants/categories';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
-import { useExactReplays, useFuzzyMerchants, type FrequentTxn, type FuzzyMerchant } from '@/hooks/useFrequentTxns';
+import { useExactReplays, type FrequentTxn, type FuzzyMerchant } from '@/hooks/useFrequentTxns';
 
 export interface SmartSuggestionRowProps {
   currency?: CurrencyCode;
@@ -32,10 +32,13 @@ export function SmartSuggestionRow({
   onPickFuzzy,
   amountEntered = false,
 }: SmartSuggestionRowProps) {
-  const exact = useExactReplays(amountEntered ? 0 : 4);
-  const fuzzy = useFuzzyMerchants(4);
+  // Trimmed to top-3 exact replays only. Fuzzy chips were a small win
+  // (fill-note-only) — for a leaner Add modal we drop them in favor of
+  // recurring bills + the predicted strip + the smart-suggestion toggle.
+  const exact = useExactReplays(amountEntered ? 0 : 3);
+  void onPickFuzzy;
 
-  if (exact.length === 0 && fuzzy.length === 0) return null;
+  if (exact.length === 0) return null;
 
   return (
     <ScrollView
@@ -58,21 +61,6 @@ export function SmartSuggestionRow({
             <Text style={styles.chipText}>
               {label} · {formatMoney(t.amount, currency)}
             </Text>
-          </Pressable>
-        );
-      })}
-      {fuzzy.map((m, i) => {
-        const cat = catInfo(m.category);
-        return (
-          <Pressable
-            key={`f-${i}`}
-            onPress={() => onPickFuzzy(m)}
-            style={[styles.chip, { borderColor: theme.border }]}
-            accessibilityRole="button"
-            accessibilityLabel={`Fill in ${m.note}, category ${cat.name}`}
-          >
-            <Icon name={cat.icon} size={14} color={cat.color} />
-            <Text style={styles.chipText}>{m.note}</Text>
           </Pressable>
         );
       })}

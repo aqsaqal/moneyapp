@@ -375,26 +375,21 @@ export default function AddScreen() {
           />
         </View>
 
-        {/* Smart suggestions: fuzzy merchants + exact replays. Skip for transfers. */}
-        {mode === 'expense' && (
+        {/* Smart suggestions — top-3 exact replays from the last month.
+            Off by default; user opts in via Settings → Preferences. Tap
+            now PREFILLS the form (amount, note, account, category) so
+            the user can verify / edit before submitting. */}
+        {mode === 'expense' && kv.getBool('smartSuggestions', false) && (
           <SmartSuggestionRow
             currency={currency}
             amountEntered={amount !== '0' && amount !== ''}
-            onPickExact={(t) => {
-              // 1-tap submit identical txn.
-              addTransaction({
-                type: 'expense',
-                amount: t.amount,
-                category: t.category,
-                accountId: t.accountId,
-                note: t.note,
-              });
-              haptics.success();
-              setSuccess(true);
-              setTimeout(() => { setSuccess(false); router.back(); }, 700);
+            onPickExact={(tx) => {
+              setAmount(String(tx.amount));
+              setNote(tx.note ?? '');
+              if (tx.category) setCatOverride(tx.category);
+              setAccountOverride(tx.accountId);
             }}
             onPickFuzzy={(m) => {
-              // Fill note + override cat/account; user adjusts amount.
               setNote(m.note);
               setCatOverride(m.category);
               setAccountOverride(m.accountId);

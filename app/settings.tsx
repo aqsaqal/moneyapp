@@ -196,6 +196,8 @@ function PreferencesSection() {
         onPress={() => setPicker('theme')}
       />
 
+      <SmartSuggestionsRow />
+
       <PickerSheet
         visible={picker === 'lang'}
         title={t('me.language')}
@@ -262,6 +264,32 @@ function PreferencesSection() {
         onClose={() => setPicker(null)}
       />
     </View>
+  );
+}
+
+function SmartSuggestionsRow() {
+  const t = useT();
+  const [on, setOn] = useState(kv.getBool('smartSuggestions', false));
+  return (
+    <SettingRow
+      label={t('settings.smartSuggestions.label')}
+      hint={on ? t('settings.smartSuggestions.bodyOn') : t('settings.smartSuggestions.bodyOff')}
+      icon="lightbulb-on-outline"
+      trailing={
+        <Pressable
+          onPress={() => {
+            const next = !on;
+            kv.setBool('smartSuggestions', next);
+            setOn(next);
+          }}
+          style={[sectionStyles.toggle, on && { backgroundColor: theme.accent }]}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: on }}
+        >
+          <View style={[sectionStyles.toggleKnob, on && { transform: [{ translateX: 18 }] }]} />
+        </Pressable>
+      }
+    />
   );
 }
 
