@@ -11,18 +11,27 @@ import type { Recurring } from '@/utils/db/schema';
 export interface RecurringRowProps {
   rec: Recurring;
   paid: boolean;
-  onTogglePaid: () => void;
+  /** When the user toggles the checkbox of an *unpaid* row — open the
+   *  Smart Add modal prefilled. The actual paid_items row is only
+   *  inserted after the user submits a transaction in Smart Add. */
+  onTapCheckbox: () => void;
+  /** Unmark a paid row (deletes the linked transaction + paid_items). */
+  onUnmark: () => void;
+  /** Tap the row body to edit the recurring template. */
   onEdit?: () => void;
   onDelete?: () => void;
-  /** Phase 10v: tap the row body to open Smart Add prefilled. */
-  onTapPay?: () => void;
   currency?: CurrencyCode;
 }
 
-export function RecurringRow({ rec, paid, onTogglePaid, onEdit, onDelete, onTapPay, currency = 'USD' }: RecurringRowProps) {
+export function RecurringRow({ rec, paid, onTapCheckbox, onUnmark, onEdit, onDelete, currency = 'USD' }: RecurringRowProps) {
   return (
     <View style={styles.row}>
-      <Pressable onPress={onTogglePaid} style={styles.check} accessibilityRole="button">
+      <Pressable
+        onPress={paid ? onUnmark : onTapCheckbox}
+        style={styles.check}
+        accessibilityRole="button"
+        accessibilityLabel={paid ? `${rec.name}, paid, tap to unmark` : `${rec.name}, tap to log payment`}
+      >
         <MaterialCommunityIcons
           name={paid ? 'check-circle' : 'circle-outline'}
           size={24}
@@ -31,9 +40,9 @@ export function RecurringRow({ rec, paid, onTogglePaid, onEdit, onDelete, onTapP
       </Pressable>
       <Pressable
         style={styles.body}
-        onPress={onTapPay}
+        onPress={onEdit}
         accessibilityRole="button"
-        accessibilityLabel={`${rec.name}, ${formatMoney(rec.amount, currency)}, due day ${rec.dayOfMonth}, tap to log`}
+        accessibilityLabel={`${rec.name}, ${formatMoney(rec.amount, currency)}, due day ${rec.dayOfMonth}, tap to edit`}
       >
         <View style={[styles.iconBox, { backgroundColor: `${rec.color}22` }]}>
           <Icon name={rec.icon} size={16} color={rec.color} />
@@ -48,11 +57,6 @@ export function RecurringRow({ rec, paid, onTogglePaid, onEdit, onDelete, onTapP
           {formatMoney(rec.amount, currency)}
         </Text>
       </Pressable>
-      {onEdit && (
-        <Pressable onPress={onEdit} hitSlop={8} accessibilityLabel="Edit">
-          <MaterialCommunityIcons name="pencil" size={16} color={theme.text3} />
-        </Pressable>
-      )}
       {onDelete && (
         <Pressable onPress={onDelete} hitSlop={8} accessibilityLabel="Delete">
           <MaterialCommunityIcons name="trash-can-outline" size={16} color={theme.text3} />

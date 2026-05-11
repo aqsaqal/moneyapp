@@ -140,10 +140,7 @@ function RecurringSection() {
               <RecurringRow
                 rec={r}
                 paid={paidIds.has(r.id)}
-                onTogglePaid={() => (paidIds.has(r.id) ? unmarkRecurringPaid(r.id, key) : markRecurringPaid(r))}
-                onEdit={() => setSheet({ kind: 'edit', rec: r })}
-                onDelete={() => deleteRecurring(r.id)}
-                onTapPay={() => router.push({
+                onTapCheckbox={() => router.push({
                   pathname: '/add',
                   params: {
                     prefill: buildPrefill({
@@ -152,9 +149,13 @@ function RecurringSection() {
                       accountId: r.accountId,
                       category: r.category,
                       note: r.name,
+                      recurringId: r.id,
                     }),
                   },
                 } as never)}
+                onUnmark={() => unmarkRecurringPaid(r.id, key)}
+                onEdit={() => setSheet({ kind: 'edit', rec: r })}
+                onDelete={() => deleteRecurring(r.id)}
                 currency={currency}
               />
               {stale && (
@@ -209,10 +210,7 @@ function RecurringSection() {
             key={r.id}
             rec={r}
             paid={paidIds.has(r.id)}
-            onTogglePaid={() => (paidIds.has(r.id) ? unmarkRecurringPaid(r.id, key) : markRecurringPaid(r))}
-            onEdit={() => setSheet({ kind: 'edit', rec: r })}
-            onDelete={() => deleteRecurring(r.id)}
-            onTapPay={() => router.push({
+            onTapCheckbox={() => router.push({
               pathname: '/add',
               params: {
                 prefill: buildPrefill({
@@ -221,9 +219,13 @@ function RecurringSection() {
                   accountId: r.accountId,
                   category: r.category,
                   note: r.name,
+                  recurringId: r.id,
                 }),
               },
             } as never)}
+            onUnmark={() => unmarkRecurringPaid(r.id, key)}
+            onEdit={() => setSheet({ kind: 'edit', rec: r })}
+            onDelete={() => deleteRecurring(r.id)}
             currency={currency}
           />
         ))}

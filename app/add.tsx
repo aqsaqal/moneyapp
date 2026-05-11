@@ -34,7 +34,7 @@ import { VoiceMicButton } from '@/components/VoiceMicButton';
 import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
-import { useAccounts, addTransaction } from '@/hooks/useAppData';
+import { useAccounts, addTransaction, linkRecurringPaid } from '@/hooks/useAppData';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
@@ -96,6 +96,9 @@ export default function AddScreen() {
         note?: string;
         originalCurrency?: string;
         date?: number;
+        /** When set, after Smart Add successfully creates a tx we also
+         *  insert a paid_items row so the checkbox flips to "paid". */
+        recurringId?: string;
       };
     } catch {
       return null;
@@ -181,9 +184,10 @@ export default function AddScreen() {
     const originalAmount = isMixed ? v : null;
     const originalCurrency = isMixed ? effectiveEntryCurrency : null;
 
+    let createdTxId: string | null = null;
     if (mode === 'transfer') {
       if (fromAcct === toAcct) return;
-      addTransaction({
+      const tx = addTransaction({
         type: 'transfer',
         amount: accountAmount,
         accountId: fromAcct,
@@ -193,6 +197,7 @@ export default function AddScreen() {
         originalAmount,
         originalCurrency,
       });
+      createdTxId = tx.id;
     } else {
       // Expense or income: needs category. Predicted strip should always
       // populate one in normal use, but the user can override or, in the
@@ -202,7 +207,7 @@ export default function AddScreen() {
         setOverrideOpen(true);
         return;
       }
-      addTransaction({
+      const tx = addTransaction({
         type: mode,
         amount: accountAmount,
         category: effectiveCat,
@@ -215,8 +220,18 @@ export default function AddScreen() {
         originalAmount,
         originalCurrency,
       });
+      createdTxId = tx.id;
       // Remember the user's account choice so L4 fallback can lock in.
       setDefaultAccount(effectiveAcct);
+    }
+    // Phase 10v: when launched from a recurring row's checkbox, flip
+    // the row to "paid" by inserting the paid_items link.
+    if (createdTxId && prefill?.recurringId) {
+      linkRecurringPaid(prefill.recurringId, createdTxId, txDate);
+    }
+    // Re-open the lower brace below by aliasing — restoring the
+    // original else-block close.
+    {
       // Delight moment: when the prediction had real prior evidence and the
       // user didn't override, surface the source so they feel the magic.
       const usedPrediction = !catOverride && predicted.source && predicted.evidence;

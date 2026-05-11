@@ -598,3 +598,24 @@ export function unmarkRecurringPaid(recId: string, key: string): void {
   db.delete(paidItems).where(eq(paidItems.id, item.id)).run();
   bump();
 }
+
+/** Phase 10v: link an already-created transaction to a recurring item
+ *  for the given month (no new tx, just the paid_items row). Used when
+ *  the user opens Smart Add prefilled from a recurring row, edits, and
+ *  submits — the checkbox then becomes "paid" because a real txn now
+ *  exists. */
+export function linkRecurringPaid(recId: string, transactionId: string, date: Date = new Date()): void {
+  const key = monthKey(date);
+  const db = getDB();
+  db.insert(paidItems)
+    .values({
+      id: `${recId}_${key}`,
+      recurringId: recId,
+      monthKey: key,
+      transactionId,
+      paidAt: Date.now(),
+    })
+    .onConflictDoNothing()
+    .run();
+  bump();
+}
