@@ -83,8 +83,11 @@ function RecurringSection() {
 
   const [sheet, setSheet] = useState<RecurringSheetState>({ kind: 'closed' });
 
-  const exp = recurring.filter((r) => r.type === 'expense');
-  const inc = recurring.filter((r) => r.type === 'income');
+  // Sort by day-of-month so the soonest-due is at the top — answers
+  // "what's coming up?" at a glance.
+  const byDay = (a: Recurring, b: Recurring) => a.dayOfMonth - b.dayOfMonth;
+  const exp = recurring.filter((r) => r.type === 'expense').sort(byDay);
+  const inc = recurring.filter((r) => r.type === 'income').sort(byDay);
   const totalFixedExp = exp.reduce((s, r) => s + r.amount, 0);
   const totalFixedInc = inc.reduce((s, r) => s + r.amount, 0);
   const remaining = exp.filter((r) => !paidIds.has(r.id)).reduce((s, r) => s + r.amount, 0);
