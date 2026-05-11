@@ -269,7 +269,6 @@ function PreferencesSection() {
 
 function FxRefreshRow() {
   const t = useT();
-  const [on, setOn] = useState(kv.getBool('fxAutoRefresh', false));
   const fx = useFxRates();
   const fmtAge = (() => {
     if (!fx.lastFetched) return t('settings.fx.never');
@@ -278,26 +277,16 @@ function FxRefreshRow() {
     if (diffH < 24) return t('settings.fx.hoursAgo', { n: diffH });
     return t('settings.fx.daysAgo', { n: Math.floor(diffH / 24) });
   })();
+  // FX is always-on now (multi-source fallback). This row exposes the
+  // cache age + manual refresh — useful when a user just enabled a
+  // foreign-currency account and doesn't want to wait for the daily
+  // window.
   return (
     <SettingRow
       label={t('settings.fx.label')}
-      hint={fx.refreshing ? t('settings.fx.refreshing') : on ? fmtAge : t('settings.fx.bodyOff')}
+      hint={fx.refreshing ? t('settings.fx.refreshing') : fmtAge}
       icon="cached"
-      trailing={
-        <Pressable
-          onPress={() => {
-            const next = !on;
-            kv.setBool('fxAutoRefresh', next);
-            setOn(next);
-            if (next) void fx.refresh();
-          }}
-          style={[sectionStyles.toggle, on && { backgroundColor: theme.accent }]}
-          accessibilityRole="switch"
-          accessibilityState={{ checked: on }}
-        >
-          <View style={[sectionStyles.toggleKnob, on && { transform: [{ translateX: 18 }] }]} />
-        </Pressable>
-      }
+      onPress={() => void fx.refresh()}
     />
   );
 }

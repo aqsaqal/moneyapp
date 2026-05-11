@@ -31,7 +31,7 @@ We disclose this so you can make an informed choice; you can ignore the voice bu
 
 The following features may make a network request **if you opt in**. Each is **off by default** and toggled in Settings. Disabling them eliminates all outbound network activity.
 
-- **FX auto-refresh** (Flow + Amanah). When enabled, the App fetches the latest USD-anchored exchange rates from `https://api.frankfurter.app` once per day. Only the request URL leaves the device; no user data, account names, or balances are included. The response is a list of currency rates, cached locally and overwritten on next refresh.
+- **FX rates** (Flow + Amanah). When the App holds accounts in more than one currency, it fetches USD-anchored exchange rates once per day to convert balances into your display currency. It tries three providers in fallback order: `open.er-api.com`, `api.fxratesapi.com`, `api.frankfurter.app`. Only the request URL leaves the device; no user data, account names, or balances are included. The response is a list of currency rates, cached locally and overwritten on next refresh.
 - **Nisab refresh** (Amanah only — gold price). When enabled, the App fetches the current gold price per gram from `https://www.goldapi.io`. Only the request URL leaves the device; no user data is included. The response is a single number, stored locally.
 - **Prayer-time calendar** (Amanah). Times are computed on-device using the `adhan` library; no network call is made.
 

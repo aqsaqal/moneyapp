@@ -1,22 +1,55 @@
-// FX cache + conversion — Phase 10k.
+// FX cache + conversion.
 //
 // Stores daily-fresh USD-anchored rates in the `fx_rates` table. Cross-rate
 // math happens on the JS side, so a balance in EUR can be displayed in
 // SAR without a network call once the cache is warm.
 //
+// Multi-source fallback (try in order, first success wins):
+//   1. open.er-api.com   — free, no API key, ~160 currencies including
+//      KZT/RUB/SAR/AED/IRR/EGP etc. that frankfurter doesn't cover.
+//   2. fxratesapi.com    — free, no API key, broad coverage.
+//   3. api.frankfurter.app — ECB, free, no API key, ~30 currencies.
+// First two return wider coverage; frankfurter is the most trustworthy
+// when its currencies are in scope, but it's last because it's narrowest.
+//
 // Privacy:
-//   - The fetch goes to api.frankfurter.app (free, no API key, ECB-sourced
-//     daily reference rates). Outbound URL only — no user data leaves
-//     the device.
-//   - Off by default. Toggled in Settings → Preferences → "FX auto-refresh".
-//     When off, balances render in their native currency without conversion;
-//     summaries that mix currencies show the per-currency breakdown
-//     instead of a forced single-unit total.
+//   - Outbound URL only; no user data is included in the request.
+//   - Auto-fetched once per 24h whenever the app boots with multi-currency
+//     accounts, OR a single-currency user explicitly enables the toggle.
+//   - Disclosed in docs/legal/privacy.md.
 
 import { getRawDB } from './db/client';
 
 export const FX_TTL_MS = 24 * 60 * 60 * 1000;
-export const FX_API = 'https://api.frankfurter.app/latest?from=USD';
+const FX_TIMEOUT_MS = 8000;
+
+/** Sources tried in order. First non-error response wins. */
+const FX_SOURCES: Array<{ name: string; url: string; extract: (data: unknown) => Record<string, number> | null }> = [
+  {
+    name: 'open.er-api',
+    url: 'https://open.er-api.com/v6/latest/USD',
+    extract: (data) => {
+      const d = data as { result?: string; rates?: Record<string, number> };
+      return d.result === 'success' && d.rates ? d.rates : null;
+    },
+  },
+  {
+    name: 'fxratesapi',
+    url: 'https://api.fxratesapi.com/latest?base=USD',
+    extract: (data) => {
+      const d = data as { success?: boolean; rates?: Record<string, number> };
+      return d.success !== false && d.rates ? d.rates : null;
+    },
+  },
+  {
+    name: 'frankfurter',
+    url: 'https://api.frankfurter.app/latest?from=USD',
+    extract: (data) => {
+      const d = data as { base?: string; rates?: Record<string, number> };
+      return d.base === 'USD' && d.rates ? d.rates : null;
+    },
+  },
+];
 
 export interface FxRow {
   quote: string;
@@ -66,29 +99,47 @@ export function isApproximate(from: string, to: string): boolean {
   return !(has(from) && has(to));
 }
 
-interface FrankfurterResponse {
-  amount: number;
-  base: string;
-  date: string;
-  rates: Record<string, number>;
+/** Try each FX source in turn; first successful response wins. Returns
+ *  the merged rate map and which source served it. Throws if every
+ *  source fails. */
+async function fetchWithFallback(): Promise<{ rates: Record<string, number>; source: string }> {
+  const errors: string[] = [];
+  for (const src of FX_SOURCES) {
+    try {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), FX_TIMEOUT_MS);
+      let response: Response;
+      try {
+        response = await fetch(src.url, { method: 'GET', signal: controller.signal });
+      } finally {
+        clearTimeout(timer);
+      }
+      if (!response.ok) {
+        errors.push(`${src.name}: HTTP ${response.status}`);
+        continue;
+      }
+      const data = (await response.json()) as unknown;
+      const rates = src.extract(data);
+      if (rates && Object.keys(rates).length > 0) {
+        return { rates, source: src.name };
+      }
+      errors.push(`${src.name}: empty rates`);
+    } catch (e) {
+      errors.push(`${src.name}: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+  throw new Error(`fx: all sources failed (${errors.join(' · ')})`);
 }
 
-/** Fetch the latest USD-anchored rates from frankfurter.app and overwrite
- *  the cache. Throws on network failure. Caller (useFxRates) decides
+/** Fetch the latest USD-anchored rates from the source chain and overwrite
+ *  the cache. Throws on total failure. Caller (useFxRates) decides
  *  whether to surface the error to the user. */
-export async function refreshRates(): Promise<{ updated: number; date: string }> {
-  const response = await fetch(FX_API, { method: 'GET' });
-  if (!response.ok) {
-    throw new Error(`fx: HTTP ${response.status}`);
-  }
-  const data = (await response.json()) as FrankfurterResponse;
-  if (data.base !== 'USD') {
-    throw new Error('fx: unexpected base currency');
-  }
+export async function refreshRates(): Promise<{ updated: number; source: string }> {
+  const { rates, source } = await fetchWithFallback();
   const now = Date.now();
   const raw = getRawDB();
   raw.withTransactionSync(() => {
-    for (const [quote, rate] of Object.entries(data.rates)) {
+    for (const [quote, rate] of Object.entries(rates)) {
       raw.runSync(
         `INSERT INTO fx_rates (quote, rate, fetched_at)
          VALUES (?, ?, ?)
@@ -99,5 +150,5 @@ export async function refreshRates(): Promise<{ updated: number; date: string }>
       );
     }
   });
-  return { updated: Object.keys(data.rates).length, date: data.date };
+  return { updated: Object.keys(rates).length, source };
 }

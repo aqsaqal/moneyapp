@@ -23,8 +23,9 @@ import type { Account } from '@/utils/db/schema';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { formatMoney } from '@/utils/format';
-import { convert, isApproximate } from '@/utils/fx';
+import { convert, isApproximate, oldestFetchedAt } from '@/utils/fx';
 import { useFxRates } from '@/hooks/useFxRates';
+import { useEffect } from 'react';
 import { useT } from '@/hooks/useT';
 import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
 import type { Profile } from '@/utils/profiles';
@@ -117,7 +118,18 @@ function AccountsSection() {
   const accounts = useAccounts();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   // Subscribe to FX bumps so balances re-convert when the cache updates.
-  useFxRates();
+  const fx = useFxRates();
+  // If Me shows accounts in multiple currencies AND the cache is empty,
+  // kick off a refresh now (bootAppData also tries, but this catches
+  // the case where boot ran offline and we're online by the time the
+  // user opens Me).
+  useEffect(() => {
+    const hasMulti = accounts.some((a) => a.currency && a.currency !== currency);
+    if (hasMulti && oldestFetchedAt() === 0 && !fx.refreshing) {
+      void fx.refresh();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accounts.length]);
 
   // Mixed-currency totals: convert each account into the user's display
   // currency before summing. When a leg is uncached we still sum, but

@@ -36,6 +36,7 @@ import { monthKey } from '@/utils/format';
 import { seedIfEmpty } from '@/utils/db/seed';
 import { onProfileChange } from '@/utils/profiles';
 import { snapshotTodayIfMissing } from '@/utils/netWorthSnapshot';
+import { FX_TTL_MS, oldestFetchedAt, refreshRates } from '@/utils/fx';
 
 // Single process-wide version counter that all hooks watch. Bumped on every
 // mutation so useEffect-driven re-queries fire.
@@ -83,6 +84,18 @@ export function bootAppData(): Promise<void> {
       // Phase 10p: capture today's net-worth snapshot once per app launch.
       // No-op when today's row already exists.
       try { snapshotTodayIfMissing(); } catch { /* never block boot on this */ }
+      // Always-on FX refresh whenever the cache is stale or empty. Multi-
+      // source fallback (open.er-api → fxratesapi → frankfurter), so a
+      // single provider outage doesn't strand the user. Non-blocking;
+      // failures are silent because identity-fallback is acceptable for a
+      // user with no multi-currency accounts.
+      try {
+        const lastFetched = oldestFetchedAt();
+        const stale = lastFetched === 0 || Date.now() - lastFetched > FX_TTL_MS;
+        if (stale) {
+          void refreshRates().catch(() => { /* offline / all sources down */ });
+        }
+      } catch { /* never block boot */ }
       // Phase 10q.2: islamic-only metals refresh when the toggle is on
       // and the cache is stale. Fire-and-forget, non-blocking.
       if (process.env.APP_FLAVOR === 'islamic') {
