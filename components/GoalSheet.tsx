@@ -24,6 +24,9 @@ import { SettingRow } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { upsertGoal, deleteGoal, useAccounts } from '@/hooks/useAppData';
 import { useT } from '@/hooks/useT';
+import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
+import { kv } from '@/utils/kv';
+import type { CurrencyCode } from '@/constants/currency';
 import type { Goal } from '@/utils/db/schema';
 
 const PALETTE = [
@@ -63,8 +66,13 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
   const [targetDate, setTargetDate] = useState(
     goal?.targetDate ? new Date(goal.targetDate).toISOString().slice(0, 10) : '',
   );
+  const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const [currency, setCurrency] = useState<CurrencyCode>(
+    (goal?.currency as CurrencyCode | undefined) ?? defaultCurrency,
+  );
 
   const [picker, setPicker] = useState<null | 'account'>(null);
+  const [currencyPickerOpen, setCurrencyPickerOpen] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -78,6 +86,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
     setTargetDate(
       goal?.targetDate ? new Date(goal.targetDate).toISOString().slice(0, 10) : '',
     );
+    setCurrency((goal?.currency as CurrencyCode | undefined) ?? defaultCurrency);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, goal]);
 
@@ -108,6 +117,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
       targetAmount: t2,
       targetDate: parsedDate,
       accountId,
+      currency,
       color,
       icon,
       createdAt: goal?.createdAt ?? Date.now(),
@@ -181,6 +191,14 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
             onPress={() => setPicker('account')}
           />
 
+          <SettingRow
+            label="Currency"
+            hint={currency}
+            icon="currency-usd"
+            iconColor={theme.accent}
+            onPress={() => setCurrencyPickerOpen(true)}
+          />
+
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>{t('plan.goals.targetDate')}</Text>
             <TextInput
@@ -247,6 +265,13 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
             selected={accountId}
             onPick={setAccountId}
             onClose={() => setPicker(null)}
+          />
+
+          <CurrencyPickerSheet
+            visible={currencyPickerOpen}
+            selected={currency}
+            onPick={(c) => setCurrency(c)}
+            onClose={() => setCurrencyPickerOpen(false)}
           />
         </ScrollView>
       </SafeAreaView>

@@ -34,7 +34,7 @@ import { VoiceMicButton } from '@/components/VoiceMicButton';
 import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
-import { useAccounts, addTransaction, linkRecurringPaid } from '@/hooks/useAppData';
+import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction } from '@/hooks/useAppData';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
@@ -90,6 +90,9 @@ export default function AddScreen() {
       return JSON.parse(decoded) as {
         type?: Mode;
         amount?: number;
+        /** Account-currency amount for mixed-FX edits — seeds the
+         *  editable converted-amount line. */
+        accountAmount?: number;
         accountId?: string;
         toAccountId?: string;
         category?: string;
@@ -99,12 +102,16 @@ export default function AddScreen() {
         /** When set, after Smart Add successfully creates a tx we also
          *  insert a paid_items row so the checkbox flips to "paid". */
         recurringId?: string;
+        /** When set, submit calls updateTransaction(editId, ...) instead
+         *  of addTransaction(...), turning Smart Add into the edit form. */
+        editId?: string;
       };
     } catch {
       return null;
     }
   }, [params.prefill]);
 
+  const isEditing = !!prefill?.editId;
   const [mode, setMode] = useState<Mode>(prefill?.type ?? 'expense');
   const [amount, setAmount] = useState(prefill?.amount ? String(prefill.amount) : '0');
   const [note, setNote] = useState(prefill?.note ?? '');
@@ -131,6 +138,13 @@ export default function AddScreen() {
     (prefill?.originalCurrency as CurrencyCode | undefined) ?? null,
   );
   const [currencyPickerOpen, setCurrencyPickerOpen] = useState(false);
+  // When the user manually edits the converted account-currency amount —
+  // e.g. their bank used a slightly different FX rate than our cached
+  // mid-market quote — we honor that instead of the auto conversion.
+  // null = use auto convert(); a number string = override.
+  const [accountAmountOverride, setAccountAmountOverride] = useState<string | null>(
+    prefill?.accountAmount != null ? String(prefill.accountAmount) : null,
+  );
 
   // Effective values feed the actual submit.
   const effectiveCat = mode === 'transfer' ? null : catOverride ?? predicted.category;
@@ -138,16 +152,21 @@ export default function AddScreen() {
     accountOverride ?? predicted.accountId ?? accounts[0]?.id ?? 'cash';
 
   // Transfer mode: from/to accounts (separate from prediction).
-  const [fromAcct, setFromAcct] = useState<string>(accounts[0]?.id ?? 'cash');
-  const [toAcct, setToAcct] = useState<string>(accounts[1]?.id ?? 'savings');
+  const [fromAcct, setFromAcct] = useState<string>(
+    prefill?.accountId ?? accounts[0]?.id ?? 'cash',
+  );
+  const [toAcct, setToAcct] = useState<string>(
+    prefill?.toAccountId ?? accounts[1]?.id ?? 'savings',
+  );
 
   useEffect(() => {
-    // Set sensible from/to defaults once accounts load.
+    // Set sensible from/to defaults once accounts load. Don't clobber
+    // an explicit prefill (e.g. editing a transfer).
     if (accounts.length >= 2) {
-      setFromAcct((p) => (accounts.find((a) => a.id === p) ? p : accounts[0].id));
-      setToAcct((p) => (accounts.find((a) => a.id === p) ? p : accounts[1].id));
+      setFromAcct((p) => (accounts.find((a) => a.id === p) ? p : prefill?.accountId ?? accounts[0].id));
+      setToAcct((p) => (accounts.find((a) => a.id === p) ? p : prefill?.toAccountId ?? accounts[1].id));
     }
-  }, [accounts]);
+  }, [accounts, prefill?.accountId, prefill?.toAccountId]);
 
   const onKey = (k: string) => {
     if (k === 'C') return setAmount('0');
@@ -177,9 +196,16 @@ export default function AddScreen() {
     if (!v) return;
 
     // For mixed-currency entries: amount the user typed is in
-    // entryCurrency; we persist `amount` in account currency.
+    // entryCurrency; we persist `amount` in account currency. If the
+    // user manually overrode the converted line (e.g. bank used a
+    // non-mid-market rate), honor that instead of the FX convert().
+    const overrideNum = accountAmountOverride
+      ? parseFloat(accountAmountOverride.replace(',', '.'))
+      : NaN;
     const accountAmount = isMixed
-      ? convert(v, effectiveEntryCurrency, accountCurrency)
+      ? Number.isFinite(overrideNum) && overrideNum > 0
+        ? overrideNum
+        : convert(v, effectiveEntryCurrency, accountCurrency)
       : v;
     const originalAmount = isMixed ? v : null;
     const originalCurrency = isMixed ? effectiveEntryCurrency : null;
@@ -187,17 +213,31 @@ export default function AddScreen() {
     let createdTxId: string | null = null;
     if (mode === 'transfer') {
       if (fromAcct === toAcct) return;
-      const tx = addTransaction({
-        type: 'transfer',
-        amount: accountAmount,
-        accountId: fromAcct,
-        toAccountId: toAcct,
-        note: note || null,
-        date: txDate.getTime(),
-        originalAmount,
-        originalCurrency,
-      });
-      createdTxId = tx.id;
+      if (isEditing && prefill?.editId) {
+        updateTransaction(prefill.editId, {
+          type: 'transfer',
+          amount: accountAmount,
+          accountId: fromAcct,
+          toAccountId: toAcct,
+          category: null,
+          note: note || null,
+          date: txDate.getTime(),
+          originalAmount,
+          originalCurrency,
+        });
+      } else {
+        const tx = addTransaction({
+          type: 'transfer',
+          amount: accountAmount,
+          accountId: fromAcct,
+          toAccountId: toAcct,
+          note: note || null,
+          date: txDate.getTime(),
+          originalAmount,
+          originalCurrency,
+        });
+        createdTxId = tx.id;
+      }
     } else {
       // Expense or income: needs category. Predicted strip should always
       // populate one in normal use, but the user can override or, in the
@@ -207,22 +247,36 @@ export default function AddScreen() {
         setOverrideOpen(true);
         return;
       }
-      const tx = addTransaction({
-        type: mode,
-        amount: accountAmount,
-        category: effectiveCat,
-        accountId: effectiveAcct,
-        note: note || null,
-        date: txDate.getTime(),
-        halalStatus: (draft.halalStatus as Transaction['halalStatus']) ?? null,
-        receiptImagePath: (draft.receiptImagePath as string | undefined) ?? null,
-        asnaf: (draft as { asnaf?: string | null }).asnaf ?? null,
-        originalAmount,
-        originalCurrency,
-      });
-      createdTxId = tx.id;
-      // Remember the user's account choice so L4 fallback can lock in.
-      setDefaultAccount(effectiveAcct);
+      if (isEditing && prefill?.editId) {
+        updateTransaction(prefill.editId, {
+          type: mode,
+          amount: accountAmount,
+          category: effectiveCat,
+          accountId: effectiveAcct,
+          toAccountId: null,
+          note: note || null,
+          date: txDate.getTime(),
+          originalAmount,
+          originalCurrency,
+        });
+      } else {
+        const tx = addTransaction({
+          type: mode,
+          amount: accountAmount,
+          category: effectiveCat,
+          accountId: effectiveAcct,
+          note: note || null,
+          date: txDate.getTime(),
+          halalStatus: (draft.halalStatus as Transaction['halalStatus']) ?? null,
+          receiptImagePath: (draft.receiptImagePath as string | undefined) ?? null,
+          asnaf: (draft as { asnaf?: string | null }).asnaf ?? null,
+          originalAmount,
+          originalCurrency,
+        });
+        createdTxId = tx.id;
+        // Remember the user's account choice so L4 fallback can lock in.
+        setDefaultAccount(effectiveAcct);
+      }
     }
     // Phase 10v: when launched from a recurring row's checkbox, flip
     // the row to "paid" by inserting the paid_items link.
@@ -299,13 +353,36 @@ export default function AddScreen() {
           </Pressable>
         </View>
         {isMixed && Number(amount) > 0 && (
-          <Text style={styles.fxConvertedLine}>
-            ≈ {currencyPrefix(accountCurrency)}
-            {convert(parseFloat(amount) || 0, effectiveEntryCurrency, accountCurrency).toFixed(
-              CURRENCIES[accountCurrency].decimalDigits,
-            )}{' '}
-            withdrawn from {accountCurrency}
-          </Text>
+          <View style={styles.fxConvertedRow}>
+            <Text style={styles.fxConvertedPrefix}>
+              {accountAmountOverride ? '=' : '≈'} {currencyPrefix(accountCurrency)}
+            </Text>
+            <TextInput
+              value={
+                accountAmountOverride ??
+                convert(parseFloat(amount) || 0, effectiveEntryCurrency, accountCurrency).toFixed(
+                  CURRENCIES[accountCurrency].decimalDigits,
+                )
+              }
+              onChangeText={(v) => setAccountAmountOverride(v === '' ? null : v)}
+              keyboardType="numbers-and-punctuation"
+              style={styles.fxConvertedInput}
+              accessibilityLabel={`Converted amount in ${accountCurrency}`}
+            />
+            <Text style={styles.fxConvertedSuffix}>
+              {accountCurrency}{' '}
+              {accountAmountOverride ? '(edited)' : 'auto'}
+            </Text>
+            {accountAmountOverride && (
+              <Pressable
+                onPress={() => setAccountAmountOverride(null)}
+                hitSlop={10}
+                accessibilityLabel="Reset to auto-convert"
+              >
+                <MaterialCommunityIcons name="refresh" size={14} color={theme.text3} />
+              </Pressable>
+            )}
+          </View>
         )}
         {/* Date chip — defaults to "today"; tap to pick a past or future
             date for back-filling. The day matters for analytics, budgets,
@@ -472,9 +549,26 @@ export default function AddScreen() {
           style={({ pressed }) => [styles.submit, pressed && { transform: [{ scale: 0.97 }] }]}
         >
           <Text style={styles.submitText}>
-            {t(mode === 'expense' ? 'add.cta.expense' : mode === 'income' ? 'add.cta.income' : 'add.cta.transfer')}
+            {isEditing
+              ? t('common.save')
+              : t(mode === 'expense' ? 'add.cta.expense' : mode === 'income' ? 'add.cta.income' : 'add.cta.transfer')}
           </Text>
         </Pressable>
+
+        {isEditing && prefill?.editId && (
+          <Pressable
+            onPress={() => {
+              deleteTransaction(prefill.editId!);
+              router.back();
+            }}
+            style={styles.deleteRow}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.delete')}
+          >
+            <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.expense} />
+            <Text style={styles.deleteText}>{t('common.delete')}</Text>
+          </Pressable>
+        )}
 
         <View style={{ height: 32 }} />
       </ScrollView>
@@ -618,12 +712,26 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg2,
   },
   currencyChipText: { color: theme.text1, fontSize: 13, fontFamily: 'PlusJakartaSans_600SemiBold' },
-  fxConvertedLine: {
-    color: theme.text3,
-    fontSize: 13,
-    textAlign: 'center',
-    marginTop: -8,
+  fxConvertedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'center',
+    gap: 4,
+    marginTop: -4,
   },
+  fxConvertedPrefix: { color: theme.text3, fontSize: 13 },
+  fxConvertedInput: {
+    color: theme.text2,
+    fontSize: 13,
+    fontFamily: font.bodySemi,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    backgroundColor: theme.bg2,
+    minWidth: 60,
+    textAlign: 'right',
+  },
+  fxConvertedSuffix: { color: theme.text3, fontSize: 13 },
   dateRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -693,4 +801,13 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: font.display,
   },
+  deleteRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    padding: spacing.md,
+    marginTop: spacing.sm,
+  },
+  deleteText: { color: theme.expense, fontSize: sizes.sm, fontFamily: font.bodySemi },
 });

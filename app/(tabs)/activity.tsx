@@ -14,13 +14,13 @@ import { TransactionRow } from '@/components/TransactionRow';
 import { SearchBar } from '@/components/SearchBar';
 import { StatCard, sectionStyles } from '@/components/Sections';
 import { MonthlyRecap } from '@/components/MonthlyRecap';
-import { TransactionSheet } from '@/components/TransactionSheet';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { InsightsStrip } from '@/components/InsightsStrip';
 import { NetWorthChart } from '@/components/NetWorthChart';
 import { FeatureSlots } from '@/features';
 import { useT } from '@/hooks/useT';
-import type { Transaction } from '@/utils/db/schema';
+import { useRouter } from 'expo-router';
+import { buildEditPrefill } from '@/utils/prefill';
 import {
   useTransactions,
   useDailySpend,
@@ -33,6 +33,7 @@ import type { CurrencyCode } from '@/constants/currency';
 
 export default function Activity() {
   const t = useT();
+  const router = useRouter();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [filterCat, setFilterCat] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -40,7 +41,6 @@ export default function Activity() {
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [recapOpen, setRecapOpen] = useState(false);
   const [pageLimit, setPageLimit] = useState(200);
-  const [editing, setEditing] = useState<Transaction | null>(null);
 
   const txns = useTransactions({
     category: filterCat,
@@ -115,7 +115,12 @@ export default function Activity() {
                   key={tx.id}
                   t={tx}
                   currency={currency}
-                  onPressMore={() => setEditing(tx)}
+                  onPressMore={() =>
+                    router.push({
+                      pathname: '/add',
+                      params: { prefill: buildEditPrefill(tx) },
+                    } as never)
+                  }
                 />
               ))}
             </View>
@@ -134,11 +139,6 @@ export default function Activity() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
-      <TransactionSheet
-        visible={editing !== null}
-        transaction={editing ?? undefined}
-        onClose={() => setEditing(null)}
-      />
     </SafeAreaView>
   );
 }

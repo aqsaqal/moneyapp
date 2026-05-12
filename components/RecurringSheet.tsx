@@ -26,6 +26,9 @@ import { SettingRow } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { upsertRecurring, deleteRecurring, useAccounts } from '@/hooks/useAppData';
 import { allExpenseCategories, allIncomeCategories, catInfo } from '@/constants/categories';
+import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
+import { kv } from '@/utils/kv';
+import type { CurrencyCode } from '@/constants/currency';
 import type { Recurring } from '@/utils/db/schema';
 
 type Mode = 'expense' | 'income';
@@ -49,8 +52,13 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
     recurring?.accountId ?? accounts[0]?.id ?? 'cash',
   );
   const [day, setDay] = useState(String(recurring?.dayOfMonth ?? 1));
+  const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const [currency, setCurrency] = useState<CurrencyCode>(
+    (recurring?.currency as CurrencyCode | undefined) ?? defaultCurrency,
+  );
 
   const [picker, setPicker] = useState<null | 'type' | 'category' | 'account'>(null);
+  const [currencyPickerOpen, setCurrencyPickerOpen] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -60,8 +68,9 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
       setCategory(recurring?.category ?? (defaultType === 'income' ? 'salary' : 'subs'));
       setAccountId(recurring?.accountId ?? accounts[0]?.id ?? 'cash');
       setDay(String(recurring?.dayOfMonth ?? 1));
+      setCurrency((recurring?.currency as CurrencyCode | undefined) ?? defaultCurrency);
     }
-  }, [visible, recurring, defaultType, accounts]);
+  }, [visible, recurring, defaultType, accounts, defaultCurrency]);
 
   const cats = type === 'expense' ? allExpenseCategories() : allIncomeCategories();
   const cat = catInfo(category, type);
@@ -81,6 +90,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
       amount: amt,
       category,
       accountId,
+      currency,
       dayOfMonth: dayNum,
       icon: cat.icon,
       color: cat.color,
@@ -170,6 +180,14 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
             onPress={() => setPicker('account')}
           />
 
+          <SettingRow
+            label="Currency"
+            hint={currency}
+            icon="currency-usd"
+            iconColor={theme.accent}
+            onPress={() => setCurrencyPickerOpen(true)}
+          />
+
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>Day of month</Text>
             <TextInput
@@ -226,6 +244,13 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
             selected={accountId}
             onPick={setAccountId}
             onClose={() => setPicker(null)}
+          />
+
+          <CurrencyPickerSheet
+            visible={currencyPickerOpen}
+            selected={currency}
+            onPick={(c) => setCurrency(c)}
+            onClose={() => setCurrencyPickerOpen(false)}
           />
         </ScrollView>
       </SafeAreaView>

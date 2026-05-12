@@ -116,6 +116,7 @@ function createTables(db: SQLite.SQLiteDatabase) {
       target_amount REAL NOT NULL,
       target_date INTEGER,
       account_id TEXT NOT NULL,
+      currency TEXT,
       color TEXT NOT NULL,
       icon TEXT NOT NULL,
       created_at INTEGER NOT NULL
@@ -129,6 +130,7 @@ function createTables(db: SQLite.SQLiteDatabase) {
       apr REAL NOT NULL,
       min_payment REAL NOT NULL,
       account_id TEXT,
+      currency TEXT,
       color TEXT NOT NULL,
       icon TEXT NOT NULL,
       created_at INTEGER NOT NULL
@@ -165,6 +167,7 @@ function createTables(db: SQLite.SQLiteDatabase) {
       amount REAL NOT NULL,
       category TEXT,
       account_id TEXT NOT NULL,
+      currency TEXT,
       day_of_month INTEGER NOT NULL,
       icon TEXT NOT NULL,
       color TEXT NOT NULL
@@ -222,6 +225,20 @@ function createTables(db: SQLite.SQLiteDatabase) {
     }
   } catch {
     /* swallow */
+  }
+
+  // Per-item currency on recurring / goals / debts so each plan item can
+  // be tracked in its own currency (e.g. USD subscription on a KZT card,
+  // or a EUR savings goal).
+  for (const table of ['recurring', 'goals', 'debts'] as const) {
+    try {
+      const cols = db.getAllSync<{ name: string }>(`PRAGMA table_info(${table})`);
+      if (!cols.some((c) => c.name === 'currency')) {
+        db.execSync(`ALTER TABLE ${table} ADD COLUMN currency TEXT;`);
+      }
+    } catch {
+      /* swallow */
+    }
   }
 }
 

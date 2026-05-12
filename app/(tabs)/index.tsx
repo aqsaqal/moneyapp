@@ -34,10 +34,9 @@ import { useStreak } from '@/hooks/useStreak';
 import { useT } from '@/hooks/useT';
 import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
 import { ProfileSheet } from '@/components/ProfileSheet';
-import { TransactionSheet } from '@/components/TransactionSheet';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { monthKey } from '@/utils/format';
-import type { Transaction } from '@/utils/db/schema';
+import { buildEditPrefill } from '@/utils/prefill';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 
@@ -50,7 +49,6 @@ export default function Home() {
   const activeProfile = useActiveProfile();
   const profiles = useProfiles();
   const [profileSheetOpen, setProfileSheetOpen] = useState(false);
-  const [editingTx, setEditingTx] = useState<Transaction | null>(null);
   const now = new Date();
   const thisMonth = monthKey(now);
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
@@ -170,7 +168,12 @@ export default function Home() {
                   key={tx.id}
                   t={tx}
                   currency={currency}
-                  onPressMore={() => setEditingTx(tx)}
+                  onPressMore={() =>
+                    router.push({
+                      pathname: '/add',
+                      params: { prefill: buildEditPrefill(tx) },
+                    } as never)
+                  }
                 />
               ))}
             </View>
@@ -179,11 +182,6 @@ export default function Home() {
 
         <View style={{ height: 100 }} />
       </ScrollView>
-      <TransactionSheet
-        visible={editingTx !== null}
-        transaction={editingTx ?? undefined}
-        onClose={() => setEditingTx(null)}
-      />
     </SafeAreaView>
   );
 }

@@ -110,6 +110,7 @@ export const debts = sqliteTable('debts', {
   apr: real('apr').notNull(),                 // annual percentage rate, e.g. 18.99
   minPayment: real('min_payment').notNull(),  // monthly minimum payment
   accountId: text('account_id'),              // optional link to an `accounts` row
+  currency: text('currency'),                 // ISO; null = user default
   color: text('color').notNull(),
   icon: text('icon').notNull(),
   createdAt: integer('created_at').notNull(),
@@ -126,6 +127,7 @@ export const goals = sqliteTable('goals', {
   targetAmount: real('target_amount').notNull(),
   targetDate: integer('target_date'),     // unix ms; null = open-ended
   accountId: text('account_id').notNull(),
+  currency: text('currency'),             // ISO; null = user default
   color: text('color').notNull(),
   icon: text('icon').notNull(),
   createdAt: integer('created_at').notNull(),
@@ -144,6 +146,7 @@ export const recurring = sqliteTable('recurring', {
   amount: real('amount').notNull(),
   category: text('category'),
   accountId: text('account_id').notNull(),
+  currency: text('currency'),             // ISO; null = user default
   dayOfMonth: integer('day_of_month').notNull(),
   icon: text('icon').notNull(),
   color: text('color').notNull(),

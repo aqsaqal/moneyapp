@@ -150,13 +150,14 @@ function RecurringSection() {
                       category: r.category,
                       note: r.name,
                       recurringId: r.id,
+                      originalCurrency: r.currency ?? undefined,
                     }),
                   },
                 } as never)}
                 onUnmark={() => unmarkRecurringPaid(r.id, key)}
                 onEdit={() => setSheet({ kind: 'edit', rec: r })}
                 onDelete={() => deleteRecurring(r.id)}
-                currency={currency}
+                currency={(r.currency ?? currency) as CurrencyCode}
               />
               {stale && (
                 <View style={styles.staleHint}>
@@ -220,13 +221,14 @@ function RecurringSection() {
                   category: r.category,
                   note: r.name,
                   recurringId: r.id,
+                  originalCurrency: r.currency ?? undefined,
                 }),
               },
             } as never)}
             onUnmark={() => unmarkRecurringPaid(r.id, key)}
             onEdit={() => setSheet({ kind: 'edit', rec: r })}
             onDelete={() => deleteRecurring(r.id)}
-            currency={currency}
+            currency={(r.currency ?? currency) as CurrencyCode}
           />
         ))}
       </View>
@@ -359,6 +361,7 @@ function GoalsSection() {
         const daysLeft = g.targetDate
           ? Math.max(0, Math.ceil((g.targetDate - Date.now()) / 86_400_000))
           : null;
+        const goalCcy = (g.currency ?? currency) as CurrencyCode;
         return (
           <Pressable
             key={g.id}
@@ -370,6 +373,7 @@ function GoalsSection() {
                   toAccountId: g.accountId,
                   amount: remaining > 0 ? remaining : undefined,
                   note: g.name,
+                  originalCurrency: g.currency ?? undefined,
                 }),
               },
             } as never)}
@@ -385,7 +389,7 @@ function GoalsSection() {
               <View style={{ flex: 1 }}>
                 <Text style={styles.goalName}>{g.name}</Text>
                 <Text style={styles.goalSub}>
-                  {formatMoney(current, currency)} / {formatMoney(g.targetAmount, currency)} · {acct?.name ?? '—'}
+                  {formatMoney(current, goalCcy)} / {formatMoney(g.targetAmount, goalCcy)} · {acct?.name ?? '—'}
                 </Text>
               </View>
               <Text style={[styles.goalPct, { color: g.color }]}>{Math.round(pct * 100)}%</Text>
@@ -403,10 +407,10 @@ function GoalsSection() {
                 ? t('plan.goals.reached')
                 : daysLeft != null
                   ? t('plan.goals.remainingByDate', {
-                      amount: formatMoney(remaining, currency),
+                      amount: formatMoney(remaining, goalCcy),
                       days: daysLeft,
                     })
-                  : t('plan.goals.remaining', { amount: formatMoney(remaining, currency) })}
+                  : t('plan.goals.remaining', { amount: formatMoney(remaining, goalCcy) })}
             </Text>
           </Pressable>
         );
@@ -525,6 +529,7 @@ function DebtsSection() {
 
       {liveDebts.map((d) => {
         const linked = d.accountId ? accountById.get(d.accountId) : null;
+        const debtCcy = (d.currency ?? currency) as CurrencyCode;
         return (
           <Pressable
             key={d.id}
@@ -541,11 +546,13 @@ function DebtsSection() {
                         toAccountId: d.accountId,
                         amount: d.minPayment > 0 ? d.minPayment : undefined,
                         note: d.name,
+                        originalCurrency: d.currency ?? undefined,
                       }
                     : {
                         type: 'expense',
                         amount: d.minPayment > 0 ? d.minPayment : undefined,
                         note: d.name,
+                        originalCurrency: d.currency ?? undefined,
                       },
                 ),
               },
@@ -553,7 +560,7 @@ function DebtsSection() {
             onLongPress={() => setEditing(debts.find((x) => x.id === d.id))}
             style={[styles.debtCard, { borderColor: `${d.color}55` }]}
             accessibilityRole="button"
-            accessibilityLabel={`${d.name}, ${formatMoney(d.balance, currency)} at ${d.apr}% APR, tap to log payment, long-press to edit`}
+            accessibilityLabel={`${d.name}, ${formatMoney(d.balance, debtCcy)} at ${d.apr}% APR, tap to log payment, long-press to edit`}
           >
             <View style={[styles.goalIcon, { backgroundColor: `${d.color}22` }]}>
               <MaterialCommunityIcons name={d.icon as never} size={20} color={d.color} />
@@ -561,7 +568,7 @@ function DebtsSection() {
             <View style={{ flex: 1 }}>
               <Text style={styles.goalName}>{d.name}</Text>
               <Text style={styles.goalSub}>
-                {formatMoney(d.balance, currency)} · {d.apr.toFixed(2)}% APR · min {formatMoney(d.minPayment, currency)}
+                {formatMoney(d.balance, debtCcy)} · {d.apr.toFixed(2)}% APR · min {formatMoney(d.minPayment, debtCcy)}
               </Text>
               {linked && (
                 <Text style={[styles.goalSub, { color: linked.color }]}>

@@ -17,7 +17,10 @@ import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { upsertDebt, deleteDebt, useAccounts } from '@/hooks/useAppData';
 import { SettingRow } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
+import { kv } from '@/utils/kv';
 import { useT } from '@/hooks/useT';
+import type { CurrencyCode } from '@/constants/currency';
 import type { Debt } from '@/utils/db/schema';
 
 const PALETTE = [
@@ -54,6 +57,11 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
   const [icon, setIcon] = useState<string>(debt?.icon ?? ICONS[0]);
   const [accountId, setAccountId] = useState<string | null>(debt?.accountId ?? null);
   const [accountPicker, setAccountPicker] = useState(false);
+  const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const [currency, setCurrency] = useState<CurrencyCode>(
+    (debt?.currency as CurrencyCode | undefined) ?? defaultCurrency,
+  );
+  const [currencyPickerOpen, setCurrencyPickerOpen] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -64,6 +72,8 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
     setColor(debt?.color ?? PALETTE[0]);
     setIcon(debt?.icon ?? ICONS[0]);
     setAccountId(debt?.accountId ?? null);
+    setCurrency((debt?.currency as CurrencyCode | undefined) ?? defaultCurrency);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, debt]);
 
   const linkedAcct = accountId ? accounts.find((a) => a.id === accountId) : null;
@@ -83,6 +93,7 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
       apr: a,
       minPayment: m,
       accountId,
+      currency,
       color,
       icon,
       createdAt: debt?.createdAt ?? Date.now(),
@@ -177,6 +188,14 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
             onPress={() => setAccountPicker(true)}
           />
 
+          <SettingRow
+            label="Currency"
+            hint={currency}
+            icon="currency-usd"
+            iconColor={theme.accent}
+            onPress={() => setCurrencyPickerOpen(true)}
+          />
+
           <PickerSheet
             visible={accountPicker}
             title="Linked account"
@@ -231,6 +250,13 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
               <Text style={styles.deleteText}>{t('common.delete')}</Text>
             </Pressable>
           )}
+
+          <CurrencyPickerSheet
+            visible={currencyPickerOpen}
+            selected={currency}
+            onPick={(c) => setCurrency(c)}
+            onClose={() => setCurrencyPickerOpen(false)}
+          />
         </ScrollView>
       </SafeAreaView>
     </Modal>
