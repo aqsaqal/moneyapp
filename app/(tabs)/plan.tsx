@@ -37,6 +37,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { Goal, Debt } from '@/utils/db/schema';
 import { catInfo } from '@/constants/categories';
 import { monthKey, formatMoney } from '@/utils/format';
+import { convert } from '@/utils/fx';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { useT } from '@/hooks/useT';
@@ -99,9 +100,15 @@ function RecurringSection() {
   const byDay = (a: Recurring, b: Recurring) => a.dayOfMonth - b.dayOfMonth;
   const exp = recurring.filter((r) => r.type === 'expense').sort(byDay);
   const inc = recurring.filter((r) => r.type === 'income').sort(byDay);
-  const totalFixedExp = exp.reduce((s, r) => s + r.amount, 0);
-  const totalFixedInc = inc.reduce((s, r) => s + r.amount, 0);
-  const remaining = exp.filter((r) => !paidIds.has(r.id)).reduce((s, r) => s + r.amount, 0);
+  // Plan summaries are shown in the user's default currency, so each
+  // per-item amount (which may be in its own currency) needs an FX
+  // conversion. When `r.currency` is null we treat it as already in
+  // the default currency (no conversion).
+  const toDefault = (r: Recurring) =>
+    r.currency && r.currency !== currency ? convert(r.amount, r.currency, currency) : r.amount;
+  const totalFixedExp = exp.reduce((s, r) => s + toDefault(r), 0);
+  const totalFixedInc = inc.reduce((s, r) => s + toDefault(r), 0);
+  const remaining = exp.filter((r) => !paidIds.has(r.id)).reduce((s, r) => s + toDefault(r), 0);
 
   return (
     <View style={{ gap: spacing.lg }}>
@@ -135,11 +142,51 @@ function RecurringSection() {
         )}
         {exp.map((r) => {
           const stale = audit.stale.find((s) => s.recurring.id === r.id);
+          // Tone-by-urgency: a never-paid bill that's due tomorrow shouldn't
+          // shout "overdue" in red. Compare today's day-of-month to the
+          // recurring's dayOfMonth and pick yellow / orange / red.
+          const isPaid = paidIds.has(r.id);
+          let hint: { tone: 'upcoming' | 'today' | 'overdue' | 'stopped'; text: string } | null = null;
+          if (stale && !isPaid) {
+            if (stale.daysSinceLastSeen == null) {
+              const todayDom = new Date().getDate();
+              if (r.dayOfMonth > todayDom) {
+                hint = {
+                  tone: 'upcoming',
+                  text: t('plan.audit.dueIn', { n: r.dayOfMonth - todayDom }),
+                };
+              } else if (r.dayOfMonth === todayDom) {
+                hint = { tone: 'today', text: t('plan.audit.dueToday') };
+              } else {
+                hint = {
+                  tone: 'overdue',
+                  text: t('plan.audit.overdue', { n: todayDom - r.dayOfMonth }),
+                };
+              }
+            } else {
+              hint = {
+                tone: 'stopped',
+                text: t('plan.audit.stale.days', { n: stale.daysSinceLastSeen }),
+              };
+            }
+          }
+          const toneColor =
+            hint?.tone === 'upcoming'
+              ? '#EAB308'
+              : hint?.tone === 'today'
+                ? theme.warning
+                : theme.expense; // overdue + stopped
+          const toneIcon =
+            hint?.tone === 'upcoming'
+              ? 'clock-outline'
+              : hint?.tone === 'today'
+                ? 'bell-ring-outline'
+                : 'alert-octagon-outline';
           return (
             <View key={r.id}>
               <RecurringRow
                 rec={r}
-                paid={paidIds.has(r.id)}
+                paid={isPaid}
                 onTapCheckbox={() => router.push({
                   pathname: '/add',
                   params: {
@@ -159,14 +206,10 @@ function RecurringSection() {
                 onDelete={() => deleteRecurring(r.id)}
                 currency={(r.currency ?? currency) as CurrencyCode}
               />
-              {stale && (
+              {hint && (
                 <View style={styles.staleHint}>
-                  <MaterialCommunityIcons name="alert-octagon-outline" size={14} color={theme.expense} />
-                  <Text style={styles.staleHintText}>
-                    {stale.daysSinceLastSeen == null
-                      ? t('plan.audit.stale.never')
-                      : t('plan.audit.stale.days', { n: stale.daysSinceLastSeen })}
-                  </Text>
+                  <MaterialCommunityIcons name={toneIcon as never} size={14} color={toneColor} />
+                  <Text style={[styles.staleHintText, { color: toneColor }]}>{hint.text}</Text>
                 </View>
               )}
             </View>
