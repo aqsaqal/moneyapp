@@ -167,7 +167,12 @@ function AccountsSection() {
 
       <View style={styles.netCard}>
         <Text style={styles.netLabel}>{t('me.netBalance')}</Text>
-        <Text style={[styles.netValue, { color: net >= 0 ? theme.accent : theme.expense }]}>
+        <Text
+          style={[styles.netValue, { color: net >= 0 ? theme.accent : theme.expense }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.6}
+        >
           {approx ? '≈ ' : ''}{formatMoney(net, currency)}
         </Text>
       </View>

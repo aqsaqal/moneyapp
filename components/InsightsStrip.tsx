@@ -13,11 +13,17 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { theme, font, sizes, radii, spacing } from '@/constants/theme';
 import { useInsights } from '@/hooks/useInsights';
 import { useT } from '@/hooks/useT';
+import { kv } from '@/utils/kv';
+import { formatMoney, type CurrencyCode } from '@/constants/currency';
 
 const MAX_CHIPS = 6;
+// Percentage swings beyond this are read as meaningless ("+20,000%") so we
+// switch to an absolute label instead.
+const PCT_NOISE_THRESHOLD = 5; // 500%
 
 export function InsightsStrip() {
   const t = useT();
+  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const { deltas } = useInsights();
   if (deltas.length === 0) return null;
 
@@ -31,14 +37,24 @@ export function InsightsStrip() {
       {deltas.slice(0, MAX_CHIPS).map((d) => {
         const arrow =
           d.deltaPct == null ? '•'
-            : d.deltaPct >= 0 ? '↑'
+            : d.deltaAbs >= 0 ? '↑'
             : '↓';
-        const pctLabel = d.deltaPct == null
-          ? t('insights.strip.new')
-          : `${d.deltaPct >= 0 ? '+' : ''}${Math.round(d.deltaPct * 100)}%`;
+        // Three labeling regimes:
+        //   1. No baseline last month → "new"
+        //   2. Baseline is tiny vs current ⇒ percentage is noise.
+        //      Show the absolute change in money instead.
+        //   3. Normal case ⇒ percentage with a +sign for growth.
+        const pctIsNoisy =
+          d.deltaPct != null && Math.abs(d.deltaPct) > PCT_NOISE_THRESHOLD;
+        const pctLabel =
+          d.deltaPct == null
+            ? t('insights.strip.new')
+            : pctIsNoisy
+              ? `${d.deltaAbs >= 0 ? '+' : '−'}${formatMoney(Math.abs(d.deltaAbs), currency)}`
+              : `${d.deltaPct >= 0 ? '+' : ''}${Math.round(d.deltaPct * 100)}%`;
         const trendColor = d.deltaPct == null
           ? theme.text2
-          : d.deltaPct >= 0 ? theme.expense : theme.accent;
+          : d.deltaAbs >= 0 ? theme.expense : theme.accent;
         return (
           <View key={d.category} style={styles.chip}>
             <View style={[styles.dot, { backgroundColor: d.color }]} />

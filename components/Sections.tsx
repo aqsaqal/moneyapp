@@ -57,7 +57,14 @@ export function SummaryCard({
   return (
     <View style={[sectionStyles.summary, { borderColor: theme.border }]}>
       <Text style={sectionStyles.summaryLabel}>{label}</Text>
-      <Text style={[sectionStyles.summaryValue, { color }]}>{formatMoney(value, currency)}</Text>
+      <Text
+        style={[sectionStyles.summaryValue, { color }]}
+        numberOfLines={1}
+        adjustsFontSizeToFit
+        minimumFontScale={0.6}
+      >
+        {formatMoney(value, currency)}
+      </Text>
     </View>
   );
 }

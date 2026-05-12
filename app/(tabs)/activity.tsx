@@ -164,11 +164,17 @@ function AnalyticsHeader({
 
   const expenses = monthTxns.filter((t) => t.type === 'expense');
   const totalSpend = expenses.reduce((s, t) => s + t.amount, 0);
-  const dayCount = new Set(daily.filter((d) => d.amount > 0).map((d) => d.day)).size || 1;
-  const avgDaily = totalSpend / dayCount;
   const today = new Date();
   const dim = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  // Avg/Day reads as "what I spend on a typical calendar day this month."
+  // Use elapsed calendar days, not days-with-spending — otherwise a user
+  // who only spent on 6 of the past 12 days sees a 2× inflated daily
+  // average, and "Avg/Day × days-in-month ≠ Total" trust breaks.
+  const elapsedDays = Math.max(1, today.getDate());
+  const avgDaily = totalSpend / elapsedDays;
   const projected = avgDaily * dim;
+  void daily; // strip the now-unused dependency
+
 
   return (
     <View style={styles.analytics}>

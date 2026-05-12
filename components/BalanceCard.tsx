@@ -68,8 +68,20 @@ export function DisposableHeroCard({
         {typeof daysLeft === 'number' ? ` · ${t('home.daysLeft', { n: daysLeft })}` : ''}
       </Text>
       {typeof forecast === 'number' && (
-        <Text style={[styles.heroForecast, { color: forecast >= 0 ? theme.accent : theme.expense }]}>
-          {t('home.forecast', { amount: formatMoney(forecast, currency) })}
+        // Color carries semantic weight — only paint red when the
+        // forecast is actually negative (you'll overshoot). For a
+        // healthy positive forecast, stay neutral. Also show the minus
+        // sign explicitly so users don't rely on color alone to read
+        // the direction.
+        <Text
+          style={[
+            styles.heroForecast,
+            { color: forecast < 0 ? theme.expense : theme.text2 },
+          ]}
+        >
+          {t('home.forecast', {
+            amount: `${forecast < 0 ? '−' : ''}${formatMoney(forecast, currency)}`,
+          })}
         </Text>
       )}
     </View>
