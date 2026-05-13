@@ -16,7 +16,8 @@ import {
 } from '@/components/Sections';
 import { AccountSheet } from '@/components/AccountSheet';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
-import { useAccounts } from '@/hooks/useAppData';
+import { useAccounts, reorderAccounts } from '@/hooks/useAppData';
+import DraggableFlatList, { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-flatlist';
 import type { Account } from '@/utils/db/schema';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
@@ -121,72 +122,98 @@ function OverviewAndAccounts() {
           addLabel={t('common.add')}
         />
 
-        {visibleAccounts.map((a) => {
-          const ac = accountCurrency(a) as CurrencyCode;
-          // Credit utilization: balance is stored negative for credit
-          // accounts (debt = -spent). The bar shows how much of the
-          // limit is consumed; thresholds escalate by color.
-          const utilPct =
-            a.type === 'credit' && a.creditLimit && a.creditLimit > 0
-              ? Math.min(Math.abs(a.balance) / a.creditLimit, 1)
-              : null;
-          const utilColor =
-            utilPct == null
-              ? theme.text3
-              : utilPct < 0.3
-                ? theme.accent
-                : utilPct < 0.7
-                  ? '#EAB308'
-                  : utilPct < 0.9
-                    ? '#F97316'
-                    : theme.expense;
-          const isExcluded = a.includeInTotal === 0;
-          const isArchived = a.archived === 1;
-          return (
-            <Pressable
-              key={a.id}
-              style={[
-                styles.acctCard,
-                (isExcluded || isArchived) && styles.acctCardDimmed,
-              ]}
-              onPress={() => setEditing(a)}
-              accessibilityRole="button"
-              accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}${isArchived ? ', archived' : isExcluded ? ', excluded from total' : ''}`}
-            >
-              <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
-                <MaterialCommunityIcons name="wallet-outline" size={20} color={a.color} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <View style={styles.acctNameRow}>
-                  <Text style={styles.acctName}>{a.name}</Text>
-                  {isArchived && <Text style={styles.acctTag}>archived</Text>}
-                  {!isArchived && isExcluded && <Text style={styles.acctTag}>excluded</Text>}
-                </View>
-                <Text style={styles.acctType}>
-                  {a.type}{ac !== currency ? ` · ${ac}` : ''}
-                </Text>
-                {utilPct != null && (
-                  <>
-                    <View style={[styles.barBg, { marginTop: 6 }]}>
-                      <View
-                        style={[
-                          styles.barFill,
-                          { width: `${utilPct * 100}%`, backgroundColor: utilColor },
-                        ]}
-                      />
+        <DraggableFlatList
+          data={visibleAccounts}
+          keyExtractor={(a) => a.id}
+          onDragEnd={({ data }) => {
+            // Persist the new order. Only active rows participate in
+            // drag; archived rows keep their existing sort_order so the
+            // hidden ordering is preserved when toggled back on.
+            reorderAccounts(data.filter((a) => a.archived !== 1).map((a) => a.id));
+          }}
+          // The outer SafeAreaView/ScrollView already scrolls; let the
+          // draggable list render its content non-scrollable to avoid
+          // nested-scrolling glitches.
+          scrollEnabled={false}
+          contentContainerStyle={{ gap: spacing.md }}
+          activationDistance={8}
+          renderItem={({ item: a, drag, isActive }: RenderItemParams<Account>) => {
+            const ac = accountCurrency(a) as CurrencyCode;
+            const utilPct =
+              a.type === 'credit' && a.creditLimit && a.creditLimit > 0
+                ? Math.min(Math.abs(a.balance) / a.creditLimit, 1)
+                : null;
+            const utilColor =
+              utilPct == null
+                ? theme.text3
+                : utilPct < 0.3
+                  ? theme.accent
+                  : utilPct < 0.7
+                    ? '#EAB308'
+                    : utilPct < 0.9
+                      ? '#F97316'
+                      : theme.expense;
+            const isExcluded = a.includeInTotal === 0;
+            const isArchived = a.archived === 1;
+            return (
+              <ScaleDecorator activeScale={1.02}>
+                <Pressable
+                  style={[
+                    styles.acctCard,
+                    (isExcluded || isArchived) && styles.acctCardDimmed,
+                    isActive && { borderColor: theme.accent },
+                  ]}
+                  onPress={() => setEditing(a)}
+                  onLongPress={drag}
+                  delayLongPress={250}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}${isArchived ? ', archived' : isExcluded ? ', excluded from total' : ''}, long-press the handle to reorder`}
+                >
+                  <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
+                    <MaterialCommunityIcons name="wallet-outline" size={20} color={a.color} />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <View style={styles.acctNameRow}>
+                      <Text style={styles.acctName}>{a.name}</Text>
+                      {isArchived && <Text style={styles.acctTag}>archived</Text>}
+                      {!isArchived && isExcluded && <Text style={styles.acctTag}>excluded</Text>}
                     </View>
-                    <Text style={[styles.acctUtil, { color: utilColor }]}>
-                      {Math.round(utilPct * 100)}% used
+                    <Text style={styles.acctType}>
+                      {a.type}{ac !== currency ? ` · ${ac}` : ''}
                     </Text>
-                  </>
-                )}
-              </View>
-              <Text style={[styles.acctBal, { color: a.balance >= 0 ? theme.accent : theme.expense }]}>
-                {formatMoney(a.balance, ac)}
-              </Text>
-            </Pressable>
-          );
-        })}
+                    {utilPct != null && (
+                      <>
+                        <View style={[styles.barBg, { marginTop: 6 }]}>
+                          <View
+                            style={[
+                              styles.barFill,
+                              { width: `${utilPct * 100}%`, backgroundColor: utilColor },
+                            ]}
+                          />
+                        </View>
+                        <Text style={[styles.acctUtil, { color: utilColor }]}>
+                          {Math.round(utilPct * 100)}% used
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                  <Text style={[styles.acctBal, { color: a.balance >= 0 ? theme.accent : theme.expense }]}>
+                    {formatMoney(a.balance, ac)}
+                  </Text>
+                  <Pressable
+                    onLongPress={drag}
+                    delayLongPress={120}
+                    hitSlop={10}
+                    style={styles.dragHandle}
+                    accessibilityLabel="Drag to reorder"
+                  >
+                    <MaterialCommunityIcons name="drag-horizontal-variant" size={20} color={theme.text3} />
+                  </Pressable>
+                </Pressable>
+              </ScaleDecorator>
+            );
+          }}
+        />
 
         {archivedAccounts.length > 0 && (
           <Pressable
@@ -290,6 +317,7 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   archiveToggleText: { color: theme.text3, fontSize: sizes.sm },
+  dragHandle: { padding: 4, marginLeft: 4 },
   ribaFooter: {
     flexDirection: 'row',
     alignItems: 'flex-start',

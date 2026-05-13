@@ -309,9 +309,18 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
 
           <SettingRow
             label="Currency"
-            hint={`${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`}
+            hint={
+              editing
+                ? `${currency} · locked at creation`
+                : `${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`
+            }
             icon="currency-usd"
-            onPress={() => setCurrencyPicker(true)}
+            // Per design call: currency is locked once an account exists.
+            // Changing it retroactively would break balances on every
+            // historical transaction (which are stored in this account's
+            // currency). To switch, archive the account and create a new
+            // one in the desired currency.
+            onPress={editing ? undefined : () => setCurrencyPicker(true)}
           />
 
           {/* Phase 10v: edit-only behavior toggles. */}

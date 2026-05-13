@@ -794,6 +794,20 @@ function migrateBudgetsToCategories() {
 
 // ---- Accounts ----
 
+/** Reorder accounts. Caller passes the IDs in the new display order;
+ *  we batch-update sort_order to N×10 so future inserts have room
+ *  between existing rows without renumbering. */
+export function reorderAccounts(orderedIds: string[]): void {
+  const db = getDB();
+  const raw = getRawDB();
+  raw.withTransactionSync(() => {
+    orderedIds.forEach((id, i) => {
+      db.update(accounts).set({ sortOrder: (i + 1) * 10 }).where(eq(accounts.id, id)).run();
+    });
+  });
+  bump();
+}
+
 export function upsertAccount(a: typeof accounts.$inferInsert): void {
   const db = getDB();
   const existing = db.select().from(accounts).where(eq(accounts.id, a.id)).get();
