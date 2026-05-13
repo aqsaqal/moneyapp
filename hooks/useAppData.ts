@@ -388,6 +388,30 @@ export function categoryTxnCount(id: string): number {
   return row?.c ?? 0;
 }
 
+/** Recency-weighted category frequency for the Smart Add chip strip.
+ *  Looks back N days and counts expense transactions per category. */
+export function useCategoryFrequency(opts: { days?: number } = {}): Map<string, number> {
+  useVersion();
+  const raw = getRawDB();
+  const days = opts.days ?? 60;
+  return useMemo(() => {
+    const since = Date.now() - days * 86_400_000;
+    try {
+      const rows = raw.getAllSync(
+        `SELECT category, COUNT(*) AS c
+           FROM transactions
+          WHERE type = 'expense' AND category IS NOT NULL AND date >= ?
+          GROUP BY category`,
+        [since],
+      ) as Array<{ category: string; c: number }>;
+      return new Map(rows.map((r) => [r.category, r.c]));
+    } catch {
+      return new Map();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version, days]);
+}
+
 export function useRecurring(): Recurring[] {
   useVersion();
   const db = getDB();

@@ -48,7 +48,6 @@ import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
 import { monthKey as monthKeyOf } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
 import { useCategoriesWithMeta, setCategoryMeta, type CategoryWithMeta } from '@/hooks/useAppData';
-import { CustomCategorySheet } from '@/components/CustomCategorySheet';
 import { convert } from '@/utils/fx';
 import { getRawDB } from '@/utils/db/client';
 import { APP_NAME } from '@/constants/flavor';
@@ -432,101 +431,29 @@ function maybeOfferBudgetConversion(prev: string, next: string) {
   );
 }
 
-// ---- Categories (Phase 10w canonical management surface) ----
+// ---- Categories (Phase 10w: now a single link row → /categories-manage) ----
 
 function CategoriesSection() {
   const t = useT();
+  const router = useRouter();
   const categories = useCategoriesWithMeta();
-  const [editing, setEditing] = useState<CategoryWithMeta | null | undefined>(undefined);
-  const [showArchived, setShowArchived] = useState(false);
-
-  const visible = categories.filter((c) => showArchived ? true : !c.archived);
-  const pinned = visible.filter((c) => c.isPinned).sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
-  const unpinned = visible.filter((c) => !c.isPinned).sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
-  const archivedCount = categories.filter((c) => c.archived).length;
-
-  const renderRow = (c: CategoryWithMeta) => {
-    const budgetLabel = c.monthlyBudget != null
-      ? `${c.monthlyBudget.toFixed(0)} ${c.budgetCurrency ?? ''}`.trim()
-      : (c.type === 'income' ? 'Income' : c.type === 'both' ? 'Both' : 'Expense');
-    const hint =
-      (c.isSystem ? '🔒 system · ' : '') +
-      (c.archived ? 'archived · ' : '') +
-      budgetLabel;
-    return (
-      <SettingRow
-        key={c.id}
-        label={c.name}
-        hint={hint}
-        icon={c.icon as never}
-        iconColor={c.color}
-        onPress={() => setEditing(c)}
-      />
-    );
-  };
-
+  const active = categories.filter((c) => !c.archived && c.id !== 'adjustment');
+  const budgetCount = categories.filter((c) => c.monthlyBudget != null && !c.archived).length;
+  const hint =
+    `${active.length} categories` +
+    (budgetCount > 0 ? ` · ${budgetCount} with budget` : '');
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <SectionHeader
-        title={t('settings.categories.title')}
-        onAdd={() => setEditing(null)}
-        addLabel={t('common.add')}
-      />
-      {pinned.length > 0 && (
-        <>
-          <Text style={settingsSectionStyles.subHeading}>PINNED</Text>
-          {pinned.map(renderRow)}
-        </>
-      )}
-      {unpinned.length > 0 && (
-        <>
-          {pinned.length > 0 && <Text style={settingsSectionStyles.subHeading}>ALL</Text>}
-          {unpinned.map(renderRow)}
-        </>
-      )}
-      {archivedCount > 0 && (
-        <Pressable
-          onPress={() => setShowArchived((v) => !v)}
-          style={settingsSectionStyles.archiveToggle}
-          accessibilityRole="button"
-        >
-          <MaterialCommunityIcons
-            name={showArchived ? 'eye-off-outline' : 'archive-outline'}
-            size={16}
-            color={theme.text3}
-          />
-          <Text style={settingsSectionStyles.archiveText}>
-            {showArchived ? 'Hide archived' : `Show archived (${archivedCount})`}
-          </Text>
-        </Pressable>
-      )}
-      <CustomCategorySheet
-        visible={editing !== undefined}
-        category={editing ?? undefined}
-        onClose={() => setEditing(undefined)}
+      <SettingRow
+        label={t('settings.categories.title')}
+        hint={hint}
+        icon="tag-multiple-outline"
+        iconColor={theme.accent}
+        onPress={() => router.push('/categories-manage' as never)}
       />
     </View>
   );
 }
-
-const settingsSectionStyles = StyleSheet.create({
-  subHeading: {
-    color: theme.text3,
-    fontSize: 10,
-    fontFamily: font.bodySemi,
-    letterSpacing: 0.5,
-    marginTop: spacing.sm,
-    marginBottom: -4,
-  },
-  archiveToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    padding: spacing.md,
-  },
-  archiveText: { color: theme.text3, fontSize: sizes.sm },
-});
 
 // ---- Security ----
 

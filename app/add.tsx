@@ -34,7 +34,8 @@ import { VoiceMicButton } from '@/components/VoiceMicButton';
 import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
-import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, AccountValidationError } from '@/hooks/useAppData';
+import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, useCategoriesWithMeta, useCategoryFrequency, useMonthTotalsByCategory, AccountValidationError, type CategoryWithMeta } from '@/hooks/useAppData';
+import { monthKey } from '@/utils/format';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
@@ -145,6 +146,31 @@ export default function AddScreen() {
   const [accountAmountOverride, setAccountAmountOverride] = useState<string | null>(
     prefill?.accountAmount != null ? String(prefill.accountAmount) : null,
   );
+
+  // Phase 10w: top-6 category chip strip + grid bottom sheet for fast
+  // picking. Order: pinned → recency frequency → alpha. Stable within a
+  // session (recomputed only when category set or frequency map changes).
+  const categories = useCategoriesWithMeta();
+  const catFreq = useCategoryFrequency({ days: 60 });
+  const monthTotals = useMonthTotalsByCategory(monthKey(), 'expense');
+  const [gridOpen, setGridOpen] = useState(false);
+  const top6Categories = useMemo(() => {
+    const eligible = categories.filter(
+      (c) =>
+        !c.archived &&
+        c.id !== 'adjustment' &&
+        (mode === 'income' ? c.type !== 'expense' : c.type !== 'income'),
+    );
+    return [...eligible]
+      .sort((a, b) => {
+        if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
+        const fa = catFreq.get(a.id) ?? 0;
+        const fb = catFreq.get(b.id) ?? 0;
+        if (fa !== fb) return fb - fa;
+        return a.name.localeCompare(b.name);
+      })
+      .slice(0, 6);
+  }, [categories, catFreq, mode]);
 
   // Confidence check: L1 (keyword) or L2 (merchant memory) with at least
   // one supporting prior add count as "high confidence" (~>70%). L3 (time
@@ -507,6 +533,94 @@ export default function AddScreen() {
           />
         </View>
 
+        {/* Phase 10w: top-6 category chip strip + "More…" → full grid.
+            Tapping a chip sets catOverride directly so the user doesn't
+            have to expand the override drawer for common categories. */}
+        {(mode === 'expense' || mode === 'income') && (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.chipStrip}
+            keyboardShouldPersistTaps="handled"
+          >
+            {top6Categories.map((c) => {
+              const selected = effectiveCat === c.id;
+              return (
+                <Pressable
+                  key={c.id}
+                  onPress={() => setCatOverride(c.id)}
+                  style={[
+                    styles.catChip,
+                    selected && { borderColor: c.color, backgroundColor: `${c.color}22` },
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected }}
+                  accessibilityLabel={c.name}
+                >
+                  <MaterialCommunityIcons
+                    name={(c.icon as never) || 'tag-outline'}
+                    size={14}
+                    color={selected ? c.color : theme.text2}
+                  />
+                  <Text style={[styles.catChipText, selected && { color: c.color }]} numberOfLines={1}>
+                    {c.name}
+                  </Text>
+                </Pressable>
+              );
+            })}
+            <Pressable
+              onPress={() => setGridOpen(true)}
+              style={[styles.catChip, styles.catChipMore]}
+              accessibilityRole="button"
+              accessibilityLabel="More categories"
+            >
+              <Text style={[styles.catChipText, { color: theme.text2 }]}>More…</Text>
+            </Pressable>
+          </ScrollView>
+        )}
+
+        {/* Inline budget bar — only when an expense category with a
+            monthly_budget is selected. Live-projects the impact of the
+            currently-typed amount. */}
+        {mode === 'expense' && effectiveCat && (() => {
+          const cat = categories.find((c) => c.id === effectiveCat);
+          if (!cat || cat.monthlyBudget == null) return null;
+          const spent = monthTotals.find((m) => m.category === effectiveCat)?.total ?? 0;
+          const ccy = cat.budgetCurrency ?? currency;
+          // Display in the budget's currency. Convert spent + the new
+          // amount via FX cache when they differ from budget currency.
+          const enteredInBudgetCcy =
+            (parseFloat(amount) || 0) > 0
+              ? ccy === effectiveEntryCurrency
+                ? parseFloat(amount)
+                : convert(parseFloat(amount) || 0, effectiveEntryCurrency, ccy)
+              : 0;
+          const spentInBudgetCcy = ccy === currency ? spent : convert(spent, currency, ccy);
+          const projected = spentInBudgetCcy + enteredInBudgetCcy;
+          const pct = cat.monthlyBudget > 0 ? Math.min(projected / cat.monthlyBudget, 1) : 0;
+          const over = projected > cat.monthlyBudget;
+          const warn = !over && projected / cat.monthlyBudget >= 0.8;
+          const overBy = over ? projected - cat.monthlyBudget : 0;
+          const barColor = over ? theme.expense : warn ? '#F97316' : cat.color;
+          return (
+            <View style={styles.budgetBarWrap}>
+              <View style={styles.budgetBarHead}>
+                <Text style={styles.budgetBarLabel}>
+                  {cat.name}: {spentInBudgetCcy.toFixed(0)} / {cat.monthlyBudget.toFixed(0)} {ccy} this month
+                </Text>
+              </View>
+              <View style={styles.budgetBarBg}>
+                <View style={[styles.budgetBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
+              </View>
+              {over && enteredInBudgetCcy > 0 && (
+                <Text style={styles.budgetWarn}>
+                  This will put you {overBy.toFixed(0)} {ccy} over your {cat.name} budget.
+                </Text>
+              )}
+            </View>
+          );
+        })()}
+
         {/* Smart suggestions — top-3 exact replays from the last month.
             Off by default; user opts in via Settings → Preferences. Tap
             now PREFILLS the form (amount, note, account, category) so
@@ -557,8 +671,14 @@ export default function AddScreen() {
             // merchant memory had at least one supporting prior add.
             // Computed once above (see `highConfidence`). L3/L4 fallbacks
             // and last-used defaults don't earn the auto badge.
-            const acctAuto = highConfidence && !accountOverride && !!predicted.accountId;
-            const catAuto = highConfidence && !catOverride && !!predicted.category;
+            const acctAuto = !accountOverride && !!predicted.accountId &&
+              (highConfidence || !!lastOfMode);
+            const catAuto = !catOverride && !!fallbackCat &&
+              (highConfidence || !!lastOfMode);
+            // Label the badge with provenance so the user knows whether
+            // the form trusted the model (Predicted) or just fell back
+            // to their last pick (Last used).
+            const badge = highConfidence ? 'predicted' : 'last used';
             return (
               <View style={styles.transferRow}>
                 {mode === 'expense' ? (
@@ -569,6 +689,7 @@ export default function AddScreen() {
                       value={effectiveAcct}
                       onPick={setAccountOverride}
                       auto={acctAuto}
+                      autoLabel={badge}
                     />
                     <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
                     <CategoryPickerRow
@@ -577,6 +698,7 @@ export default function AddScreen() {
                       value={effectiveCat}
                       onPick={setCatOverride}
                       auto={catAuto}
+                      autoLabel={badge}
                     />
                   </>
                 ) : (
@@ -587,6 +709,7 @@ export default function AddScreen() {
                       value={effectiveCat}
                       onPick={setCatOverride}
                       auto={catAuto}
+                      autoLabel={badge}
                     />
                     <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
                     <TransferAcctRow
@@ -595,6 +718,7 @@ export default function AddScreen() {
                       value={effectiveAcct}
                       onPick={setAccountOverride}
                       auto={acctAuto}
+                      autoLabel={badge}
                     />
                   </>
                 )}
@@ -642,8 +766,97 @@ export default function AddScreen() {
         <View style={{ height: 32 }} />
       </ScrollView>
 
+      {/* Inline category grid (the "More…" sheet). Local to /add so the
+          typed amount, note and account survive the picker. */}
+      <CategoryGridOverlay
+        visible={gridOpen}
+        mode={mode === 'income' ? 'income' : 'expense'}
+        categories={categories}
+        monthTotals={monthTotals}
+        currency={currency}
+        onPick={(c) => {
+          setCatOverride(c.id);
+          setGridOpen(false);
+        }}
+        onClose={() => setGridOpen(false)}
+      />
+
       <SuccessOverlay visible={success} caption={successCaption} />
     </SafeAreaView>
+  );
+}
+
+function CategoryGridOverlay({
+  visible,
+  mode,
+  categories,
+  monthTotals,
+  currency,
+  onPick,
+  onClose,
+}: {
+  visible: boolean;
+  mode: 'expense' | 'income';
+  categories: CategoryWithMeta[];
+  monthTotals: Array<{ category: string; total: number }>;
+  currency: CurrencyCode;
+  onPick: (c: CategoryWithMeta) => void;
+  onClose: () => void;
+}) {
+  if (!visible) return null;
+  const totalsMap = new Map(monthTotals.map((m) => [m.category, m.total]));
+  const eligible = categories.filter(
+    (c) =>
+      !c.archived &&
+      c.id !== 'adjustment' &&
+      (mode === 'income' ? c.type !== 'expense' : c.type !== 'income'),
+  );
+  return (
+    <View style={styles.gridOverlay} pointerEvents="auto">
+      <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+      <View style={styles.gridSheet}>
+        <Text style={styles.gridTitle}>Pick category</Text>
+        <ScrollView contentContainerStyle={styles.gridScroll}>
+          {eligible.map((c) => {
+            const spent = totalsMap.get(c.id) ?? 0;
+            const budget = c.monthlyBudget ?? 0;
+            const ccy = (c.budgetCurrency as CurrencyCode) ?? currency;
+            const spentInCcy = ccy === currency ? spent : convert(spent, currency, ccy);
+            const pct = budget > 0 ? Math.min(spentInCcy / budget, 1) : 0;
+            const over = budget > 0 && spentInCcy > budget;
+            const warn = !over && budget > 0 && pct >= 0.7;
+            const barColor = over ? theme.expense : warn ? '#F97316' : '#10B981';
+            return (
+              <Pressable
+                key={c.id}
+                onPress={() => onPick(c)}
+                style={styles.gridTile}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  budget > 0
+                    ? `${c.name}, ${Math.round(pct * 100)} percent of budget used`
+                    : c.name
+                }
+              >
+                <View style={[styles.gridIcon, { backgroundColor: `${c.color}22` }]}>
+                  <MaterialCommunityIcons
+                    name={(c.icon as never) || 'tag-outline'}
+                    size={22}
+                    color={c.color}
+                  />
+                </View>
+                <Text style={styles.gridName} numberOfLines={1}>{c.name}</Text>
+                {budget > 0 && (
+                  <View style={styles.gridBarBg}>
+                    <View style={[styles.gridBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
+                  </View>
+                )}
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+      </View>
+    </View>
   );
 }
 
@@ -657,6 +870,7 @@ function TransferAcctRow({
   value,
   onPick,
   auto = false,
+  autoLabel,
 }: {
   label: string;
   accounts: { id: string; name: string; color: string }[];
@@ -664,9 +878,12 @@ function TransferAcctRow({
   onPick: (id: string) => void;
   /** True when the value came from a high-confidence Smart prediction
    *  rather than an explicit user pick. Renders with a dashed border +
-   *  small "auto" badge so the user knows this was guessed and can tap
-   *  to override. */
+   *  small badge so the user knows this was guessed and can tap to
+   *  override. */
   auto?: boolean;
+  /** Override the badge text. Defaults to "auto". Use "predicted" for
+   *  high-confidence model output and "last" for last-used fallback. */
+  autoLabel?: string;
 }) {
   const [open, setOpen] = useState(false);
   const acct = accounts.find((a) => a.id === value);
@@ -685,7 +902,7 @@ function TransferAcctRow({
       >
         <View style={[styles.transferDot, { backgroundColor: acct?.color ?? theme.text3 }]} />
         <Text style={styles.transferRowText}>{acct?.name ?? 'Pick account'}</Text>
-        {auto && <Text style={styles.autoBadge}>auto</Text>}
+        {auto && <Text style={styles.autoBadge}>{autoLabel ?? 'auto'}</Text>}
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
       <PickerSheet
@@ -708,12 +925,14 @@ function CategoryPickerRow({
   value,
   onPick,
   auto = false,
+  autoLabel,
 }: {
   label: string;
   cats: { id: string; name: string; color: string }[];
   value: string | null;
   onPick: (id: string) => void;
   auto?: boolean;
+  autoLabel?: string;
 }) {
   const [open, setOpen] = useState(false);
   const cat = value ? cats.find((c) => c.id === value) : undefined;
@@ -732,7 +951,7 @@ function CategoryPickerRow({
       >
         <View style={[styles.transferDot, { backgroundColor: cat?.color ?? theme.text3 }]} />
         <Text style={styles.transferRowText}>{cat?.name ?? 'Pick category'}</Text>
-        {auto && <Text style={styles.autoBadge}>auto</Text>}
+        {auto && <Text style={styles.autoBadge}>{autoLabel ?? 'auto'}</Text>}
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
       <PickerSheet
@@ -913,4 +1132,62 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   deleteText: { color: theme.expense, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  chipStrip: { gap: 8, paddingVertical: 4 },
+  catChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg2,
+  },
+  catChipMore: { borderStyle: 'dashed' },
+  catChipText: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.body },
+  budgetBarWrap: { gap: 4 },
+  budgetBarHead: { flexDirection: 'row', justifyContent: 'space-between' },
+  budgetBarLabel: { color: theme.text2, fontSize: sizes.xs },
+  budgetBarBg: { height: 5, backgroundColor: theme.bg3, borderRadius: 3, overflow: 'hidden' },
+  budgetBarFill: { height: '100%', borderRadius: 3 },
+  budgetWarn: { color: theme.expense, fontSize: sizes.xs, fontFamily: font.bodySemi },
+  gridOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'flex-end',
+    zIndex: 100,
+  },
+  gridSheet: {
+    backgroundColor: theme.bg1,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.lg,
+    maxHeight: '70%',
+  },
+  gridTitle: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold, marginBottom: spacing.sm },
+  gridScroll: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    paddingBottom: spacing.md,
+  },
+  gridTile: {
+    width: '30%',
+    aspectRatio: 1,
+    padding: spacing.sm,
+    backgroundColor: theme.bg2,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: theme.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+  },
+  gridIcon: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  gridName: { color: theme.text1, fontSize: 12 },
+  gridBarBg: { width: '80%', height: 3, backgroundColor: theme.bg3, borderRadius: 2, overflow: 'hidden' },
+  gridBarFill: { height: '100%', borderRadius: 2 },
 });

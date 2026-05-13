@@ -16,11 +16,14 @@ import { useReducedMotion } from '@/hooks/useReducedMotion';
 
 export interface FabButtonProps {
   onPress: () => void;
+  /** Phase 10w fast-entry: long-press opens the category grid for a
+   *  zero-typing add path. Falls back to onPress when omitted. */
+  onLongPress?: () => void;
   size?: number;
   icon?: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 }
 
-export function FabButton({ onPress, size = 56, icon = 'plus' }: FabButtonProps) {
+export function FabButton({ onPress, onLongPress, size = 56, icon = 'plus' }: FabButtonProps) {
   const pulse = useSharedValue(0);
   const haptics = useHaptics();
   const reducedMotion = useReducedMotion();
@@ -55,6 +58,8 @@ export function FabButton({ onPress, size = 56, icon = 'plus' }: FabButtonProps)
       <Pressable
         onPressIn={haptics.press}
         onPress={onPress}
+        onLongPress={onLongPress}
+        delayLongPress={350}
         style={({ pressed }) => [
           styles.fab,
           { width: size, height: size, borderRadius: size / 2 },
@@ -62,6 +67,7 @@ export function FabButton({ onPress, size = 56, icon = 'plus' }: FabButtonProps)
         ]}
         accessibilityRole="button"
         accessibilityLabel="Add transaction"
+        accessibilityHint={onLongPress ? 'Long-press for category grid' : undefined}
       >
         <MaterialCommunityIcons name={icon} size={size * 0.5} color={theme.bg} />
       </Pressable>

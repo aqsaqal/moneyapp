@@ -120,7 +120,10 @@ export default function TabsLayout() {
         <Tabs.Screen name="me" options={{ title: 'Me' }} />
       </Tabs>
       <View style={[styles.fabWrap, { bottom: fabBottom }]} pointerEvents="box-none">
-        <FabButton onPress={() => router.push('/add')} />
+        <FabButton
+          onPress={() => router.push('/add')}
+          onLongPress={() => router.push('/category-grid')}
+        />
       </View>
     </View>
   );
