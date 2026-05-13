@@ -164,8 +164,6 @@ function OverviewAndAccounts() {
                     isActive && { borderColor: theme.accent },
                   ]}
                   onPress={() => setEditing(a)}
-                  onLongPress={drag}
-                  delayLongPress={250}
                   accessibilityRole="button"
                   accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}${isArchived ? ', archived' : isExcluded ? ', excluded from total' : ''}, long-press the handle to reorder`}
                 >
@@ -201,13 +199,12 @@ function OverviewAndAccounts() {
                     {formatMoney(a.balance, ac)}
                   </Text>
                   <Pressable
-                    onLongPress={drag}
-                    delayLongPress={120}
+                    onPressIn={drag}
                     hitSlop={10}
                     style={styles.dragHandle}
                     accessibilityLabel="Drag to reorder"
                   >
-                    <MaterialCommunityIcons name="drag-horizontal-variant" size={20} color={theme.text3} />
+                    <MaterialCommunityIcons name="drag-horizontal-variant" size={22} color={theme.text2} />
                   </Pressable>
                 </Pressable>
               </ScaleDecorator>

@@ -85,14 +85,29 @@ export default function SettingsScreen() {
         <View style={{ width: 24 }} />
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <ProfilesSection />
-        <PreferencesSection />
+        {/* ───── PROFILE SETTINGS ───── */}
+        <Text style={settingsTopStyles.groupTitle}>PROFILE SETTINGS</Text>
+        <ActiveProfileRow />
+        <CurrencyRow />
         <CategoriesSection />
-        <SecuritySection />
+        <SmartSuggestionsRow />
         {/* Islamic flavor: mazhab + prayer-method rows. Generic: nothing. */}
         <FeatureSlots.MeTabExtras onNavigate={(p) => router.push(p as never)} />
+
+        {/* ───── APP SETTINGS ───── */}
+        <Text style={[settingsTopStyles.groupTitle, { marginTop: spacing.xl }]}>APP SETTINGS</Text>
+        <LanguageRow />
+        <ArabicNumeralsRow />
+        <AppearanceRow />
+        <SecuritySection />
+        <NotificationsRow />
         <DataSection />
-        <AboutSection />
+        <ProfileManagementSection />
+
+        {/* ───── ABOUT (sits below both groups) ───── */}
+        <View style={{ marginTop: spacing.xl }}>
+          <AboutSection />
+        </View>
         <View style={{ height: 60 }} />
       </ScrollView>
     </SafeAreaView>
@@ -149,14 +164,14 @@ type ProfileSheetMode =
   | { kind: 'edit'; profile: Profile }
   | { kind: 'create' };
 
-function ProfilesSection() {
+function ProfileManagementSection() {
   const t = useT();
   const profiles = useProfiles();
   const active = useActiveProfile();
   const [sheet, setSheet] = useState<ProfileSheetMode>({ kind: 'closed' });
 
   return (
-    <View style={{ gap: spacing.md, marginBottom: spacing.lg }}>
+    <View style={{ gap: spacing.md, marginTop: spacing.md, marginBottom: spacing.lg }}>
       <SectionHeader
         title={t('me.section.profiles')}
         onAdd={() => setSheet({ kind: 'create' })}
@@ -205,71 +220,102 @@ function ProfilesSection() {
   );
 }
 
-function PreferencesSection() {
+/** Phase 10w settings split:
+ *  Profile settings (per active profile):
+ *    - Active profile row (edit / delete)
+ *    - Default currency
+ *    - Categories link
+ *    - Frequent merchant chips toggle
+ *    - Islamic mazhab / prayer method (via FeatureSlots.MeTabExtras)
+ *  App settings (global):
+ *    - Language (+ Arabic-Indic numerals when locale starts with ar)
+ *    - Appearance
+ *    - Biometric lock
+ *    - Notifications (placeholder)
+ *    - Export data
+ *    - Profile management (switch / add list)
+ *    - About
+ *
+ *  Currency, smart-suggestions, categories, islamic prefs live under
+ *  Profile settings because they're conceptually scoped to the active
+ *  profile (kv storage is profile-keyed via the profile-scoped SQLite
+ *  DB; multi-profile users can have a personal-profile USD + business-
+ *  profile EUR setup, for example).
+ */
+
+function ActiveProfileRow() {
+  const t = useT();
+  const active = useActiveProfile();
+  const profiles = useProfiles();
+  const [sheet, setSheet] = useState<ProfileSheetMode>({ kind: 'closed' });
+  const hint =
+    profiles.length === 1
+      ? 'Active profile'
+      : `Active · ${profiles.length} profiles total`;
+  return (
+    <>
+      <SettingRow
+        label={active.name}
+        hint={hint}
+        icon={(active.icon as never) || 'account-circle-outline'}
+        iconColor={active.color}
+        onPress={() => setSheet({ kind: 'edit', profile: active })}
+      />
+      <ProfileSheet
+        visible={sheet.kind !== 'closed'}
+        mode={sheet.kind === 'closed' ? null : sheet}
+        onClose={() => setSheet({ kind: 'closed' })}
+      />
+      {/* unused locally, but keep the import alive for t() */}
+      {false && <Text>{t('common.edit')}</Text>}
+    </>
+  );
+}
+
+function CurrencyRow() {
   const t = useT();
   const [currency, setCurrency] = useState<CurrencyCode>((kv.get('currency') ?? 'USD') as CurrencyCode);
-  const [locale, setLocale] = useState<string>(kv.get('locale') ?? 'en-US');
-  const [arabicNum, setArabicNum] = useState<boolean>(kv.getBool('arabicNumerals', true));
-  const [themeMode, setThemeModeState] = useState<string>(kv.get('themeMode') ?? 'system');
-  const [picker, setPicker] = useState<null | 'lang' | 'currency' | 'theme'>(null);
-
-  const themeModeLabel = (() => {
-    switch (themeMode) {
-      case 'dark': return t('me.appearance.dark');
-      case 'light': return t('me.appearance.light');
-      default: return t('me.appearance.system');
-    }
-  })();
-
-  const localeLabel = LOCALES.find((l) => l.code === locale)?.name ?? locale;
-  const currencyLabel = `${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`;
-
+  const [open, setOpen] = useState(false);
+  const label = `${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`;
   return (
-    <View style={{ gap: spacing.md }}>
-      <SectionHeader title={t('me.section.preferences')} />
+    <>
+      <SettingRow
+        label={t('me.currency')}
+        hint={label}
+        icon="currency-usd"
+        onPress={() => setOpen(true)}
+      />
+      <CurrencyPickerSheet
+        visible={open}
+        title={t('me.currency')}
+        selected={currency}
+        onPick={(c) => {
+          const prev = currency;
+          kv.set('currency', c);
+          setCurrency(c);
+          if (prev !== c) maybeOfferBudgetConversion(prev, c);
+        }}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
+}
+
+function LanguageRow() {
+  const t = useT();
+  const [locale, setLocale] = useState<string>(kv.get('locale') ?? 'en-US');
+  const [open, setOpen] = useState(false);
+  const localeLabel = LOCALES.find((l) => l.code === locale)?.name ?? locale;
+  return (
+    <>
       <SettingRow
         label={t('me.language')}
         hint={localeLabel}
         icon="translate"
-        onPress={() => setPicker('lang')}
+        onPress={() => setOpen(true)}
       />
-      {locale.startsWith('ar') && (
-        <SettingRow
-          label={t('me.arabicNumerals')}
-          hint={t('me.arabicNumerals.hint')}
-          trailing={
-            <Pressable
-              onPress={() => {
-                const next = !arabicNum;
-                setArabicNum(next);
-                kv.setBool('arabicNumerals', next);
-              }}
-              style={[sectionStyles.toggle, arabicNum && { backgroundColor: theme.accent }]}
-              accessibilityRole="switch"
-              accessibilityState={{ checked: arabicNum }}
-            >
-              <View style={[sectionStyles.toggleKnob, arabicNum && { transform: [{ translateX: 18 }] }]} />
-            </Pressable>
-          }
-        />
-      )}
-      <SettingRow
-        label={t('me.currency')}
-        hint={currencyLabel}
-        icon="currency-usd"
-        onPress={() => setPicker('currency')}
-      />
-      <SettingRow
-        label={t('me.appearance')}
-        hint={themeModeLabel}
-        icon="palette-outline"
-        onPress={() => setPicker('theme')}
-      />
-
-      <SmartSuggestionsRow />
-
       <PickerSheet
-        visible={picker === 'lang'}
+        visible={open}
         title={t('me.language')}
         options={LOCALES.map<PickerOption<string>>((l) => ({
           value: l.code,
@@ -281,10 +327,60 @@ function PreferencesSection() {
           setLocale(code);
           changeLocale(code, t);
         }}
-        onClose={() => setPicker(null)}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
+}
+
+function ArabicNumeralsRow() {
+  const t = useT();
+  const [on, setOn] = useState<boolean>(kv.getBool('arabicNumerals', true));
+  const locale = kv.get('locale') ?? 'en-US';
+  if (!locale.startsWith('ar')) return null;
+  return (
+    <SettingRow
+      label={t('me.arabicNumerals')}
+      hint={t('me.arabicNumerals.hint')}
+      trailing={
+        <Pressable
+          onPress={() => {
+            const next = !on;
+            setOn(next);
+            kv.setBool('arabicNumerals', next);
+          }}
+          style={[sectionStyles.toggle, on && { backgroundColor: theme.accent }]}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: on }}
+        >
+          <View style={[sectionStyles.toggleKnob, on && { transform: [{ translateX: 18 }] }]} />
+        </Pressable>
+      }
+    />
+  );
+}
+
+function AppearanceRow() {
+  const t = useT();
+  const [themeMode, setThemeModeState] = useState<string>(kv.get('themeMode') ?? 'system');
+  const [open, setOpen] = useState(false);
+  const themeModeLabel = (() => {
+    switch (themeMode) {
+      case 'dark': return t('me.appearance.dark');
+      case 'light': return t('me.appearance.light');
+      default: return t('me.appearance.system');
+    }
+  })();
+  return (
+    <>
+      <SettingRow
+        label={t('me.appearance')}
+        hint={themeModeLabel}
+        icon="palette-outline"
+        onPress={() => setOpen(true)}
       />
       <PickerSheet
-        visible={picker === 'theme'}
+        visible={open}
         title={t('me.appearance')}
         options={[
           { value: 'system', label: t('me.appearance.system'), icon: 'theme-light-dark' },
@@ -321,23 +417,39 @@ function PreferencesSection() {
             ],
           );
         }}
-        onClose={() => setPicker(null)}
+        onClose={() => setOpen(false)}
       />
-      <CurrencyPickerSheet
-        visible={picker === 'currency'}
-        title={t('me.currency')}
-        selected={currency}
-        onPick={(c) => {
-          const prev = currency;
-          kv.set('currency', c);
-          setCurrency(c);
-          if (prev !== c) maybeOfferBudgetConversion(prev, c);
-        }}
-        onClose={() => setPicker(null)}
-      />
-    </View>
+    </>
   );
 }
+
+
+function NotificationsRow() {
+  // Placeholder until expo-notifications wiring lands (Round 2 follow-up).
+  // Toggle does nothing yet but the row reserves its place in the
+  // App settings flow so muscle memory doesn't shift later.
+  const t = useT();
+  void t;
+  return (
+    <SettingRow
+      label="Notifications"
+      hint="Bill reminders, budget alerts (coming soon)"
+      icon="bell-outline"
+      iconColor={theme.text2}
+    />
+  );
+}
+
+const settingsTopStyles = StyleSheet.create({
+  groupTitle: {
+    color: theme.text3,
+    fontSize: 11,
+    fontFamily: font.bodySemi,
+    letterSpacing: 1,
+    marginTop: spacing.md,
+    marginBottom: spacing.xs,
+  },
+});
 
 function SmartSuggestionsRow() {
   const t = useT();
