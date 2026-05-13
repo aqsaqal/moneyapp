@@ -18,7 +18,7 @@
   "tabs.home": "الرئيسية",
   "tabs.plan": "الخطة",
   "tabs.activity": "النشاط",
-  "tabs.me": "حسابي",
+  "tabs.me": "الحسابات",
 
   "home.recent": "آخر العمليات",
   "home.viewAll": "عرض الكل",
@@ -91,8 +91,10 @@
   "insights.netWorth.empty": "تابِع لبضعة أيام لتظهر اتجاهات صافي ثروتك.",
   "insights.netWorth.window": "آخر {n} يومًا",
 
-  "me.title": "حسابي",
+  "me.title": "الحسابات",
   "me.section.accounts": "الحسابات",
+  "me.section.overview": "نظرة عامة",
+  "me.section.profiles": "الملفات الشخصية",
   "me.section.preferences": "التفضيلات",
   "me.section.security": "الأمان",
   "me.section.data": "البيانات",

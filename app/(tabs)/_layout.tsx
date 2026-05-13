@@ -38,7 +38,7 @@ const TAB_ICONS: Record<
   index: 'home-variant',
   plan: 'calendar-check',
   activity: 'format-list-bulleted',
-  me: 'account-circle-outline',
+  me: 'wallet-outline',
 };
 const TAB_LABEL_KEYS: Record<string, string> = {
   index: 'tabs.home',

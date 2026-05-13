@@ -18,7 +18,7 @@
   "tabs.home": "Ana Sayfa",
   "tabs.plan": "Plan",
   "tabs.activity": "Hareketler",
-  "tabs.me": "Profil",
+  "tabs.me": "Hesaplar",
 
   "home.recent": "Son işlemler",
   "home.viewAll": "Tümünü gör",
@@ -91,8 +91,10 @@
   "insights.netWorth.empty": "Net varlık eğilimini görmek için birkaç gün takip et.",
   "insights.netWorth.window": "Son {n} gün",
 
-  "me.title": "Profil",
+  "me.title": "Hesaplar",
   "me.section.accounts": "Hesaplar",
+  "me.section.overview": "Genel bakış",
+  "me.section.profiles": "Profiller",
   "me.section.preferences": "Tercihler",
   "me.section.security": "Güvenlik",
   "me.section.data": "Veriler",

@@ -18,7 +18,7 @@
   "tabs.home": "Басты",
   "tabs.plan": "Жоспар",
   "tabs.activity": "Тарих",
-  "tabs.me": "Профиль",
+  "tabs.me": "Шоттар",
 
   "home.recent": "Соңғылары",
   "home.viewAll": "Барлығы",
@@ -94,8 +94,10 @@
   "insights.netWorth.empty": "Бірнеше күн қадағалаңыз — таза капиталдың трендін көресіз.",
   "insights.netWorth.window": "Соңғы {n} күн",
 
-  "me.title": "Профиль",
+  "me.title": "Шоттар",
   "me.section.accounts": "Шоттар",
+  "me.section.overview": "Шолу",
+  "me.section.profiles": "Профильдер",
   "me.section.preferences": "Параметрлер",
   "me.section.security": "Қауіпсіздік",
   "me.section.data": "Деректер",

@@ -18,7 +18,7 @@
   "tabs.home": "Главная",
   "tabs.plan": "План",
   "tabs.activity": "История",
-  "tabs.me": "Профиль",
+  "tabs.me": "Счета",
 
   "home.recent": "Недавние",
   "home.viewAll": "Все",
@@ -94,8 +94,10 @@
   "insights.netWorth.empty": "Понаблюдайте несколько дней, чтобы увидеть динамику капитала.",
   "insights.netWorth.window": "Последние {n} дн.",
 
-  "me.title": "Профиль",
+  "me.title": "Счета",
   "me.section.accounts": "Счета",
+  "me.section.overview": "Обзор",
+  "me.section.profiles": "Профили",
   "me.section.preferences": "Настройки",
   "me.section.security": "Безопасность",
   "me.section.data": "Данные",

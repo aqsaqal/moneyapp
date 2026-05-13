@@ -27,7 +27,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { theme, spacing, font, sizes } from '@/constants/theme';
+import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import {
   SectionHeader,
   SettingRow,
@@ -54,6 +54,9 @@ import { APP_NAME } from '@/constants/flavor';
 import { PRIVACY_POLICY_URL, TERMS_URL, SUPPORT_EMAIL } from '@/constants/legal';
 import { useT } from '@/hooks/useT';
 import { setLocale as setI18nLocale, type LocaleCode } from '@/utils/i18n';
+import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
+import { ProfileSheet } from '@/components/ProfileSheet';
+import type { Profile } from '@/utils/profiles';
 
 const LOCALES = [
   { code: 'en-US', name: 'English', rtl: false },
@@ -82,6 +85,7 @@ export default function SettingsScreen() {
         <View style={{ width: 24 }} />
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+        <ProfilesSection />
         <PreferencesSection />
         <CategoriesSection />
         <SecuritySection />
@@ -132,6 +136,72 @@ function changeLocale(next: string, tFn: (k: string) => string) {
         },
       },
     ],
+  );
+}
+
+// ---- Profiles ----
+// Moved from Me/Accounts (Phase 10v): profiles are configuration, not
+// identity data the user manages daily. They live above Preferences here.
+
+type ProfileSheetMode =
+  | { kind: 'closed' }
+  | { kind: 'switch'; profiles: Profile[]; activeId: string }
+  | { kind: 'edit'; profile: Profile }
+  | { kind: 'create' };
+
+function ProfilesSection() {
+  const t = useT();
+  const profiles = useProfiles();
+  const active = useActiveProfile();
+  const [sheet, setSheet] = useState<ProfileSheetMode>({ kind: 'closed' });
+
+  return (
+    <View style={{ gap: spacing.md, marginBottom: spacing.lg }}>
+      <SectionHeader
+        title={t('me.section.profiles')}
+        onAdd={() => setSheet({ kind: 'create' })}
+        addLabel={t('common.add')}
+      />
+      <View style={{ gap: spacing.sm }}>
+        {profiles.map((p) => (
+          <Pressable
+            key={p.id}
+            onPress={() => setSheet({ kind: 'edit', profile: p })}
+            style={[
+              styles.profileRow,
+              p.id === active.id && { borderColor: p.color },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel={`${p.name}${p.id === active.id ? ', active' : ''}`}
+          >
+            <View style={[styles.profileIcon, { backgroundColor: `${p.color}22` }]}>
+              <MaterialCommunityIcons name={p.icon as never} size={20} color={p.color} />
+            </View>
+            <Text style={styles.profileName}>{p.name}</Text>
+            {p.id === active.id ? (
+              <Text style={[styles.profileActive, { color: p.color }]}>active</Text>
+            ) : (
+              <Pressable
+                hitSlop={10}
+                onPress={(e) => {
+                  e.stopPropagation();
+                  setSheet({ kind: 'switch', profiles, activeId: active.id });
+                }}
+                accessibilityLabel="Switch"
+              >
+                <MaterialCommunityIcons name="swap-horizontal" size={18} color={theme.text2} />
+              </Pressable>
+            )}
+          </Pressable>
+        ))}
+      </View>
+
+      <ProfileSheet
+        visible={sheet.kind !== 'closed'}
+        mode={sheet.kind === 'closed' ? null : sheet}
+        onClose={() => setSheet({ kind: 'closed' })}
+      />
+    </View>
   );
 }
 
@@ -478,6 +548,25 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xxl,
     gap: spacing.md,
   },
+  profileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+  },
+  profileIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileName: { color: theme.text1, fontSize: sizes.md, flex: 1 },
+  profileActive: { fontSize: sizes.xs, fontFamily: font.bodySemi, textTransform: 'lowercase' },
   disclaimer: {
     color: theme.text3,
     fontSize: sizes.xs,

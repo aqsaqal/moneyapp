@@ -18,7 +18,7 @@
   "tabs.home": "Home",
   "tabs.plan": "Plan",
   "tabs.activity": "Activity",
-  "tabs.me": "Me",
+  "tabs.me": "Accounts",
 
   "home.recent": "Recent",
   "home.viewAll": "View all",
@@ -94,8 +94,10 @@
   "insights.netWorth.empty": "Track for a few days to see your net worth trend.",
   "insights.netWorth.window": "Last {n} days",
 
-  "me.title": "Me",
+  "me.title": "Accounts",
   "me.section.accounts": "Accounts",
+  "me.section.overview": "Overview",
+  "me.section.profiles": "Profiles",
   "me.section.preferences": "Preferences",
   "me.section.security": "Security",
   "me.section.data": "Data",

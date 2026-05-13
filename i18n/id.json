@@ -18,7 +18,7 @@
   "tabs.home": "Beranda",
   "tabs.plan": "Rencana",
   "tabs.activity": "Aktivitas",
-  "tabs.me": "Saya",
+  "tabs.me": "Akun",
 
   "home.recent": "Terbaru",
   "home.viewAll": "Lihat semua",
@@ -91,8 +91,10 @@
   "insights.netWorth.empty": "Lacak beberapa hari untuk melihat tren kekayaan bersihmu.",
   "insights.netWorth.window": "{n} hari terakhir",
 
-  "me.title": "Saya",
+  "me.title": "Akun",
   "me.section.accounts": "Akun",
+  "me.section.overview": "Ringkasan",
+  "me.section.profiles": "Profil",
   "me.section.preferences": "Preferensi",
   "me.section.security": "Keamanan",
   "me.section.data": "Data",

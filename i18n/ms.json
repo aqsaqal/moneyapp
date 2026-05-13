@@ -18,7 +18,7 @@
   "tabs.home": "Utama",
   "tabs.plan": "Rancangan",
   "tabs.activity": "Aktiviti",
-  "tabs.me": "Saya",
+  "tabs.me": "Akaun",
 
   "home.recent": "Terkini",
   "home.viewAll": "Lihat semua",
@@ -91,8 +91,10 @@
   "insights.netWorth.empty": "Jejaki beberapa hari untuk melihat trend nilai bersih anda.",
   "insights.netWorth.window": "{n} hari lepas",
 
-  "me.title": "Saya",
+  "me.title": "Akaun",
   "me.section.accounts": "Akaun",
+  "me.section.overview": "Gambaran",
+  "me.section.profiles": "Profil",
   "me.section.preferences": "Pilihan",
   "me.section.security": "Keselamatan",
   "me.section.data": "Data",
