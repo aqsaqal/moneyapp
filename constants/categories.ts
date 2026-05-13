@@ -54,33 +54,63 @@ interface CustomRow {
   name: string;
   icon: string;
   color: string;
-  type: 'expense' | 'income';
+  type: 'expense' | 'income' | 'both';
+  archived: number | null;
+  is_pinned: number | null;
+  sort_order: number | null;
 }
 
-function readCustoms(type: 'expense' | 'income'): CategoryDef[] {
+function readCustoms(type: 'expense' | 'income'): CustomRow[] {
   try {
     const raw = getRawDB();
-    const rows = raw.getAllSync(
-      `SELECT id, name, icon, color, type FROM custom_categories WHERE type = ? ORDER BY created_at`,
+    return raw.getAllSync(
+      `SELECT id, name, icon, color, type, archived, is_pinned, sort_order
+         FROM custom_categories
+        WHERE type = ? OR type = 'both'
+        ORDER BY is_pinned DESC, sort_order, created_at`,
       [type],
     ) as CustomRow[];
-    return rows.map((r) => ({ id: r.id, name: r.name, icon: r.icon, color: r.color }));
   } catch {
     return [];
   }
 }
 
+// Categories that exist for system reasons but should never appear in a
+// manual category picker. `adjustment` is reserved for the balance-
+// reconciliation flow.
+const HIDDEN_FROM_MANUAL_PICKERS = new Set(['adjustment']);
+
 export function allExpenseCategories(): CategoryDef[] {
   // Order: customs first (so they shadow seeded by id) → seeded → islamic.
   const customs = readCustoms('expense');
-  const seededFiltered = EXPENSE_CATEGORIES.filter((c) => !customs.some((x) => x.id === c.id));
-  return [...customs, ...seededFiltered, ...FeatureSlots.CategoryExtras.expense];
+  const liveCustoms = customs
+    .filter((c) => c.archived !== 1 && !HIDDEN_FROM_MANUAL_PICKERS.has(c.id))
+    .map<CategoryDef>((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color }));
+  const shadowed = new Set(customs.map((c) => c.id));
+  const archivedIds = new Set(customs.filter((c) => c.archived === 1).map((c) => c.id));
+  const seededFiltered = EXPENSE_CATEGORIES.filter(
+    (c) =>
+      !shadowed.has(c.id) &&
+      !archivedIds.has(c.id) &&
+      !HIDDEN_FROM_MANUAL_PICKERS.has(c.id),
+  );
+  return [...liveCustoms, ...seededFiltered, ...FeatureSlots.CategoryExtras.expense];
 }
 
 export function allIncomeCategories(): CategoryDef[] {
   const customs = readCustoms('income');
-  const seededFiltered = INCOME_CATEGORIES.filter((c) => !customs.some((x) => x.id === c.id));
-  return [...customs, ...seededFiltered, ...FeatureSlots.CategoryExtras.income];
+  const liveCustoms = customs
+    .filter((c) => c.archived !== 1 && !HIDDEN_FROM_MANUAL_PICKERS.has(c.id))
+    .map<CategoryDef>((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color }));
+  const shadowed = new Set(customs.map((c) => c.id));
+  const archivedIds = new Set(customs.filter((c) => c.archived === 1).map((c) => c.id));
+  const seededFiltered = INCOME_CATEGORIES.filter(
+    (c) =>
+      !shadowed.has(c.id) &&
+      !archivedIds.has(c.id) &&
+      !HIDDEN_FROM_MANUAL_PICKERS.has(c.id),
+  );
+  return [...liveCustoms, ...seededFiltered, ...FeatureSlots.CategoryExtras.income];
 }
 
 const FALLBACK: CategoryDef = { id: 'unknown', name: 'Other', icon: 'MoreHorizontal', color: '#8888AA' };

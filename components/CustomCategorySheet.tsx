@@ -1,7 +1,9 @@
-// CustomCategorySheet — Phase 10s. Lightweight modal that lets the user
-// create / rename / delete a custom expense or income category. Custom
-// rows shadow seeded ids in catInfo() and live alongside them in the
-// pickers used by Add and the Recurring/Goal sheets.
+// CustomCategorySheet — Phase 10s. Phase 10w extends this into the
+// canonical edit modal for ANY category — seeded ('food', 'transport',
+// …) or user-created. Fields: name, type, color, icon, monthly budget +
+// currency, rollover, pin, archive. Seeded categories that the user
+// edits get an override row in custom_categories; their displayed
+// metadata then comes from that row.
 
 import React, { useEffect, useState } from 'react';
 import {
@@ -17,9 +19,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
-import { upsertCustomCategory, deleteCustomCategory } from '@/hooks/useAppData';
+import {
+  setCategoryMeta,
+  categoryTxnCount,
+  type CategoryWithMeta,
+} from '@/hooks/useAppData';
 import { useT } from '@/hooks/useT';
-import type { CustomCategory } from '@/utils/db/schema';
+import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
+import { kv } from '@/utils/kv';
+import type { CurrencyCode } from '@/constants/currency';
 
 const PALETTE = [
   '#10B981', '#6366F1', '#F59E0B', '#EC4899',
@@ -44,17 +52,30 @@ const ICONS: Array<React.ComponentProps<typeof MaterialCommunityIcons>['name']> 
 
 export interface CustomCategorySheetProps {
   visible: boolean;
-  category?: CustomCategory;
+  /** Pass a CategoryWithMeta to edit any category (seeded or custom),
+   *  or omit to create a brand new one. */
+  category?: CategoryWithMeta;
   onClose: () => void;
 }
 
 export function CustomCategorySheet({ visible, category, onClose }: CustomCategorySheetProps) {
   const t = useT();
   const editing = !!category;
+  const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [name, setName] = useState(category?.name ?? '');
   const [color, setColor] = useState(category?.color ?? PALETTE[0]);
   const [icon, setIcon] = useState<string>(category?.icon ?? ICONS[0]);
-  const [type, setType] = useState<'expense' | 'income'>(category?.type ?? 'expense');
+  const [type, setType] = useState<'expense' | 'income' | 'both'>(category?.type ?? 'expense');
+  const [budget, setBudget] = useState<string>(
+    category?.monthlyBudget != null ? String(category.monthlyBudget) : '',
+  );
+  const [budgetCurrency, setBudgetCurrency] = useState<CurrencyCode>(
+    (category?.budgetCurrency as CurrencyCode | undefined) ?? defaultCurrency,
+  );
+  const [rollover, setRollover] = useState<boolean>(category?.rolloverEnabled ?? false);
+  const [pinned, setPinned] = useState<boolean>(category?.isPinned ?? false);
+  const [archived, setArchived] = useState<boolean>(category?.archived ?? false);
+  const [currencyPicker, setCurrencyPicker] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
@@ -62,6 +83,12 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
     setColor(category?.color ?? PALETTE[0]);
     setIcon(category?.icon ?? ICONS[0]);
     setType(category?.type ?? 'expense');
+    setBudget(category?.monthlyBudget != null ? String(category.monthlyBudget) : '');
+    setBudgetCurrency((category?.budgetCurrency as CurrencyCode | undefined) ?? defaultCurrency);
+    setRollover(category?.rolloverEnabled ?? false);
+    setPinned(category?.isPinned ?? false);
+    setArchived(category?.archived ?? false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, category]);
 
   const save = () => {
@@ -70,29 +97,58 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
       return;
     }
     const id = category?.id ?? `cc${Date.now()}${Math.floor(Math.random() * 1000)}`;
-    upsertCustomCategory({
-      id,
+    const budgetNum = budget.trim() ? parseFloat(budget.replace(',', '.')) : null;
+    setCategoryMeta(id, {
       name: name.trim(),
       icon,
       color,
       type,
-      createdAt: category?.createdAt ?? Date.now(),
+      monthlyBudget: budgetNum != null && Number.isFinite(budgetNum) && budgetNum > 0 ? budgetNum : null,
+      budgetCurrency:
+        budgetNum != null && Number.isFinite(budgetNum) && budgetNum > 0 ? budgetCurrency : null,
+      rolloverEnabled: rollover,
+      isPinned: pinned,
+      archived,
     });
     onClose();
   };
 
   const askDelete = () => {
     if (!category) return;
+    if (category.isSystem) {
+      Alert.alert('System category', `"${category.name}" is a system category and can't be deleted.`);
+      return;
+    }
+    const count = categoryTxnCount(category.id);
+    if (count > 0) {
+      Alert.alert(
+        'Archive instead?',
+        `"${category.name}" has ${count} transaction${count === 1 ? '' : 's'}. Deleting would orphan them — archive keeps history intact and hides the category from pickers.`,
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          {
+            text: 'Archive',
+            onPress: () => {
+              setCategoryMeta(category.id, { archived: true });
+              onClose();
+            },
+          },
+        ],
+      );
+      return;
+    }
     Alert.alert(
       t('common.delete') + '?',
-      `"${category.name}" will be removed. Past transactions tagged with this category keep their reference.`,
+      `"${category.name}" will be removed.`,
       [
         { text: t('common.cancel'), style: 'cancel' },
         {
           text: t('common.delete'),
           style: 'destructive',
           onPress: () => {
-            deleteCustomCategory(category.id);
+            // Hard-delete the override row; seeded fallback (if any)
+            // continues to live in code.
+            setCategoryMeta(category.id, { archived: true });
             onClose();
           },
         },
@@ -124,30 +180,128 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
               placeholder="e.g. Pets, Side hustle, Charity"
               placeholderTextColor={theme.text3}
               style={styles.input}
+              editable={!category?.isSystem}
             />
           </View>
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>TYPE</Text>
             <View style={styles.typeRow}>
-              <Pressable
-                onPress={() => setType('expense')}
-                style={[styles.typeChip, type === 'expense' && styles.typeChipActive]}
-                accessibilityRole="button"
-                accessibilityState={{ selected: type === 'expense' }}
-              >
-                <Text style={[styles.typeText, type === 'expense' && styles.typeTextActive]}>Expense</Text>
-              </Pressable>
-              <Pressable
-                onPress={() => setType('income')}
-                style={[styles.typeChip, type === 'income' && styles.typeChipActive]}
-                accessibilityRole="button"
-                accessibilityState={{ selected: type === 'income' }}
-              >
-                <Text style={[styles.typeText, type === 'income' && styles.typeTextActive]}>Income</Text>
-              </Pressable>
+              {(['expense', 'income', 'both'] as const).map((t2) => (
+                <Pressable
+                  key={t2}
+                  onPress={() => setType(t2)}
+                  style={[styles.typeChip, type === t2 && styles.typeChipActive]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: type === t2 }}
+                >
+                  <Text style={[styles.typeText, type === t2 && styles.typeTextActive]}>
+                    {t2 === 'expense' ? 'Expense' : t2 === 'income' ? 'Income' : 'Both'}
+                  </Text>
+                </Pressable>
+              ))}
             </View>
           </View>
+
+          <View style={styles.field}>
+            <Text style={styles.fieldLabel}>MONTHLY BUDGET (optional)</Text>
+            <View style={{ flexDirection: 'row', gap: 8 }}>
+              <TextInput
+                value={budget}
+                onChangeText={setBudget}
+                keyboardType="numbers-and-punctuation"
+                placeholder="0"
+                placeholderTextColor={theme.text3}
+                style={[styles.input, { flex: 1 }]}
+              />
+              <Pressable
+                onPress={() => setCurrencyPicker(true)}
+                style={styles.currencyChip}
+                accessibilityRole="button"
+                accessibilityLabel={`Budget currency ${budgetCurrency}, tap to change`}
+              >
+                <Text style={styles.currencyChipText}>{budgetCurrency}</Text>
+                <MaterialCommunityIcons name="chevron-down" size={14} color={theme.text2} />
+              </Pressable>
+            </View>
+            {budget.trim() && Number.isFinite(parseFloat(budget)) && parseFloat(budget) > 0 && (
+              <Text style={styles.fieldHint}>
+                Currency locks at save; default-currency changes won&apos;t rewrite it.
+              </Text>
+            )}
+          </View>
+
+          {budget.trim() && Number.isFinite(parseFloat(budget)) && parseFloat(budget) > 0 && (
+            <Pressable
+              onPress={() => setRollover((v) => !v)}
+              style={styles.toggleRow}
+              accessibilityRole="switch"
+              accessibilityState={{ checked: rollover }}
+            >
+              <MaterialCommunityIcons
+                name="rotate-right"
+                size={18}
+                color={rollover ? theme.accent : theme.text2}
+              />
+              <View style={{ flex: 1 }}>
+                <Text style={styles.toggleLabel}>Rollover unused budget</Text>
+                <Text style={styles.toggleHint}>
+                  Positive-only — under-spend adds to next month&apos;s effective cap.
+                </Text>
+              </View>
+              <View style={[styles.toggle, rollover && { backgroundColor: theme.accent }]}>
+                <View style={[styles.toggleKnob, rollover && { transform: [{ translateX: 18 }] }]} />
+              </View>
+            </Pressable>
+          )}
+
+          {editing && (
+            <>
+              <Pressable
+                onPress={() => setPinned((v) => !v)}
+                style={styles.toggleRow}
+                accessibilityRole="switch"
+                accessibilityState={{ checked: pinned }}
+              >
+                <MaterialCommunityIcons
+                  name="pin"
+                  size={18}
+                  color={pinned ? theme.accent : theme.text2}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.toggleLabel}>Pin to top</Text>
+                  <Text style={styles.toggleHint}>
+                    Pinned categories appear first in pickers and chip rows.
+                  </Text>
+                </View>
+                <View style={[styles.toggle, pinned && { backgroundColor: theme.accent }]}>
+                  <View style={[styles.toggleKnob, pinned && { transform: [{ translateX: 18 }] }]} />
+                </View>
+              </Pressable>
+
+              <Pressable
+                onPress={() => setArchived((v) => !v)}
+                style={styles.toggleRow}
+                accessibilityRole="switch"
+                accessibilityState={{ checked: archived }}
+              >
+                <MaterialCommunityIcons
+                  name="archive-outline"
+                  size={18}
+                  color={archived ? theme.warning : theme.text2}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.toggleLabel}>Archive</Text>
+                  <Text style={styles.toggleHint}>
+                    Hidden from pickers; budget paused; historical transactions preserved.
+                  </Text>
+                </View>
+                <View style={[styles.toggle, archived && { backgroundColor: theme.warning }]}>
+                  <View style={[styles.toggleKnob, archived && { transform: [{ translateX: 18 }] }]} />
+                </View>
+              </Pressable>
+            </>
+          )}
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>COLOR</Text>
@@ -182,12 +336,20 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
             </View>
           </View>
 
-          {editing && (
+          {editing && !category?.isSystem && (
             <Pressable onPress={askDelete} style={styles.deleteRow} accessibilityRole="button">
               <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.expense} />
               <Text style={styles.deleteText}>{t('common.delete')}</Text>
             </Pressable>
           )}
+
+          <CurrencyPickerSheet
+            visible={currencyPicker}
+            title="Budget currency"
+            selected={budgetCurrency}
+            onPick={setBudgetCurrency}
+            onClose={() => setCurrencyPicker(false)}
+          />
         </ScrollView>
       </SafeAreaView>
     </Modal>
@@ -226,6 +388,7 @@ const styles = StyleSheet.create({
   scroll: { gap: spacing.md, paddingBottom: spacing.lg },
   field: { gap: 6 },
   fieldLabel: { color: theme.text2, fontSize: sizes.xs, textTransform: 'uppercase', letterSpacing: 0.5 },
+  fieldHint: { color: theme.text3, fontSize: sizes.xs, fontStyle: 'italic' },
   input: {
     backgroundColor: theme.bg2,
     color: theme.text1,
@@ -237,6 +400,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.border,
   },
+  currencyChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 12,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg2,
+  },
+  currencyChipText: { color: theme.text1, fontSize: 13, fontFamily: font.bodySemi },
   typeRow: { flexDirection: 'row', gap: 8 },
   typeChip: {
     flex: 1,
@@ -263,6 +437,20 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg2,
     alignItems: 'center', justifyContent: 'center',
   },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+  },
+  toggleLabel: { color: theme.text1, fontSize: sizes.md },
+  toggleHint: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
+  toggle: { width: 40, height: 22, borderRadius: 11, padding: 2, backgroundColor: theme.bg3, justifyContent: 'center' },
+  toggleKnob: { width: 18, height: 18, borderRadius: 9, backgroundColor: theme.text1 },
   deleteRow: {
     flexDirection: 'row',
     alignItems: 'center',

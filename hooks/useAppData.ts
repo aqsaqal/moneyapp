@@ -37,6 +37,8 @@ import { seedIfEmpty } from '@/utils/db/seed';
 import { onProfileChange } from '@/utils/profiles';
 import { snapshotTodayIfMissing } from '@/utils/netWorthSnapshot';
 import { FX_TTL_MS, oldestFetchedAt, refreshRates } from '@/utils/fx';
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '@/constants/categories';
+import { kv } from '@/utils/kv';
 
 // Single process-wide version counter that all hooks watch. Bumped on every
 // mutation so useEffect-driven re-queries fire.
@@ -81,6 +83,10 @@ export function bootAppData(): Promise<void> {
     bootPromise = (async () => {
       getDB(); // opens + creates tables
       await seedIfEmpty();
+      // Phase 10w: one-time migration — copy any pre-existing standalone
+      // `budgets` rows onto the matching custom_categories row so the
+      // category becomes the single source of truth.
+      try { migrateBudgetsToCategories(); } catch { /* idempotent; safe to ignore */ }
       // Phase 10p: capture today's net-worth snapshot once per app launch.
       // No-op when today's row already exists.
       try { snapshotTodayIfMissing(); } catch { /* never block boot on this */ }
@@ -195,10 +201,191 @@ export function useAccounts(opts: UseAccountsOpts = {}): Account[] {
   }, [version, includeArchived]);
 }
 
+/** Phase 10w: budgets are now stored on custom_categories.monthly_budget.
+ *  Legacy callers still get { id, category, limit } via this synth view. */
 export function useBudgets(): Budget[] {
   useVersion();
-  const db = getDB();
-  return useMemo(() => db.select().from(budgets).all(), [version]);
+  const raw = getRawDB();
+  return useMemo(() => {
+    try {
+      const rows = raw.getAllSync(
+        `SELECT id, monthly_budget AS lim FROM custom_categories
+          WHERE monthly_budget IS NOT NULL
+            AND (archived IS NULL OR archived != 1)`,
+      ) as Array<{ id: string; lim: number }>;
+      return rows.map((r) => ({ id: r.id, category: r.id, limit: r.lim }));
+    } catch {
+      return [];
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
+}
+
+/** Read all categories (seeded + customs) with their monthly_budget /
+ *  budget_currency / pinned / archived metadata. Surfaced here so the
+ *  Settings → Categories management surface and Plan → Budgets
+ *  dashboard share the same source of truth. */
+export interface CategoryWithMeta {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  type: 'expense' | 'income' | 'both';
+  isSystem: boolean;
+  isPinned: boolean;
+  archived: boolean;
+  monthlyBudget: number | null;
+  budgetCurrency: string | null;
+  rolloverEnabled: boolean;
+  sortOrder: number;
+  budgetAlertsSent: string | null;
+}
+
+export function useCategoriesWithMeta(): CategoryWithMeta[] {
+  useVersion();
+  const raw = getRawDB();
+  return useMemo(() => {
+    // Start with seeded categories so even uncustomized ones show up in
+    // Settings; merge custom_categories rows on top (shadow by id).
+    const out = new Map<string, CategoryWithMeta>();
+    for (const c of EXPENSE_CATEGORIES) {
+      out.set(c.id, {
+        id: c.id, name: c.name, icon: c.icon, color: c.color, type: 'expense',
+        isSystem: c.id === 'other' || c.id === 'adjustment',
+        isPinned: false, archived: false,
+        monthlyBudget: null, budgetCurrency: null, rolloverEnabled: false,
+        sortOrder: 0, budgetAlertsSent: null,
+      });
+    }
+    for (const c of INCOME_CATEGORIES) {
+      const existing = out.get(c.id);
+      if (existing) {
+        existing.type = 'both';
+      } else {
+        out.set(c.id, {
+          id: c.id, name: c.name, icon: c.icon, color: c.color, type: 'income',
+          isSystem: c.id === 'other_in' || c.id === 'adjustment',
+          isPinned: false, archived: false,
+          monthlyBudget: null, budgetCurrency: null, rolloverEnabled: false,
+          sortOrder: 0, budgetAlertsSent: null,
+        });
+      }
+    }
+    try {
+      const rows = raw.getAllSync(
+        `SELECT id, name, icon, color, type, is_system, is_pinned, sort_order,
+                archived, monthly_budget, budget_currency, rollover_enabled,
+                budget_alerts_sent
+           FROM custom_categories`,
+      ) as Array<{
+        id: string; name: string; icon: string; color: string; type: string;
+        is_system: number | null; is_pinned: number | null;
+        sort_order: number | null; archived: number | null;
+        monthly_budget: number | null; budget_currency: string | null;
+        rollover_enabled: number | null; budget_alerts_sent: string | null;
+      }>;
+      for (const r of rows) {
+        out.set(r.id, {
+          id: r.id, name: r.name, icon: r.icon, color: r.color,
+          type: (r.type as 'expense' | 'income' | 'both'),
+          isSystem: r.is_system === 1,
+          isPinned: r.is_pinned === 1,
+          archived: r.archived === 1,
+          monthlyBudget: r.monthly_budget,
+          budgetCurrency: r.budget_currency,
+          rolloverEnabled: r.rollover_enabled === 1,
+          sortOrder: r.sort_order ?? 0,
+          budgetAlertsSent: r.budget_alerts_sent,
+        });
+      }
+    } catch {
+      /* swallow */
+    }
+    return Array.from(out.values());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
+}
+
+/** Persist budget + flags onto a category. Inserts an override row when
+ *  the category is seeded-only and has no existing custom_categories row. */
+export function setCategoryMeta(
+  id: string,
+  patch: Partial<{
+    isPinned: boolean;
+    archived: boolean;
+    monthlyBudget: number | null;
+    budgetCurrency: string | null;
+    rolloverEnabled: boolean;
+    sortOrder: number;
+    name: string;
+    icon: string;
+    color: string;
+    type: 'expense' | 'income' | 'both';
+  }>,
+): void {
+  const raw = getRawDB();
+  // Look up the seeded defaults so a fresh insert has icon/color/etc.
+  const seededExpense = EXPENSE_CATEGORIES.find((c) => c.id === id);
+  const seededIncome = INCOME_CATEGORIES.find((c) => c.id === id);
+  const seeded = seededExpense ?? seededIncome;
+  const existing = raw.getFirstSync(
+    `SELECT id FROM custom_categories WHERE id = ?`,
+    [id],
+  ) as { id: string } | undefined;
+  if (!existing) {
+    raw.runSync(
+      `INSERT INTO custom_categories
+         (id, name, icon, color, type, created_at, is_pinned, archived,
+          monthly_budget, budget_currency, rollover_enabled, sort_order)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        patch.name ?? seeded?.name ?? id,
+        patch.icon ?? seeded?.icon ?? 'MoreHorizontal',
+        patch.color ?? seeded?.color ?? '#8888AA',
+        patch.type ?? (seededIncome && !seededExpense ? 'income' : 'expense'),
+        Date.now(),
+        patch.isPinned ? 1 : 0,
+        patch.archived ? 1 : 0,
+        patch.monthlyBudget ?? null,
+        patch.budgetCurrency ?? null,
+        patch.rolloverEnabled ? 1 : 0,
+        patch.sortOrder ?? 0,
+      ],
+    );
+  } else {
+    const sets: string[] = [];
+    const args: Array<string | number | null> = [];
+    const push = (col: string, val: string | number | null) => {
+      sets.push(`${col} = ?`);
+      args.push(val);
+    };
+    if (patch.name != null) push('name', patch.name);
+    if (patch.icon != null) push('icon', patch.icon);
+    if (patch.color != null) push('color', patch.color);
+    if (patch.type != null) push('type', patch.type);
+    if (patch.isPinned != null) push('is_pinned', patch.isPinned ? 1 : 0);
+    if (patch.archived != null) push('archived', patch.archived ? 1 : 0);
+    if ('monthlyBudget' in patch) push('monthly_budget', patch.monthlyBudget ?? null);
+    if ('budgetCurrency' in patch) push('budget_currency', patch.budgetCurrency ?? null);
+    if (patch.rolloverEnabled != null) push('rollover_enabled', patch.rolloverEnabled ? 1 : 0);
+    if (patch.sortOrder != null) push('sort_order', patch.sortOrder);
+    if (sets.length === 0) return;
+    args.push(id);
+    raw.runSync(`UPDATE custom_categories SET ${sets.join(', ')} WHERE id = ?`, args);
+  }
+  bump();
+}
+
+/** Count expense transactions referencing this category (any date).
+ *  Used by the delete-with-archive-instead guard. */
+export function categoryTxnCount(id: string): number {
+  const raw = getRawDB();
+  const row = raw.getFirstSync(
+    `SELECT COUNT(*) AS c FROM transactions WHERE category = ?`,
+    [id],
+  ) as { c: number } | undefined;
+  return row?.c ?? 0;
 }
 
 export function useRecurring(): Recurring[] {
@@ -523,7 +710,63 @@ export function setHalalStatus(id: string, status: Transaction['halalStatus']): 
   updateTransaction(id, { halalStatus: status });
 }
 
-// ---- Budgets ----
+// ---- Phase 10w: budgets→categories migration ----
+
+/** Copy any rows from the legacy standalone `budgets` table onto the
+ *  matching custom_categories row. Idempotent: skips when the target
+ *  row already has monthly_budget set, and deletes the legacy row only
+ *  after the merge succeeds. Safe to run on every boot. */
+function migrateBudgetsToCategories() {
+  const raw = getRawDB();
+  let legacy: Array<{ id: string; category: string; limit: number }> = [];
+  try {
+    legacy = raw.getAllSync(`SELECT id, category, "limit" FROM budgets`) as typeof legacy;
+  } catch {
+    return;
+  }
+  if (legacy.length === 0) return;
+  const defaultCurrency = kv.get('currency') ?? 'USD';
+
+  const seededLookup = new Map<string, { name: string; icon: string; color: string; type: 'expense' | 'income' }>();
+  for (const c of EXPENSE_CATEGORIES) {
+    seededLookup.set(c.id, { name: c.name, icon: c.icon, color: c.color, type: 'expense' });
+  }
+  for (const c of INCOME_CATEGORIES) {
+    if (!seededLookup.has(c.id)) {
+      seededLookup.set(c.id, { name: c.name, icon: c.icon, color: c.color, type: 'income' });
+    }
+  }
+
+  raw.withTransactionSync(() => {
+    for (const b of legacy) {
+      const existing = raw.getFirstSync(
+        `SELECT id, monthly_budget FROM custom_categories WHERE id = ?`,
+        [b.category],
+      ) as { id: string; monthly_budget: number | null } | undefined;
+      if (existing) {
+        if (existing.monthly_budget == null) {
+          raw.runSync(
+            `UPDATE custom_categories SET monthly_budget = ?, budget_currency = ? WHERE id = ?`,
+            [b.limit, defaultCurrency, b.category],
+          );
+        }
+      } else {
+        const seeded = seededLookup.get(b.category);
+        const name = seeded?.name ?? b.category;
+        const icon = seeded?.icon ?? 'MoreHorizontal';
+        const color = seeded?.color ?? '#8888AA';
+        const type = seeded?.type ?? 'expense';
+        raw.runSync(
+          `INSERT INTO custom_categories (id, name, icon, color, type, created_at, monthly_budget, budget_currency)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+          [b.category, name, icon, color, type, Date.now(), b.limit, defaultCurrency],
+        );
+      }
+      raw.runSync(`DELETE FROM budgets WHERE id = ?`, [b.id]);
+    }
+  });
+  bump();
+}
 
 // ---- Accounts ----
 
@@ -592,19 +835,21 @@ export function deleteAccountCascade(id: string): { txnsDeleted: number; transfe
   return { txnsDeleted: direct.length, transfersPreserved: transfers.length };
 }
 
-// ---- Budgets ----
+// ---- Budgets (Phase 10w: now stored on categories) ----
 
+/** Legacy shape — id here is the *category id*. Routes through
+ *  setCategoryMeta so the budget lives on the canonical row. */
 export function upsertBudget(b: NewBudget): void {
-  const db = getDB();
-  const existing = db.select().from(budgets).where(eq(budgets.category, b.category)).get();
-  if (existing) db.update(budgets).set({ limit: b.limit }).where(eq(budgets.id, existing.id)).run();
-  else db.insert(budgets).values({ ...b, id: b.id ?? newId('b') }).run();
-  bump();
+  const defaultCurrency = kv.get('currency') ?? 'USD';
+  setCategoryMeta(b.category, {
+    monthlyBudget: b.limit,
+    budgetCurrency: defaultCurrency,
+  });
 }
 
+/** `id` here is the category id (we synthesize id=category in useBudgets). */
 export function deleteBudget(id: string): void {
-  getDB().delete(budgets).where(eq(budgets.id, id)).run();
-  bump();
+  setCategoryMeta(id, { monthlyBudget: null, budgetCurrency: null });
 }
 
 // ---- Goals (Phase 10l) ----

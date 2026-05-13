@@ -147,13 +147,23 @@ function createTables(db: SQLite.SQLiteDatabase) {
     );
 
     -- Phase 10s: user-defined categories overlaying the seeded set.
+    -- Phase 10w: extended to be the canonical management surface — pin,
+    -- archive, budget, rollover, alert state all live here.
     CREATE TABLE IF NOT EXISTS custom_categories (
       id TEXT PRIMARY KEY NOT NULL,
       name TEXT NOT NULL,
       icon TEXT NOT NULL,
       color TEXT NOT NULL,
       type TEXT NOT NULL,
-      created_at INTEGER NOT NULL
+      created_at INTEGER NOT NULL,
+      is_system INTEGER,
+      is_pinned INTEGER,
+      sort_order INTEGER,
+      archived INTEGER,
+      monthly_budget REAL,
+      budget_currency TEXT,
+      rollover_enabled INTEGER,
+      budget_alerts_sent TEXT
     );
 
     CREATE TABLE IF NOT EXISTS budgets (
@@ -247,6 +257,26 @@ function createTables(db: SQLite.SQLiteDatabase) {
     } catch {
       /* swallow */
     }
+  }
+
+  // Phase 10w: extended custom_categories columns. Idempotent.
+  try {
+    const cols = db.getAllSync<{ name: string }>(`PRAGMA table_info(custom_categories)`);
+    const add = (col: string, type: string) => {
+      if (!cols.some((c) => c.name === col)) {
+        db.execSync(`ALTER TABLE custom_categories ADD COLUMN ${col} ${type};`);
+      }
+    };
+    add('is_system', 'INTEGER');
+    add('is_pinned', 'INTEGER');
+    add('sort_order', 'INTEGER');
+    add('archived', 'INTEGER');
+    add('monthly_budget', 'REAL');
+    add('budget_currency', 'TEXT');
+    add('rollover_enabled', 'INTEGER');
+    add('budget_alerts_sent', 'TEXT');
+  } catch {
+    /* swallow */
   }
 }
 

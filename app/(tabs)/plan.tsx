@@ -15,20 +15,20 @@ import { SectionHeader, SummaryCard, AddRow, sectionStyles } from '@/components/
 import { RecurringSheet } from '@/components/RecurringSheet';
 import { FeatureSlots } from '@/features';
 import {
-  useBudgets,
   useRecurring,
   usePaidItemsForMonth,
   useMonthTotalsByCategory,
   markRecurringPaid,
   unmarkRecurringPaid,
   deleteRecurring,
-  upsertBudget,
-  deleteBudget,
   upsertRecurring,
   useGoals,
   useAccounts,
   useDebts,
+  useCategoriesWithMeta,
+  type CategoryWithMeta,
 } from '@/hooks/useAppData';
+import { CustomCategorySheet } from '@/components/CustomCategorySheet';
 import { useSubscriptionAudit, type DetectedCandidate, type StaleSubscription } from '@/hooks/useSubscriptionAudit';
 import { GoalSheet } from '@/components/GoalSheet';
 import { DebtSheet } from '@/components/DebtSheet';
@@ -286,91 +286,143 @@ function RecurringSection() {
   );
 }
 
-// ---- Budgets section ----
+// ---- Budgets section (Phase 10w: category-driven dashboard) ----
 
 function BudgetsSection() {
   const t = useT();
-  const budgets = useBudgets();
-  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const categories = useCategoriesWithMeta();
   const key = monthKey();
   const totals = useMonthTotalsByCategory(key, 'expense');
   const totalsMap = useMemo(() => new Map(totals.map((t) => [t.category, t.total])), [totals]);
+  const [editing, setEditing] = useState<CategoryWithMeta | null | undefined>(undefined);
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  // Active budgets only: archived-out categories with paused budgets don't
+  // belong in the dashboard.
+  const budgeted = categories.filter((c) => c.monthlyBudget != null && !c.archived);
+
+  // Sort by urgency: over-budget first, then close-to-cap (>80%), then
+  // healthy. Spend is expense-only and currency-converted into the budget's
+  // currency at today's rate (since useMonthTotalsByCategory returns native
+  // sums per the user's display currency — we treat that as already in
+  // default; in mixed-currency cases this is best-effort and surfaces
+  // exactly when the budget currency differs from default).
+  const rows = budgeted
+    .map((c) => {
+      const budget = c.monthlyBudget ?? 0;
+      const ccy = (c.budgetCurrency as CurrencyCode | null) ?? defaultCurrency;
+      // Approximation: month totals are in default currency. If the
+      // budget is in another currency, convert the spend total over.
+      const spentInDefault = totalsMap.get(c.id) ?? 0;
+      const spent =
+        ccy === defaultCurrency ? spentInDefault : convert(spentInDefault, defaultCurrency, ccy);
+      const pct = budget > 0 ? spent / budget : 0;
+      const urgency = pct >= 1 ? 2 : pct >= 0.8 ? 1 : 0;
+      return { c, ccy, spent, budget, pct, urgency };
+    })
+    .sort((a, b) => b.urgency - a.urgency || b.pct - a.pct);
 
   return (
     <View style={{ gap: spacing.md }}>
       <SectionHeader
         title={t('plan.budgets')}
-        onAdd={promptAddBudget}
+        onAdd={() => setPickerOpen(true)}
         addLabel={t('common.add')}
       />
-      {budgets.length === 0 && (
+      {rows.length === 0 && (
         <Text style={styles.emptyHint}>{t('plan.empty.budgets')}</Text>
       )}
-      {budgets.map((b) => {
-        const spent = totalsMap.get(b.category) ?? 0;
-        const pct = b.limit > 0 ? Math.min(spent / b.limit, 1) : 0;
-        const over = spent > b.limit;
-        const cat = catInfo(b.category);
+      {rows.map(({ c, ccy, spent, budget, pct }) => {
+        const clamped = Math.min(pct, 1);
+        const over = pct >= 1;
+        const warn = !over && pct >= 0.8;
+        const barColor = over ? theme.expense : warn ? '#F97316' : c.color;
         return (
-          <View key={b.id} style={styles.budgetCard}>
+          <Pressable
+            key={c.id}
+            onPress={() => setEditing(c)}
+            style={styles.budgetCard}
+            accessibilityRole="button"
+            accessibilityLabel={`${c.name} budget ${spent.toFixed(0)} of ${budget.toFixed(0)} ${ccy}, ${Math.round(pct * 100)} percent used`}
+          >
             <View style={styles.budgetHead}>
-              <Text style={styles.budgetName}>{cat.name}</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
+                <View style={[styles.budgetIconWrap, { backgroundColor: `${c.color}22` }]}>
+                  <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={14} color={c.color} />
+                </View>
+                <Text style={styles.budgetName}>{c.name}</Text>
+              </View>
               <Text style={[styles.budgetAmt, over && { color: theme.expense }]}>
-                {formatMoney(spent, currency)} / {formatMoney(b.limit, currency)}
+                {formatMoney(spent, ccy)} / {formatMoney(budget, ccy)}
               </Text>
             </View>
             <View style={styles.barBg}>
               <View
-                style={[
-                  styles.barFill,
-                  { width: `${pct * 100}%`, backgroundColor: over ? theme.expense : cat.color },
-                ]}
+                style={[styles.barFill, { width: `${clamped * 100}%`, backgroundColor: barColor }]}
               />
             </View>
-            <View style={styles.budgetActions}>
-              <Pressable onPress={() => promptEditBudget(b.id, b.category, b.limit)}>
-                <Text style={styles.actionText}>Edit</Text>
-              </Pressable>
-              <Pressable onPress={() => deleteBudget(b.id)}>
-                <Text style={[styles.actionText, { color: theme.expense }]}>Delete</Text>
-              </Pressable>
-            </View>
-          </View>
+          </Pressable>
         );
       })}
+
+      <CustomCategorySheet
+        visible={editing !== undefined}
+        category={editing ?? undefined}
+        onClose={() => setEditing(undefined)}
+      />
+
+      <BudgetCategoryPickerSheet
+        visible={pickerOpen}
+        options={categories.filter((c) => !c.archived && c.monthlyBudget == null && c.id !== 'adjustment')}
+        onPick={(c) => {
+          setPickerOpen(false);
+          setEditing(c);
+        }}
+        onClose={() => setPickerOpen(false)}
+      />
     </View>
   );
 }
 
-function promptEditBudget(id: string, category: string, currentLimit: number) {
-  Alert.prompt(
-    'Edit Budget',
-    `Limit for ${category}`,
-    (text) => {
-      const v = parseFloat(text);
-      if (Number.isFinite(v) && v > 0) upsertBudget({ id, category, limit: v });
-    },
-    'plain-text',
-    String(currentLimit),
-    'numeric',
+function BudgetCategoryPickerSheet({
+  visible,
+  options,
+  onPick,
+  onClose,
+}: {
+  visible: boolean;
+  options: CategoryWithMeta[];
+  onPick: (c: CategoryWithMeta) => void;
+  onClose: () => void;
+}) {
+  if (!visible) return null;
+  return (
+    <View style={styles.pickerOverlay} pointerEvents="auto">
+      <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+      <View style={styles.pickerSheet}>
+        <Text style={styles.pickerTitle}>Pick a category</Text>
+        <ScrollView style={{ maxHeight: 360 }}>
+          {options.length === 0 && (
+            <Text style={styles.emptyHint}>Every category already has a budget.</Text>
+          )}
+          {options.map((c) => (
+            <Pressable
+              key={c.id}
+              onPress={() => onPick(c)}
+              style={styles.pickerRow}
+              accessibilityRole="button"
+            >
+              <View style={[styles.budgetIconWrap, { backgroundColor: `${c.color}22` }]}>
+                <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={14} color={c.color} />
+              </View>
+              <Text style={styles.pickerLabel}>{c.name}</Text>
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
+    </View>
   );
-}
-
-function promptAddBudget() {
-  Alert.prompt('New Budget', 'Enter category id (e.g. food)', (cat) => {
-    if (!cat) return;
-    Alert.prompt(
-      'New Budget',
-      `Limit for ${cat}`,
-      (text) => {
-        const v = parseFloat(text);
-        if (Number.isFinite(v) && v > 0) upsertBudget({ id: `b${Date.now()}`, category: cat, limit: v });
-      },
-      'plain-text',
-      '',
-      'numeric',
-    );
-  });
 }
 
 // ---- Goals (Phase 10l) ----
@@ -785,4 +837,32 @@ const styles = StyleSheet.create({
   barFill: { height: '100%', borderRadius: 3 },
   budgetActions: { flexDirection: 'row', gap: spacing.lg },
   actionText: { color: theme.accent, fontSize: sizes.sm },
+  budgetIconWrap: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  pickerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'flex-end',
+    zIndex: 100,
+  },
+  pickerSheet: {
+    backgroundColor: theme.bg1,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: spacing.md,
+    gap: spacing.sm,
+  },
+  pickerTitle: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold, marginBottom: spacing.sm },
+  pickerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingVertical: spacing.md,
+  },
+  pickerLabel: { color: theme.text1, fontSize: sizes.md },
 });

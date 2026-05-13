@@ -87,13 +87,31 @@ export const fxRates = sqliteTable('fx_rates', {
 // EXPENSE_CATEGORIES / INCOME_CATEGORIES from constants/categories — id
 // space is shared, so a custom row with id='coffee' would shadow the
 // seeded one. catInfo() prefers customs when both exist.
+//
+// Phase 10w extends this table to be the canonical management surface for
+// ALL category metadata users care about — pinning, archiving, budgets,
+// rollover. Seeded categories that the user customizes get an override
+// row inserted here (id matches the seeded id).
 export const customCategories = sqliteTable('custom_categories', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
   icon: text('icon').notNull(),
   color: text('color').notNull(),
-  type: text('type', { enum: ['expense', 'income'] }).notNull(),
+  // 'both' means the category is offered in expense AND income pickers.
+  type: text('type', { enum: ['expense', 'income', 'both'] }).notNull(),
   createdAt: integer('created_at').notNull(),
+  // 10w fields ----------------------------------------------------------
+  isSystem: integer('is_system'),         // 1 for 'other' / 'adjustment'
+  isPinned: integer('is_pinned'),         // 1 = stick to top
+  sortOrder: integer('sort_order'),       // user-defined within pinned/unpinned groups
+  archived: integer('archived'),          // 1 = hide from pickers
+  monthlyBudget: real('monthly_budget'),  // nullable cap; null = no budget
+  budgetCurrency: text('budget_currency'),// ISO; locked at budget creation
+  rolloverEnabled: integer('rollover_enabled'), // 1 = unused budget rolls into next month
+  // Per-month bookkeeping for the 80% / 100% push-notification gates.
+  // Stored as a JSON map { "2026-05": ["80","100"], … } — small enough
+  // to live inline; saves a separate `budget_alerts` table.
+  budgetAlertsSent: text('budget_alerts_sent'),
 });
 
 // Phase 10p: daily net-worth snapshots so the Activity analytics can chart

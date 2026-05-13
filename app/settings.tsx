@@ -47,9 +47,10 @@ import { exportData } from '@/utils/dataExport';
 import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
 import { monthKey as monthKeyOf } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
-import { useCustomCategories } from '@/hooks/useAppData';
+import { useCategoriesWithMeta, setCategoryMeta, type CategoryWithMeta } from '@/hooks/useAppData';
 import { CustomCategorySheet } from '@/components/CustomCategorySheet';
-import type { CustomCategory } from '@/utils/db/schema';
+import { convert } from '@/utils/fx';
+import { getRawDB } from '@/utils/db/client';
 import { APP_NAME } from '@/constants/flavor';
 import { PRIVACY_POLICY_URL, TERMS_URL, SUPPORT_EMAIL } from '@/constants/legal';
 import { useT } from '@/hooks/useT';
@@ -328,8 +329,10 @@ function PreferencesSection() {
         title={t('me.currency')}
         selected={currency}
         onPick={(c) => {
+          const prev = currency;
           kv.set('currency', c);
           setCurrency(c);
+          if (prev !== c) maybeOfferBudgetConversion(prev, c);
         }}
         onClose={() => setPicker(null)}
       />
@@ -389,12 +392,78 @@ function FxRefreshRow() {
   );
 }
 
-// ---- Custom categories (Phase 10s) ----
+/** Phase 10w currency-change side effect: every budget remembers the
+ *  currency it was created in. Switching the default currency must NOT
+ *  rewrite that — the data is per-budget, locked at creation. Offer a
+ *  one-shot opt-in conversion at today's FX rate. */
+function maybeOfferBudgetConversion(prev: string, next: string) {
+  if (prev === next) return;
+  const raw = getRawDB();
+  type Row = { id: string; monthly_budget: number; budget_currency: string | null };
+  let rows: Row[] = [];
+  try {
+    rows = raw.getAllSync(
+      `SELECT id, monthly_budget, budget_currency FROM custom_categories
+        WHERE monthly_budget IS NOT NULL`,
+    ) as Row[];
+  } catch {
+    return;
+  }
+  const inPrev = rows.filter((r) => (r.budget_currency ?? prev) === prev);
+  if (inPrev.length === 0) return;
+  Alert.alert(
+    'Convert budgets?',
+    `You have ${inPrev.length} budget${inPrev.length === 1 ? '' : 's'} in ${prev}. Keep them as-is, or convert all to ${next} at today's rate?`,
+    [
+      { text: `Keep in ${prev}`, style: 'cancel' },
+      {
+        text: `Convert to ${next}`,
+        onPress: () => {
+          for (const r of inPrev) {
+            const converted = convert(r.monthly_budget, prev, next);
+            setCategoryMeta(r.id, {
+              monthlyBudget: Math.round(converted * 100) / 100,
+              budgetCurrency: next,
+            });
+          }
+        },
+      },
+    ],
+  );
+}
+
+// ---- Categories (Phase 10w canonical management surface) ----
 
 function CategoriesSection() {
   const t = useT();
-  const customs = useCustomCategories();
-  const [editing, setEditing] = useState<CustomCategory | null | undefined>(undefined);
+  const categories = useCategoriesWithMeta();
+  const [editing, setEditing] = useState<CategoryWithMeta | null | undefined>(undefined);
+  const [showArchived, setShowArchived] = useState(false);
+
+  const visible = categories.filter((c) => showArchived ? true : !c.archived);
+  const pinned = visible.filter((c) => c.isPinned).sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
+  const unpinned = visible.filter((c) => !c.isPinned).sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
+  const archivedCount = categories.filter((c) => c.archived).length;
+
+  const renderRow = (c: CategoryWithMeta) => {
+    const budgetLabel = c.monthlyBudget != null
+      ? `${c.monthlyBudget.toFixed(0)} ${c.budgetCurrency ?? ''}`.trim()
+      : (c.type === 'income' ? 'Income' : c.type === 'both' ? 'Both' : 'Expense');
+    const hint =
+      (c.isSystem ? '🔒 system · ' : '') +
+      (c.archived ? 'archived · ' : '') +
+      budgetLabel;
+    return (
+      <SettingRow
+        key={c.id}
+        label={c.name}
+        hint={hint}
+        icon={c.icon as never}
+        iconColor={c.color}
+        onPress={() => setEditing(c)}
+      />
+    );
+  };
 
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
@@ -403,21 +472,34 @@ function CategoriesSection() {
         onAdd={() => setEditing(null)}
         addLabel={t('common.add')}
       />
-      {customs.length === 0 && (
-        <Text style={{ color: theme.text3, fontSize: sizes.sm, paddingHorizontal: 4, lineHeight: 20 }}>
-          {t('settings.categories.empty')}
-        </Text>
+      {pinned.length > 0 && (
+        <>
+          <Text style={settingsSectionStyles.subHeading}>PINNED</Text>
+          {pinned.map(renderRow)}
+        </>
       )}
-      {customs.map((c) => (
-        <SettingRow
-          key={c.id}
-          label={c.name}
-          hint={c.type === 'expense' ? 'Expense' : 'Income'}
-          icon={c.icon as never}
-          iconColor={c.color}
-          onPress={() => setEditing(c)}
-        />
-      ))}
+      {unpinned.length > 0 && (
+        <>
+          {pinned.length > 0 && <Text style={settingsSectionStyles.subHeading}>ALL</Text>}
+          {unpinned.map(renderRow)}
+        </>
+      )}
+      {archivedCount > 0 && (
+        <Pressable
+          onPress={() => setShowArchived((v) => !v)}
+          style={settingsSectionStyles.archiveToggle}
+          accessibilityRole="button"
+        >
+          <MaterialCommunityIcons
+            name={showArchived ? 'eye-off-outline' : 'archive-outline'}
+            size={16}
+            color={theme.text3}
+          />
+          <Text style={settingsSectionStyles.archiveText}>
+            {showArchived ? 'Hide archived' : `Show archived (${archivedCount})`}
+          </Text>
+        </Pressable>
+      )}
       <CustomCategorySheet
         visible={editing !== undefined}
         category={editing ?? undefined}
@@ -426,6 +508,25 @@ function CategoriesSection() {
     </View>
   );
 }
+
+const settingsSectionStyles = StyleSheet.create({
+  subHeading: {
+    color: theme.text3,
+    fontSize: 10,
+    fontFamily: font.bodySemi,
+    letterSpacing: 0.5,
+    marginTop: spacing.sm,
+    marginBottom: -4,
+  },
+  archiveToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    padding: spacing.md,
+  },
+  archiveText: { color: theme.text3, fontSize: sizes.sm },
+});
 
 // ---- Security ----
 
