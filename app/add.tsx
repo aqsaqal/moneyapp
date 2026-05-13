@@ -20,7 +20,7 @@
 // Override path remains for power users who want explicit control.
 
 import React, { useEffect, useMemo, useState } from 'react';
-import { Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -34,7 +34,7 @@ import { VoiceMicButton } from '@/components/VoiceMicButton';
 import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
-import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions } from '@/hooks/useAppData';
+import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, AccountValidationError } from '@/hooks/useAppData';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
@@ -214,7 +214,13 @@ export default function AddScreen() {
   const effectiveEntryCurrency: CurrencyCode = entryCurrency ?? accountCurrency;
   const isMixed = effectiveEntryCurrency !== accountCurrency;
 
-  const submit = () => {
+  const doSubmit = (opts: { skipCashCheck?: boolean } = {}) => {
+    submitInner(opts);
+  };
+
+  const submit = () => doSubmit();
+
+  const submitInner = (opts: { skipCashCheck?: boolean }) => {
     const v = parseFloat(amount);
     if (!v) return;
 
@@ -234,6 +240,24 @@ export default function AddScreen() {
     const originalCurrency = isMixed ? effectiveEntryCurrency : null;
 
     let createdTxId: string | null = null;
+    // Wrap each insert in a cash-negative guard. The hook throws when a
+    // Cash-type account would drop below zero; we catch + prompt, then
+    // retry with skipCashCheck=true if the user opts in.
+    const handleValidation = (e: unknown): boolean => {
+      if (e instanceof AccountValidationError && e.code === 'cash_negative') {
+        if (opts.skipCashCheck) return false;
+        Alert.alert(
+          'Cash will go negative',
+          `This will make the account go below zero (projected ${e.details.projected.toFixed(2)}). Cash accounts usually can't carry a negative balance — switch to a credit/debt account, or continue anyway?`,
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { text: 'Continue', onPress: () => submitInner({ skipCashCheck: true }) },
+          ],
+        );
+        return true;
+      }
+      throw e;
+    };
     if (mode === 'transfer') {
       if (fromAcct === toAcct) return;
       if (isEditing && prefill?.editId) {
@@ -249,17 +273,21 @@ export default function AddScreen() {
           originalCurrency,
         });
       } else {
-        const tx = addTransaction({
-          type: 'transfer',
-          amount: accountAmount,
-          accountId: fromAcct,
-          toAccountId: toAcct,
-          note: note || null,
-          date: txDate.getTime(),
-          originalAmount,
-          originalCurrency,
-        });
-        createdTxId = tx.id;
+        try {
+          const tx = addTransaction({
+            type: 'transfer',
+            amount: accountAmount,
+            accountId: fromAcct,
+            toAccountId: toAcct,
+            note: note || null,
+            date: txDate.getTime(),
+            originalAmount,
+            originalCurrency,
+          }, { skipCashCheck: opts.skipCashCheck });
+          createdTxId = tx.id;
+        } catch (e) {
+          if (handleValidation(e)) return;
+        }
       }
     } else {
       // Expense or income: needs category. Predicted strip should always
@@ -283,22 +311,26 @@ export default function AddScreen() {
           originalCurrency,
         });
       } else {
-        const tx = addTransaction({
-          type: mode,
-          amount: accountAmount,
-          category: effectiveCat,
-          accountId: effectiveAcct,
-          note: note || null,
-          date: txDate.getTime(),
-          halalStatus: (draft.halalStatus as Transaction['halalStatus']) ?? null,
-          receiptImagePath: (draft.receiptImagePath as string | undefined) ?? null,
-          asnaf: (draft as { asnaf?: string | null }).asnaf ?? null,
-          originalAmount,
-          originalCurrency,
-        });
-        createdTxId = tx.id;
-        // Remember the user's account choice so L4 fallback can lock in.
-        setDefaultAccount(effectiveAcct);
+        try {
+          const tx = addTransaction({
+            type: mode,
+            amount: accountAmount,
+            category: effectiveCat,
+            accountId: effectiveAcct,
+            note: note || null,
+            date: txDate.getTime(),
+            halalStatus: (draft.halalStatus as Transaction['halalStatus']) ?? null,
+            receiptImagePath: (draft.receiptImagePath as string | undefined) ?? null,
+            asnaf: (draft as { asnaf?: string | null }).asnaf ?? null,
+            originalAmount,
+            originalCurrency,
+          }, { skipCashCheck: opts.skipCashCheck });
+          createdTxId = tx.id;
+          // Remember the user's account choice so L4 fallback can lock in.
+          setDefaultAccount(effectiveAcct);
+        } catch (e) {
+          if (handleValidation(e)) return;
+        }
       }
     }
     // Phase 10v: when launched from a recurring row's checkbox, flip

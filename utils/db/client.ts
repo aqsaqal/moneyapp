@@ -99,7 +99,9 @@ function createTables(db: SQLite.SQLiteDatabase) {
       color TEXT NOT NULL,
       sort_order INTEGER NOT NULL DEFAULT 0,
       currency TEXT,
-      is_riba INTEGER
+      is_riba INTEGER,
+      include_in_total INTEGER,
+      archived INTEGER
     );
 
     -- Phase 10k: per-account currency + FX cache.
@@ -222,6 +224,12 @@ function createTables(db: SQLite.SQLiteDatabase) {
     }
     if (!cols.some((c) => c.name === 'is_riba')) {
       db.execSync(`ALTER TABLE accounts ADD COLUMN is_riba INTEGER;`);
+    }
+    if (!cols.some((c) => c.name === 'include_in_total')) {
+      db.execSync(`ALTER TABLE accounts ADD COLUMN include_in_total INTEGER;`);
+    }
+    if (!cols.some((c) => c.name === 'archived')) {
+      db.execSync(`ALTER TABLE accounts ADD COLUMN archived INTEGER;`);
     }
   } catch {
     /* swallow */

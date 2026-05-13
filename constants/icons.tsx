@@ -59,6 +59,7 @@ export const ICON_MAP: Record<string, MCCName> = {
   AlertTriangle: 'alert',
   Calendar: 'calendar',
   ChevronRight: 'chevron-right',
+  Scale: 'scale-balance',
 
   // Islamic-flavor icons. Strings present in both bundles (constant values),
   // but only referenced by features/islamic/* components. Dead-code elimination

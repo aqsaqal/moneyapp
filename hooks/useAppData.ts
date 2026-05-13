@@ -177,10 +177,22 @@ export function useTransactions(opts: UseTransactionsOpts = {}): Transaction[] {
   }, [version, opts.monthKey, opts.category, opts.accountId, opts.type, opts.search, opts.halalStatus, opts.limit]);
 }
 
-export function useAccounts(): Account[] {
+export interface UseAccountsOpts {
+  /** Default false — archived accounts are hidden so pickers don't let
+   *  users select retired wallets / credit cards. The Accounts tab opts
+   *  in via { includeArchived: true } and renders them dimmed. */
+  includeArchived?: boolean;
+}
+
+export function useAccounts(opts: UseAccountsOpts = {}): Account[] {
   useVersion();
   const db = getDB();
-  return useMemo(() => db.select().from(accounts).orderBy(accounts.sortOrder).all(), [version]);
+  const includeArchived = opts.includeArchived ?? false;
+  return useMemo(() => {
+    const all = db.select().from(accounts).orderBy(accounts.sortOrder).all();
+    return includeArchived ? all : all.filter((a) => a.archived !== 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version, includeArchived]);
 }
 
 export function useBudgets(): Budget[] {
@@ -339,9 +351,39 @@ export interface AddTxnInput {
   originalCurrency?: string | null;
 }
 
-export function addTransaction(input: AddTxnInput): Transaction {
+/** Pre-flight checks. Throws AccountValidationError with `code='cash_negative'`
+ *  when the transaction would drop a Cash-type account below zero. Callers
+ *  catch the error and prompt the user; non-cash accounts are exempt. */
+export class AccountValidationError extends Error {
+  constructor(public code: 'cash_negative', public details: { accountId: string; projected: number }) {
+    super(`account-validation:${code}`);
+  }
+}
+
+function checkCashNegative(
+  input: { type: AddTxnInput['type']; amount: number; accountId: string; toAccountId?: string | null },
+) {
+  const db = getDB();
+  // The account-id we deduct from in the relevant direction:
+  //   transfer  → accountId is the "from"  → projected = balance - amount
+  //   expense   → accountId balance       → projected = balance - amount
+  //   income    → no negative projection (adds)
+  if (input.type === 'income') return;
+  const acc = db.select().from(accounts).where(eq(accounts.id, input.accountId)).get();
+  if (!acc || acc.type !== 'cash') return;
+  const projected = acc.balance - input.amount;
+  if (projected < 0) {
+    throw new AccountValidationError('cash_negative', { accountId: input.accountId, projected });
+  }
+}
+
+export function addTransaction(
+  input: AddTxnInput,
+  opts: { skipCashCheck?: boolean } = {},
+): Transaction {
   const db = getDB();
   const raw = getRawDB();
+  if (!opts.skipCashCheck) checkCashNegative(input);
   const id = newId();
   const now = Date.now();
   const row: NewTransaction = {
@@ -495,11 +537,59 @@ export function upsertAccount(a: typeof accounts.$inferInsert): void {
 
 export function deleteAccount(id: string): void {
   const db = getDB();
-  // Caller should warn the user — deleting an account orphans its txns'
-  // accountId reference. We intentionally don't cascade-delete txns; that's
-  // user data. Caller can choose to reassign first.
+  // Low-level: removes the account row WITHOUT touching transactions.
+  // Callers typically want deleteAccountCascade() — see below.
   db.delete(accounts).where(eq(accounts.id, id)).run();
   bump();
+}
+
+/**
+ * Cascade delete with the semantics the user expects:
+ *   • Direct expense/income transactions on this account → deleted
+ *   • Transfers involving this account → kept; the account row is renamed
+ *     to "Deleted: <original>" and archived so the reference still
+ *     resolves, but it won't show in account pickers or net-worth totals.
+ *   • If there are no references, the account row is hard-deleted.
+ *
+ * Returns counts so the success toast can report "N transactions removed,
+ * M transfers preserved." Idempotent at the row level.
+ */
+export function deleteAccountCascade(id: string): { txnsDeleted: number; transfersPreserved: number } {
+  const db = getDB();
+  const raw = getRawDB();
+  const acc = db.select().from(accounts).where(eq(accounts.id, id)).get();
+  if (!acc) return { txnsDeleted: 0, transfersPreserved: 0 };
+
+  const direct = raw.getAllSync<{ id: string }>(
+    `SELECT id FROM transactions WHERE account_id = ? AND type IN ('expense', 'income')`,
+    [id],
+  );
+  for (const t of direct) {
+    db.delete(transactions).where(eq(transactions.id, t.id)).run();
+  }
+
+  const transfers = raw.getAllSync<{ id: string }>(
+    `SELECT id FROM transactions WHERE type = 'transfer' AND (account_id = ? OR to_account_id = ?)`,
+    [id, id],
+  );
+
+  if (transfers.length === 0) {
+    // No transfer refs — hard-delete the row.
+    db.delete(accounts).where(eq(accounts.id, id)).run();
+  } else {
+    // Preserve transfer history by renaming + archiving so the lookup
+    // still resolves to a stable record but the account is invisible
+    // in pickers / totals.
+    db.update(accounts).set({
+      name: `Deleted: ${acc.name}`,
+      archived: 1,
+      includeInTotal: 0,
+      balance: 0,
+    }).where(eq(accounts.id, id)).run();
+  }
+
+  bump();
+  return { txnsDeleted: direct.length, transfersPreserved: transfers.length };
 }
 
 // ---- Budgets ----

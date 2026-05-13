@@ -28,6 +28,7 @@ export const EXPENSE_CATEGORIES: CategoryDef[] = [
   { id: 'clothing', name: 'Clothing', icon: 'Package', color: '#F472B6' },
   { id: 'fitness', name: 'Fitness', icon: 'Activity', color: '#4ADE80' },
   { id: 'subs', name: 'Subs', icon: 'FileText', color: '#38BDF8' },
+  { id: 'adjustment', name: 'Adjustment', icon: 'Scale', color: '#94A3B8' },
   { id: 'other', name: 'Other', icon: 'MoreHorizontal', color: '#8888AA' },
 ];
 
@@ -37,6 +38,7 @@ export const INCOME_CATEGORIES: CategoryDef[] = [
   { id: 'investment', name: 'Investment', icon: 'TrendingUp', color: '#818CF8' },
   { id: 'gift_in', name: 'Gift', icon: 'Gift', color: '#E879F9' },
   { id: 'refund', name: 'Refund', icon: 'ArrowRightLeft', color: '#FFBE44' },
+  { id: 'adjustment', name: 'Adjustment', icon: 'Scale', color: '#94A3B8' },
   { id: 'other_in', name: 'Other', icon: 'MoreHorizontal', color: '#8888AA' },
 ];
 

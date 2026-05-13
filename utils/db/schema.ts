@@ -46,7 +46,9 @@ export const accounts = sqliteTable('accounts', {
   name: text('name').notNull(),
   // 'debt' = generic liability (loan, mortgage, owed money). Distinct from
   // 'credit' (credit card) which has a creditLimit and is paid back monthly.
-  type: text('type', { enum: ['cash', 'bank', 'credit', 'savings', 'debt'] }).notNull(),
+  // 'investment' (10v) tracks brokerage / pension / crypto wallets — value
+  // can fluctuate, included in net worth by default.
+  type: text('type', { enum: ['cash', 'bank', 'credit', 'savings', 'debt', 'investment'] }).notNull(),
   balance: real('balance').notNull(),
   creditLimit: real('credit_limit'),
   icon: text('icon').notNull(),
@@ -62,6 +64,14 @@ export const accounts = sqliteTable('accounts', {
   // flavors but is only set / read in the islamic build — keeping it
   // schema-wide avoids a flavor-specific migration.
   isRiba: integer('is_riba'),  // 0 / 1; null = unset (default no warning)
+  // Phase 10v: account lifecycle / visibility flags.
+  // includeInTotal: 0 lets the user keep an account on file but exclude
+  // it from Net Balance / Assets / Debt (e.g. spouse's card, archived
+  // joint account). Default 1.
+  // archived: hides the account from active lists, excludes from totals,
+  // historical transactions still resolve to it. Default 0.
+  includeInTotal: integer('include_in_total'),   // 0 / 1; null = 1
+  archived: integer('archived'),                 // 0 / 1; null = 0
 });
 
 // Phase 10k: cached daily exchange rates from frankfurter.app. Rows are

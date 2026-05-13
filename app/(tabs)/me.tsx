@@ -43,17 +43,26 @@ export default function AccountsScreen() {
 
 function OverviewAndAccounts() {
   const t = useT();
-  const accounts = useAccounts();
+  const allAccounts = useAccounts({ includeArchived: true });
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   // Subscribe to FX bumps so balances re-convert when the cache updates.
   const fx = useFxRates();
+  // Show-archived toggle lives at the bottom of the list. Off by default
+  // so the active set is uncluttered.
+  const [showArchived, setShowArchived] = useState(false);
   useEffect(() => {
-    const hasMulti = accounts.some((a) => a.currency && a.currency !== currency);
+    const hasMulti = allAccounts.some((a) => a.currency && a.currency !== currency);
     if (hasMulti && oldestFetchedAt() === 0 && !fx.refreshing) {
       void fx.refresh();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accounts.length]);
+  }, [allAccounts.length]);
+
+  // Split active vs archived. Both totals + list visibility care.
+  const active = allAccounts.filter((a) => a.archived !== 1);
+  const archivedAccounts = allAccounts.filter((a) => a.archived === 1);
+  // Totals exclude archived AND any account flagged include_in_total=0.
+  const counted = active.filter((a) => a.includeInTotal !== 0);
 
   // Mixed-currency totals: convert each account into the user's display
   // currency before summing. When a leg is uncached we still sum, but
@@ -61,14 +70,14 @@ function OverviewAndAccounts() {
   let approxFlag = false;
   const accountCurrency = (a: Account) =>
     (a.currency as string | null | undefined) ?? currency;
-  const assets = accounts
+  const assets = counted
     .filter((a) => a.balance >= 0)
     .reduce((s, a) => {
       const ac = accountCurrency(a);
       if (isApproximate(ac, currency)) approxFlag = true;
       return s + convert(a.balance, ac, currency);
     }, 0);
-  const debt = accounts
+  const debt = counted
     .filter((a) => a.balance < 0)
     .reduce((s, a) => {
       const ac = accountCurrency(a);
@@ -80,6 +89,7 @@ function OverviewAndAccounts() {
 
   // null = creating new; Account = editing; undefined = sheet closed
   const [editing, setEditing] = useState<Account | null | undefined>(undefined);
+  const visibleAccounts = showArchived ? allAccounts : active;
 
   return (
     <View style={{ gap: spacing.lg }}>
@@ -111,36 +121,64 @@ function OverviewAndAccounts() {
           addLabel={t('common.add')}
         />
 
-        {accounts.map((a) => {
+        {visibleAccounts.map((a) => {
           const ac = accountCurrency(a) as CurrencyCode;
+          // Credit utilization: balance is stored negative for credit
+          // accounts (debt = -spent). The bar shows how much of the
+          // limit is consumed; thresholds escalate by color.
+          const utilPct =
+            a.type === 'credit' && a.creditLimit && a.creditLimit > 0
+              ? Math.min(Math.abs(a.balance) / a.creditLimit, 1)
+              : null;
+          const utilColor =
+            utilPct == null
+              ? theme.text3
+              : utilPct < 0.3
+                ? theme.accent
+                : utilPct < 0.7
+                  ? '#EAB308'
+                  : utilPct < 0.9
+                    ? '#F97316'
+                    : theme.expense;
+          const isExcluded = a.includeInTotal === 0;
+          const isArchived = a.archived === 1;
           return (
             <Pressable
               key={a.id}
-              style={styles.acctCard}
+              style={[
+                styles.acctCard,
+                (isExcluded || isArchived) && styles.acctCardDimmed,
+              ]}
               onPress={() => setEditing(a)}
               accessibilityRole="button"
-              accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}`}
+              accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}${isArchived ? ', archived' : isExcluded ? ', excluded from total' : ''}`}
             >
               <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
                 <MaterialCommunityIcons name="wallet-outline" size={20} color={a.color} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={styles.acctName}>{a.name}</Text>
+                <View style={styles.acctNameRow}>
+                  <Text style={styles.acctName}>{a.name}</Text>
+                  {isArchived && <Text style={styles.acctTag}>archived</Text>}
+                  {!isArchived && isExcluded && <Text style={styles.acctTag}>excluded</Text>}
+                </View>
                 <Text style={styles.acctType}>
                   {a.type}{ac !== currency ? ` · ${ac}` : ''}
                 </Text>
-                {a.creditLimit && (
-                  <View style={[styles.barBg, { marginTop: 6 }]}>
-                    <View
-                      style={[
-                        styles.barFill,
-                        {
-                          width: `${Math.min(Math.abs(a.balance) / a.creditLimit, 1) * 100}%`,
-                          backgroundColor: theme.expense,
-                        },
-                      ]}
-                    />
-                  </View>
+                {utilPct != null && (
+                  <>
+                    <View style={[styles.barBg, { marginTop: 6 }]}>
+                      <View
+                        style={[
+                          styles.barFill,
+                          { width: `${utilPct * 100}%`, backgroundColor: utilColor },
+                        ]}
+                      />
+                    </View>
+                    <Text style={[styles.acctUtil, { color: utilColor }]}>
+                      {Math.round(utilPct * 100)}% used
+                    </Text>
+                  </>
                 )}
               </View>
               <Text style={[styles.acctBal, { color: a.balance >= 0 ? theme.accent : theme.expense }]}>
@@ -150,7 +188,25 @@ function OverviewAndAccounts() {
           );
         })}
 
-        {process.env.APP_FLAVOR === 'islamic' && accounts.some((a) => a.isRiba === 1) && (
+        {archivedAccounts.length > 0 && (
+          <Pressable
+            onPress={() => setShowArchived((v) => !v)}
+            style={styles.archiveToggle}
+            accessibilityRole="button"
+            accessibilityLabel={showArchived ? 'Hide archived accounts' : `Show ${archivedAccounts.length} archived accounts`}
+          >
+            <MaterialCommunityIcons
+              name={showArchived ? 'eye-off-outline' : 'archive-outline'}
+              size={16}
+              color={theme.text3}
+            />
+            <Text style={styles.archiveToggleText}>
+              {showArchived ? 'Hide archived' : `Show archived (${archivedAccounts.length})`}
+            </Text>
+          </Pressable>
+        )}
+
+        {process.env.APP_FLAVOR === 'islamic' && allAccounts.some((a) => a.isRiba === 1) && (
           <View style={styles.ribaFooter}>
             <MaterialCommunityIcons name="alert-circle-outline" size={16} color={theme.warning} />
             <Text style={styles.ribaFooterText}>
@@ -206,11 +262,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  acctCardDimmed: { opacity: 0.55 },
+  acctNameRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   acctName: { color: theme.text1, fontSize: sizes.md },
+  acctTag: {
+    color: theme.text3,
+    fontSize: 10,
+    fontFamily: font.bodySemi,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 4,
+    backgroundColor: theme.bg3,
+    overflow: 'hidden',
+  },
   acctType: { color: theme.text3, fontSize: sizes.xs, textTransform: 'capitalize' },
   acctBal: { fontSize: sizes.lg, fontFamily: font.display, fontWeight: '700' },
+  acctUtil: { fontSize: sizes.xs, marginTop: 4, fontFamily: font.bodySemi },
   barBg: { height: 6, backgroundColor: theme.bg3, borderRadius: 3, overflow: 'hidden' },
   barFill: { height: '100%', borderRadius: 3 },
+  archiveToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    padding: spacing.md,
+  },
+  archiveToggleText: { color: theme.text3, fontSize: sizes.sm },
   ribaFooter: {
     flexDirection: 'row',
     alignItems: 'flex-start',
