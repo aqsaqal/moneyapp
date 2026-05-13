@@ -67,7 +67,7 @@ export interface KVSchema {
   profiles: string;            // JSON array of Profile objects (utils/profiles.ts)
   voicePromptShown: string;    // '1' once the explainer was acknowledged (Phase 10h)
   fxAutoRefresh: string;       // '1' = fetch FX rates daily from frankfurter.app (Phase 10k)
-  smartSuggestions: string;    // '1' = show frequent-merchant chips on Smart Add (default off)
+  smartSuggestions: string;    // '1' = show frequent-merchant chips on Smart Add (default ON)
   'islamic.nisabAutoRefresh': string;  // '1' = fetch gold/silver spot daily (Phase 10q.2)
 }
 

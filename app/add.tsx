@@ -456,7 +456,7 @@ export default function AddScreen() {
             Off by default; user opts in via Settings → Preferences. Tap
             now PREFILLS the form (amount, note, account, category) so
             the user can verify / edit before submitting. */}
-        {mode === 'expense' && kv.getBool('smartSuggestions', false) && (
+        {mode === 'expense' && kv.getBool('smartSuggestions', true) && (
           <SmartSuggestionRow
             currency={currency}
             amountEntered={amount !== '0' && amount !== ''}
@@ -497,41 +497,58 @@ export default function AddScreen() {
             />
           </View>
         ) : (
-          <View style={styles.transferRow}>
-            {mode === 'expense' ? (
-              <>
-                <TransferAcctRow
-                  label={t('add.transfer.from')}
-                  accounts={accounts}
-                  value={effectiveAcct}
-                  onPick={setAccountOverride}
-                />
-                <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
-                <CategoryPickerRow
-                  label={t('add.toCategory')}
-                  cats={cats}
-                  value={effectiveCat}
-                  onPick={setCatOverride}
-                />
-              </>
-            ) : (
-              <>
-                <CategoryPickerRow
-                  label={t('add.fromCategory')}
-                  cats={cats}
-                  value={effectiveCat}
-                  onPick={setCatOverride}
-                />
-                <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
-                <TransferAcctRow
-                  label={t('add.transfer.to')}
-                  accounts={accounts}
-                  value={effectiveAcct}
-                  onPick={setAccountOverride}
-                />
-              </>
-            )}
-          </View>
+          (() => {
+            // High-confidence prediction = L1 keyword or L2 merchant memory
+            // had at least one supporting prior add. L3/L4 are weak fallbacks
+            // ("most-used cat for this account this month") and don't earn
+            // the auto badge — they'd cry wolf for users with sparse data.
+            const highConfidence =
+              (predicted.source === 'l1-keyword' || predicted.source === 'l2-memory') &&
+              (predicted.evidence?.count ?? 0) > 0;
+            const acctAuto = highConfidence && !accountOverride && !!predicted.accountId;
+            const catAuto = highConfidence && !catOverride && !!predicted.category;
+            return (
+              <View style={styles.transferRow}>
+                {mode === 'expense' ? (
+                  <>
+                    <TransferAcctRow
+                      label={t('add.transfer.from')}
+                      accounts={accounts}
+                      value={effectiveAcct}
+                      onPick={setAccountOverride}
+                      auto={acctAuto}
+                    />
+                    <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
+                    <CategoryPickerRow
+                      label={t('add.toCategory')}
+                      cats={cats}
+                      value={effectiveCat}
+                      onPick={setCatOverride}
+                      auto={catAuto}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <CategoryPickerRow
+                      label={t('add.fromCategory')}
+                      cats={cats}
+                      value={effectiveCat}
+                      onPick={setCatOverride}
+                      auto={catAuto}
+                    />
+                    <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
+                    <TransferAcctRow
+                      label={t('add.transfer.to')}
+                      accounts={accounts}
+                      value={effectiveAcct}
+                      onPick={setAccountOverride}
+                      auto={acctAuto}
+                    />
+                  </>
+                )}
+              </View>
+            );
+          })()
         )}
 
         {/* Islamic AddTxExtras — halal selector + asnaf for giving categories.
@@ -587,11 +604,17 @@ function TransferAcctRow({
   accounts,
   value,
   onPick,
+  auto = false,
 }: {
   label: string;
   accounts: { id: string; name: string; color: string }[];
   value: string;
   onPick: (id: string) => void;
+  /** True when the value came from a high-confidence Smart prediction
+   *  rather than an explicit user pick. Renders with a dashed border +
+   *  small "auto" badge so the user knows this was guessed and can tap
+   *  to override. */
+  auto?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const acct = accounts.find((a) => a.id === value);
@@ -600,12 +623,17 @@ function TransferAcctRow({
       <Text style={styles.transferLabel}>{label}</Text>
       <Pressable
         onPress={() => setOpen(true)}
-        style={[styles.transferRowChip, acct && { borderColor: `${acct.color}88` }]}
+        style={[
+          styles.transferRowChip,
+          acct && { borderColor: `${acct.color}88` },
+          auto && styles.transferRowChipAuto,
+        ]}
         accessibilityRole="button"
-        accessibilityLabel={`${label}: ${acct?.name ?? 'pick account'}`}
+        accessibilityLabel={`${label}: ${acct?.name ?? 'pick account'}${auto ? ', auto-filled' : ''}`}
       >
         <View style={[styles.transferDot, { backgroundColor: acct?.color ?? theme.text3 }]} />
         <Text style={styles.transferRowText}>{acct?.name ?? 'Pick account'}</Text>
+        {auto && <Text style={styles.autoBadge}>auto</Text>}
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
       <PickerSheet
@@ -627,11 +655,13 @@ function CategoryPickerRow({
   cats,
   value,
   onPick,
+  auto = false,
 }: {
   label: string;
   cats: { id: string; name: string; color: string }[];
   value: string | null;
   onPick: (id: string) => void;
+  auto?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const cat = value ? cats.find((c) => c.id === value) : undefined;
@@ -640,12 +670,17 @@ function CategoryPickerRow({
       <Text style={styles.transferLabel}>{label}</Text>
       <Pressable
         onPress={() => setOpen(true)}
-        style={[styles.transferRowChip, cat && { borderColor: `${cat.color}88` }]}
+        style={[
+          styles.transferRowChip,
+          cat && { borderColor: `${cat.color}88` },
+          auto && styles.transferRowChipAuto,
+        ]}
         accessibilityRole="button"
-        accessibilityLabel={`${label}: ${cat?.name ?? 'pick category'}`}
+        accessibilityLabel={`${label}: ${cat?.name ?? 'pick category'}${auto ? ', auto-filled' : ''}`}
       >
         <View style={[styles.transferDot, { backgroundColor: cat?.color ?? theme.text3 }]} />
         <Text style={styles.transferRowText}>{cat?.name ?? 'Pick category'}</Text>
+        {auto && <Text style={styles.autoBadge}>auto</Text>}
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
       <PickerSheet
@@ -786,6 +821,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.border,
     backgroundColor: theme.bg2,
+  },
+  transferRowChipAuto: {
+    borderStyle: 'dashed',
+    backgroundColor: 'transparent',
+  },
+  autoBadge: {
+    color: theme.text3,
+    fontSize: 10,
+    fontFamily: font.bodySemi,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    backgroundColor: theme.bg1,
+    overflow: 'hidden',
   },
   transferDot: { width: 10, height: 10, borderRadius: 5 },
   transferRowText: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.body, flex: 1 },

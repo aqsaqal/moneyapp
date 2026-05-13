@@ -269,7 +269,7 @@ function PreferencesSection() {
 
 function SmartSuggestionsRow() {
   const t = useT();
-  const [on, setOn] = useState(kv.getBool('smartSuggestions', false));
+  const [on, setOn] = useState(kv.getBool('smartSuggestions', true));
   return (
     <SettingRow
       label={t('settings.smartSuggestions.label')}
