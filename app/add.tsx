@@ -671,14 +671,13 @@ export default function AddScreen() {
             // merchant memory had at least one supporting prior add.
             // Computed once above (see `highConfidence`). L3/L4 fallbacks
             // and last-used defaults don't earn the auto badge.
-            const acctAuto = !accountOverride && !!predicted.accountId &&
-              (highConfidence || !!lastOfMode);
-            const catAuto = !catOverride && !!fallbackCat &&
-              (highConfidence || !!lastOfMode);
-            // Label the badge with provenance so the user knows whether
-            // the form trusted the model (Predicted) or just fell back
-            // to their last pick (Last used).
-            const badge = highConfidence ? 'predicted' : 'last used';
+            // Only badge high-confidence predictions. Last-used fallback
+            // still seeds the form (so picks are sensible from cold) but
+            // doesn't get a tag — users found "LAST USED" noisy on every
+            // open and indistinguishable from a real prediction.
+            const acctAuto = highConfidence && !accountOverride && !!predicted.accountId;
+            const catAuto = highConfidence && !catOverride && !!predicted.category;
+            const badge = 'predicted';
             return (
               <View style={styles.transferRow}>
                 {mode === 'expense' ? (
