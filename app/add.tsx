@@ -671,13 +671,17 @@ export default function AddScreen() {
             // merchant memory had at least one supporting prior add.
             // Computed once above (see `highConfidence`). L3/L4 fallbacks
             // and last-used defaults don't earn the auto badge.
-            // Only badge high-confidence predictions. Last-used fallback
-            // still seeds the form (so picks are sensible from cold) but
-            // doesn't get a tag — users found "LAST USED" noisy on every
-            // open and indistinguishable from a real prediction.
-            const acctAuto = highConfidence && !accountOverride && !!predicted.accountId;
-            const catAuto = highConfidence && !catOverride && !!predicted.category;
-            const badge = 'predicted';
+            // Auto-fill signal is purely the dashed-border state on the
+            // chip; no text label is rendered. Both high-confidence
+            // predictions and last-used fallback get the dashed border
+            // since both are guesses the user can override.
+            const acctAuto =
+              !accountOverride && !!predicted.accountId &&
+              (highConfidence || !!lastOfMode);
+            const catAuto =
+              !catOverride && !!fallbackCat &&
+              (highConfidence || !!lastOfMode);
+            const badge = undefined;
             return (
               <View style={styles.transferRow}>
                 {mode === 'expense' ? (
@@ -901,7 +905,9 @@ function TransferAcctRow({
       >
         <View style={[styles.transferDot, { backgroundColor: acct?.color ?? theme.text3 }]} />
         <Text style={styles.transferRowText}>{acct?.name ?? 'Pick account'}</Text>
-        {auto && <Text style={styles.autoBadge}>{autoLabel ?? 'auto'}</Text>}
+        {/* Signal of auto-fill is the dashed border (transferRowChipAuto);
+            no text badge — labels like LAST USED / PREDICTED ate the
+            chip's horizontal budget. */}
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
       <PickerSheet
@@ -950,7 +956,9 @@ function CategoryPickerRow({
       >
         <View style={[styles.transferDot, { backgroundColor: cat?.color ?? theme.text3 }]} />
         <Text style={styles.transferRowText}>{cat?.name ?? 'Pick category'}</Text>
-        {auto && <Text style={styles.autoBadge}>{autoLabel ?? 'auto'}</Text>}
+        {/* Signal of auto-fill is the dashed border (transferRowChipAuto);
+            no text badge — labels like LAST USED / PREDICTED ate the
+            chip's horizontal budget. */}
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
       <PickerSheet

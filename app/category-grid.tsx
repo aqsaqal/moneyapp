@@ -141,7 +141,7 @@ export default function CategoryGridScreen() {
   );
 }
 
-const TILE_GAP = 12;
+const TILE_GAP = 10;
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
@@ -173,7 +173,11 @@ const styles = StyleSheet.create({
     gap: TILE_GAP,
   },
   tile: {
-    width: `${(100 - 6) / 3}%`,
+    // 30% × 3 tiles = 90%; remaining 10% absorbs the two horizontal
+    // gaps. The earlier `(100 - 6)/3 = 31.3%` math overflowed when
+    // gap + paint rounding pushed the row past 100%, collapsing to 2
+    // columns on some Android densities.
+    width: '30%',
     aspectRatio: 1,
     padding: spacing.sm,
     backgroundColor: theme.bg2,

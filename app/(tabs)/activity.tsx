@@ -26,7 +26,8 @@ import {
   useDailySpend,
   useMonthTotalsByCategory,
 } from '@/hooks/useAppData';
-import { EXPENSE_CATEGORIES, catInfo } from '@/constants/categories';
+import { catInfo } from '@/constants/categories';
+import { useCategoriesWithMeta, useCategoryFrequency } from '@/hooks/useAppData';
 import { dayStr, monthKey, formatMoney } from '@/utils/format';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
@@ -36,6 +37,25 @@ export default function Activity() {
   const router = useRouter();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [filterCat, setFilterCat] = useState<string | null>(null);
+  // Filter chips: every category that could be tagged on a transaction
+  // — expense, income, both, AND 'adjustment' (because reconciliations
+  // are real rows in the list). Archived are still filtered out;
+  // there's no point letting the user filter by a category they can't
+  // currently log against. Sort: pinned → 60d frequency → alpha. No
+  // row cap; horizontal scroll handles overflow.
+  const allCategories = useCategoriesWithMeta();
+  const filterFreq = useCategoryFrequency({ days: 60 });
+  const filterCategories = useMemo(() => {
+    return allCategories
+      .filter((c) => !c.archived)
+      .sort((a, b) => {
+        if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
+        const fa = filterFreq.get(a.id) ?? 0;
+        const fb = filterFreq.get(b.id) ?? 0;
+        if (fa !== fb) return fb - fa;
+        return a.name.localeCompare(b.name);
+      });
+  }, [allCategories, filterFreq]);
   const [search, setSearch] = useState('');
   const [halalFilter, setHalalFilter] = useState<string | null>(null);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
@@ -71,7 +91,7 @@ export default function Activity() {
         <SearchBar value={search} onChange={setSearch} placeholder={t('activity.searchPlaceholder')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
           <FilterChip label={t('activity.allChip')} active={!filterCat} onPress={() => setFilterCat(null)} />
-          {EXPENSE_CATEGORIES.slice(0, 10).map((c) => (
+          {filterCategories.map((c) => (
             <FilterChip
               key={c.id}
               label={c.name}
