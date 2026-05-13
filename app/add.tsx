@@ -34,7 +34,7 @@ import { VoiceMicButton } from '@/components/VoiceMicButton';
 import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
-import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction } from '@/hooks/useAppData';
+import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions } from '@/hooks/useAppData';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
@@ -146,10 +146,33 @@ export default function AddScreen() {
     prefill?.accountAmount != null ? String(prefill.accountAmount) : null,
   );
 
-  // Effective values feed the actual submit.
-  const effectiveCat = mode === 'transfer' ? null : catOverride ?? predicted.category;
+  // Confidence check: L1 (keyword) or L2 (merchant memory) with at least
+  // one supporting prior add count as "high confidence" (~>70%). L3 (time
+  // of day) and L4 (default fallback) are weak — we'd rather show the
+  // user's most recent pick of the same mode than push a low-confidence
+  // guess into the form.
+  const highConfidence =
+    (predicted.source === 'l1-keyword' || predicted.source === 'l2-memory') &&
+    (predicted.evidence?.count ?? 0) > 0;
+  // Last-used fallback: pull the most recent expense or income (matches
+  // the current mode) so a low-confidence prediction surfaces familiar
+  // defaults rather than a stale L4 "most-used this month" guess.
+  const recent = useTransactions({ limit: 5 });
+  const lastOfMode = useMemo(
+    () => recent.find((tx) => tx.type === mode),
+    [recent, mode],
+  );
+  // Effective values feed the actual submit. Above 70% confidence we
+  // trust the predictor; below, we trust the user's last pick.
+  const fallbackCat = highConfidence
+    ? predicted.category
+    : lastOfMode?.category ?? predicted.category;
+  const fallbackAcct = highConfidence
+    ? predicted.accountId
+    : lastOfMode?.accountId ?? predicted.accountId;
+  const effectiveCat = mode === 'transfer' ? null : catOverride ?? fallbackCat;
   const effectiveAcct =
-    accountOverride ?? predicted.accountId ?? accounts[0]?.id ?? 'cash';
+    accountOverride ?? fallbackAcct ?? accounts[0]?.id ?? 'cash';
 
   // Transfer mode: from/to accounts (separate from prediction).
   const [fromAcct, setFromAcct] = useState<string>(
@@ -498,13 +521,10 @@ export default function AddScreen() {
           </View>
         ) : (
           (() => {
-            // High-confidence prediction = L1 keyword or L2 merchant memory
-            // had at least one supporting prior add. L3/L4 are weak fallbacks
-            // ("most-used cat for this account this month") and don't earn
-            // the auto badge — they'd cry wolf for users with sparse data.
-            const highConfidence =
-              (predicted.source === 'l1-keyword' || predicted.source === 'l2-memory') &&
-              (predicted.evidence?.count ?? 0) > 0;
+            // High-confidence prediction (>70%) = L1 keyword or L2
+            // merchant memory had at least one supporting prior add.
+            // Computed once above (see `highConfidence`). L3/L4 fallbacks
+            // and last-used defaults don't earn the auto badge.
             const acctAuto = highConfidence && !accountOverride && !!predicted.accountId;
             const catAuto = highConfidence && !catOverride && !!predicted.category;
             return (
