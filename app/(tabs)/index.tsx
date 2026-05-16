@@ -29,6 +29,7 @@ import { StreakBadge } from '@/components/StreakBadge';
 import {
   useTransactions,
   useRecurring as useRecurringList,
+  useAccounts,
 } from '@/hooks/useAppData';
 import { useStreak } from '@/hooks/useStreak';
 import { useT } from '@/hooks/useT';
@@ -57,6 +58,7 @@ export default function Home() {
   const recentTxns = useTransactions({ limit: 3 });
   const streak = useStreak();
   const recurring = useRecurringList();
+  const accounts = useAccounts();
 
   const income = useMemo(
     () => thisMoTxns.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0),
@@ -128,7 +130,11 @@ export default function Home() {
           onClose={() => setProfileSheetOpen(false)}
         />
 
-        {/* THE one number — two-line hero with trajectory color. */}
+        {/* THE one number — two-line hero with trajectory color. The
+            empty-state CTA depends on what the user is missing: no
+            accounts first (prerequisite for everything else), then no
+            income. Sample data is no longer seeded on first install,
+            so this path is the actual new-user landing experience. */}
         <DisposableHeroCard
           disposable={disposable}
           income={income}
@@ -137,7 +143,11 @@ export default function Home() {
           monthLabel={monthLabel}
           currency={currency}
           forecast={forecast ?? undefined}
-          onSetIncome={() => router.push('/(tabs)/plan' as never)}
+          emptyKind={accounts.length === 0 ? 'no-accounts' : income <= 0 ? 'no-income' : null}
+          onSetUp={() => {
+            if (accounts.length === 0) router.push('/(tabs)/me' as never);
+            else router.push('/(tabs)/plan' as never);
+          }}
         />
 
         {/* Phase 10x: forecast moved out of the hero into its own

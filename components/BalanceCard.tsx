@@ -20,8 +20,8 @@ import { t } from '@/utils/i18n';
 
 export interface DisposableHeroCardProps {
   disposable: number;
-  /** Used for empty-state detection. When 0 we render the "Set your
-   *  income to see disposable" CTA instead of meaningless zeros. */
+  /** Used for empty-state detection. When 0 we render an empty-state
+   *  panel with a context-appropriate CTA instead of meaningless zeros. */
   income: number;
   expense: number;
   daysLeft?: number;
@@ -32,8 +32,11 @@ export interface DisposableHeroCardProps {
    *  on the hero amount. Not rendered in the hero itself; the optional
    *  ForecastCard below the hero owns that display. */
   forecast?: number;
-  /** Empty-state CTA — invoked when income === 0. */
-  onSetIncome?: () => void;
+  /** Which empty state, if any, to render. Caller decides the order:
+   *  'no-accounts' is the prerequisite, 'no-income' is the next step. */
+  emptyKind?: 'no-accounts' | 'no-income' | null;
+  /** Empty-state CTA — meaning depends on emptyKind. */
+  onSetUp?: () => void;
 }
 
 /**
@@ -57,31 +60,38 @@ export function DisposableHeroCard({
   monthLabel,
   currency = 'USD',
   forecast,
-  onSetIncome,
+  emptyKind,
+  onSetUp,
 }: DisposableHeroCardProps) {
-  void expense; void monthLabel; // retained on the prop API for callers
+  void expense; void monthLabel; void income; // retained on the prop API for callers
 
-  // Empty state: no income recorded this month. Don't show 0s; ask the
-  // user to set income via the CTA.
-  if (income <= 0) {
+  // Empty state: depends on what's missing. 'no-accounts' is the
+  // prerequisite for everything else, so it takes precedence.
+  if (emptyKind) {
+    const title =
+      emptyKind === 'no-accounts'
+        ? 'Set up your first account'
+        : 'Set your income to see disposable';
+    const body =
+      emptyKind === 'no-accounts'
+        ? 'Add a wallet, bank, credit card, or savings account so we can track your balances.'
+        : 'Add a salary, freelance income, or any recurring deposit so we can compute what you have left to spend.';
+    const cta = emptyKind === 'no-accounts' ? 'Add account' : 'Set up income';
     return (
-      <View style={styles.heroCard} accessible accessibilityLabel="No income set yet">
-        <Text style={styles.heroEmptyTitle}>Set your income to see disposable</Text>
-        <Text style={styles.heroEmptyBody}>
-          Add a salary, freelance income, or any recurring deposit so we can compute
-          what you have left to spend.
-        </Text>
-        {onSetIncome && (
+      <View style={styles.heroCard} accessible accessibilityLabel={title}>
+        <Text style={styles.heroEmptyTitle}>{title}</Text>
+        <Text style={styles.heroEmptyBody}>{body}</Text>
+        {onSetUp && (
           <Pressable
-            onPress={onSetIncome}
+            onPress={onSetUp}
             style={({ pressed }) => [
               styles.heroCta,
               pressed && { transform: [{ scale: 0.97 }] },
             ]}
             accessibilityRole="button"
-            accessibilityLabel="Set up income"
+            accessibilityLabel={cta}
           >
-            <Text style={styles.heroCtaText}>Set up income</Text>
+            <Text style={styles.heroCtaText}>{cta}</Text>
           </Pressable>
         )}
       </View>

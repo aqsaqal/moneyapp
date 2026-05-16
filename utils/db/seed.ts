@@ -13,11 +13,24 @@ export async function isEmpty(): Promise<boolean> {
   return (rows[0]?.c ?? 0) === 0;
 }
 
+/** Phase 10y: sample-data seeding is OFF by default. Real money apps
+ *  shouldn't pollute the user's ledger with fake transactions — the
+ *  Disposable hero, Activity totals, and budget bars would all show
+ *  nonsense numbers. We keep the seed routine in source so a future
+ *  "Try with sample data" Demo profile opt-in can call seedDemoData()
+ *  directly, but the boot path never invokes it.
+ *
+ *  Anything genuinely default (category list, system categories,
+ *  "Personal" profile) is configuration, not transactions — those
+ *  remain seeded elsewhere. */
 export async function seedIfEmpty() {
-  // Only seed once per install — even if a user later creates a new
-  // profile (which gets its own empty DB), we don't want to re-inject
-  // 49 sample transactions into their fresh ledger. The first profile's
-  // db gets the demo dataset; subsequent profiles open clean.
+  return; // no-op
+}
+
+/** Explicit opt-in: dumps the legacy demo dataset into the active
+ *  profile's DB. Not wired to UI yet; reserved for a "Demo profile"
+ *  onboarding affordance. */
+export async function seedDemoData() {
   if (kv.getBool('hasSeededOnce', false)) return;
   if (!(await isEmpty())) return;
   const db = getDB();
