@@ -55,7 +55,7 @@ export function StreakBadge({ count }: { count: number }) {
       hitSlop={6}
     >
       <Animated.View style={[styles.wrap, animStyle]}>
-        <Text style={styles.text}>🔥 {count}</Text>
+        <Text style={styles.text}>🔥 {count} {count === 1 ? 'day' : 'days'}</Text>
       </Animated.View>
     </Pressable>
   );

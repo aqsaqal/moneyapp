@@ -8,7 +8,7 @@
 // Both exported from this file so callers can pick the right variant.
 
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, radii, font, sizes, spacing } from '@/constants/theme';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
@@ -20,22 +20,34 @@ import { t } from '@/utils/i18n';
 
 export interface DisposableHeroCardProps {
   disposable: number;
+  /** Used for empty-state detection. When 0 we render the "Set your
+   *  income to see disposable" CTA instead of meaningless zeros. */
   income: number;
   expense: number;
   daysLeft?: number;
   monthLabel?: string;
   currency?: CurrencyCode;
   /** Phase 10u — projected end-of-month disposable based on the current
-   *  trajectory. Rendered as a small line under the hero amount when set. */
+   *  trajectory. Drives the trajectory state color (green/yellow/red)
+   *  on the hero amount. Not rendered in the hero itself; the optional
+   *  ForecastCard below the hero owns that display. */
   forecast?: number;
+  /** Empty-state CTA — invoked when income === 0. */
+  onSetIncome?: () => void;
 }
 
 /**
- * One number, big. Disposable = income - fixed expenses - variable spend.
- * Subtext line: $income in · $spent out · N days left.
+ * Two-line hero:
+ *   Line 1 (huge):   "{currency} {disposable} left this month"
+ *   Line 2 (medium): "{currency} {perDay}/day for {N} days"
  *
- * Phase 6 of v2: replaces v1's BalanceCard on Home. Net Balance moved to
- * Me/Accounts — it's a "see all my money" answer, not a daily-glance answer.
+ * Color carries trajectory state, not the sign of the number:
+ *   green   = forecast keeps you ≥10% buffer
+ *   yellow  = forecast within 0–10% of zero
+ *   red     = forecast < 0 (you'll overshoot at current pace)
+ * Painting a positive Disposable red because the forecast says you'll
+ * overshoot is the signal users actually need; painting it red just for
+ * a temporary negative balance is noise.
  */
 export function DisposableHeroCard({
   disposable,
@@ -45,46 +57,132 @@ export function DisposableHeroCard({
   monthLabel,
   currency = 'USD',
   forecast,
+  onSetIncome,
 }: DisposableHeroCardProps) {
-  const positive = disposable >= 0;
+  void expense; void monthLabel; // retained on the prop API for callers
+
+  // Empty state: no income recorded this month. Don't show 0s; ask the
+  // user to set income via the CTA.
+  if (income <= 0) {
+    return (
+      <View style={styles.heroCard} accessible accessibilityLabel="No income set yet">
+        <Text style={styles.heroEmptyTitle}>Set your income to see disposable</Text>
+        <Text style={styles.heroEmptyBody}>
+          Add a salary, freelance income, or any recurring deposit so we can compute
+          what you have left to spend.
+        </Text>
+        {onSetIncome && (
+          <Pressable
+            onPress={onSetIncome}
+            style={({ pressed }) => [
+              styles.heroCta,
+              pressed && { transform: [{ scale: 0.97 }] },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Set up income"
+          >
+            <Text style={styles.heroCtaText}>Set up income</Text>
+          </Pressable>
+        )}
+      </View>
+    );
+  }
+
+  const days = typeof daysLeft === 'number' && daysLeft > 0 ? daysLeft : 1;
+  const perDay = disposable / days;
+
+  // Trajectory state via forecast (computed by caller). When forecast is
+  // undefined we treat it as healthy (no judgement yet).
+  let trajColor = theme.accent; // green
+  if (typeof forecast === 'number') {
+    if (forecast < 0) trajColor = theme.expense;
+    else if (forecast < disposable * 0.1) trajColor = '#EAB308';
+  }
+
   return (
     <View
       style={styles.heroCard}
       accessible
-      accessibilityLabel={`Disposable balance ${formatMoney(disposable, currency)}${monthLabel ? ` for ${monthLabel}` : ''}`}
+      accessibilityLabel={`${formatMoney(disposable, currency)} left this month, ${formatMoney(perDay, currency)} per day for ${days} days`}
     >
-      <Text style={styles.heroLabel}>
-        {t('home.disposable', { month: monthLabel ?? '' }).replace(/^\s*·\s*/, '')}
-      </Text>
       <Text
-        style={[styles.heroAmount, { color: positive ? theme.text1 : theme.expense }]}
+        style={[styles.heroAmount, { color: trajColor }]}
         adjustsFontSizeToFit
         numberOfLines={1}
       >
-        {formatMoney(disposable, currency)}
+        {formatMoney(disposable, currency)} left this month
       </Text>
       <Text style={styles.heroSubline}>
-        {formatMoney(income, currency)} · {formatMoney(expense, currency)}
-        {typeof daysLeft === 'number' ? ` · ${t('home.daysLeft', { n: daysLeft })}` : ''}
+        {formatMoney(perDay, currency)}/day for {days} days
       </Text>
-      {typeof forecast === 'number' && (
-        // Color carries semantic weight — only paint red when the
-        // forecast is actually negative (you'll overshoot). For a
-        // healthy positive forecast, stay neutral. Also show the minus
-        // sign explicitly so users don't rely on color alone to read
-        // the direction.
-        <Text
-          style={[
-            styles.heroForecast,
-            { color: forecast < 0 ? theme.expense : theme.text2 },
-          ]}
-        >
-          {t('home.forecast', {
-            amount: `${forecast < 0 ? '−' : ''}${formatMoney(forecast, currency)}`,
-          })}
-        </Text>
-      )}
     </View>
+  );
+}
+
+// =============================================================================
+// ForecastCard — Phase 10x: dedicated, tappable card below the hero
+// =============================================================================
+
+export interface ForecastCardProps {
+  forecast: number;
+  disposable: number;
+  daysLeft: number;
+  currency?: CurrencyCode;
+}
+
+/** Tappable forecast card. Collapsed: shows the headline. Expanded:
+ *  reveals projected end-of-month + a one-line explanation of how it's
+ *  computed (avg daily variable spend × days left + remaining bills). */
+export function ForecastCard({
+  forecast,
+  disposable,
+  daysLeft,
+  currency = 'USD',
+}: ForecastCardProps) {
+  const [open, setOpen] = React.useState(false);
+  // Tone matches the hero's trajectory color.
+  let toneColor = theme.accent;
+  let tone: 'good' | 'warn' | 'bad' = 'good';
+  if (forecast < 0) {
+    toneColor = theme.expense;
+    tone = 'bad';
+  } else if (forecast < disposable * 0.1) {
+    toneColor = '#EAB308';
+    tone = 'warn';
+  }
+  const headline =
+    tone === 'bad'
+      ? 'At this pace, you\'ll overshoot.'
+      : tone === 'warn'
+        ? 'Close to running out.'
+        : 'On track.';
+  return (
+    <Pressable
+      onPress={() => setOpen((v) => !v)}
+      style={styles.forecastCard}
+      accessibilityRole="button"
+      accessibilityLabel={`Forecast: ${headline} Tap for details.`}
+    >
+      <View style={styles.forecastRow}>
+        <View style={[styles.forecastDot, { backgroundColor: toneColor }]} />
+        <Text style={[styles.forecastHead, { color: toneColor }]}>{headline}</Text>
+        <Text style={styles.forecastCta}>{open ? 'hide' : 'tap for forecast'}</Text>
+      </View>
+      {open && (
+        <View style={styles.forecastBody}>
+          <Text style={styles.forecastLine}>
+            Projected end-of-month:{' '}
+            <Text style={{ color: toneColor, fontFamily: font.bodySemi }}>
+              {forecast < 0 ? '−' : ''}{formatMoney(forecast, currency)}
+            </Text>
+          </Text>
+          <Text style={styles.forecastHint}>
+            Based on your average daily spend so far times {daysLeft} day{daysLeft === 1 ? '' : 's'} left,
+            plus recurring bills not yet paid this month.
+          </Text>
+        </View>
+      )}
+    </Pressable>
   );
 }
 
@@ -190,6 +288,52 @@ const styles = StyleSheet.create({
     fontFamily: font.bodySemi,
     marginTop: 6,
   },
+  heroEmptyTitle: {
+    color: theme.text1,
+    fontSize: sizes.lg,
+    fontFamily: font.displayBold,
+    marginTop: 4,
+  },
+  heroEmptyBody: {
+    color: theme.text3,
+    fontSize: sizes.sm,
+    fontFamily: font.body,
+    marginTop: 6,
+    lineHeight: 20,
+  },
+  heroCta: {
+    alignSelf: 'flex-start',
+    marginTop: spacing.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: radii.pill,
+    backgroundColor: theme.accent,
+  },
+  heroCtaText: {
+    color: theme.bg,
+    fontSize: sizes.sm,
+    fontFamily: font.bodySemi,
+  },
+  forecastCard: {
+    backgroundColor: theme.bg2,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: theme.border,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    marginTop: spacing.sm,
+  },
+  forecastRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  forecastDot: { width: 8, height: 8, borderRadius: 4 },
+  forecastHead: { fontSize: sizes.sm, fontFamily: font.bodySemi, flex: 1 },
+  forecastCta: { color: theme.text3, fontSize: sizes.xs, textTransform: 'uppercase', letterSpacing: 0.5 },
+  forecastBody: { marginTop: spacing.sm, gap: 4 },
+  forecastLine: { color: theme.text2, fontSize: sizes.sm },
+  forecastHint: { color: theme.text3, fontSize: sizes.xs, lineHeight: 16 },
 
   // v1 (kept)
   card: {

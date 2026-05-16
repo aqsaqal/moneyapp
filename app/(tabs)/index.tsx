@@ -22,7 +22,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes } from '@/constants/theme';
 import { APP_NAME } from '@/constants/flavor';
 import { FeatureSlots } from '@/features';
-import { DisposableHeroCard } from '@/components/BalanceCard';
+import { DisposableHeroCard, ForecastCard } from '@/components/BalanceCard';
 import { HomeActionCard } from '@/components/HomeActionCard';
 import { TransactionRow } from '@/components/TransactionRow';
 import { StreakBadge } from '@/components/StreakBadge';
@@ -128,7 +128,7 @@ export default function Home() {
           onClose={() => setProfileSheetOpen(false)}
         />
 
-        {/* THE one number */}
+        {/* THE one number — two-line hero with trajectory color. */}
         <DisposableHeroCard
           disposable={disposable}
           income={income}
@@ -137,7 +137,21 @@ export default function Home() {
           monthLabel={monthLabel}
           currency={currency}
           forecast={forecast ?? undefined}
+          onSetIncome={() => router.push('/(tabs)/plan' as never)}
         />
+
+        {/* Phase 10x: forecast moved out of the hero into its own
+            tappable card. Collapsed by default; tap to reveal projected
+            end-of-month + how it's computed. Hidden when income is
+            zero (the empty-state hero already covers that case). */}
+        {income > 0 && typeof forecast === 'number' && (
+          <ForecastCard
+            forecast={forecast}
+            disposable={disposable}
+            daysLeft={daysLeft}
+            currency={currency}
+          />
+        )}
 
         {/* Islamic flavor: ZakatHomeCard + RamadanHomeCard. Generic: nothing. */}
         <FeatureSlots.HomeExtras />
