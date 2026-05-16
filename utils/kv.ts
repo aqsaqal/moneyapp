@@ -68,6 +68,7 @@ export interface KVSchema {
   voicePromptShown: string;    // '1' once the explainer was acknowledged (Phase 10h)
   fxAutoRefresh: string;       // '1' = fetch FX rates daily from frankfurter.app (Phase 10k)
   smartSuggestions: string;    // '1' = show frequent-merchant chips on Smart Add (default ON)
+  hasSeededOnce: string;       // '1' once the sample dataset has been inserted on this install — prevents re-seeding for new profiles
   'islamic.nisabAutoRefresh': string;  // '1' = fetch gold/silver spot daily (Phase 10q.2)
 }
 

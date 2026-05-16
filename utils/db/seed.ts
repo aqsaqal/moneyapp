@@ -5,6 +5,7 @@ import { sql } from 'drizzle-orm';
 import { getDB } from './client';
 import { accounts, budgets, recurring, transactions } from './schema';
 import { DEFAULT_ACCOUNTS, DEFAULT_BUDGETS, DEFAULT_RECURRING } from '@/constants/defaults';
+import { kv } from '@/utils/kv';
 
 export async function isEmpty(): Promise<boolean> {
   const db = getDB();
@@ -13,6 +14,11 @@ export async function isEmpty(): Promise<boolean> {
 }
 
 export async function seedIfEmpty() {
+  // Only seed once per install — even if a user later creates a new
+  // profile (which gets its own empty DB), we don't want to re-inject
+  // 49 sample transactions into their fresh ledger. The first profile's
+  // db gets the demo dataset; subsequent profiles open clean.
+  if (kv.getBool('hasSeededOnce', false)) return;
   if (!(await isEmpty())) return;
   const db = getDB();
 
@@ -88,4 +94,5 @@ export async function seedIfEmpty() {
   });
 
   await db.insert(transactions).values(toInsert);
+  kv.setBool('hasSeededOnce', true);
 }
