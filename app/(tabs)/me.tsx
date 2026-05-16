@@ -215,8 +215,10 @@ function OverviewAndAccounts() {
                     isActive && { borderColor: theme.accent },
                   ]}
                   onPress={() => setEditing(a)}
+                  onLongPress={drag}
+                  delayLongPress={300}
                   accessibilityRole="button"
-                  accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}${isArchived ? ', archived' : isExcluded ? ', excluded from total' : ''}, long-press the handle to reorder`}
+                  accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}${isArchived ? ', archived' : isExcluded ? ', excluded from total' : ''}, long-press to reorder`}
                 >
                   <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
                     <MaterialCommunityIcons name="wallet-outline" size={20} color={a.color} />
@@ -261,14 +263,6 @@ function OverviewAndAccounts() {
                   >
                     {formatMoney(a.balance, ac)}
                   </Text>
-                  <Pressable
-                    onPressIn={drag}
-                    hitSlop={10}
-                    style={styles.dragHandle}
-                    accessibilityLabel="Drag to reorder"
-                  >
-                    <MaterialCommunityIcons name="drag-horizontal-variant" size={22} color={theme.text2} />
-                  </Pressable>
                 </Pressable>
               </ScaleDecorator>
             );
@@ -350,7 +344,6 @@ const styles = StyleSheet.create({
     padding: spacing.md,
   },
   archiveToggleText: { color: theme.text3, fontSize: sizes.sm },
-  dragHandle: { padding: 4, marginLeft: 4 },
   ribaFooter: {
     flexDirection: 'row',
     alignItems: 'flex-start',
