@@ -81,6 +81,11 @@ export interface IconProps {
 }
 
 export function Icon({ name, size = 18, color = '#EAEAF2', style }: IconProps): React.JSX.Element {
-  const mcc = ICON_MAP[name] ?? 'help-circle-outline';
+  // Two valid name shapes: a legacy Lucide-style key (mapped via ICON_MAP)
+  // or a raw MaterialCommunityIcons name (passed through). Falling back
+  // to the literal name covers seeded categories that now store mcc
+  // names directly (Phase 10x) without forcing every legacy caller to
+  // change in lockstep.
+  const mcc = (ICON_MAP[name] ?? name) as MCCName;
   return <MaterialCommunityIcons name={mcc} size={size} color={color} style={style} />;
 }
