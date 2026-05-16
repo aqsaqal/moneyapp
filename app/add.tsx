@@ -218,11 +218,63 @@ export default function AddScreen() {
     }
   }, [accounts, prefill?.accountId, prefill?.toAccountId]);
 
+  // Phase 10z: calc mode appends operators to the amount string. The
+  // amount field doubles as an expression display. Submit evaluates it.
+  const [calcOpen, setCalcOpen] = useState(false);
   const onKey = (k: string) => {
     if (k === 'C') return setAmount('0');
     if (k === 'del') return setAmount((a) => (a.length <= 1 ? '0' : a.slice(0, -1)));
-    if (k === '.') return setAmount((a) => (a.includes('.') ? a : a + '.'));
+    if (k === '.') {
+      // Don't allow a second dot in the same numeric segment.
+      return setAmount((a) => {
+        const lastOp = Math.max(a.lastIndexOf('+'), a.lastIndexOf('-'), a.lastIndexOf('*'), a.lastIndexOf('/'));
+        const tail = a.slice(lastOp + 1);
+        return tail.includes('.') ? a : a + '.';
+      });
+    }
     setAmount((a) => (a === '0' ? k : a + k));
+  };
+  const onCalcOp = (op: '+' | '-' | '*' | '/') => {
+    setAmount((a) => {
+      // Replace a trailing operator instead of stacking — same UX as
+      // every calculator app.
+      if (/[+\-*/]$/.test(a)) return a.slice(0, -1) + op;
+      return a + op;
+    });
+  };
+  const evalAmount = (raw: string): number => {
+    // Allow only digits, dot, and the four operators. Anything else
+    // returns NaN so submit() bails. Tiny shunting-yard parser to
+    // honor precedence without using eval / Function.
+    if (!/^[0-9.+\-*/]+$/.test(raw)) return NaN;
+    const tokens: Array<number | string> = [];
+    let buf = '';
+    for (const ch of raw) {
+      if ('+-*/'.includes(ch)) {
+        if (buf) { tokens.push(parseFloat(buf)); buf = ''; }
+        tokens.push(ch);
+      } else buf += ch;
+    }
+    if (buf) tokens.push(parseFloat(buf));
+    // Strip a trailing operator if the user submitted mid-expression.
+    if (typeof tokens[tokens.length - 1] === 'string') tokens.pop();
+    if (tokens.length === 0) return NaN;
+    // Two passes: * /, then + -.
+    const pass = (ops: string[]): boolean => {
+      for (let i = 1; i < tokens.length - 1; i += 2) {
+        const op = tokens[i] as string;
+        if (!ops.includes(op)) continue;
+        const a = tokens[i - 1] as number;
+        const b = tokens[i + 1] as number;
+        const r = op === '+' ? a + b : op === '-' ? a - b : op === '*' ? a * b : a / b;
+        tokens.splice(i - 1, 3, r);
+        return true;
+      }
+      return false;
+    };
+    while (pass(['*', '/'])) { /* keep folding */ }
+    while (pass(['+', '-'])) { /* keep folding */ }
+    return typeof tokens[0] === 'number' ? tokens[0] : NaN;
   };
 
   // The account's own currency. When entryCurrency differs from this we
@@ -248,8 +300,10 @@ export default function AddScreen() {
   const submit = () => doSubmit();
 
   const submitInner = (opts: { skipCashCheck?: boolean }) => {
-    const v = parseFloat(amount);
-    if (!v) return;
+    // Amount may be a tiny expression like "100+50*2" when calc mode
+    // was used. evalAmount() returns the resolved number or NaN.
+    const v = evalAmount(amount);
+    if (!Number.isFinite(v) || v <= 0) return;
 
     // For mixed-currency entries: amount the user typed is in
     // entryCurrency; we persist `amount` in account currency. If the
@@ -466,17 +520,17 @@ export default function AddScreen() {
             )}
           </View>
         )}
-        {/* Date chip — defaults to "today"; tap to pick a past or future
-            date for back-filling. The day matters for analytics, budgets,
+        {/* Date — small grey text directly under the amount. Always
+            visible; tap (or the 📅 key in the numpad's right column)
+            to open the picker. Day matters for analytics, budgets,
             and the day-grouped Activity list. */}
         <Pressable
           onPress={() => setDatePickerOpen(true)}
-          style={styles.dateRow}
           accessibilityRole="button"
           accessibilityLabel={`Date ${txDate.toDateString()}, tap to change`}
+          hitSlop={8}
         >
-          <MaterialCommunityIcons name="calendar-outline" size={16} color={theme.text2} />
-          <Text style={styles.dateText}>
+          <Text style={styles.dateInlineText}>
             {isSameDay(txDate, new Date())
               ? `Today · ${txDate.toLocaleDateString()}`
               : txDate.toLocaleDateString()}
@@ -739,18 +793,18 @@ export default function AddScreen() {
           onChange={(p) => setDraft({ ...draft, ...p })}
         />
 
-        <Numpad onPress={onKey} />
-
-        <Pressable
-          onPress={submit}
-          style={({ pressed }) => [styles.submit, pressed && { transform: [{ scale: 0.97 }] }]}
-        >
-          <Text style={styles.submitText}>
-            {isEditing
-              ? t('common.save')
-              : t(mode === 'expense' ? 'add.cta.expense' : mode === 'income' ? 'add.cta.income' : 'add.cta.transfer')}
-          </Text>
-        </Pressable>
+        {/* Numpad's right column owns the function keys: delete, date,
+            calc toggle, and submit (✓). The standalone Add expense /
+            Save CTA below the keypad is gone — ✓ is the only submit. */}
+        <Numpad
+          onPress={onKey}
+          onDate={() => setDatePickerOpen(true)}
+          onSubmit={submit}
+          onCalcToggle={() => setCalcOpen((v) => !v)}
+          onCalcOp={onCalcOp}
+          calcOpen={calcOpen}
+          submitLabel={isEditing ? t('common.save') : t(`add.cta.${mode}`)}
+        />
 
         {isEditing && prefill?.editId && (
           <Pressable
@@ -975,19 +1029,12 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   fxConvertedSuffix: { color: theme.text3, fontSize: 13 },
-  dateRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 999,
-    borderWidth: 1,
-    borderColor: theme.border,
-    backgroundColor: theme.bg2,
+  dateInlineText: {
+    color: theme.text3,
+    fontSize: 12,
+    textAlign: 'center',
+    marginTop: -4,
   },
-  dateText: { color: theme.text1, fontSize: 13, fontFamily: 'PlusJakartaSans_600SemiBold' },
   noteRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1048,18 +1095,6 @@ const styles = StyleSheet.create({
   },
   transferDot: { width: 10, height: 10, borderRadius: 5 },
   transferRowText: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.body, flex: 1 },
-  submit: {
-    backgroundColor: theme.accent,
-    padding: spacing.md,
-    borderRadius: radii.lg,
-    alignItems: 'center',
-  },
-  submitText: {
-    color: theme.bg,
-    fontSize: sizes.lg,
-    fontWeight: '700',
-    fontFamily: font.display,
-  },
   deleteRow: {
     flexDirection: 'row',
     alignItems: 'center',
