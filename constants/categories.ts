@@ -33,7 +33,6 @@ export const EXPENSE_CATEGORIES: CategoryDef[] = [
   { id: 'clothing', name: 'Clothing', icon: 'tshirt-crew-outline', color: '#F472B6' },
   { id: 'fitness', name: 'Fitness', icon: 'run', color: '#4ADE80' },
   { id: 'subs', name: 'Subs', icon: 'file-document-outline', color: '#38BDF8' },
-  { id: 'adjustment', name: 'Adjustment', icon: 'scale-balance', color: '#94A3B8' },
   { id: 'other', name: 'Other', icon: 'dots-horizontal', color: '#8888AA' },
 ];
 
@@ -43,7 +42,6 @@ export const INCOME_CATEGORIES: CategoryDef[] = [
   { id: 'investment', name: 'Investment', icon: 'trending-up', color: '#818CF8' },
   { id: 'gift_in', name: 'Gift', icon: 'gift-outline', color: '#E879F9' },
   { id: 'refund', name: 'Refund', icon: 'swap-horizontal', color: '#FFBE44' },
-  { id: 'adjustment', name: 'Adjustment', icon: 'scale-balance', color: '#94A3B8' },
   { id: 'other_in', name: 'Other', icon: 'dots-horizontal', color: '#8888AA' },
 ];
 
@@ -81,9 +79,9 @@ function readCustoms(type: 'expense' | 'income'): CustomRow[] {
 }
 
 // Categories that exist for system reasons but should never appear in a
-// manual category picker. `adjustment` is reserved for the balance-
-// reconciliation flow.
-const HIDDEN_FROM_MANUAL_PICKERS = new Set(['adjustment']);
+// manual category picker. (Currently empty after the 'adjustment' →
+// 'other' merge in Phase 10y. Kept as a hook for future system rows.)
+const HIDDEN_FROM_MANUAL_PICKERS = new Set<string>();
 
 export function allExpenseCategories(): CategoryDef[] {
   // Order: customs first (so they shadow seeded by id) → seeded → islamic.

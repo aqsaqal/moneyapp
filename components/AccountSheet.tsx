@@ -162,7 +162,12 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
               addTransaction({
                 type: diff > 0 ? 'income' : 'expense',
                 amount: Math.abs(diff),
-                category: 'adjustment',
+                // Phase 10y: reconciliations land in "Other" instead of
+                // a dedicated 'adjustment' category — keeps the picker
+                // lean and avoids a system category most users never
+                // file by manually. The note still flags it as a
+                // reconciliation in Activity.
+                category: diff > 0 ? 'other_in' : 'other',
                 accountId: id,
                 note: 'Balance reconciliation',
                 date: Date.now(),

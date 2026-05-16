@@ -19,7 +19,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { theme, spacing, font, sizes } from '@/constants/theme';
+import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { APP_NAME } from '@/constants/flavor';
 import { FeatureSlots } from '@/features';
 import { DisposableHeroCard, ForecastCard } from '@/components/BalanceCard';
@@ -150,6 +150,24 @@ export default function Home() {
           }}
         />
 
+        {/* Second-step card: only shown while accounts are still missing.
+            Greyed/disabled so the user sees the progression without
+            being able to skip the prerequisite. Disappears once an
+            account exists — at that point the hero ITSELF rolls forward
+            to the income empty state. */}
+        {accounts.length === 0 && (
+          <View style={styles.disabledNextCard} accessible accessibilityLabel="Next step (disabled): set your income">
+            <View style={styles.disabledNextHead}>
+              <MaterialCommunityIcons name="lock-outline" size={14} color={theme.text3} />
+              <Text style={styles.disabledNextLabel}>Next</Text>
+            </View>
+            <Text style={styles.disabledNextTitle}>Then set your income</Text>
+            <Text style={styles.disabledNextHint}>
+              Available once you have at least one account.
+            </Text>
+          </View>
+        )}
+
         {/* Phase 10x: forecast moved out of the hero into its own
             tappable card. Collapsed by default; tap to reveal projected
             end-of-month + how it's computed. Hidden when income is
@@ -215,6 +233,24 @@ const styles = StyleSheet.create({
   scroll: { padding: spacing.lg, gap: spacing.lg },
   header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   brand: { color: theme.text1, fontSize: sizes.xxxl, fontFamily: font.displayBold },
+  disabledNextCard: {
+    backgroundColor: theme.bg2,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    borderColor: theme.border,
+    padding: spacing.md,
+    opacity: 0.55,
+  },
+  disabledNextHead: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  disabledNextLabel: {
+    color: theme.text3,
+    fontSize: 10,
+    fontFamily: font.bodySemi,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  disabledNextTitle: { color: theme.text2, fontSize: sizes.md, marginTop: 2, fontFamily: font.bodySemi },
+  disabledNextHint: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
   section: { gap: spacing.sm },
   sectionTitle: {
     color: theme.text2,

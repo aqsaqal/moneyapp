@@ -27,7 +27,7 @@ import {
   useMonthTotalsByCategory,
 } from '@/hooks/useAppData';
 import { catInfo } from '@/constants/categories';
-import { useCategoriesWithMeta, useCategoryFrequency } from '@/hooks/useAppData';
+import { useCategoriesWithMeta } from '@/hooks/useAppData';
 import { dayStr, monthKey, formatMoney } from '@/utils/format';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
@@ -37,25 +37,24 @@ export default function Activity() {
   const router = useRouter();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [filterCat, setFilterCat] = useState<string | null>(null);
-  // Filter chips: every category that could be tagged on a transaction
-  // — expense, income, both, AND 'adjustment' (because reconciliations
-  // are real rows in the list). Archived are still filtered out;
-  // there's no point letting the user filter by a category they can't
-  // currently log against. Sort: pinned → 60d frequency → alpha. No
-  // row cap; horizontal scroll handles overflow.
+  // Filter chip strip: same pattern as the Smart Add chip row —
+  // "All" + top 5 by THIS MONTH spend + "More". The full picker
+  // (everything non-archived, including income categories) lives
+  // behind the "More" chip.
   const allCategories = useCategoriesWithMeta();
-  const filterFreq = useCategoryFrequency({ days: 60 });
-  const filterCategories = useMemo(() => {
+  const monthTotalsForFilter = useMonthTotalsByCategory(monthKey(), 'expense');
+  const top5Categories = useMemo(() => {
+    const spendById = new Map(monthTotalsForFilter.map((m) => [m.category, m.total]));
     return allCategories
-      .filter((c) => !c.archived)
-      .sort((a, b) => {
-        if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
-        const fa = filterFreq.get(a.id) ?? 0;
-        const fb = filterFreq.get(b.id) ?? 0;
-        if (fa !== fb) return fb - fa;
-        return a.name.localeCompare(b.name);
-      });
-  }, [allCategories, filterFreq]);
+      .filter((c) => !c.archived && (spendById.get(c.id) ?? 0) > 0)
+      .sort((a, b) => (spendById.get(b.id) ?? 0) - (spendById.get(a.id) ?? 0))
+      .slice(0, 5);
+  }, [allCategories, monthTotalsForFilter]);
+  const allFilterCategories = useMemo(
+    () => allCategories.filter((c) => !c.archived).sort((a, b) => a.name.localeCompare(b.name)),
+    [allCategories],
+  );
+  const [filterMoreOpen, setFilterMoreOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [halalFilter, setHalalFilter] = useState<string | null>(null);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
@@ -91,7 +90,7 @@ export default function Activity() {
         <SearchBar value={search} onChange={setSearch} placeholder={t('activity.searchPlaceholder')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
           <FilterChip label={t('activity.allChip')} active={!filterCat} onPress={() => setFilterCat(null)} />
-          {filterCategories.map((c) => (
+          {top5Categories.map((c) => (
             <FilterChip
               key={c.id}
               label={c.name}
@@ -100,6 +99,20 @@ export default function Activity() {
               color={c.color}
             />
           ))}
+          {/* "More" only renders if the selected filter is hidden from
+              the top-5, OR if there are more than 5 categories with any
+              activity this month — otherwise it's noise. */}
+          {(allFilterCategories.length > top5Categories.length || (filterCat && !top5Categories.some((c) => c.id === filterCat))) && (
+            <FilterChip
+              label={
+                filterCat && !top5Categories.some((c) => c.id === filterCat)
+                  ? `More · ${catInfo(filterCat).name}`
+                  : 'More…'
+              }
+              active={Boolean(filterCat && !top5Categories.some((c) => c.id === filterCat))}
+              onPress={() => setFilterMoreOpen(true)}
+            />
+          )}
           <FeatureSlots.HistoryFilterExtras value={halalFilter} onChange={setHalalFilter} />
         </ScrollView>
       </View>
@@ -159,6 +172,41 @@ export default function Activity() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
+      {filterMoreOpen && (
+        <View style={styles.moreOverlay} pointerEvents="auto">
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setFilterMoreOpen(false)} />
+          <View style={styles.moreSheet}>
+            <Text style={styles.moreTitle}>Filter by category</Text>
+            <ScrollView style={{ maxHeight: 420 }}>
+              <Pressable
+                onPress={() => {
+                  setFilterCat(null);
+                  setFilterMoreOpen(false);
+                }}
+                style={styles.moreRow}
+                accessibilityRole="button"
+              >
+                <View style={[styles.moreDot, { backgroundColor: theme.text3 }]} />
+                <Text style={styles.moreLabel}>All</Text>
+              </Pressable>
+              {allFilterCategories.map((c) => (
+                <Pressable
+                  key={c.id}
+                  onPress={() => {
+                    setFilterCat(c.id);
+                    setFilterMoreOpen(false);
+                  }}
+                  style={styles.moreRow}
+                  accessibilityRole="button"
+                >
+                  <View style={[styles.moreDot, { backgroundColor: c.color }]} />
+                  <Text style={styles.moreLabel}>{c.name}</Text>
+                </Pressable>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -294,6 +342,25 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg2,
   },
   chipText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body },
+  moreOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+    justifyContent: 'flex-end',
+    zIndex: 100,
+  },
+  moreSheet: {
+    backgroundColor: theme.bg1,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: spacing.md,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.lg,
+    maxHeight: '70%',
+  },
+  moreTitle: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold, marginBottom: spacing.sm },
+  moreRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 12 },
+  moreDot: { width: 10, height: 10, borderRadius: 5 },
+  moreLabel: { color: theme.text1, fontSize: sizes.md },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
   analytics: {
     padding: spacing.md,

@@ -6,7 +6,7 @@
 // through automatically.
 
 import { Appearance } from 'react-native';
-import { PRIMARY_COLOR } from './flavor';
+import { PRIMARY_COLOR, IS_ISLAMIC } from './flavor';
 import { kv } from '@/utils/kv';
 
 export type ThemeMode = 'system' | 'dark' | 'light';
@@ -52,16 +52,24 @@ const dark: Palette = {
   gold: '#D4AF37',
 };
 
+// Brand mint (#00E09E) reads fine on dark — saturation pops against
+// black. On white it goes washed-out. We swap to a deeper variant for
+// light mode so the green still feels like a brand color, not a hint:
+//   Flow:   emerald-600 (#059669)
+//   Amanah: teal-700    (#0F766E)
+// Dark mode keeps PRIMARY_COLOR unchanged.
+const LIGHT_ACCENT = IS_ISLAMIC ? '#0F766E' : '#059669';
+
 const light: Palette = {
   bg: '#F7F7FA',
   bg1: '#FFFFFF',
   bg2: '#F0F0F5',
   bg3: '#E5E5EE',
   bg4: '#DADAE6',
-  accent: PRIMARY_COLOR,
-  accentDim: `${PRIMARY_COLOR}20`,
-  accentMid: `${PRIMARY_COLOR}44`,
-  income: PRIMARY_COLOR,
+  accent: LIGHT_ACCENT,
+  accentDim: `${LIGHT_ACCENT}20`,
+  accentMid: `${LIGHT_ACCENT}44`,
+  income: LIGHT_ACCENT,
   expense: '#E11D48',
   warning: '#D97706',
   indigo: '#4F46E5',
