@@ -34,10 +34,11 @@ export default function AccountsScreen() {
         <Text style={styles.title}>{t('me.title')}</Text>
         <HeaderSettingsButton />
       </View>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <OverviewAndAccounts />
-        <View style={{ height: 100 }} />
-      </ScrollView>
+      {/* DraggableFlatList IS the scroll container so its pan gestures
+          don't fight a parent ScrollView. Overview + section headers
+          ride on ListHeaderComponent; archive toggle + riba footer +
+          tab-bar spacer ride on ListFooterComponent. */}
+      <OverviewAndAccounts />
     </SafeAreaView>
   );
 }
@@ -92,15 +93,21 @@ function OverviewAndAccounts() {
   const [editing, setEditing] = useState<Account | null | undefined>(undefined);
   const visibleAccounts = showArchived ? allAccounts : active;
 
-  return (
-    <View style={{ gap: spacing.lg }}>
+  const ListHeader = (
+    <View style={{ gap: spacing.lg, marginBottom: spacing.md }}>
       {/* OVERVIEW — single hero card: big Net, Assets+Debt split below. */}
       <View style={{ gap: spacing.md }}>
         <SectionHeader title={t('me.section.overview')} />
         <View style={styles.overviewCard}>
           <Text style={styles.netLabel}>{t('me.netBalance')}</Text>
           <Text
-            style={[styles.netValue, { color: net >= 0 ? theme.accent : theme.expense }]}
+            // Zero is neutral, not "positive". Green/red carries meaning;
+            // a 0 balance should read as black so users don't see a
+            // false healthy-state signal.
+            style={[
+              styles.netValue,
+              { color: net > 0 ? theme.accent : net < 0 ? theme.expense : theme.text1 },
+            ]}
             numberOfLines={1}
             adjustsFontSizeToFit
             minimumFontScale={0.6}
@@ -108,35 +115,79 @@ function OverviewAndAccounts() {
             {approx ? '≈ ' : ''}{formatMoney(net, currency)}
           </Text>
           <View style={[sectionStyles.summaryRow, { marginTop: spacing.md }]}>
-            <SummaryCard label={t('me.assets')} value={assets} color={theme.accent} currency={currency} />
-            <SummaryCard label={t('me.debt')} value={debt} color={theme.expense} currency={currency} />
+            <SummaryCard
+              label={t('me.assets')}
+              value={assets}
+              color={assets > 0 ? theme.accent : theme.text1}
+              currency={currency}
+            />
+            <SummaryCard
+              label={t('me.debt')}
+              value={debt}
+              color={debt > 0 ? theme.expense : theme.text1}
+              currency={currency}
+            />
           </View>
         </View>
       </View>
 
-      {/* ACCOUNTS — list with + Add header. */}
-      <View style={{ gap: spacing.md }}>
-        <SectionHeader
-          title={t('me.section.accounts')}
-          onAdd={() => setEditing(null)}
-          addLabel={t('common.add')}
-        />
+      <SectionHeader
+        title={t('me.section.accounts')}
+        onAdd={() => setEditing(null)}
+        addLabel={t('common.add')}
+      />
+    </View>
+  );
 
-        <DraggableFlatList
-          data={visibleAccounts}
-          keyExtractor={(a) => a.id}
-          onDragEnd={({ data }) => {
-            // Persist the new order. Only active rows participate in
-            // drag; archived rows keep their existing sort_order so the
-            // hidden ordering is preserved when toggled back on.
-            reorderAccounts(data.filter((a) => a.archived !== 1).map((a) => a.id));
-          }}
-          // The outer SafeAreaView/ScrollView already scrolls; let the
-          // draggable list render its content non-scrollable to avoid
-          // nested-scrolling glitches.
-          scrollEnabled={false}
-          contentContainerStyle={{ gap: spacing.md }}
-          activationDistance={8}
+  const ListFooter = (
+    <View style={{ gap: spacing.md, marginTop: spacing.md }}>
+      {archivedAccounts.length > 0 && (
+        <Pressable
+          onPress={() => setShowArchived((v) => !v)}
+          style={styles.archiveToggle}
+          accessibilityRole="button"
+          accessibilityLabel={showArchived ? 'Hide archived accounts' : `Show ${archivedAccounts.length} archived accounts`}
+        >
+          <MaterialCommunityIcons
+            name={showArchived ? 'eye-off-outline' : 'archive-outline'}
+            size={16}
+            color={theme.text3}
+          />
+          <Text style={styles.archiveToggleText}>
+            {showArchived ? 'Hide archived' : `Show archived (${archivedAccounts.length})`}
+          </Text>
+        </Pressable>
+      )}
+      {process.env.APP_FLAVOR === 'islamic' && allAccounts.some((a) => a.isRiba === 1) && (
+        <View style={styles.ribaFooter}>
+          <MaterialCommunityIcons name="alert-circle-outline" size={16} color={theme.warning} />
+          <Text style={styles.ribaFooterText}>
+            One or more accounts are flagged as earning interest. Consult a scholar
+            for the right zakat treatment.
+          </Text>
+        </View>
+      )}
+      <View style={{ height: 100 }} />
+    </View>
+  );
+
+  return (
+    <>
+      <DraggableFlatList
+        data={visibleAccounts}
+        keyExtractor={(a) => a.id}
+        ListHeaderComponent={ListHeader}
+        ListFooterComponent={ListFooter}
+        contentContainerStyle={styles.scroll}
+        // Each row has its own drag handle (right edge). Body tap →
+        // edit; vertical swipe on the row body should scroll naturally.
+        activationDistance={20}
+        onDragEnd={({ data }) => {
+          // Persist the new order. Only active rows participate in
+          // drag; archived rows keep their existing sort_order so the
+          // hidden ordering is preserved when toggled back on.
+          reorderAccounts(data.filter((a) => a.archived !== 1).map((a) => a.id));
+        }}
           renderItem={({ item: a, drag, isActive }: RenderItemParams<Account>) => {
             const ac = accountCurrency(a) as CurrencyCode;
             const utilPct =
@@ -195,7 +246,19 @@ function OverviewAndAccounts() {
                       </>
                     )}
                   </View>
-                  <Text style={[styles.acctBal, { color: a.balance >= 0 ? theme.accent : theme.expense }]}>
+                  <Text
+                    style={[
+                      styles.acctBal,
+                      {
+                        color:
+                          a.balance > 0
+                            ? theme.accent
+                            : a.balance < 0
+                              ? theme.expense
+                              : theme.text1,
+                      },
+                    ]}
+                  >
                     {formatMoney(a.balance, ac)}
                   </Text>
                   <Pressable
@@ -212,41 +275,14 @@ function OverviewAndAccounts() {
           }}
         />
 
-        {archivedAccounts.length > 0 && (
-          <Pressable
-            onPress={() => setShowArchived((v) => !v)}
-            style={styles.archiveToggle}
-            accessibilityRole="button"
-            accessibilityLabel={showArchived ? 'Hide archived accounts' : `Show ${archivedAccounts.length} archived accounts`}
-          >
-            <MaterialCommunityIcons
-              name={showArchived ? 'eye-off-outline' : 'archive-outline'}
-              size={16}
-              color={theme.text3}
-            />
-            <Text style={styles.archiveToggleText}>
-              {showArchived ? 'Hide archived' : `Show archived (${archivedAccounts.length})`}
-            </Text>
-          </Pressable>
-        )}
-
-        {process.env.APP_FLAVOR === 'islamic' && allAccounts.some((a) => a.isRiba === 1) && (
-          <View style={styles.ribaFooter}>
-            <MaterialCommunityIcons name="alert-circle-outline" size={16} color={theme.warning} />
-            <Text style={styles.ribaFooterText}>
-              One or more accounts are flagged as earning interest. Consult a scholar
-              for the right zakat treatment.
-            </Text>
-          </View>
-        )}
-      </View>
+      />
 
       <AccountSheet
         visible={editing !== undefined}
         account={editing ?? undefined}
         onClose={() => setEditing(undefined)}
       />
-    </View>
+    </>
   );
 }
 
