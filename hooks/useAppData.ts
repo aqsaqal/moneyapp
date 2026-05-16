@@ -7,7 +7,7 @@
 //   const { transactions, addTransaction, deleteTransaction } = useAppData();
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { and, desc, eq, gte, like, lt, or, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, gte, like, lt, lte, or, sql } from 'drizzle-orm';
 import { getDB, getRawDB } from '@/utils/db/client';
 import {
   accounts,
@@ -87,6 +87,10 @@ export function bootAppData(): Promise<void> {
       // `budgets` rows onto the matching custom_categories row so the
       // category becomes the single source of truth.
       try { migrateBudgetsToCategories(); } catch { /* idempotent; safe to ignore */ }
+      // Phase 10z: settle any scheduled transactions whose date has
+      // passed since the last launch. Idempotent, fast (single SELECT
+      // + per-row UPDATE inside a transaction).
+      try { applyDueTransactions(); } catch { /* never block boot */ }
       // Phase 10p: capture today's net-worth snapshot once per app launch.
       // No-op when today's row already exists.
       try { snapshotTodayIfMissing(); } catch { /* never block boot on this */ }
@@ -140,6 +144,14 @@ export interface UseTransactionsOpts {
   halalStatus?: string | null;
   /** Hard cap on rows returned. Default: see DEFAULT_TX_LIMIT below. */
   limit?: number;
+  /** Inclusive upper bound on date (epoch ms). Used to exclude future-
+   *  dated transactions from "what's already happened" rollups —
+   *  Disposable, budgets, insights — so a scheduled future expense
+   *  doesn't shrink today's headline numbers. */
+  dateLte?: number;
+  /** Exclusive lower bound on date (epoch ms). For the Upcoming
+   *  section on Activity: only rows with date > end-of-today. */
+  dateGt?: number;
 }
 
 /** Default page size for transaction queries when no limit is passed.
@@ -172,6 +184,8 @@ export function useTransactions(opts: UseTransactionsOpts = {}): Transaction[] {
       const s = `%${opts.search}%`;
       clauses.push(or(like(transactions.note, s), like(transactions.category, s))!);
     }
+    if (typeof opts.dateLte === 'number') clauses.push(lte(transactions.date, opts.dateLte));
+    if (typeof opts.dateGt === 'number') clauses.push(gt(transactions.date, opts.dateGt));
     const where = clauses.length ? and(...clauses) : undefined;
     let q = db.select().from(transactions).where(where).orderBy(desc(transactions.date));
     // Always cap. The caller can override with an explicit limit; otherwise
@@ -483,13 +497,17 @@ export function useMonthTotalsByCategory(key: string, type: 'expense' | 'income'
   const db = getDB();
   return useMemo(() => {
     const [s, e] = monthRange(key);
+    // Phase 10z: cap at "now" so a scheduled future expense doesn't
+    // inflate the category bar before it actually fires. The upper
+    // bound is whichever is smaller — end-of-month or right-now.
+    const cap = Math.min(e, Date.now());
     return db
       .select({
         category: transactions.category,
         total: sql<number>`SUM(${transactions.amount})`.as('total'),
       })
       .from(transactions)
-      .where(and(eq(transactions.type, type), gte(transactions.date, s), lt(transactions.date, e)))
+      .where(and(eq(transactions.type, type), gte(transactions.date, s), lt(transactions.date, cap)))
       .groupBy(transactions.category)
       .all()
       .filter((r): r is CategoryTotal => !!r.category) as CategoryTotal[];
@@ -594,9 +612,15 @@ export function addTransaction(
 ): Transaction {
   const db = getDB();
   const raw = getRawDB();
-  if (!opts.skipCashCheck) checkCashNegative(input);
-  const id = newId();
   const now = Date.now();
+  const txDate = input.date ?? now;
+  // Phase 10z: future-dated transactions are SCHEDULED, not yet
+  // executed. Their row gets `applied = 0`; the balance does NOT
+  // move on insert. The boot-time applyDueTransactions() pass debits
+  // the account once the date has arrived.
+  const isFuture = txDate > now;
+  if (!isFuture && !opts.skipCashCheck) checkCashNegative(input);
+  const id = newId();
   const row: NewTransaction = {
     id,
     type: input.type,
@@ -611,12 +635,19 @@ export function addTransaction(
     asnaf: input.asnaf ?? null,
     originalAmount: input.originalAmount ?? null,
     originalCurrency: input.originalCurrency ?? null,
-    date: input.date ?? now,
+    date: txDate,
     createdAt: now,
+    applied: isFuture ? 0 : 1,
   };
   raw.withTransactionSync(() => {
     db.insert(transactions).values(row).run();
-    // Account balance updates.
+    if (isFuture) {
+      // Scheduled — don't touch account balances yet. Editing or
+      // deletion before the date is a no-op on balances; once the
+      // boot pass applies it, those reversals work like any normal tx.
+      return;
+    }
+    // Account balance updates (only for already-applied / past-or-now txns).
     if (input.type === 'transfer' && input.toAccountId) {
       db.update(accounts).set({ balance: sql`${accounts.balance} - ${input.amount}` }).where(eq(accounts.id, input.accountId)).run();
       db.update(accounts).set({ balance: sql`${accounts.balance} + ${input.amount}` }).where(eq(accounts.id, input.toAccountId)).run();
@@ -625,14 +656,48 @@ export function addTransaction(
     } else {
       db.update(accounts).set({ balance: sql`${accounts.balance} - ${input.amount}` }).where(eq(accounts.id, input.accountId)).run();
     }
-    // Phase 7: bump merchant_memory for L2 prediction. Skipped for transfers
-    // (no category) and recurring auto-creates (system-named, not user notes).
     if (input.type === 'expense' && input.category && input.note && !input.recurringId) {
       bumpMerchantMemoryInline(raw, input.note, input.category, input.accountId, now);
     }
   });
   bump();
   return { ...row } as Transaction;
+}
+
+/** Boot-time pass: any future-dated transaction whose date has now
+ *  arrived gets its balance change applied and `applied` flips to 1.
+ *  Safe to run on every cold launch (idempotent: applied=1 rows are
+ *  skipped). */
+export function applyDueTransactions(): number {
+  const raw = getRawDB();
+  const db = getDB();
+  const now = Date.now();
+  type Row = {
+    id: string; type: 'expense' | 'income' | 'transfer';
+    amount: number; account_id: string; to_account_id: string | null;
+  };
+  const rows = raw.getAllSync(
+    `SELECT id, type, amount, account_id, to_account_id
+       FROM transactions
+      WHERE applied = 0 AND date <= ?`,
+    [now],
+  ) as Row[];
+  if (rows.length === 0) return 0;
+  raw.withTransactionSync(() => {
+    for (const r of rows) {
+      if (r.type === 'transfer' && r.to_account_id) {
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${r.amount}` }).where(eq(accounts.id, r.account_id)).run();
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${r.amount}` }).where(eq(accounts.id, r.to_account_id)).run();
+      } else if (r.type === 'income') {
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${r.amount}` }).where(eq(accounts.id, r.account_id)).run();
+      } else {
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${r.amount}` }).where(eq(accounts.id, r.account_id)).run();
+      }
+      raw.runSync(`UPDATE transactions SET applied = 1 WHERE id = ?`, [r.id]);
+    }
+  });
+  if (rows.length > 0) bump();
+  return rows.length;
 }
 
 /** Inline duplicate of bumpMerchantMemory to avoid pulling useSmartPredict into
@@ -669,18 +734,23 @@ export function deleteTransaction(id: string): void {
   const raw = getRawDB();
   const existing = db.select().from(transactions).where(eq(transactions.id, id)).get();
   if (!existing) return;
+  // Phase 10z: only reverse balances when the transaction was already
+  // applied. Scheduled-but-not-yet-fired rows (applied = 0) never
+  // touched the account balance, so deleting them is a pure row
+  // remove — no balance correction needed.
+  const wasApplied = existing.applied !== 0;
   raw.withTransactionSync(() => {
-    // Reverse balance effects.
-    if (existing.type === 'transfer' && existing.toAccountId) {
-      db.update(accounts).set({ balance: sql`${accounts.balance} + ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
-      db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.toAccountId)).run();
-    } else if (existing.type === 'income') {
-      db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
-    } else {
-      db.update(accounts).set({ balance: sql`${accounts.balance} + ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
+    if (wasApplied) {
+      if (existing.type === 'transfer' && existing.toAccountId) {
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.toAccountId)).run();
+      } else if (existing.type === 'income') {
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
+      } else {
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
+      }
     }
     db.delete(transactions).where(eq(transactions.id, id)).run();
-    // Clean any paid_items referencing this transaction.
     db.delete(paidItems).where(eq(paidItems.transactionId, id)).run();
   });
   bump();

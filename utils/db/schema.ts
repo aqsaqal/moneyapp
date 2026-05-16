@@ -32,6 +32,13 @@ export const transactions = sqliteTable(
     // Null on same-currency transactions.
     originalAmount: real('original_amount'),
     originalCurrency: text('original_currency'),
+    // Phase 10z: scheduled future-dated transactions. When `date > now`
+    // at insert time, the row is created but the account balance is NOT
+    // moved. `applied = 0` flags pending; a boot-time pass flips it to
+    // 1 and debits the balance once the date has arrived. Existing
+    // historical rows have applied = NULL which we treat as 1 (legacy
+    // = always applied) so the migration is a no-op for everyone.
+    applied: integer('applied'),  // 0/1; null = legacy / always applied
   },
   (t) => ({
     dateIdx: index('tx_date_idx').on(t.date),

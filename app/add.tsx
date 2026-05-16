@@ -36,7 +36,7 @@ import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
 import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, useCategoriesWithMeta, useCategoryFrequency, useMonthTotalsByCategory, AccountValidationError } from '@/hooks/useAppData';
 import { CategoryPicker } from '@/components/CategoryPicker';
-import { monthKey } from '@/utils/format';
+import { monthKey, daysDiff, relativeDayLabel } from '@/utils/format';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
@@ -524,18 +524,25 @@ export default function AddScreen() {
             visible; tap (or the 📅 key in the numpad's right column)
             to open the picker. Day matters for analytics, budgets,
             and the day-grouped Activity list. */}
-        <Pressable
-          onPress={() => setDatePickerOpen(true)}
-          accessibilityRole="button"
-          accessibilityLabel={`Date ${txDate.toDateString()}, tap to change`}
-          hitSlop={8}
-        >
-          <Text style={styles.dateInlineText}>
-            {isSameDay(txDate, new Date())
-              ? `Today · ${txDate.toLocaleDateString()}`
-              : txDate.toLocaleDateString()}
-          </Text>
-        </Pressable>
+        {(() => {
+          const diff = daysDiff(Date.now(), txDate);
+          // Tone: future = amber (scheduled, draws attention); past
+          // = accent (intentional backdate is fine); today = neutral.
+          const tone =
+            diff > 0 ? '#F59E0B' : diff < 0 ? theme.accent : theme.text3;
+          return (
+            <Pressable
+              onPress={() => setDatePickerOpen(true)}
+              accessibilityRole="button"
+              accessibilityLabel={`Date ${txDate.toDateString()}, tap to change`}
+              hitSlop={8}
+            >
+              <Text style={[styles.dateInlineText, { color: tone }]}>
+                {relativeDayLabel(txDate, locale)}
+              </Text>
+            </Pressable>
+          );
+        })()}
         {datePickerOpen && (() => {
           const DateTimePicker = getDatePicker();
           if (!DateTimePicker) {

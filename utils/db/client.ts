@@ -220,6 +220,9 @@ function createTables(db: SQLite.SQLiteDatabase) {
     if (!cols.some((c) => c.name === 'original_currency')) {
       db.execSync(`ALTER TABLE transactions ADD COLUMN original_currency TEXT;`);
     }
+    if (!cols.some((c) => c.name === 'applied')) {
+      db.execSync(`ALTER TABLE transactions ADD COLUMN applied INTEGER;`);
+    }
   } catch {
     /* swallow — fresh DB will already have the column from CREATE TABLE if we add it there in a future major. */
   }

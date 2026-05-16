@@ -54,8 +54,11 @@ export default function Home() {
   const thisMonth = monthKey(now);
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
 
-  const thisMoTxns = useTransactions({ monthKey: thisMonth });
-  const recentTxns = useTransactions({ limit: 3 });
+  // Future-dated transactions are real-but-pending (the user scheduled
+  // a future bill). They shouldn't shrink today's Disposable until
+  // they actually fire — clamp the rollup to right-now.
+  const thisMoTxns = useTransactions({ monthKey: thisMonth, dateLte: Date.now() });
+  const recentTxns = useTransactions({ limit: 3, dateLte: Date.now() });
   const streak = useStreak();
   const recurring = useRecurringList();
   const accounts = useAccounts();

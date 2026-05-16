@@ -62,10 +62,22 @@ export default function Activity() {
   const [recapOpen, setRecapOpen] = useState(false);
   const [pageLimit, setPageLimit] = useState(200);
 
+  // End-of-today as the boundary between Upcoming and history.
+  const endOfToday = useMemo(() => {
+    const d = new Date(); d.setHours(23, 59, 59, 999); return d.getTime();
+  }, []);
+  const upcomingTxns = useTransactions({
+    category: filterCat,
+    search: search || undefined,
+    halalStatus: halalFilter,
+    dateGt: endOfToday,
+    limit: 100,
+  });
   const txns = useTransactions({
     category: filterCat,
     search: search || undefined,
     halalStatus: halalFilter,
+    dateLte: endOfToday,
     limit: pageLimit,
   });
   const reachedLimit = txns.length >= pageLimit;
@@ -138,6 +150,31 @@ export default function Activity() {
                 ? t('activity.empty.filtered.hint')
                 : t('activity.empty.fresh.hint')}
             </Text>
+          </View>
+        )}
+        {/* Upcoming — future-dated transactions. Scheduled but not yet
+            executed. Amber tone, slightly dimmed so they read as "not
+            yet real" without looking broken. Stays tappable so the
+            user can edit / cancel the scheduled item. */}
+        {upcomingTxns.length > 0 && (
+          <View style={styles.group}>
+            <Text style={[styles.dayLabel, styles.upcomingLabel]}>UPCOMING</Text>
+            <View style={{ gap: 2, opacity: 0.85 }}>
+              {upcomingTxns.map((tx) => (
+                <TransactionRow
+                  key={tx.id}
+                  t={tx}
+                  currency={currency}
+                  tag={{ text: 'scheduled', color: '#F59E0B' }}
+                  onPressMore={() =>
+                    router.push({
+                      pathname: '/add',
+                      params: { prefill: buildEditPrefill(tx) },
+                    } as never)
+                  }
+                />
+              ))}
+            </View>
           </View>
         )}
         {grouped.map(([day, ts]) => (
@@ -318,6 +355,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg2,
   },
   chipText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body },
+  upcomingLabel: { color: '#F59E0B' },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
   analytics: {
     padding: spacing.md,

@@ -17,9 +17,13 @@ export interface TransactionRowProps {
   t: Transaction;
   currency?: CurrencyCode;
   onPressMore?: () => void;
+  /** Optional inline tag — used for "scheduled" on future-dated rows
+   *  in the Upcoming section. Renders as a small colored pill next to
+   *  the name. */
+  tag?: { text: string; color: string };
 }
 
-export function TransactionRow({ t, currency = 'USD', onPressMore }: TransactionRowProps) {
+export function TransactionRow({ t, currency = 'USD', onPressMore, tag }: TransactionRowProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
 
   let icon = 'MoreHorizontal';
@@ -86,7 +90,14 @@ export function TransactionRow({ t, currency = 'USD', onPressMore }: Transaction
             <Icon name={icon} size={18} color={color} />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={styles.name} numberOfLines={1}>{name}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Text style={styles.name} numberOfLines={1}>{name}</Text>
+              {tag && (
+                <Text style={[styles.tag, { color: tag.color, borderColor: `${tag.color}55` }]}>
+                  {tag.text}
+                </Text>
+              )}
+            </View>
             {/* Halal badge only rendered in islamic builds — string literals
                 ('halal'/'haram'/'mushbooh') get DCE'd from generic via babel
                 process.env inlining. */}
@@ -171,6 +182,17 @@ const styles = StyleSheet.create({
     fontSize: sizes.xs,
     marginTop: 2,
     textTransform: 'capitalize',
+  },
+  tag: {
+    fontSize: 10,
+    fontFamily: font.bodySemi,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 4,
+    borderWidth: 1,
+    overflow: 'hidden',
   },
   amount: {
     fontSize: sizes.md,
