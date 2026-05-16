@@ -28,6 +28,7 @@ import {
 } from '@/hooks/useAppData';
 import { catInfo } from '@/constants/categories';
 import { useCategoriesWithMeta } from '@/hooks/useAppData';
+import { CategoryPicker } from '@/components/CategoryPicker';
 import { dayStr, monthKey, formatMoney } from '@/utils/format';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
@@ -172,41 +173,16 @@ export default function Activity() {
         <View style={{ height: 100 }} />
       </ScrollView>
       <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
-      {filterMoreOpen && (
-        <View style={styles.moreOverlay} pointerEvents="auto">
-          <Pressable style={StyleSheet.absoluteFill} onPress={() => setFilterMoreOpen(false)} />
-          <View style={styles.moreSheet}>
-            <Text style={styles.moreTitle}>Filter by category</Text>
-            <ScrollView style={{ maxHeight: 420 }}>
-              <Pressable
-                onPress={() => {
-                  setFilterCat(null);
-                  setFilterMoreOpen(false);
-                }}
-                style={styles.moreRow}
-                accessibilityRole="button"
-              >
-                <View style={[styles.moreDot, { backgroundColor: theme.text3 }]} />
-                <Text style={styles.moreLabel}>All</Text>
-              </Pressable>
-              {allFilterCategories.map((c) => (
-                <Pressable
-                  key={c.id}
-                  onPress={() => {
-                    setFilterCat(c.id);
-                    setFilterMoreOpen(false);
-                  }}
-                  style={styles.moreRow}
-                  accessibilityRole="button"
-                >
-                  <View style={[styles.moreDot, { backgroundColor: c.color }]} />
-                  <Text style={styles.moreLabel}>{c.name}</Text>
-                </Pressable>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-      )}
+      <CategoryPicker
+        visible={filterMoreOpen}
+        mode="select"
+        headerText="Filter by category"
+        onSelect={(id) => {
+          setFilterCat(id);
+          setFilterMoreOpen(false);
+        }}
+        onClose={() => setFilterMoreOpen(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -342,25 +318,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg2,
   },
   chipText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body },
-  moreOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    justifyContent: 'flex-end',
-    zIndex: 100,
-  },
-  moreSheet: {
-    backgroundColor: theme.bg1,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.lg,
-    maxHeight: '70%',
-  },
-  moreTitle: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold, marginBottom: spacing.sm },
-  moreRow: { flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 12 },
-  moreDot: { width: 10, height: 10, borderRadius: 5 },
-  moreLabel: { color: theme.text1, fontSize: sizes.md },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
   analytics: {
     padding: spacing.md,

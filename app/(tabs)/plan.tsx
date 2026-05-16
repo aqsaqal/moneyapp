@@ -29,6 +29,7 @@ import {
   type CategoryWithMeta,
 } from '@/hooks/useAppData';
 import { CustomCategorySheet } from '@/components/CustomCategorySheet';
+import { CategoryPicker } from '@/components/CategoryPicker';
 import { useSubscriptionAudit, type DetectedCandidate, type StaleSubscription } from '@/hooks/useSubscriptionAudit';
 import { GoalSheet } from '@/components/GoalSheet';
 import { DebtSheet } from '@/components/DebtSheet';
@@ -372,55 +373,19 @@ function BudgetsSection() {
         onClose={() => setEditing(undefined)}
       />
 
-      <BudgetCategoryPickerSheet
+      <CategoryPicker
         visible={pickerOpen}
-        options={categories.filter((c) => !c.archived && c.monthlyBudget == null && c.id !== 'adjustment')}
-        onPick={(c) => {
+        mode="select"
+        excludeWithBudget
+        showAddNew
+        headerText="Pick a category to budget"
+        onSelect={(id) => {
+          const cat = categories.find((c) => c.id === id);
+          if (cat) setEditing(cat);
           setPickerOpen(false);
-          setEditing(c);
         }}
         onClose={() => setPickerOpen(false)}
       />
-    </View>
-  );
-}
-
-function BudgetCategoryPickerSheet({
-  visible,
-  options,
-  onPick,
-  onClose,
-}: {
-  visible: boolean;
-  options: CategoryWithMeta[];
-  onPick: (c: CategoryWithMeta) => void;
-  onClose: () => void;
-}) {
-  if (!visible) return null;
-  return (
-    <View style={styles.pickerOverlay} pointerEvents="auto">
-      <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
-      <View style={styles.pickerSheet}>
-        <Text style={styles.pickerTitle}>Pick a category</Text>
-        <ScrollView style={{ maxHeight: 360 }}>
-          {options.length === 0 && (
-            <Text style={styles.emptyHint}>Every category already has a budget.</Text>
-          )}
-          {options.map((c) => (
-            <Pressable
-              key={c.id}
-              onPress={() => onPick(c)}
-              style={styles.pickerRow}
-              accessibilityRole="button"
-            >
-              <View style={[styles.budgetIconWrap, { backgroundColor: `${c.color}22` }]}>
-                <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={14} color={c.color} />
-              </View>
-              <Text style={styles.pickerLabel}>{c.name}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
-      </View>
     </View>
   );
 }
@@ -844,25 +809,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  pickerOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    justifyContent: 'flex-end',
-    zIndex: 100,
-  },
-  pickerSheet: {
-    backgroundColor: theme.bg1,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: spacing.md,
-    gap: spacing.sm,
-  },
-  pickerTitle: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold, marginBottom: spacing.sm },
-  pickerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
-    paddingVertical: spacing.md,
-  },
-  pickerLabel: { color: theme.text1, fontSize: sizes.md },
 });

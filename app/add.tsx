@@ -34,7 +34,8 @@ import { VoiceMicButton } from '@/components/VoiceMicButton';
 import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
-import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, useCategoriesWithMeta, useCategoryFrequency, useMonthTotalsByCategory, AccountValidationError, type CategoryWithMeta } from '@/hooks/useAppData';
+import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, useCategoriesWithMeta, useCategoryFrequency, useMonthTotalsByCategory, AccountValidationError } from '@/hooks/useAppData';
+import { CategoryPicker } from '@/components/CategoryPicker';
 import { monthKey } from '@/utils/format';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
@@ -769,16 +770,19 @@ export default function AddScreen() {
         <View style={{ height: 32 }} />
       </ScrollView>
 
-      {/* Inline category grid (the "More…" sheet). Local to /add so the
-          typed amount, note and account survive the picker. */}
-      <CategoryGridOverlay
+      {/* Inline "More…" picker. Local to /add so the typed amount,
+          note and account survive the picker. Unified component:
+          shows expense or income categories per current mode, with
+          live budget bars and a "+ New" tile. */}
+      <CategoryPicker
         visible={gridOpen}
-        mode={mode === 'income' ? 'income' : 'expense'}
-        categories={categories}
-        monthTotals={monthTotals}
-        currency={currency}
-        onPick={(c) => {
-          setCatOverride(c.id);
+        mode="select"
+        transactionType={mode === 'income' ? 'income' : 'expense'}
+        showBudgetProgress
+        showAddNew
+        headerText="Pick category"
+        onSelect={(id) => {
+          setCatOverride(id);
           setGridOpen(false);
         }}
         onClose={() => setGridOpen(false)}
@@ -786,80 +790,6 @@ export default function AddScreen() {
 
       <SuccessOverlay visible={success} caption={successCaption} />
     </SafeAreaView>
-  );
-}
-
-function CategoryGridOverlay({
-  visible,
-  mode,
-  categories,
-  monthTotals,
-  currency,
-  onPick,
-  onClose,
-}: {
-  visible: boolean;
-  mode: 'expense' | 'income';
-  categories: CategoryWithMeta[];
-  monthTotals: Array<{ category: string; total: number }>;
-  currency: CurrencyCode;
-  onPick: (c: CategoryWithMeta) => void;
-  onClose: () => void;
-}) {
-  if (!visible) return null;
-  const totalsMap = new Map(monthTotals.map((m) => [m.category, m.total]));
-  const eligible = categories.filter(
-    (c) =>
-      !c.archived &&
-      c.id !== 'adjustment' &&
-      (mode === 'income' ? c.type !== 'expense' : c.type !== 'income'),
-  );
-  return (
-    <View style={styles.gridOverlay} pointerEvents="auto">
-      <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
-      <View style={styles.gridSheet}>
-        <Text style={styles.gridTitle}>Pick category</Text>
-        <ScrollView contentContainerStyle={styles.gridScroll}>
-          {eligible.map((c) => {
-            const spent = totalsMap.get(c.id) ?? 0;
-            const budget = c.monthlyBudget ?? 0;
-            const ccy = (c.budgetCurrency as CurrencyCode) ?? currency;
-            const spentInCcy = ccy === currency ? spent : convert(spent, currency, ccy);
-            const pct = budget > 0 ? Math.min(spentInCcy / budget, 1) : 0;
-            const over = budget > 0 && spentInCcy > budget;
-            const warn = !over && budget > 0 && pct >= 0.7;
-            const barColor = over ? theme.expense : warn ? '#F97316' : '#10B981';
-            return (
-              <Pressable
-                key={c.id}
-                onPress={() => onPick(c)}
-                style={styles.gridTile}
-                accessibilityRole="button"
-                accessibilityLabel={
-                  budget > 0
-                    ? `${c.name}, ${Math.round(pct * 100)} percent of budget used`
-                    : c.name
-                }
-              >
-                <View style={[styles.gridIcon, { backgroundColor: `${c.color}22` }]}>
-                  <MaterialCommunityIcons
-                    name={(c.icon as never) || 'tag-outline'}
-                    size={22}
-                    color={c.color}
-                  />
-                </View>
-                <Text style={styles.gridName} numberOfLines={1}>{c.name}</Text>
-                {budget > 0 && (
-                  <View style={styles.gridBarBg}>
-                    <View style={[styles.gridBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
-                  </View>
-                )}
-              </Pressable>
-            );
-          })}
-        </ScrollView>
-      </View>
-    </View>
   );
 }
 
@@ -1159,42 +1089,4 @@ const styles = StyleSheet.create({
   budgetBarBg: { height: 5, backgroundColor: theme.bg3, borderRadius: 3, overflow: 'hidden' },
   budgetBarFill: { height: '100%', borderRadius: 3 },
   budgetWarn: { color: theme.expense, fontSize: sizes.xs, fontFamily: font.bodySemi },
-  gridOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.55)',
-    justifyContent: 'flex-end',
-    zIndex: 100,
-  },
-  gridSheet: {
-    backgroundColor: theme.bg1,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingHorizontal: spacing.md,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.lg,
-    maxHeight: '70%',
-  },
-  gridTitle: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold, marginBottom: spacing.sm },
-  gridScroll: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-    paddingBottom: spacing.md,
-  },
-  gridTile: {
-    width: '30%',
-    aspectRatio: 1,
-    padding: spacing.sm,
-    backgroundColor: theme.bg2,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: theme.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 4,
-  },
-  gridIcon: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  gridName: { color: theme.text1, fontSize: 12 },
-  gridBarBg: { width: '80%', height: 3, backgroundColor: theme.bg3, borderRadius: 2, overflow: 'hidden' },
-  gridBarFill: { height: '100%', borderRadius: 2 },
 });
