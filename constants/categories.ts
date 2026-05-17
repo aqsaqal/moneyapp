@@ -51,6 +51,22 @@ export const INCOME_CATEGORIES: CategoryDef[] = [
 
 import { FeatureSlots } from '@/features';
 import { getRawDB } from '@/utils/db/client';
+import { t as i18nT } from '@/utils/i18n';
+
+// Seeded categories carry English `name` strings in the table above so
+// other tooling (search index, exports, OCR matchers) still has stable
+// text to work with. The picker / sheets show the translated name via
+// this helper. Custom categories don't pass through here — their names
+// come from the DB row (single name today; per-locale overrides land
+// later via the name_translations column).
+export function localizedSeededName(id: string, fallback: string): string {
+  // Missing-key fallback in t() returns the key itself, so we test the
+  // translation against the key string to decide whether to use the
+  // English fallback.
+  const key = `cat.${id}`;
+  const tr = i18nT(key);
+  return tr === key ? fallback : tr;
+}
 
 interface CustomRow {
   id: string;
@@ -91,12 +107,14 @@ export function allExpenseCategories(): CategoryDef[] {
     .map<CategoryDef>((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color }));
   const shadowed = new Set(customs.map((c) => c.id));
   const archivedIds = new Set(customs.filter((c) => c.archived === 1).map((c) => c.id));
-  const seededFiltered = EXPENSE_CATEGORIES.filter(
-    (c) =>
-      !shadowed.has(c.id) &&
-      !archivedIds.has(c.id) &&
-      !HIDDEN_FROM_MANUAL_PICKERS.has(c.id),
-  );
+  const seededFiltered = EXPENSE_CATEGORIES
+    .filter(
+      (c) =>
+        !shadowed.has(c.id) &&
+        !archivedIds.has(c.id) &&
+        !HIDDEN_FROM_MANUAL_PICKERS.has(c.id),
+    )
+    .map<CategoryDef>((c) => ({ ...c, name: localizedSeededName(c.id, c.name) }));
   return [...liveCustoms, ...seededFiltered, ...FeatureSlots.CategoryExtras.expense];
 }
 
@@ -107,19 +125,21 @@ export function allIncomeCategories(): CategoryDef[] {
     .map<CategoryDef>((c) => ({ id: c.id, name: c.name, icon: c.icon, color: c.color }));
   const shadowed = new Set(customs.map((c) => c.id));
   const archivedIds = new Set(customs.filter((c) => c.archived === 1).map((c) => c.id));
-  const seededFiltered = INCOME_CATEGORIES.filter(
-    (c) =>
-      !shadowed.has(c.id) &&
-      !archivedIds.has(c.id) &&
-      !HIDDEN_FROM_MANUAL_PICKERS.has(c.id),
-  );
+  const seededFiltered = INCOME_CATEGORIES
+    .filter(
+      (c) =>
+        !shadowed.has(c.id) &&
+        !archivedIds.has(c.id) &&
+        !HIDDEN_FROM_MANUAL_PICKERS.has(c.id),
+    )
+    .map<CategoryDef>((c) => ({ ...c, name: localizedSeededName(c.id, c.name) }));
   return [...liveCustoms, ...seededFiltered, ...FeatureSlots.CategoryExtras.income];
 }
 
 const FALLBACK: CategoryDef = { id: 'unknown', name: 'Other', icon: 'MoreHorizontal', color: '#8888AA' };
 
 export function catInfo(id: string | null | undefined, type: 'expense' | 'income' = 'expense'): CategoryDef {
-  if (!id) return FALLBACK;
+  if (!id) return { ...FALLBACK, name: localizedSeededName('other', FALLBACK.name) };
   const pool = type === 'income' ? allIncomeCategories() : allExpenseCategories();
   return pool.find((c) => c.id === id) ?? { ...FALLBACK, id, name: id };
 }

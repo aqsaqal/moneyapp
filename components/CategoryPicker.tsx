@@ -30,6 +30,7 @@ import {
 } from '@/hooks/useAppData';
 import { CustomCategorySheet } from '@/components/CustomCategorySheet';
 import { monthKey } from '@/utils/format';
+import { useT } from '@/hooks/useT';
 
 export type CategoryPickerMode = 'select' | 'multi-select';
 
@@ -74,6 +75,7 @@ export function CategoryPicker({
   onConfirm,
   onClose,
 }: CategoryPickerProps) {
+  const t = useT();
   const [search, setSearch] = useState('');
   const [selection, setSelection] = useState<Set<string>>(new Set(initialSelection ?? []));
   const [creating, setCreating] = useState(false);
@@ -130,13 +132,13 @@ export function CategoryPicker({
       <SafeAreaView style={styles.sheet} edges={['bottom']}>
         <View style={styles.handle} />
         <View style={styles.header}>
-          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel="Close">
+          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
             <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
           </Pressable>
-          <Text style={styles.title}>{headerText ?? 'Pick category'}</Text>
+          <Text style={styles.title}>{headerText ?? t('picker.pickCategory')}</Text>
           {mode === 'multi-select' ? (
-            <Pressable onPress={handleDone} hitSlop={10} accessibilityLabel="Done">
-              <Text style={styles.done}>Done</Text>
+            <Pressable onPress={handleDone} hitSlop={10} accessibilityLabel={t('picker.done')}>
+              <Text style={styles.done}>{t('picker.done')}</Text>
             </Pressable>
           ) : (
             <View style={{ width: 22 }} />
@@ -148,7 +150,7 @@ export function CategoryPicker({
           <TextInput
             value={search}
             onChangeText={setSearch}
-            placeholder="Search…"
+            placeholder={t('picker.search')}
             placeholderTextColor={theme.text3}
             style={styles.searchInput}
             autoCorrect={false}

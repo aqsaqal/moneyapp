@@ -250,8 +250,8 @@ function ActiveProfileRow() {
   const [sheet, setSheet] = useState<ProfileSheetMode>({ kind: 'closed' });
   const hint =
     profiles.length === 1
-      ? 'Active profile'
-      : `Active · ${profiles.length} profiles total`;
+      ? t('profile.active')
+      : t('profile.activeAmong', { count: profiles.length });
   return (
     <>
       <SettingRow

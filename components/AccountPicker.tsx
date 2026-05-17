@@ -70,10 +70,10 @@ export function AccountPicker({
       <SafeAreaView style={styles.sheet} edges={['bottom']}>
         <View style={styles.handle} />
         <View style={styles.header}>
-          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel="Close">
+          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={i18nT('common.close')}>
             <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
           </Pressable>
-          <Text style={styles.title}>{headerText ?? 'Pick account'}</Text>
+          <Text style={styles.title}>{headerText ?? i18nT('picker.pickAccount')}</Text>
           <View style={{ width: 22 }} />
         </View>
 

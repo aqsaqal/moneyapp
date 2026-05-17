@@ -24,6 +24,7 @@ import { theme, font, sizes, radii } from '@/constants/theme';
 import { catInfo } from '@/constants/categories';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import { useExactReplays, type FrequentTxn, type FuzzyMerchant } from '@/hooks/useFrequentTxns';
+import { t as i18nT } from '@/utils/i18n';
 
 export interface SmartSuggestionRowProps {
   currency?: CurrencyCode;
@@ -118,9 +119,9 @@ export function SmartSuggestionRow({
           onPress={onMore}
           style={[styles.chip, styles.moreChip]}
           accessibilityRole="button"
-          accessibilityLabel="More categories"
+          accessibilityLabel={i18nT('smartAdd.more')}
         >
-          <Text style={[styles.chipText, { color: theme.text2 }]}>More…</Text>
+          <Text style={[styles.chipText, { color: theme.text2 }]}>{i18nT('smartAdd.more')}</Text>
         </Pressable>
       )}
     </ScrollView>

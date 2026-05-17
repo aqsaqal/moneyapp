@@ -66,7 +66,7 @@ export function ProfileSheet({ visible, mode, onClose }: ProfileSheetProps) {
   const save = () => {
     if (!mode) return;
     if (!name.trim()) {
-      Alert.alert(t('common.required'), 'Profile name');
+      Alert.alert(t('common.required'), t('profile.nameRequired'));
       return;
     }
     if (mode.kind === 'create') {
@@ -81,8 +81,8 @@ export function ProfileSheet({ visible, mode, onClose }: ProfileSheetProps) {
   const askDelete = () => {
     if (!mode || mode.kind !== 'edit') return;
     Alert.alert(
-      t('common.delete') + '?',
-      `"${mode.profile.name}" — all transactions, accounts, budgets and recurring items in this profile will be permanently deleted.`,
+      t('profile.deleteConfirm.title'),
+      t('profile.deleteConfirm.body', { name: mode.profile.name }),
       [
         { text: t('common.cancel'), style: 'cancel' },
         {
@@ -91,7 +91,7 @@ export function ProfileSheet({ visible, mode, onClose }: ProfileSheetProps) {
           onPress: () => {
             const r = deleteProfile(mode.profile.id);
             if (!r.ok && r.reason === 'last') {
-              Alert.alert('Cannot delete', 'You must keep at least one profile.');
+              Alert.alert(t('profile.deleteLast.title'), t('profile.deleteLast.body'));
               return;
             }
             onClose();
@@ -136,7 +136,7 @@ function SwitchList({ mode, onClose }: { mode: Extract<Mode, { kind: 'switch' }>
         <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
           <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
         </Pressable>
-        <Text style={styles.title}>Switch profile</Text>
+        <Text style={styles.title}>{t('profile.switch')}</Text>
         <View style={{ width: 22 }} />
       </View>
       <FlatList
@@ -204,18 +204,18 @@ function EditForm({
       </View>
 
       <View style={styles.field}>
-        <Text style={styles.fieldLabel}>NAME</Text>
+        <Text style={styles.fieldLabel}>{t('profile.field.name')}</Text>
         <TextInput
           value={name}
           onChangeText={setName}
-          placeholder="e.g. Personal, Business, Family"
+          placeholder={t('profile.namePlaceholder')}
           placeholderTextColor={theme.text3}
           style={styles.input}
         />
       </View>
 
       <View style={styles.field}>
-        <Text style={styles.fieldLabel}>COLOR</Text>
+        <Text style={styles.fieldLabel}>{t('profile.field.color')}</Text>
         <View style={styles.swatchRow}>
           {PROFILE_COLORS.map((c) => (
             <Pressable
@@ -229,7 +229,7 @@ function EditForm({
       </View>
 
       <View style={styles.field}>
-        <Text style={styles.fieldLabel}>ICON</Text>
+        <Text style={styles.fieldLabel}>{t('profile.field.icon')}</Text>
         <View style={styles.iconRow}>
           {PROFILE_ICONS.map((i) => (
             <Pressable

@@ -18,7 +18,6 @@ export default function CategoryGridScreen() {
       transactionType="expense"
       showBudgetProgress
       showAddNew
-      headerText="Pick category"
       onSelect={(categoryId) => {
         router.replace({
           pathname: '/add',

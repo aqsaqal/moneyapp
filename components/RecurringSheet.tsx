@@ -26,6 +26,7 @@ import { SettingRow } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { upsertRecurring, deleteRecurring, useAccounts } from '@/hooks/useAppData';
 import { allExpenseCategories, allIncomeCategories, catInfo } from '@/constants/categories';
+import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
@@ -42,6 +43,7 @@ export interface RecurringSheetProps {
 }
 
 export function RecurringSheet({ visible, recurring, defaultType, onClose }: RecurringSheetProps) {
+  const t = useT();
   const editing = !!recurring;
   const accounts = useAccounts();
   const [type, setType] = useState<Mode>(recurring?.type ?? defaultType ?? 'expense');
@@ -80,7 +82,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
     const amt = parseFloat(amount.replace(',', '.'));
     const dayNum = parseInt(day, 10);
     if (!name.trim() || !Number.isFinite(amt) || amt <= 0 || !Number.isFinite(dayNum) || dayNum < 1 || dayNum > 31) {
-      Alert.alert('Required', 'Name, amount > 0, and a day-of-month between 1 and 31 are required.');
+      Alert.alert(t('recurring.invalid.title'), t('recurring.invalid.body'));
       return;
     }
     upsertRecurring({
@@ -101,12 +103,12 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
   const askDelete = () => {
     if (!recurring) return;
     Alert.alert(
-      'Delete recurring item?',
-      `"${recurring.name}" will no longer remind you each month. Past payments stay in your history.`,
+      t('recurring.deleteConfirm.title'),
+      t('recurring.deleteConfirm.body', { name: recurring.name }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: () => {
             deleteRecurring(recurring.id);
@@ -123,37 +125,37 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
       <SafeAreaView style={styles.sheet} edges={['bottom']}>
         <View style={styles.handle} />
         <View style={styles.header}>
-          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel="Close">
+          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
             <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
           </Pressable>
-          <Text style={styles.title}>{editing ? 'Edit recurring' : 'New recurring'}</Text>
-          <Pressable onPress={save} hitSlop={10} accessibilityLabel="Save">
+          <Text style={styles.title}>{editing ? t('recurring.edit') : t('recurring.new')}</Text>
+          <Pressable onPress={save} hitSlop={10} accessibilityLabel={t('common.save')}>
             <MaterialCommunityIcons name="check" size={22} color={theme.accent} />
           </Pressable>
         </View>
 
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <SettingRow
-            label="Type"
-            hint={type === 'expense' ? 'Expense (bill / subscription)' : 'Income (salary / payout)'}
+            label={t('recurring.type')}
+            hint={type === 'expense' ? t('recurring.type.expense') : t('recurring.type.income')}
             icon={type === 'expense' ? 'arrow-bottom-left' : 'arrow-top-right'}
             iconColor={type === 'expense' ? theme.expense : theme.accent}
             onPress={() => setPicker('type')}
           />
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Name</Text>
+            <Text style={styles.fieldLabel}>{t('recurring.name')}</Text>
             <TextInput
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Netflix, Rent, Salary"
+              placeholder={t('recurring.namePlaceholder')}
               placeholderTextColor={theme.text3}
               style={styles.input}
             />
           </View>
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Amount</Text>
+            <Text style={styles.fieldLabel}>{t('recurring.amount')}</Text>
             <TextInput
               value={amount}
               onChangeText={setAmount}
@@ -165,7 +167,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
           </View>
 
           <SettingRow
-            label="Category"
+            label={t('recurring.category')}
             hint={cat.name}
             icon={cat.icon as never}
             iconColor={cat.color}
@@ -173,15 +175,15 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
           />
 
           <SettingRow
-            label="Account"
-            hint={acct?.name ?? 'pick'}
+            label={t('recurring.account')}
+            hint={acct?.name ?? t('recurring.pickAccount')}
             icon="wallet-outline"
             iconColor={acct?.color ?? theme.text3}
             onPress={() => setPicker('account')}
           />
 
           <SettingRow
-            label="Currency"
+            label={t('recurring.currency')}
             hint={currency}
             icon="currency-usd"
             iconColor={theme.accent}
@@ -189,7 +191,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
           />
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Day of month</Text>
+            <Text style={styles.fieldLabel}>{t('recurring.dayOfMonth')}</Text>
             <TextInput
               value={day}
               onChangeText={setDay}
@@ -203,16 +205,16 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
           {editing && (
             <Pressable onPress={askDelete} style={styles.deleteRow} accessibilityRole="button">
               <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.expense} />
-              <Text style={styles.deleteText}>Delete recurring</Text>
+              <Text style={styles.deleteText}>{t('recurring.delete')}</Text>
             </Pressable>
           )}
 
           <PickerSheet
             visible={picker === 'type'}
-            title="Type"
+            title={t('recurring.type')}
             options={[
-              { value: 'expense' as const, label: 'Expense (bill / subscription)' },
-              { value: 'income' as const, label: 'Income (salary / payout)' },
+              { value: 'expense' as const, label: t('recurring.type.expense') },
+              { value: 'income' as const, label: t('recurring.type.income') },
             ]}
             selected={type}
             onPick={setType}
@@ -221,7 +223,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
 
           <PickerSheet
             visible={picker === 'category'}
-            title="Category"
+            title={t('recurring.category')}
             options={cats.map<PickerOption<string>>((c) => ({
               value: c.id,
               label: c.name,
@@ -234,7 +236,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
 
           <PickerSheet
             visible={picker === 'account'}
-            title="Account"
+            title={t('recurring.account')}
             options={accounts.map<PickerOption<string>>((a) => ({
               value: a.id,
               label: a.name,

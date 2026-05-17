@@ -378,7 +378,7 @@ function BudgetsSection() {
         mode="select"
         excludeWithBudget
         showAddNew
-        headerText="Pick a category to budget"
+        headerText={t('picker.pickCategoryToBudget')}
         onSelect={(id) => {
           const cat = categories.find((c) => c.id === id);
           if (cat) setEditing(cat);
