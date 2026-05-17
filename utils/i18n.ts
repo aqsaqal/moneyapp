@@ -62,6 +62,7 @@ import uz from '@/i18n/uz-UZ.json';
 import fil from '@/i18n/fil-PH.json';
 import sw from '@/i18n/sw-KE.json';
 import ta from '@/i18n/ta-IN.json';
+import te from '@/i18n/te-IN.json';
 
 // LocaleCode is a wide string union — every entry in LOCALES inside the
 // settings screen must use a code listed here. Most are not yet mapped
@@ -128,6 +129,7 @@ const DICTS: Partial<Record<LocaleCode, Dictionary>> = {
   'fil-PH': fil as Dictionary,
   'sw-KE': sw as Dictionary,
   'ta-IN': ta as Dictionary,
+  'te-IN': te as Dictionary,
 };
 
 let currentLocale: LocaleCode = (kv.get('locale') as LocaleCode) ?? 'en-US';
