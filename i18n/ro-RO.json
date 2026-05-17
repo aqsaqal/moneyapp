@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Pornit — {count} facturi, cu {lead} zile înainte",
   "notifications.leadDays": "Anticipare",
   "notifications.leadDays.value": "cu {n} zile înainte",
-  "notifications.leadDays.sameDay": "În aceeași zi"
+  "notifications.leadDays.sameDay": "În aceeași zi",
+  "account.reconcile.title": "Reconciliere sold?",
+  "account.reconcile.body": "Soldul s-a schimbat cu {sign}{amount} {currency}. Salvează noul sold sau creează o tranzacție de Ajustare pentru a explica diferența în Activitate.",
+  "account.reconcile.skip": "Salvează fără ajustare",
+  "account.reconcile.create": "Creează ajustare",
+  "account.reconcile.note": "Reconciliere sold"
 }

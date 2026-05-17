@@ -348,5 +348,10 @@
   "notifications.hint.enabled": "Қосылған — {count} шот, {lead} күн бұрын",
   "notifications.leadDays": "Еске салу уақыты",
   "notifications.leadDays.value": "{n} күн бұрын",
-  "notifications.leadDays.sameDay": "Сол күні"
+  "notifications.leadDays.sameDay": "Сол күні",
+  "account.reconcile.title": "Балансты салыстыру керек пе?",
+  "account.reconcile.body": "Баланс {sign}{amount} {currency} өзгерді. Жаңа балансты сақта немесе айырмашылықты Белсенділікте түсіндіру үшін Түзету операциясын жаса.",
+  "account.reconcile.skip": "Түзетусіз сақтау",
+  "account.reconcile.create": "Түзету жасау",
+  "account.reconcile.note": "Баланс түзетуі"
 }

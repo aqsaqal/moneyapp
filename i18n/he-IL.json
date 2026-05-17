@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "פעיל — {count} חשבוניות, {lead} ימים לפני",
   "notifications.leadDays": "זמן תזכורת",
   "notifications.leadDays.value": "{n} ימים לפני",
-  "notifications.leadDays.sameDay": "באותו יום"
+  "notifications.leadDays.sameDay": "באותו יום",
+  "account.reconcile.title": "להתאים יתרה?",
+  "account.reconcile.body": "היתרה השתנתה ב-{sign}{amount} {currency}. שמור יתרה חדשה או צור עסקת התאמה כדי שההפרש ייראה בפעילות.",
+  "account.reconcile.skip": "שמור ללא התאמה",
+  "account.reconcile.create": "צור התאמה",
+  "account.reconcile.note": "התאמת יתרה"
 }

@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "चालू — {count} बिले, {lead} दिवस आधी",
   "notifications.leadDays": "स्मरण वेळ",
   "notifications.leadDays.value": "{n} दिवस आधी",
-  "notifications.leadDays.sameDay": "त्याच दिवशी"
+  "notifications.leadDays.sameDay": "त्याच दिवशी",
+  "account.reconcile.title": "शिल्लक जुळवायची?",
+  "account.reconcile.body": "शिल्लक {sign}{amount} {currency} ने बदलली. नवीन शिल्लक जतन करा किंवा फरक क्रियाकलापामध्ये स्पष्ट करण्यासाठी समायोजन व्यवहार तयार करा.",
+  "account.reconcile.skip": "समायोजनाशिवाय जतन करा",
+  "account.reconcile.create": "समायोजन तयार करा",
+  "account.reconcile.note": "शिल्लक जुळवणी"
 }

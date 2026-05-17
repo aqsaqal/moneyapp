@@ -348,5 +348,10 @@
   "notifications.hint.enabled": "Hidup — {count} bil, {lead} hari sebelum",
   "notifications.leadDays": "Masa peringatan",
   "notifications.leadDays.value": "{n} hari sebelum",
-  "notifications.leadDays.sameDay": "Hari yang sama"
+  "notifications.leadDays.sameDay": "Hari yang sama",
+  "account.reconcile.title": "Mutabakat baki?",
+  "account.reconcile.body": "Baki berubah {sign}{amount} {currency}. Simpan baki baru, atau cipta transaksi Pelarasan untuk jelaskan jurang dalam Aktiviti.",
+  "account.reconcile.skip": "Simpan tanpa pelarasan",
+  "account.reconcile.create": "Cipta pelarasan",
+  "account.reconcile.note": "Mutabakat baki"
 }

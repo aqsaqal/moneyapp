@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "オン — {count} 件、{lead} 日前",
   "notifications.leadDays": "リマインド時期",
   "notifications.leadDays.value": "{n} 日前",
-  "notifications.leadDays.sameDay": "当日"
+  "notifications.leadDays.sameDay": "当日",
+  "account.reconcile.title": "残高を調整しますか？",
+  "account.reconcile.body": "残高が {sign}{amount} {currency} 変動しました。新しい残高を保存するか、調整取引を作成してアクティビティで差額を説明します。",
+  "account.reconcile.skip": "調整なしで保存",
+  "account.reconcile.create": "調整を作成",
+  "account.reconcile.note": "残高調整"
 }

@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Vklopljeno — {count} računov, {lead} dni prej",
   "notifications.leadDays": "Predčasno",
   "notifications.leadDays.value": "{n} dni prej",
-  "notifications.leadDays.sameDay": "Isti dan"
+  "notifications.leadDays.sameDay": "Isti dan",
+  "account.reconcile.title": "Uskladi stanje?",
+  "account.reconcile.body": "Stanje se je spremenilo za {sign}{amount} {currency}. Shrani novo stanje ali ustvari transakcijo Prilagoditev, da bo razlika vidna v Aktivnosti.",
+  "account.reconcile.skip": "Shrani brez prilagoditve",
+  "account.reconcile.create": "Ustvari prilagoditev",
+  "account.reconcile.note": "Uskladitev stanja"
 }

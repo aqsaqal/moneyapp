@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "آن — {count} بل، {lead} دن پہلے",
   "notifications.leadDays": "یاد دہانی کا وقت",
   "notifications.leadDays.value": "{n} دن پہلے",
-  "notifications.leadDays.sameDay": "اسی دن"
+  "notifications.leadDays.sameDay": "اسی دن",
+  "account.reconcile.title": "بیلنس ہم آہنگ کریں؟",
+  "account.reconcile.body": "بیلنس {sign}{amount} {currency} تبدیل ہوا۔ نیا بیلنس محفوظ کریں یا فرق سرگرمی میں واضح کرنے کے لیے ایڈجسٹمنٹ ٹرانزیکشن بنائیں۔",
+  "account.reconcile.skip": "ایڈجسٹمنٹ کے بغیر محفوظ کریں",
+  "account.reconcile.create": "ایڈجسٹمنٹ بنائیں",
+  "account.reconcile.note": "بیلنس ہم آہنگی"
 }

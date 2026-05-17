@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Be — {count} számla, {lead} nappal előtte",
   "notifications.leadDays": "Előjelzés",
   "notifications.leadDays.value": "{n} nappal előtte",
-  "notifications.leadDays.sameDay": "Aznap"
+  "notifications.leadDays.sameDay": "Aznap",
+  "account.reconcile.title": "Egyenleg egyeztetése?",
+  "account.reconcile.body": "Az egyenleg {sign}{amount} {currency}-vel változott. Mentsd az új egyenleget, vagy hozz létre Korrekció tranzakciót, hogy a különbség az Aktivitásban követhető legyen.",
+  "account.reconcile.skip": "Mentés korrekció nélkül",
+  "account.reconcile.create": "Korrekció létrehozása",
+  "account.reconcile.note": "Egyenleg-egyeztetés"
 }

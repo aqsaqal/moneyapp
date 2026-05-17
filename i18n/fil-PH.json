@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "On — {count} bill, {lead} araw bago",
   "notifications.leadDays": "Paalala bago",
   "notifications.leadDays.value": "{n} araw bago",
-  "notifications.leadDays.sameDay": "Sa mismong araw"
+  "notifications.leadDays.sameDay": "Sa mismong araw",
+  "account.reconcile.title": "I-reconcile ang balanse?",
+  "account.reconcile.body": "Nagbago ang balanse ng {sign}{amount} {currency}. I-save ang bagong balanse o gumawa ng Adjustment para makita ang puwang sa Aktibidad.",
+  "account.reconcile.skip": "I-save nang walang adjustment",
+  "account.reconcile.create": "Gumawa ng adjustment",
+  "account.reconcile.note": "Reconciliation ng balanse"
 }

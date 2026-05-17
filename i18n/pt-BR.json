@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Ligado — {count} conta(s), {lead} dia(s) antes",
   "notifications.leadDays": "Antecedência",
   "notifications.leadDays.value": "{n} dia(s) antes",
-  "notifications.leadDays.sameDay": "No mesmo dia"
+  "notifications.leadDays.sameDay": "No mesmo dia",
+  "account.reconcile.title": "Reconciliar saldo?",
+  "account.reconcile.body": "Saldo mudou {sign}{amount} {currency}. Salve o novo saldo ou crie uma transação de Ajuste para explicar a diferença em Atividade.",
+  "account.reconcile.skip": "Salvar sem ajuste",
+  "account.reconcile.create": "Criar ajuste",
+  "account.reconcile.note": "Reconciliação de saldo"
 }

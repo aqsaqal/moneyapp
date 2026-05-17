@@ -348,5 +348,10 @@
   "notifications.hint.enabled": "Вкл — {count} счетов, за {lead} дн.",
   "notifications.leadDays": "Время напоминания",
   "notifications.leadDays.value": "за {n} дн.",
-  "notifications.leadDays.sameDay": "В тот же день"
+  "notifications.leadDays.sameDay": "В тот же день",
+  "account.reconcile.title": "Сверить баланс?",
+  "account.reconcile.body": "Баланс изменился на {sign}{amount} {currency}. Сохрани новый баланс или создай Корректировку, чтобы пояснить разницу в Активности.",
+  "account.reconcile.skip": "Сохранить без корректировки",
+  "account.reconcile.create": "Создать корректировку",
+  "account.reconcile.note": "Сверка баланса"
 }

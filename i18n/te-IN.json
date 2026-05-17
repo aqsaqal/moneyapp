@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "ఆన్ — {count} బిల్లులు, {lead} రోజుల ముందు",
   "notifications.leadDays": "రిమైండర్ సమయం",
   "notifications.leadDays.value": "{n} రోజుల ముందు",
-  "notifications.leadDays.sameDay": "అదే రోజు"
+  "notifications.leadDays.sameDay": "అదే రోజు",
+  "account.reconcile.title": "బ్యాలెన్స్ సర్దుబాటు?",
+  "account.reconcile.body": "బ్యాలెన్స్ {sign}{amount} {currency} మారింది. కొత్త బ్యాలెన్స్‌ను సేవ్ చేయండి లేదా తేడాను కార్యకలాపంలో వివరించడానికి సర్దుబాటు లావాదేవీని సృష్టించండి.",
+  "account.reconcile.skip": "సర్దుబాటు లేకుండా సేవ్",
+  "account.reconcile.create": "సర్దుబాటు సృష్టించు",
+  "account.reconcile.note": "బ్యాలెన్స్ సర్దుబాటు"
 }

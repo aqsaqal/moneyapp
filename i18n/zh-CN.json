@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "开启 — {count} 笔账单，提前 {lead} 天",
   "notifications.leadDays": "提前时间",
   "notifications.leadDays.value": "提前 {n} 天",
-  "notifications.leadDays.sameDay": "当天"
+  "notifications.leadDays.sameDay": "当天",
+  "account.reconcile.title": "对账余额？",
+  "account.reconcile.body": "余额变动 {sign}{amount} {currency}。保存新余额，或创建一笔调整交易以便在活动中追溯差额。",
+  "account.reconcile.skip": "直接保存",
+  "account.reconcile.create": "创建调整",
+  "account.reconcile.note": "余额对账"
 }

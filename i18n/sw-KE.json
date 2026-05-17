@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Imewashwa — bili {count}, siku {lead} kabla",
   "notifications.leadDays": "Muda wa kukumbushwa",
   "notifications.leadDays.value": "siku {n} kabla",
-  "notifications.leadDays.sameDay": "Siku hiyo hiyo"
+  "notifications.leadDays.sameDay": "Siku hiyo hiyo",
+  "account.reconcile.title": "Sawazisha salio?",
+  "account.reconcile.body": "Salio limebadilika kwa {sign}{amount} {currency}. Hifadhi salio jipya au unda muamala wa Marekebisho ili tofauti ielezeke katika Shughuli.",
+  "account.reconcile.skip": "Hifadhi bila marekebisho",
+  "account.reconcile.create": "Unda marekebisho",
+  "account.reconcile.note": "Usawazishaji wa salio"
 }

@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Укључено — {count} рачуна, {lead} дана раније",
   "notifications.leadDays": "Време подсетника",
   "notifications.leadDays.value": "{n} дана раније",
-  "notifications.leadDays.sameDay": "Истог дана"
+  "notifications.leadDays.sameDay": "Истог дана",
+  "account.reconcile.title": "Усагласи стање?",
+  "account.reconcile.body": "Стање је промењено за {sign}{amount} {currency}. Сачувај ново стање или направи Прилагођавање како би разлика била видљива у Активности.",
+  "account.reconcile.skip": "Сачувај без прилагођавања",
+  "account.reconcile.create": "Направи прилагођавање",
+  "account.reconcile.note": "Усаглашавање стања"
 }

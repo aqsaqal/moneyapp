@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Ieslēgts — {count} rēķini, {lead} dienas iepriekš",
   "notifications.leadDays": "Atgādinājuma laiks",
   "notifications.leadDays.value": "{n} dienas iepriekš",
-  "notifications.leadDays.sameDay": "Tajā pašā dienā"
+  "notifications.leadDays.sameDay": "Tajā pašā dienā",
+  "account.reconcile.title": "Saskaņot atlikumu?",
+  "account.reconcile.body": "Atlikums mainījās par {sign}{amount} {currency}. Saglabā jauno atlikumu vai izveido Korekcijas darījumu, lai starpība būtu redzama Aktivitātē.",
+  "account.reconcile.skip": "Saglabāt bez korekcijas",
+  "account.reconcile.create": "Izveidot korekciju",
+  "account.reconcile.note": "Atlikuma saskaņošana"
 }

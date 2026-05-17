@@ -348,5 +348,10 @@
   "notifications.hint.enabled": "Aktif — {count} tagihan, {lead} hari sebelum",
   "notifications.leadDays": "Waktu pengingat",
   "notifications.leadDays.value": "{n} hari sebelum",
-  "notifications.leadDays.sameDay": "Hari yang sama"
+  "notifications.leadDays.sameDay": "Hari yang sama",
+  "account.reconcile.title": "Rekonsiliasi saldo?",
+  "account.reconcile.body": "Saldo berubah {sign}{amount} {currency}. Simpan saldo baru, atau buat transaksi Penyesuaian agar selisih terlihat di Aktivitas.",
+  "account.reconcile.skip": "Simpan tanpa penyesuaian",
+  "account.reconcile.create": "Buat penyesuaian",
+  "account.reconcile.note": "Rekonsiliasi saldo"
 }

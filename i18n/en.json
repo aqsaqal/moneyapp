@@ -348,5 +348,10 @@
   "notifications.hint.enabled": "On — {count} bill(s), {lead} day(s) before",
   "notifications.leadDays": "Reminder lead",
   "notifications.leadDays.value": "{n} day(s) before",
-  "notifications.leadDays.sameDay": "On the day"
+  "notifications.leadDays.sameDay": "On the day",
+  "account.reconcile.title": "Reconcile balance?",
+  "account.reconcile.body": "Balance changed by {sign}{amount} {currency}. Save the new balance, or create an Adjustment transaction so the gap is explainable from Activity.",
+  "account.reconcile.skip": "Save without adjustment",
+  "account.reconcile.create": "Create adjustment",
+  "account.reconcile.note": "Balance reconciliation"
 }

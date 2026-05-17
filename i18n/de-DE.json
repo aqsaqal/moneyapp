@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "An — {count} Rechnung(en), {lead} Tag(e) vorher",
   "notifications.leadDays": "Vorlaufzeit",
   "notifications.leadDays.value": "{n} Tag(e) vorher",
-  "notifications.leadDays.sameDay": "Am selben Tag"
+  "notifications.leadDays.sameDay": "Am selben Tag",
+  "account.reconcile.title": "Saldo abgleichen?",
+  "account.reconcile.body": "Saldo um {sign}{amount} {currency} geändert. Neuen Saldo speichern oder eine Anpassungs-Transaktion erstellen, damit die Differenz in Aktivität erklärbar ist.",
+  "account.reconcile.skip": "Ohne Anpassung speichern",
+  "account.reconcile.create": "Anpassung erstellen",
+  "account.reconcile.note": "Saldo-Abgleich"
 }

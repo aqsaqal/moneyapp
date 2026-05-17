@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Päällä — {count} laskua, {lead} päivää ennen",
   "notifications.leadDays": "Ennakkoaika",
   "notifications.leadDays.value": "{n} päivää ennen",
-  "notifications.leadDays.sameDay": "Samana päivänä"
+  "notifications.leadDays.sameDay": "Samana päivänä",
+  "account.reconcile.title": "Sovita saldo?",
+  "account.reconcile.body": "Saldo muuttui {sign}{amount} {currency}. Tallenna uusi saldo tai luo Oikaisu-tapahtuma, jotta ero näkyy Toiminnassa.",
+  "account.reconcile.skip": "Tallenna ilman oikaisua",
+  "account.reconcile.create": "Luo oikaisu",
+  "account.reconcile.note": "Saldon sovitus"
 }

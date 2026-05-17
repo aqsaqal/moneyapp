@@ -348,5 +348,10 @@
   "notifications.hint.enabled": "مفعل — {count} فاتورة، قبل {lead} يوم",
   "notifications.leadDays": "وقت التذكير",
   "notifications.leadDays.value": "قبل {n} يوم",
-  "notifications.leadDays.sameDay": "في اليوم نفسه"
+  "notifications.leadDays.sameDay": "في اليوم نفسه",
+  "account.reconcile.title": "تسوية الرصيد؟",
+  "account.reconcile.body": "تغيّر الرصيد بمقدار {sign}{amount} {currency}. احفظ الرصيد الجديد، أو أنشئ معاملة تعديل لتفسير الفرق من النشاط.",
+  "account.reconcile.skip": "حفظ بدون تعديل",
+  "account.reconcile.create": "إنشاء تعديل",
+  "account.reconcile.note": "تسوية الرصيد"
 }

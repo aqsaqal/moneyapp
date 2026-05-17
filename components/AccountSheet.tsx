@@ -43,6 +43,7 @@ import {
   useTransactions,
 } from '@/hooks/useAppData';
 import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
+import { useT } from '@/hooks/useT';
 import { kv } from '@/utils/kv';
 import type { Account } from '@/utils/db/schema';
 
@@ -70,6 +71,7 @@ export interface AccountSheetProps {
 }
 
 export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
+  const t = useT();
   const editing = !!account;
   const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [type, setType] = useState<AccountType>(account?.type ?? 'cash');
@@ -151,12 +153,39 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
       const diff = balanceNum - account!.balance;
       const sign = diff > 0 ? '+' : '−';
       Alert.alert(
-        'Reconcile balance?',
-        `Balance changed by ${sign}${Math.abs(diff).toFixed(2)} ${currency}. We'll create an Adjustment transaction so this gap is explainable from Activity.`,
+        t('account.reconcile.title'),
+        t('account.reconcile.body', {
+          sign,
+          amount: Math.abs(diff).toFixed(2),
+          currency,
+        }),
         [
-          { text: 'Cancel', style: 'cancel' },
+          { text: t('common.cancel'), style: 'cancel' },
           {
-            text: 'Create adjustment',
+            text: t('account.reconcile.skip'),
+            onPress: () => {
+              // Overwrite the balance directly — no Adjustment txn, no
+              // Activity row. Useful when the user just typo'd the
+              // opening balance and wants a clean fix.
+              upsertAccount({
+                id,
+                name: name.trim(),
+                type,
+                balance: balanceNum,
+                creditLimit: type === 'credit' ? parseFloat(limit) || null : null,
+                icon: typeMeta.icon,
+                color,
+                sortOrder: account?.sortOrder ?? Date.now(),
+                currency: currency === defaultCurrency ? null : currency,
+                isRiba: process.env.APP_FLAVOR === 'islamic' ? (isRiba ? 1 : 0) : null,
+                includeInTotal: includeInTotal ? 1 : 0,
+                archived: archived ? 1 : 0,
+              });
+              onClose();
+            },
+          },
+          {
+            text: t('account.reconcile.create'),
             onPress: () => {
               writeMeta();
               addTransaction({
@@ -169,7 +198,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
                 // reconciliation in Activity.
                 category: diff > 0 ? 'other_in' : 'other',
                 accountId: id,
-                note: 'Balance reconciliation',
+                note: t('account.reconcile.note'),
                 date: Date.now(),
               });
               onClose();

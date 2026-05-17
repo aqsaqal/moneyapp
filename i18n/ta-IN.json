@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "ஆன் — {count} பில், {lead} நாட்கள் முன்",
   "notifications.leadDays": "நினைவூட்டல் நேரம்",
   "notifications.leadDays.value": "{n} நாட்கள் முன்",
-  "notifications.leadDays.sameDay": "அதே நாளில்"
+  "notifications.leadDays.sameDay": "அதே நாளில்",
+  "account.reconcile.title": "இருப்பை சரிசெய்யவா?",
+  "account.reconcile.body": "இருப்பு {sign}{amount} {currency} மாறியது. புதிய இருப்பை சேமிக்கவும் அல்லது வேறுபாட்டை செயல்பாட்டில் விளக்க சரிசெய்தல் பரிவர்த்தனை உருவாக்கவும்.",
+  "account.reconcile.skip": "சரிசெய்தல் இல்லாமல் சேமி",
+  "account.reconcile.create": "சரிசெய்தல் உருவாக்கு",
+  "account.reconcile.note": "இருப்பு சரிசெய்தல்"
 }

@@ -116,17 +116,17 @@ export function DisposableHeroCard({
     <View
       style={styles.heroCard}
       accessible
-      accessibilityLabel={`${formatMoney(disposable, currency)} left this month, ${formatMoney(perDay, currency)} per day for ${days} days`}
+      accessibilityLabel={`${formatMoney(disposable, currency)} ${t('hero.left')}, ${t('hero.perDay', { amount: formatMoney(perDay, currency), days })}`}
     >
       <Text
         style={[styles.heroAmount, { color: trajColor }]}
         adjustsFontSizeToFit
         numberOfLines={1}
       >
-        {formatMoney(disposable, currency)} left this month
+        {formatMoney(disposable, currency)} {t('hero.left')}
       </Text>
       <Text style={styles.heroSubline}>
-        {formatMoney(perDay, currency)}/day for {days} days
+        {t('hero.perDay', { amount: formatMoney(perDay, currency), days })}
       </Text>
     </View>
   );
@@ -165,33 +165,32 @@ export function ForecastCard({
   }
   const headline =
     tone === 'bad'
-      ? 'At this pace, you\'ll overshoot.'
+      ? t('forecast.overshoot')
       : tone === 'warn'
-        ? 'Close to running out.'
-        : 'On track.';
+        ? t('forecast.close')
+        : t('forecast.onTrack');
   return (
     <Pressable
       onPress={() => setOpen((v) => !v)}
       style={styles.forecastCard}
       accessibilityRole="button"
-      accessibilityLabel={`Forecast: ${headline} Tap for details.`}
+      accessibilityLabel={headline}
     >
       <View style={styles.forecastRow}>
         <View style={[styles.forecastDot, { backgroundColor: toneColor }]} />
         <Text style={[styles.forecastHead, { color: toneColor }]}>{headline}</Text>
-        <Text style={styles.forecastCta}>{open ? 'hide' : 'tap for forecast'}</Text>
+        <Text style={styles.forecastCta}>{open ? t('forecast.hide') : t('forecast.tap')}</Text>
       </View>
       {open && (
         <View style={styles.forecastBody}>
           <Text style={styles.forecastLine}>
-            Projected end-of-month:{' '}
+            {t('forecast.projected')}{' '}
             <Text style={{ color: toneColor, fontFamily: font.bodySemi }}>
               {forecast < 0 ? '−' : ''}{formatMoney(forecast, currency)}
             </Text>
           </Text>
           <Text style={styles.forecastHint}>
-            Based on your average daily spend so far times {daysLeft} day{daysLeft === 1 ? '' : 's'} left,
-            plus recurring bills not yet paid this month.
+            {t('forecast.basedOn', { days: daysLeft })}
           </Text>
         </View>
       )}

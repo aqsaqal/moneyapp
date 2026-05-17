@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "เปิด — {count} บิล ล่วงหน้า {lead} วัน",
   "notifications.leadDays": "ระยะแจ้งเตือน",
   "notifications.leadDays.value": "ล่วงหน้า {n} วัน",
-  "notifications.leadDays.sameDay": "วันเดียวกัน"
+  "notifications.leadDays.sameDay": "วันเดียวกัน",
+  "account.reconcile.title": "กระทบยอด?",
+  "account.reconcile.body": "ยอดเปลี่ยน {sign}{amount} {currency} บันทึกยอดใหม่หรือสร้างรายการปรับปรุงเพื่อระบุส่วนต่างในกิจกรรม",
+  "account.reconcile.skip": "บันทึกโดยไม่ปรับ",
+  "account.reconcile.create": "สร้างการปรับ",
+  "account.reconcile.note": "กระทบยอด"
 }

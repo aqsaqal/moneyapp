@@ -348,5 +348,10 @@
   "notifications.hint.enabled": "Açık — {count} fatura, {lead} gün önce",
   "notifications.leadDays": "Hatırlatma süresi",
   "notifications.leadDays.value": "{n} gün önce",
-  "notifications.leadDays.sameDay": "Aynı gün"
+  "notifications.leadDays.sameDay": "Aynı gün",
+  "account.reconcile.title": "Bakiyeyi mutabakatla?",
+  "account.reconcile.body": "Bakiye {sign}{amount} {currency} değişti. Yeni bakiyeyi kaydet veya farkı Aktivite'de açıklamak için Düzeltme işlemi oluştur.",
+  "account.reconcile.skip": "Düzeltmesiz kaydet",
+  "account.reconcile.create": "Düzeltme oluştur",
+  "account.reconcile.note": "Bakiye mutabakatı"
 }

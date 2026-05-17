@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Activé — {count} facture(s), {lead} jour(s) avant",
   "notifications.leadDays": "Délai",
   "notifications.leadDays.value": "{n} jour(s) avant",
-  "notifications.leadDays.sameDay": "Le jour même"
+  "notifications.leadDays.sameDay": "Le jour même",
+  "account.reconcile.title": "Réconcilier le solde ?",
+  "account.reconcile.body": "Le solde a changé de {sign}{amount} {currency}. Enregistrez le nouveau solde, ou créez une transaction d'Ajustement pour expliquer l'écart depuis Activité.",
+  "account.reconcile.skip": "Enregistrer sans ajustement",
+  "account.reconcile.create": "Créer un ajustement",
+  "account.reconcile.note": "Réconciliation du solde"
 }

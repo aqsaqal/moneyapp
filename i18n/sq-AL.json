@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Aktiv — {count} fatura, {lead} ditë para",
   "notifications.leadDays": "Koha e kujtesës",
   "notifications.leadDays.value": "{n} ditë para",
-  "notifications.leadDays.sameDay": "Të njëjtën ditë"
+  "notifications.leadDays.sameDay": "Të njëjtën ditë",
+  "account.reconcile.title": "Të rakordohet gjendja?",
+  "account.reconcile.body": "Gjendja ndryshoi me {sign}{amount} {currency}. Ruaj gjendjen e re ose krijo një transaksion Përshtatje që dallimi të jetë i shpjegueshëm nga Aktiviteti.",
+  "account.reconcile.skip": "Ruaj pa përshtatje",
+  "account.reconcile.create": "Krijo përshtatje",
+  "account.reconcile.note": "Rakordim i gjendjes"
 }

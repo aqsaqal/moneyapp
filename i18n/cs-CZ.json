@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Zapnuto — {count} účtů, {lead} dní předem",
   "notifications.leadDays": "Předstih",
   "notifications.leadDays.value": "{n} dní předem",
-  "notifications.leadDays.sameDay": "V den splatnosti"
+  "notifications.leadDays.sameDay": "V den splatnosti",
+  "account.reconcile.title": "Vyrovnat zůstatek?",
+  "account.reconcile.body": "Zůstatek se změnil o {sign}{amount} {currency}. Ulož nový zůstatek nebo vytvoř transakci Úprava, aby byl rozdíl vysvětlitelný z Aktivity.",
+  "account.reconcile.skip": "Uložit bez úpravy",
+  "account.reconcile.create": "Vytvořit úpravu",
+  "account.reconcile.note": "Vyrovnání zůstatku"
 }

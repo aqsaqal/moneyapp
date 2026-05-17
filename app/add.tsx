@@ -39,6 +39,7 @@ import { CategoryPicker } from '@/components/CategoryPicker';
 import { AccountPicker } from '@/components/AccountPicker';
 import type { Account } from '@/utils/db/schema';
 import { monthKey, daysDiff, relativeDayLabel } from '@/utils/format';
+import { decodePrefill } from '@/utils/prefill';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
@@ -86,33 +87,21 @@ export default function AddScreen() {
   const params = useLocalSearchParams<{ prefill?: string }>();
   const prefill = useMemo(() => {
     if (!params.prefill) return null;
-    try {
-      const decoded =
-        typeof globalThis.atob === 'function'
-          ? globalThis.atob(params.prefill)
-          : Buffer.from(params.prefill, 'base64').toString('utf8');
-      return JSON.parse(decoded) as {
-        type?: Mode;
-        amount?: number;
-        /** Account-currency amount for mixed-FX edits — seeds the
-         *  editable converted-amount line. */
-        accountAmount?: number;
-        accountId?: string;
-        toAccountId?: string;
-        category?: string;
-        note?: string;
-        originalCurrency?: string;
-        date?: number;
-        /** When set, after Smart Add successfully creates a tx we also
-         *  insert a paid_items row so the checkbox flips to "paid". */
-        recurringId?: string;
-        /** When set, submit calls updateTransaction(editId, ...) instead
-         *  of addTransaction(...), turning Smart Add into the edit form. */
-        editId?: string;
-      };
-    } catch {
-      return null;
-    }
+    // Decode via shared Buffer-based helper — handles Cyrillic, Arabic,
+    // Chinese notes that the legacy `atob` path silently choked on.
+    return decodePrefill(params.prefill) as {
+      type?: Mode;
+      amount?: number;
+      accountAmount?: number;
+      accountId?: string;
+      toAccountId?: string;
+      category?: string;
+      note?: string;
+      originalCurrency?: string;
+      date?: number;
+      recurringId?: string;
+      editId?: string;
+    } | null;
   }, [params.prefill]);
 
   const isEditing = !!prefill?.editId;

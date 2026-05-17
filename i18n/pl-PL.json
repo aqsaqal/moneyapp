@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Włączone — {count} rachunków, {lead} dni przed",
   "notifications.leadDays": "Wyprzedzenie",
   "notifications.leadDays.value": "{n} dni przed",
-  "notifications.leadDays.sameDay": "W tym samym dniu"
+  "notifications.leadDays.sameDay": "W tym samym dniu",
+  "account.reconcile.title": "Uzgodnić saldo?",
+  "account.reconcile.body": "Saldo zmieniło się o {sign}{amount} {currency}. Zapisz nowe saldo lub utwórz transakcję Korekta, by różnica była widoczna w Aktywności.",
+  "account.reconcile.skip": "Zapisz bez korekty",
+  "account.reconcile.create": "Utwórz korektę",
+  "account.reconcile.note": "Uzgodnienie salda"
 }

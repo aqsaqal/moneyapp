@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Aan — {count} factu(u)r(en), {lead} dag(en) van tevoren",
   "notifications.leadDays": "Voorlooptijd",
   "notifications.leadDays.value": "{n} dag(en) van tevoren",
-  "notifications.leadDays.sameDay": "Op de dag zelf"
+  "notifications.leadDays.sameDay": "Op de dag zelf",
+  "account.reconcile.title": "Saldo verrekenen?",
+  "account.reconcile.body": "Saldo veranderde met {sign}{amount} {currency}. Sla het nieuwe saldo op, of maak een Aanpassing-transactie zodat het verschil zichtbaar is in Activiteit.",
+  "account.reconcile.skip": "Opslaan zonder aanpassing",
+  "account.reconcile.create": "Aanpassing maken",
+  "account.reconcile.note": "Saldo-verrekening"
 }

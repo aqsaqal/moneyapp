@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "På — {count} regninger, {lead} dager før",
   "notifications.leadDays": "Forhåndsvarsel",
   "notifications.leadDays.value": "{n} dager før",
-  "notifications.leadDays.sameDay": "Samme dag"
+  "notifications.leadDays.sameDay": "Samme dag",
+  "account.reconcile.title": "Avstem saldo?",
+  "account.reconcile.body": "Saldoen endret seg med {sign}{amount} {currency}. Lagre ny saldo, eller opprett en Justering-transaksjon så differansen vises i Aktivitet.",
+  "account.reconcile.skip": "Lagre uten justering",
+  "account.reconcile.create": "Opprett justering",
+  "account.reconcile.note": "Saldoavstemming"
 }

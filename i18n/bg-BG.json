@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Вкл — {count} сметки, {lead} дни предварително",
   "notifications.leadDays": "Време за напомняне",
   "notifications.leadDays.value": "{n} дни предварително",
-  "notifications.leadDays.sameDay": "В същия ден"
+  "notifications.leadDays.sameDay": "В същия ден",
+  "account.reconcile.title": "Изравнение на салдо?",
+  "account.reconcile.body": "Салдото се промени с {sign}{amount} {currency}. Запази ново салдо или създай Корекция, за да се проследи разликата в Активност.",
+  "account.reconcile.skip": "Запази без корекция",
+  "account.reconcile.create": "Създай корекция",
+  "account.reconcile.note": "Изравнение на салдо"
 }

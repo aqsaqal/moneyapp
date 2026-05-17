@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "On — {count} bollette, {lead} giorno(i) prima",
   "notifications.leadDays": "Anticipo",
   "notifications.leadDays.value": "{n} giorno(i) prima",
-  "notifications.leadDays.sameDay": "Stesso giorno"
+  "notifications.leadDays.sameDay": "Stesso giorno",
+  "account.reconcile.title": "Riconciliare il saldo?",
+  "account.reconcile.body": "Il saldo è cambiato di {sign}{amount} {currency}. Salva il nuovo saldo o crea una transazione di Rettifica per spiegare la differenza da Attività.",
+  "account.reconcile.skip": "Salva senza rettifica",
+  "account.reconcile.create": "Crea rettifica",
+  "account.reconcile.note": "Riconciliazione saldo"
 }

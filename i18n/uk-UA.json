@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Увімк — {count} рахунків, за {lead} дн.",
   "notifications.leadDays": "Заздалегідь",
   "notifications.leadDays.value": "за {n} дн.",
-  "notifications.leadDays.sameDay": "У той же день"
+  "notifications.leadDays.sameDay": "У той же день",
+  "account.reconcile.title": "Звірити баланс?",
+  "account.reconcile.body": "Баланс змінився на {sign}{amount} {currency}. Збережи новий баланс або створи Коригування, щоб різниця була пояснена в Активності.",
+  "account.reconcile.skip": "Зберегти без коригування",
+  "account.reconcile.create": "Створити коригування",
+  "account.reconcile.note": "Звірка балансу"
 }

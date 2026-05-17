@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "켜짐 — {count}건, {lead}일 전",
   "notifications.leadDays": "알림 시점",
   "notifications.leadDays.value": "{n}일 전",
-  "notifications.leadDays.sameDay": "당일"
+  "notifications.leadDays.sameDay": "당일",
+  "account.reconcile.title": "잔액을 조정할까요?",
+  "account.reconcile.body": "잔액이 {sign}{amount} {currency} 변경되었습니다. 새 잔액을 저장하거나 조정 거래를 생성해 활동에서 차이를 추적하세요.",
+  "account.reconcile.skip": "조정 없이 저장",
+  "account.reconcile.create": "조정 생성",
+  "account.reconcile.note": "잔액 조정"
 }

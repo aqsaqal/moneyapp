@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Įjungta — {count} sąskaitų, prieš {lead} d.",
   "notifications.leadDays": "Priminimo laikas",
   "notifications.leadDays.value": "prieš {n} d.",
-  "notifications.leadDays.sameDay": "Tą pačią dieną"
+  "notifications.leadDays.sameDay": "Tą pačią dieną",
+  "account.reconcile.title": "Suderinti likutį?",
+  "account.reconcile.body": "Likutis pasikeitė {sign}{amount} {currency}. Išsaugok naują likutį arba sukurk Koregavimo operaciją, kad skirtumas būtų matomas Veikloje.",
+  "account.reconcile.skip": "Išsaugoti be koregavimo",
+  "account.reconcile.create": "Sukurti koregavimą",
+  "account.reconcile.note": "Likučio suderinimas"
 }

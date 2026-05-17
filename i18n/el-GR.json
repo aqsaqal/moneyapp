@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Ενεργό — {count} λογ., {lead} ημέρες πριν",
   "notifications.leadDays": "Χρόνος υπενθύμισης",
   "notifications.leadDays.value": "{n} ημέρες πριν",
-  "notifications.leadDays.sameDay": "Την ίδια μέρα"
+  "notifications.leadDays.sameDay": "Την ίδια μέρα",
+  "account.reconcile.title": "Συμφωνία υπολοίπου;",
+  "account.reconcile.body": "Το υπόλοιπο άλλαξε κατά {sign}{amount} {currency}. Αποθήκευσε το νέο υπόλοιπο ή δημιούργησε συναλλαγή Προσαρμογής για να εξηγηθεί η διαφορά στην Δραστηριότητα.",
+  "account.reconcile.skip": "Αποθήκευση χωρίς προσαρμογή",
+  "account.reconcile.create": "Δημιουργία προσαρμογής",
+  "account.reconcile.note": "Συμφωνία υπολοίπου"
 }

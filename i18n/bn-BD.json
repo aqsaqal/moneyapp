@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "চালু — {count} বিল, {lead} দিন আগে",
   "notifications.leadDays": "স্মরণ সময়",
   "notifications.leadDays.value": "{n} দিন আগে",
-  "notifications.leadDays.sameDay": "একই দিনে"
+  "notifications.leadDays.sameDay": "একই দিনে",
+  "account.reconcile.title": "ব্যালেন্স মেলাবেন?",
+  "account.reconcile.body": "ব্যালেন্স {sign}{amount} {currency} পরিবর্তিত হয়েছে। নতুন ব্যালেন্স সংরক্ষণ করুন বা পার্থক্য কার্যকলাপে ব্যাখ্যা করতে সমন্বয় লেনদেন তৈরি করুন।",
+  "account.reconcile.skip": "সমন্বয় ছাড়া সংরক্ষণ",
+  "account.reconcile.create": "সমন্বয় তৈরি করুন",
+  "account.reconcile.note": "ব্যালেন্স মেলানো"
 }

@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Bật — {count} hoá đơn, trước {lead} ngày",
   "notifications.leadDays": "Thời gian nhắc",
   "notifications.leadDays.value": "trước {n} ngày",
-  "notifications.leadDays.sameDay": "Cùng ngày"
+  "notifications.leadDays.sameDay": "Cùng ngày",
+  "account.reconcile.title": "Đối chiếu số dư?",
+  "account.reconcile.body": "Số dư đã thay đổi {sign}{amount} {currency}. Lưu số dư mới hoặc tạo giao dịch Điều chỉnh để giải thích chênh lệch trong Hoạt động.",
+  "account.reconcile.skip": "Lưu mà không điều chỉnh",
+  "account.reconcile.create": "Tạo điều chỉnh",
+  "account.reconcile.note": "Đối chiếu số dư"
 }

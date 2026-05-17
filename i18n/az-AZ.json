@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Açıq — {count} hesab, {lead} gün əvvəl",
   "notifications.leadDays": "Xatırlatma vaxtı",
   "notifications.leadDays.value": "{n} gün əvvəl",
-  "notifications.leadDays.sameDay": "Eyni gün"
+  "notifications.leadDays.sameDay": "Eyni gün",
+  "account.reconcile.title": "Balansı uzlaşdırmaq?",
+  "account.reconcile.body": "Balans {sign}{amount} {currency} dəyişdi. Yeni balansı yadda saxla və ya fərqi Fəaliyyətdə izah etmək üçün Düzəliş əməliyyatı yarat.",
+  "account.reconcile.skip": "Düzəlişsiz yadda saxla",
+  "account.reconcile.create": "Düzəliş yarat",
+  "account.reconcile.note": "Balans uzlaşması"
 }

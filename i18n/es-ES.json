@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "Activo — {count} facturas, {lead} día(s) antes",
   "notifications.leadDays": "Anticipación",
   "notifications.leadDays.value": "{n} día(s) antes",
-  "notifications.leadDays.sameDay": "El mismo día"
+  "notifications.leadDays.sameDay": "El mismo día",
+  "account.reconcile.title": "¿Conciliar el saldo?",
+  "account.reconcile.body": "El saldo cambió en {sign}{amount} {currency}. Guarda el nuevo saldo o crea una transacción de Ajuste para explicar la diferencia desde Actividad.",
+  "account.reconcile.skip": "Guardar sin ajuste",
+  "account.reconcile.create": "Crear ajuste",
+  "account.reconcile.note": "Conciliación de saldo"
 }

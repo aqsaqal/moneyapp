@@ -349,5 +349,10 @@
   "notifications.hint.enabled": "روشن — {count} قبض، {lead} روز قبل",
   "notifications.leadDays": "زمان یادآور",
   "notifications.leadDays.value": "{n} روز قبل",
-  "notifications.leadDays.sameDay": "همان روز"
+  "notifications.leadDays.sameDay": "همان روز",
+  "account.reconcile.title": "تطبیق موجودی؟",
+  "account.reconcile.body": "موجودی {sign}{amount} {currency} تغییر کرد. موجودی جدید را ذخیره کنید یا یک تراکنش تعدیل ایجاد کنید تا تفاوت در فعالیت‌ها مشخص باشد.",
+  "account.reconcile.skip": "ذخیره بدون تعدیل",
+  "account.reconcile.create": "ایجاد تعدیل",
+  "account.reconcile.note": "تطبیق موجودی"
 }
