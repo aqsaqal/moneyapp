@@ -143,6 +143,30 @@ export default function AddScreen() {
   // existing reconciliation logic for non-transfer types stays as-is.
   const [accountAmountOverrideTo, setAccountAmountOverrideTo] = useState<string | null>(null);
 
+  // Re-sync state from prefill whenever the route params change. Expo
+  // Router reuses the /add screen instance across navigations from Plan
+  // / Activity / Home, so the useState() initializers only fire on the
+  // very first mount — without this effect, tapping "income recurring"
+  // after the screen has already opened once for an expense leaves the
+  // expense state in place. We key on params.prefill (the encoded
+  // string, not the decoded object) so identical re-taps still re-init.
+  useEffect(() => {
+    if (!prefill) return;
+    if (prefill.type) setMode(prefill.type);
+    if (prefill.amount != null) setAmount(String(prefill.amount));
+    if (prefill.note != null) setNote(prefill.note);
+    if (prefill.date != null) setTxDate(new Date(prefill.date));
+    if (prefill.category != null) setCatOverride(prefill.category);
+    if (prefill.accountId != null) setAccountOverride(prefill.accountId);
+    if (prefill.originalCurrency != null) {
+      setEntryCurrency(prefill.originalCurrency as CurrencyCode);
+    }
+    if (prefill.accountAmount != null) {
+      setAccountAmountOverride(String(prefill.accountAmount));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.prefill]);
+
   // Phase 10z: categories metadata still used by the budget context
   // line (below From/To) and the inline CategoryPicker — the top-6
   // chip strip is gone. SmartSuggestionRow handles "More…" → grid now.

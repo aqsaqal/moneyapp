@@ -33,6 +33,7 @@ import { CategoryPicker } from '@/components/CategoryPicker';
 import { useSubscriptionAudit, type DetectedCandidate, type StaleSubscription } from '@/hooks/useSubscriptionAudit';
 import { GoalSheet } from '@/components/GoalSheet';
 import { DebtSheet } from '@/components/DebtSheet';
+import { encodePrefill } from '@/utils/prefill';
 import { projectPayoff, debtTotals, type Strategy } from '@/utils/debtPayoff';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { Goal, Debt } from '@/utils/db/schema';
@@ -75,11 +76,11 @@ type RecurringSheetState =
   | { kind: 'create'; type: 'expense' | 'income' };
 
 /** Build a base64-encoded JSON prefill blob for /add. Used by every
- *  Plan-tab row that should open Smart Add with the right defaults. */
+ *  Plan-tab row that should open Smart Add with the right defaults.
+ *  Delegates to the shared UTF-8-safe encoder so non-Latin-1 notes
+ *  (Cyrillic, Arabic, Chinese, …) survive the round-trip. */
 function buildPrefill(data: Record<string, unknown>): string {
-  const json = JSON.stringify(data);
-  if (typeof globalThis.btoa === 'function') return globalThis.btoa(json);
-  return Buffer.from(json, 'utf8').toString('base64');
+  return encodePrefill(data);
 }
 
 function RecurringSection() {
