@@ -41,7 +41,12 @@ import {
   setBiometricEnabled,
   useBiometricSupported,
 } from '@/hooks/useBiometricLock';
-import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
+import {
+  CURRENCIES,
+  type CurrencyCode,
+  CURRENCY_FORMAT_PRESETS,
+  previewWithPreset,
+} from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { exportData } from '@/utils/dataExport';
 import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
@@ -136,6 +141,7 @@ export default function SettingsScreen() {
         <Text style={settingsTopStyles.groupTitle}>PROFILE SETTINGS</Text>
         <ActiveProfileRow />
         <CurrencyRow />
+        <CurrencyFormatRow />
         <CategoriesSection />
         <SmartSuggestionsRow />
         {/* Islamic flavor: mazhab + prayer-method rows. Generic: nothing. */}
@@ -341,6 +347,43 @@ function CurrencyRow() {
           kv.set('currency', c);
           setCurrency(c);
           if (prev !== c) maybeOfferBudgetConversion(prev, c);
+        }}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
+}
+
+function CurrencyFormatRow() {
+  const t = useT();
+  const [open, setOpen] = useState(false);
+  const [presetId, setPresetId] = useState<string>(kv.get('currencyFormat') ?? '');
+  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const def = CURRENCIES[currency];
+  // The sample amount that produces a visible difference across all formats.
+  const sample = -1234567.9;
+  const hint = presetId
+    ? previewWithPreset(sample, CURRENCY_FORMAT_PRESETS.find((p) => p.id === presetId)!, def.symbolNative, 2)
+    : t('me.currencyFormat.hint');
+  return (
+    <>
+      <SettingRow
+        label={t('me.currencyFormat')}
+        hint={hint}
+        icon="numeric"
+        onPress={() => setOpen(true)}
+      />
+      <PickerSheet
+        visible={open}
+        title={t('me.currencyFormat')}
+        options={CURRENCY_FORMAT_PRESETS.map<PickerOption<string>>((p) => ({
+          value: p.id,
+          label: previewWithPreset(sample, p, def.symbolNative, 2),
+        }))}
+        selected={presetId}
+        onPick={(id) => {
+          setPresetId(id);
+          kv.set('currencyFormat', id);
         }}
         onClose={() => setOpen(false)}
       />

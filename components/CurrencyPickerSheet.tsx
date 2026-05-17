@@ -21,6 +21,8 @@ import {
   CURRENCIES,
   MAIN_CURRENCIES,
   OTHER_CURRENCIES,
+  CRYPTO_CURRENCIES,
+  METAL_CURRENCIES,
   type CurrencyCode,
 } from '@/constants/currency';
 
@@ -32,7 +34,7 @@ export interface CurrencyPickerSheetProps {
   onClose: () => void;
 }
 
-type Tab = 'main' | 'other';
+type Tab = 'main' | 'other' | 'crypto' | 'metals';
 
 export function CurrencyPickerSheet({
   visible,
@@ -43,12 +45,16 @@ export function CurrencyPickerSheet({
 }: CurrencyPickerSheetProps) {
   const t = useT();
   const [tab, setTab] = useState<Tab>(
-    CURRENCIES[selected]?.tier === 'other' ? 'other' : 'main',
+    (CURRENCIES[selected]?.tier as Tab) ?? 'main',
   );
   const [query, setQuery] = useState('');
 
   const list = useMemo(() => {
-    const base = tab === 'main' ? MAIN_CURRENCIES : OTHER_CURRENCIES;
+    const base =
+      tab === 'main' ? MAIN_CURRENCIES
+      : tab === 'other' ? OTHER_CURRENCIES
+      : tab === 'crypto' ? CRYPTO_CURRENCIES
+      : METAL_CURRENCIES;
     if (!query.trim()) return base;
     const q = query.trim().toLowerCase();
     return base.filter((c) => {
@@ -71,19 +77,26 @@ export function CurrencyPickerSheet({
         </View>
 
         <View style={styles.tabsRow}>
-          {(['main', 'other'] as Tab[]).map((id) => (
-            <Pressable
-              key={id}
-              onPress={() => setTab(id)}
-              style={[styles.tab, tab === id && styles.tabActive]}
-              accessibilityRole="button"
-              accessibilityState={{ selected: tab === id }}
-            >
-              <Text style={[styles.tabText, tab === id && styles.tabTextActive]}>
-                {id === 'main' ? t('currencyPicker.main') : t('currencyPicker.other')}
-              </Text>
-            </Pressable>
-          ))}
+          {(['main', 'other', 'crypto', 'metals'] as Tab[]).map((id) => {
+            const label =
+              id === 'main' ? t('currencyPicker.main')
+              : id === 'other' ? t('currencyPicker.other')
+              : id === 'crypto' ? t('currencyPicker.crypto')
+              : t('currencyPicker.metals');
+            return (
+              <Pressable
+                key={id}
+                onPress={() => setTab(id)}
+                style={[styles.tab, tab === id && styles.tabActive]}
+                accessibilityRole="button"
+                accessibilityState={{ selected: tab === id }}
+              >
+                <Text style={[styles.tabText, tab === id && styles.tabTextActive]} numberOfLines={1}>
+                  {label}
+                </Text>
+              </Pressable>
+            );
+          })}
         </View>
 
         <View style={styles.searchWrap}>
@@ -164,10 +177,11 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   title: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold },
-  tabsRow: { flexDirection: 'row', paddingHorizontal: spacing.md, gap: 8, marginBottom: spacing.md },
+  tabsRow: { flexDirection: 'row', paddingHorizontal: spacing.md, gap: 6, marginBottom: spacing.md },
   tab: {
     flex: 1,
     paddingVertical: 10,
+    paddingHorizontal: 6,
     borderRadius: radii.md,
     borderWidth: 1,
     borderColor: theme.border,
@@ -175,7 +189,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg2,
   },
   tabActive: { backgroundColor: theme.accent, borderColor: 'transparent' },
-  tabText: { color: theme.text2, fontSize: sizes.sm },
+  tabText: { color: theme.text2, fontSize: sizes.xs },
   tabTextActive: { color: theme.bg, fontFamily: font.bodySemi },
   searchWrap: {
     flexDirection: 'row',

@@ -30,7 +30,20 @@ export type CurrencyCode =
   // Caribbean / Pacific
   | 'JMD' | 'TTD' | 'BBD' | 'BSD' | 'BMD' | 'XCD' | 'PGK' | 'SBD' | 'WST' | 'TOP' | 'VUV'
   // Other
-  | 'ILS' | 'IRR';
+  | 'ILS' | 'IRR'
+  // Remaining ISO 4217 fiat (added in Phase 10x)
+  | 'ANG' | 'AOA' | 'AWG' | 'BIF' | 'BWP' | 'BZD' | 'CDF' | 'CVE' | 'DJF'
+  | 'ERN' | 'FKP' | 'GIP' | 'GMD' | 'GNF' | 'GYD' | 'HTG' | 'KMF' | 'KYD'
+  | 'KPW' | 'LRD' | 'LSL' | 'MGA' | 'MRU' | 'MUR' | 'MWK' | 'MZN' | 'NAD'
+  | 'RWF' | 'SCR' | 'SDG' | 'SHP' | 'SLE' | 'SOS' | 'SRD' | 'SSP' | 'STN'
+  | 'SYP' | 'SZL' | 'ZMW' | 'ZWL'
+  // Cryptocurrencies — top market cap
+  | 'BTC' | 'ETH' | 'USDT' | 'USDC' | 'BNB' | 'XRP' | 'ADA' | 'SOL' | 'DOGE'
+  | 'TRX' | 'TON' | 'AVAX' | 'DOT' | 'MATIC' | 'LINK' | 'BCH' | 'LTC' | 'SHIB'
+  | 'XLM' | 'XMR' | 'ATOM' | 'ETC' | 'FIL' | 'ICP' | 'NEAR' | 'APT' | 'ARB'
+  | 'OP' | 'HBAR' | 'ALGO'
+  // Precious metals (ISO 4217)
+  | 'XAU' | 'XAG' | 'XPT' | 'XPD';
 
 export interface CurrencyDef {
   code: CurrencyCode;
@@ -38,8 +51,8 @@ export interface CurrencyDef {
   symbol: string;
   symbolNative: string;
   decimalDigits: number;
-  /** "main" = top tab of the currency picker; "other" = second tab. */
-  tier: 'main' | 'other';
+  /** Picker tab placement. */
+  tier: 'main' | 'other' | 'crypto' | 'metals';
 }
 
 export const CURRENCIES: Record<CurrencyCode, CurrencyDef> = {
@@ -159,6 +172,83 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyDef> = {
   XOF: { code: 'XOF', name: 'West African CFA Franc', symbol: 'CFA', symbolNative: 'CFA', decimalDigits: 0, tier: 'other' },
   YER: { code: 'YER', name: 'Yemeni Rial', symbol: 'YR', symbolNative: 'ر.ي', decimalDigits: 2, tier: 'other' },
   ZAR: { code: 'ZAR', name: 'South African Rand', symbol: 'R', symbolNative: 'R', decimalDigits: 2, tier: 'other' },
+  // ---- Remaining ISO 4217 fiat (alphabetical) ----
+  ANG: { code: 'ANG', name: 'Netherlands Antillean Guilder', symbol: 'ƒ', symbolNative: 'ƒ', decimalDigits: 2, tier: 'other' },
+  AOA: { code: 'AOA', name: 'Angolan Kwanza', symbol: 'Kz', symbolNative: 'Kz', decimalDigits: 2, tier: 'other' },
+  AWG: { code: 'AWG', name: 'Aruban Florin', symbol: 'ƒ', symbolNative: 'ƒ', decimalDigits: 2, tier: 'other' },
+  BIF: { code: 'BIF', name: 'Burundian Franc', symbol: 'FBu', symbolNative: 'FBu', decimalDigits: 0, tier: 'other' },
+  BWP: { code: 'BWP', name: 'Botswana Pula', symbol: 'P', symbolNative: 'P', decimalDigits: 2, tier: 'other' },
+  BZD: { code: 'BZD', name: 'Belize Dollar', symbol: 'BZ$', symbolNative: 'BZ$', decimalDigits: 2, tier: 'other' },
+  CDF: { code: 'CDF', name: 'Congolese Franc', symbol: 'FC', symbolNative: 'FC', decimalDigits: 2, tier: 'other' },
+  CVE: { code: 'CVE', name: 'Cape Verdean Escudo', symbol: '$', symbolNative: '$', decimalDigits: 2, tier: 'other' },
+  DJF: { code: 'DJF', name: 'Djiboutian Franc', symbol: 'Fdj', symbolNative: 'Fdj', decimalDigits: 0, tier: 'other' },
+  ERN: { code: 'ERN', name: 'Eritrean Nakfa', symbol: 'Nfk', symbolNative: 'Nfk', decimalDigits: 2, tier: 'other' },
+  FKP: { code: 'FKP', name: 'Falkland Islands Pound', symbol: '£', symbolNative: '£', decimalDigits: 2, tier: 'other' },
+  GIP: { code: 'GIP', name: 'Gibraltar Pound', symbol: '£', symbolNative: '£', decimalDigits: 2, tier: 'other' },
+  GMD: { code: 'GMD', name: 'Gambian Dalasi', symbol: 'D', symbolNative: 'D', decimalDigits: 2, tier: 'other' },
+  GNF: { code: 'GNF', name: 'Guinean Franc', symbol: 'FG', symbolNative: 'FG', decimalDigits: 0, tier: 'other' },
+  GYD: { code: 'GYD', name: 'Guyanese Dollar', symbol: 'G$', symbolNative: 'G$', decimalDigits: 2, tier: 'other' },
+  HTG: { code: 'HTG', name: 'Haitian Gourde', symbol: 'G', symbolNative: 'G', decimalDigits: 2, tier: 'other' },
+  KMF: { code: 'KMF', name: 'Comorian Franc', symbol: 'CF', symbolNative: 'CF', decimalDigits: 0, tier: 'other' },
+  KYD: { code: 'KYD', name: 'Cayman Islands Dollar', symbol: 'CI$', symbolNative: 'CI$', decimalDigits: 2, tier: 'other' },
+  KPW: { code: 'KPW', name: 'North Korean Won', symbol: '₩', symbolNative: '₩', decimalDigits: 2, tier: 'other' },
+  LRD: { code: 'LRD', name: 'Liberian Dollar', symbol: 'L$', symbolNative: 'L$', decimalDigits: 2, tier: 'other' },
+  LSL: { code: 'LSL', name: 'Lesotho Loti', symbol: 'L', symbolNative: 'L', decimalDigits: 2, tier: 'other' },
+  MGA: { code: 'MGA', name: 'Malagasy Ariary', symbol: 'Ar', symbolNative: 'Ar', decimalDigits: 2, tier: 'other' },
+  MRU: { code: 'MRU', name: 'Mauritanian Ouguiya', symbol: 'UM', symbolNative: 'UM', decimalDigits: 2, tier: 'other' },
+  MUR: { code: 'MUR', name: 'Mauritian Rupee', symbol: '₨', symbolNative: '₨', decimalDigits: 2, tier: 'other' },
+  MWK: { code: 'MWK', name: 'Malawian Kwacha', symbol: 'MK', symbolNative: 'MK', decimalDigits: 2, tier: 'other' },
+  MZN: { code: 'MZN', name: 'Mozambican Metical', symbol: 'MT', symbolNative: 'MT', decimalDigits: 2, tier: 'other' },
+  NAD: { code: 'NAD', name: 'Namibian Dollar', symbol: 'N$', symbolNative: 'N$', decimalDigits: 2, tier: 'other' },
+  RWF: { code: 'RWF', name: 'Rwandan Franc', symbol: 'RF', symbolNative: 'RF', decimalDigits: 0, tier: 'other' },
+  SCR: { code: 'SCR', name: 'Seychellois Rupee', symbol: 'SR', symbolNative: 'SR', decimalDigits: 2, tier: 'other' },
+  SDG: { code: 'SDG', name: 'Sudanese Pound', symbol: 'SDG', symbolNative: 'ج.س.', decimalDigits: 2, tier: 'other' },
+  SHP: { code: 'SHP', name: 'Saint Helena Pound', symbol: '£', symbolNative: '£', decimalDigits: 2, tier: 'other' },
+  SLE: { code: 'SLE', name: 'Sierra Leonean Leone', symbol: 'Le', symbolNative: 'Le', decimalDigits: 2, tier: 'other' },
+  SOS: { code: 'SOS', name: 'Somali Shilling', symbol: 'Sh', symbolNative: 'Sh', decimalDigits: 2, tier: 'other' },
+  SRD: { code: 'SRD', name: 'Surinamese Dollar', symbol: 'Sr$', symbolNative: 'Sr$', decimalDigits: 2, tier: 'other' },
+  SSP: { code: 'SSP', name: 'South Sudanese Pound', symbol: '£', symbolNative: '£', decimalDigits: 2, tier: 'other' },
+  STN: { code: 'STN', name: 'São Tomé and Príncipe Dobra', symbol: 'Db', symbolNative: 'Db', decimalDigits: 2, tier: 'other' },
+  SYP: { code: 'SYP', name: 'Syrian Pound', symbol: 'LS', symbolNative: 'ل.س', decimalDigits: 2, tier: 'other' },
+  SZL: { code: 'SZL', name: 'Eswatini Lilangeni', symbol: 'L', symbolNative: 'L', decimalDigits: 2, tier: 'other' },
+  ZMW: { code: 'ZMW', name: 'Zambian Kwacha', symbol: 'ZK', symbolNative: 'ZK', decimalDigits: 2, tier: 'other' },
+  ZWL: { code: 'ZWL', name: 'Zimbabwean Dollar', symbol: 'Z$', symbolNative: 'Z$', decimalDigits: 2, tier: 'other' },
+  // ---- Cryptocurrencies ----
+  BTC: { code: 'BTC', name: 'Bitcoin', symbol: '₿', symbolNative: '₿', decimalDigits: 8, tier: 'crypto' },
+  ETH: { code: 'ETH', name: 'Ethereum', symbol: 'Ξ', symbolNative: 'Ξ', decimalDigits: 6, tier: 'crypto' },
+  USDT: { code: 'USDT', name: 'Tether', symbol: '₮', symbolNative: '₮', decimalDigits: 2, tier: 'crypto' },
+  USDC: { code: 'USDC', name: 'USD Coin', symbol: 'USDC', symbolNative: 'USDC', decimalDigits: 2, tier: 'crypto' },
+  BNB: { code: 'BNB', name: 'BNB', symbol: 'BNB', symbolNative: 'BNB', decimalDigits: 4, tier: 'crypto' },
+  XRP: { code: 'XRP', name: 'XRP', symbol: 'XRP', symbolNative: 'XRP', decimalDigits: 4, tier: 'crypto' },
+  ADA: { code: 'ADA', name: 'Cardano', symbol: '₳', symbolNative: '₳', decimalDigits: 4, tier: 'crypto' },
+  SOL: { code: 'SOL', name: 'Solana', symbol: 'SOL', symbolNative: 'SOL', decimalDigits: 4, tier: 'crypto' },
+  DOGE: { code: 'DOGE', name: 'Dogecoin', symbol: 'Ð', symbolNative: 'Ð', decimalDigits: 4, tier: 'crypto' },
+  TRX: { code: 'TRX', name: 'TRON', symbol: 'TRX', symbolNative: 'TRX', decimalDigits: 4, tier: 'crypto' },
+  TON: { code: 'TON', name: 'Toncoin', symbol: 'TON', symbolNative: 'TON', decimalDigits: 4, tier: 'crypto' },
+  AVAX: { code: 'AVAX', name: 'Avalanche', symbol: 'AVAX', symbolNative: 'AVAX', decimalDigits: 4, tier: 'crypto' },
+  DOT: { code: 'DOT', name: 'Polkadot', symbol: 'DOT', symbolNative: 'DOT', decimalDigits: 4, tier: 'crypto' },
+  MATIC: { code: 'MATIC', name: 'Polygon', symbol: 'POL', symbolNative: 'POL', decimalDigits: 4, tier: 'crypto' },
+  LINK: { code: 'LINK', name: 'Chainlink', symbol: 'LINK', symbolNative: 'LINK', decimalDigits: 4, tier: 'crypto' },
+  BCH: { code: 'BCH', name: 'Bitcoin Cash', symbol: 'BCH', symbolNative: 'BCH', decimalDigits: 6, tier: 'crypto' },
+  LTC: { code: 'LTC', name: 'Litecoin', symbol: 'Ł', symbolNative: 'Ł', decimalDigits: 6, tier: 'crypto' },
+  SHIB: { code: 'SHIB', name: 'Shiba Inu', symbol: 'SHIB', symbolNative: 'SHIB', decimalDigits: 2, tier: 'crypto' },
+  XLM: { code: 'XLM', name: 'Stellar', symbol: 'XLM', symbolNative: 'XLM', decimalDigits: 4, tier: 'crypto' },
+  XMR: { code: 'XMR', name: 'Monero', symbol: 'ɱ', symbolNative: 'ɱ', decimalDigits: 6, tier: 'crypto' },
+  ATOM: { code: 'ATOM', name: 'Cosmos', symbol: 'ATOM', symbolNative: 'ATOM', decimalDigits: 4, tier: 'crypto' },
+  ETC: { code: 'ETC', name: 'Ethereum Classic', symbol: 'ETC', symbolNative: 'ETC', decimalDigits: 6, tier: 'crypto' },
+  FIL: { code: 'FIL', name: 'Filecoin', symbol: 'FIL', symbolNative: 'FIL', decimalDigits: 4, tier: 'crypto' },
+  ICP: { code: 'ICP', name: 'Internet Computer', symbol: 'ICP', symbolNative: 'ICP', decimalDigits: 4, tier: 'crypto' },
+  NEAR: { code: 'NEAR', name: 'NEAR Protocol', symbol: 'NEAR', symbolNative: 'NEAR', decimalDigits: 4, tier: 'crypto' },
+  APT: { code: 'APT', name: 'Aptos', symbol: 'APT', symbolNative: 'APT', decimalDigits: 4, tier: 'crypto' },
+  ARB: { code: 'ARB', name: 'Arbitrum', symbol: 'ARB', symbolNative: 'ARB', decimalDigits: 4, tier: 'crypto' },
+  OP: { code: 'OP', name: 'Optimism', symbol: 'OP', symbolNative: 'OP', decimalDigits: 4, tier: 'crypto' },
+  HBAR: { code: 'HBAR', name: 'Hedera', symbol: 'HBAR', symbolNative: 'HBAR', decimalDigits: 4, tier: 'crypto' },
+  ALGO: { code: 'ALGO', name: 'Algorand', symbol: 'ALGO', symbolNative: 'ALGO', decimalDigits: 4, tier: 'crypto' },
+  // ---- Precious metals (ISO 4217, priced per troy ounce) ----
+  XAU: { code: 'XAU', name: 'Gold (oz)', symbol: 'Au', symbolNative: 'Au', decimalDigits: 3, tier: 'metals' },
+  XAG: { code: 'XAG', name: 'Silver (oz)', symbol: 'Ag', symbolNative: 'Ag', decimalDigits: 3, tier: 'metals' },
+  XPT: { code: 'XPT', name: 'Platinum (oz)', symbol: 'Pt', symbolNative: 'Pt', decimalDigits: 3, tier: 'metals' },
+  XPD: { code: 'XPD', name: 'Palladium (oz)', symbol: 'Pd', symbolNative: 'Pd', decimalDigits: 3, tier: 'metals' },
 };
 
 export const MAIN_CURRENCIES: CurrencyCode[] = (Object.keys(CURRENCIES) as CurrencyCode[])
@@ -167,6 +257,12 @@ export const MAIN_CURRENCIES: CurrencyCode[] = (Object.keys(CURRENCIES) as Curre
 export const OTHER_CURRENCIES: CurrencyCode[] = (Object.keys(CURRENCIES) as CurrencyCode[])
   .filter((c) => CURRENCIES[c].tier === 'other')
   .sort((a, b) => CURRENCIES[a].name.localeCompare(CURRENCIES[b].name));
+
+export const CRYPTO_CURRENCIES: CurrencyCode[] = (Object.keys(CURRENCIES) as CurrencyCode[])
+  .filter((c) => CURRENCIES[c].tier === 'crypto');
+
+export const METAL_CURRENCIES: CurrencyCode[] = (Object.keys(CURRENCIES) as CurrencyCode[])
+  .filter((c) => CURRENCIES[c].tier === 'metals');
 
 /** Effective locale for number formatting — applies the user's
  *  Arabic-numerals preference (default ON for ar-* locales). */
@@ -180,9 +276,143 @@ function effectiveLocale(locale?: string): string | undefined {
   return useArabic ? `${loc}-u-nu-arab` : loc;
 }
 
-/** Full-precision formatter. `$12.50`, `ر.س ١٢٫٥٠`. */
+// ---- Currency format presets (Phase 10x) ----
+// User-controllable preset that overrides locale defaults for digit
+// grouping and symbol placement. Each preset is a (numberStyle × position)
+// pair. The default 'auto' defers to Intl.NumberFormat (locale-aware).
+//
+// numberStyle:
+//   western      1,234,567.90    comma thousands, dot decimal
+//   indian       12,34,567.90    lakh/crore grouping
+//   european     1.234.567,90    dot thousands, comma decimal
+//   space-comma  1 234 567,90    space thousands, comma decimal (fr/sv)
+//   space-dot    1 234 567.90    space thousands, dot decimal
+//
+// position:
+//   amount-symbol     1,234.90 ₸  symbol after, sign at far left
+//   symbol-amount     ₸ 1,234.90  symbol before with space, sign at far left
+//   symbol-sign       ₸ -1,234.90 symbol leads, sign next to amount
+
+export type CurrencyNumberStyle = 'western' | 'indian' | 'european' | 'space-comma' | 'space-dot';
+export type CurrencyPosition = 'amount-symbol' | 'symbol-amount' | 'symbol-sign';
+
+export interface CurrencyFormatPreset {
+  id: string;
+  numberStyle: CurrencyNumberStyle;
+  position: CurrencyPosition;
+}
+
+export const CURRENCY_FORMAT_PRESETS: CurrencyFormatPreset[] = [
+  // amount-symbol (negative goes far left)
+  { id: 'western-amount-symbol',     numberStyle: 'western',     position: 'amount-symbol' },
+  { id: 'indian-amount-symbol',      numberStyle: 'indian',      position: 'amount-symbol' },
+  { id: 'european-amount-symbol',    numberStyle: 'european',    position: 'amount-symbol' },
+  { id: 'space-dot-amount-symbol',   numberStyle: 'space-dot',   position: 'amount-symbol' },
+  { id: 'space-comma-amount-symbol', numberStyle: 'space-comma', position: 'amount-symbol' },
+  // symbol-amount (sign far left)
+  { id: 'western-symbol-amount',     numberStyle: 'western',     position: 'symbol-amount' },
+  { id: 'indian-symbol-amount',      numberStyle: 'indian',      position: 'symbol-amount' },
+  { id: 'european-symbol-amount',    numberStyle: 'european',    position: 'symbol-amount' },
+  { id: 'space-dot-symbol-amount',   numberStyle: 'space-dot',   position: 'symbol-amount' },
+  { id: 'space-comma-symbol-amount', numberStyle: 'space-comma', position: 'symbol-amount' },
+  // symbol-sign (symbol first, then sign)
+  { id: 'western-symbol-sign',       numberStyle: 'western',     position: 'symbol-sign' },
+  { id: 'indian-symbol-sign',        numberStyle: 'indian',      position: 'symbol-sign' },
+  { id: 'european-symbol-sign',      numberStyle: 'european',    position: 'symbol-sign' },
+  { id: 'space-dot-symbol-sign',     numberStyle: 'space-dot',   position: 'symbol-sign' },
+  { id: 'space-comma-symbol-sign',   numberStyle: 'space-comma', position: 'symbol-sign' },
+];
+
+export function getCurrencyFormatPreset(id?: string | null): CurrencyFormatPreset | null {
+  if (!id) return null;
+  return CURRENCY_FORMAT_PRESETS.find((p) => p.id === id) ?? null;
+}
+
+/** Apply digit grouping + decimal style to a positive numeric string
+ *  produced by `Number.prototype.toFixed(digits)`. */
+function applyNumberStyle(positive: string, style: CurrencyNumberStyle): string {
+  const [intPart, fracPart] = positive.split('.');
+  let grouped: string;
+  if (style === 'indian') {
+    // 1 group of 3 (rightmost), then groups of 2.  12345678 -> 1,23,45,678
+    if (intPart.length <= 3) grouped = intPart;
+    else {
+      const last3 = intPart.slice(-3);
+      const rest = intPart.slice(0, -3);
+      const restGrouped = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ',');
+      grouped = `${restGrouped},${last3}`;
+    }
+    return fracPart ? `${grouped}.${fracPart}` : grouped;
+  }
+  const groupedThousands = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  switch (style) {
+    case 'western':
+      return fracPart ? `${groupedThousands}.${fracPart}` : groupedThousands;
+    case 'european':
+      return fracPart
+        ? `${groupedThousands.replace(/,/g, '.')},${fracPart}`
+        : groupedThousands.replace(/,/g, '.');
+    case 'space-comma':
+      return fracPart
+        ? `${groupedThousands.replace(/,/g, ' ')},${fracPart}`
+        : groupedThousands.replace(/,/g, ' ');
+    case 'space-dot':
+      return fracPart
+        ? `${groupedThousands.replace(/,/g, ' ')}.${fracPart}`
+        : groupedThousands.replace(/,/g, ' ');
+  }
+}
+
+/** Compose final string per the user's position preference. */
+export function composeWithPreset(
+  signed: number,
+  digits: string,
+  symbol: string,
+  position: CurrencyPosition,
+): string {
+  const negative = signed < 0;
+  const sign = negative ? '−' : ''; // U+2212 minus
+  switch (position) {
+    case 'amount-symbol':
+      return `${sign}${digits} ${symbol}`;
+    case 'symbol-amount':
+      return `${sign}${symbol} ${digits}`;
+    case 'symbol-sign':
+      return `${symbol} ${sign}${digits}`;
+  }
+}
+
+/** Render a preset-formatted preview for the given numeric value
+ *  and symbol — used by the Currency format picker rows. */
+export function previewWithPreset(
+  signed: number,
+  preset: CurrencyFormatPreset,
+  symbol: string,
+  decimalDigits: number = 2,
+): string {
+  const abs = Math.abs(signed).toFixed(decimalDigits);
+  const digits = applyNumberStyle(abs, preset.numberStyle);
+  return composeWithPreset(signed, digits, symbol, preset.position);
+}
+
+/** Full-precision formatter. `$12.50`, `ر.س ١٢٫٥٠`.
+ *  Always returns the absolute value formatted — callers that need a
+ *  negative sign prepend it themselves (preserved from v1 contract). */
 export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?: string): string {
+  const c = CURRENCIES[code];
   const abs = Math.abs(amount);
+  // Respect the user's currency-format preset (digit grouping + symbol
+  // position) when one is set. Otherwise fall back to locale-aware
+  // Intl.NumberFormat (the original path).
+  const presetId = kv.get('currencyFormat');
+  const preset = getCurrencyFormatPreset(presetId);
+  if (preset) {
+    const digits = applyNumberStyle(abs.toFixed(c.decimalDigits), preset.numberStyle);
+    // For absolute values, symbol-amount and symbol-sign collapse to the
+    // same thing (no sign to position) — both render `₸ 1,234.90`.
+    if (preset.position === 'amount-symbol') return `${digits} ${c.symbolNative}`;
+    return `${c.symbolNative} ${digits}`;
+  }
   const eff = effectiveLocale(locale);
   try {
     return new Intl.NumberFormat(eff, {
@@ -191,8 +421,6 @@ export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?:
       currencyDisplay: 'narrowSymbol',
     }).format(abs);
   } catch {
-    // Intl.NumberFormat isn't always fully supported on Hermes for every locale.
-    const c = CURRENCIES[code];
     return `${c.symbol}${abs.toFixed(c.decimalDigits)}`;
   }
 }
