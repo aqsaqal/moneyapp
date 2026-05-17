@@ -586,8 +586,7 @@ export default function AddScreen() {
         {mode === 'expense' && kv.getBool('smartSuggestions', true) && (
           <SmartSuggestionRow
             currency={currency}
-            amountEntered={amount !== '0' && amount !== ''}
-            activeCategoryId={effectiveCat}
+            amount={amount}
             onMore={() => setGridOpen(true)}
             onPickExact={(tx) => {
               setAmount(String(tx.amount));

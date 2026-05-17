@@ -1,16 +1,22 @@
 // SmartSuggestionRow — horizontal merchant chips above the numpad.
 //
 // Phase 10z behavior:
-//   • Single row of top-3 exact replays.
-//   • Active state: when a chip's category matches the currently
-//     selected category, fill with the cat color + show ✓. Tap again
-//     to deselect (handled by the caller — we just visualize).
-//   • "More…" chip at the end — opens the full CategoryPicker for
-//     fresh entries with no prior history.
-//   • Layout never shifts: the strip is fixed-height, scrolls
-//     horizontally, and chips don't change size on tap.
+//   • Chips are always visible — they're suggestions, not selections.
+//   • Layout never shifts: fixed chip dimensions, horizontal scroll.
+//   • Tapping a chip overrides the amount + note + category + account
+//     in one go (caller handles the writes via onPickExact).
+//
+// Visual state — three tiers derived from current amount + last tap:
+//   • Neutral (outlined)            — chip's amount doesn't match
+//   • Subtle match (bright border)  — chip's amount equals current
+//                                     typed amount AND user didn't
+//                                     just tap a chip
+//   • Active (filled + ✓)           — user tapped this chip AND its
+//                                     amount still equals current
+//                                     amount. Clears the moment the
+//                                     user types a different amount.
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Icon } from './Icon';
@@ -21,31 +27,47 @@ import { useExactReplays, type FrequentTxn, type FuzzyMerchant } from '@/hooks/u
 
 export interface SmartSuggestionRowProps {
   currency?: CurrencyCode;
+  /** Current typed amount string from the parent. Drives the
+   *  match-highlight + active-state logic. */
+  amount: string;
   onPickExact: (txn: FrequentTxn) => void;
   onPickFuzzy: (merchant: FuzzyMerchant) => void;
-  /** When the user has already typed an amount, exact replays are less useful;
-   *  prefer fuzzy chips. Caller passes the current amount string. */
-  amountEntered?: boolean;
-  /** Highlights chips whose category id matches. */
-  activeCategoryId?: string | null;
   /** Tail "More…" chip — opens the full category grid. */
   onMore?: () => void;
 }
 
+const AMOUNT_EPSILON = 0.001;
+
 export function SmartSuggestionRow({
   currency = 'USD',
+  amount,
   onPickExact,
   onPickFuzzy,
-  amountEntered = false,
-  activeCategoryId,
   onMore,
 }: SmartSuggestionRowProps) {
-  const exact = useExactReplays(amountEntered ? 0 : 3);
+  const exact = useExactReplays(3);
   void onPickFuzzy;
 
-  // Render the strip even when there are zero exact replays, as long as
-  // a More chip is wanted — otherwise users with no history would see
-  // nothing here.
+  const currentNum = parseFloat(amount) || 0;
+  const [tappedIdx, setTappedIdx] = useState<number | null>(null);
+
+  // The tapped state stays only while the amount still matches that
+  // chip's value. Once the user types a different amount, the tap
+  // anchor clears. This is a single useEffect rather than a derived
+  // value so re-renders are consistent.
+  useEffect(() => {
+    if (tappedIdx == null) return;
+    const t = exact[tappedIdx];
+    if (!t) { setTappedIdx(null); return; }
+    if (Math.abs(t.amount - currentNum) > AMOUNT_EPSILON) setTappedIdx(null);
+  }, [exact, tappedIdx, currentNum]);
+
+  // If no tap is currently active, find a chip whose amount happens to
+  // match what's been typed — that gets the subtle highlight.
+  const matchIdx = tappedIdx != null || currentNum <= 0
+    ? -1
+    : exact.findIndex((t) => Math.abs(t.amount - currentNum) < AMOUNT_EPSILON);
+
   if (exact.length === 0 && !onMore) return null;
 
   return (
@@ -58,25 +80,34 @@ export function SmartSuggestionRow({
       {exact.map((t, i) => {
         const cat = catInfo(t.category);
         const label = t.note || cat.name;
-        const active = !!activeCategoryId && t.category === activeCategoryId;
+        const isActive = i === tappedIdx;
+        const isMatch = i === matchIdx;
         return (
           <Pressable
             key={`e-${i}`}
-            onPress={() => onPickExact(t)}
+            onPress={() => {
+              setTappedIdx(i);
+              onPickExact(t);
+            }}
             style={[
               styles.chip,
-              { borderColor: cat.color },
-              active && { backgroundColor: `${cat.color}26` },
+              // Default outline = soft border in the cat's color.
+              { borderColor: isActive ? cat.color : isMatch ? cat.color : `${cat.color}55` },
+              isMatch && { borderWidth: 2 },
+              isActive && { backgroundColor: `${cat.color}26`, borderWidth: 2 },
             ]}
             accessibilityRole="button"
-            accessibilityState={{ selected: active }}
-            accessibilityLabel={`Repeat ${label} for ${formatMoney(t.amount, currency)}${active ? ', selected' : ''}`}
+            accessibilityState={{ selected: isActive }}
+            accessibilityLabel={
+              `${label} ${formatMoney(t.amount, currency)}` +
+              (isActive ? ', selected' : isMatch ? ', matches current amount' : '')
+            }
           >
             <Icon name={cat.icon} size={14} color={cat.color} />
-            <Text style={[styles.chipText, active && { color: cat.color, fontFamily: font.bodySemi }]}>
+            <Text style={[styles.chipText, (isActive || isMatch) && { color: cat.color, fontFamily: font.bodySemi }]}>
               {label} · {formatMoney(t.amount, currency)}
             </Text>
-            {active && (
+            {isActive && (
               <MaterialCommunityIcons name="check" size={12} color={cat.color} />
             )}
           </Pressable>
@@ -105,7 +136,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 8,
     borderRadius: radii.pill,
-    borderWidth: 1.5,
+    borderWidth: 1,
     backgroundColor: theme.bg2,
   },
   moreChip: { borderStyle: 'dashed', borderColor: theme.border, borderWidth: 1 },
