@@ -149,6 +149,10 @@ export default function AddScreen() {
   const [accountAmountOverride, setAccountAmountOverride] = useState<string | null>(
     prefill?.accountAmount != null ? String(prefill.accountAmount) : null,
   );
+  // Phase 10z: independent override for the destination side of a
+  // transfer. From-side keeps using accountAmountOverride above so the
+  // existing reconciliation logic for non-transfer types stays as-is.
+  const [accountAmountOverrideTo, setAccountAmountOverrideTo] = useState<string | null>(null);
 
   // Phase 10z: categories metadata still used by the budget context
   // line (below From/To) and the inline CategoryPicker — the top-6
@@ -264,17 +268,46 @@ export default function AddScreen() {
   // The account's own currency. When entryCurrency differs from this we
   // compute the account-currency `amount` via FX and persist the original
   // amount + currency alongside.
-  const acctCurrencyFor = (id: string): CurrencyCode => {
+  const acctCurrencyFor = (id: string | null | undefined): CurrencyCode | null => {
+    if (!id) return null;
     const a = accounts.find((x) => x.id === id);
-    return ((a?.currency as CurrencyCode | null) ?? currency) as CurrencyCode;
+    if (!a) return null;
+    return ((a.currency as CurrencyCode | null) ?? currency) as CurrencyCode;
   };
-  const accountCurrency = acctCurrencyFor(
-    mode === 'transfer' ? fromAcct : effectiveAcct,
-  );
-  // entryCurrency defaults to the account's currency. When the user picks
-  // a different one, we surface the converted account-currency value
-  // beneath the amount as a small subline.
-  const effectiveEntryCurrency: CurrencyCode = entryCurrency ?? accountCurrency;
+
+  // Phase 10z: per-side account currencies. Expense uses From only,
+  // income uses To only, transfer uses both. The "primary" account
+  // currency anchors the default transaction currency.
+  const fromAccountCcy =
+    mode === 'transfer'
+      ? acctCurrencyFor(fromAcct)
+      : mode === 'expense'
+        ? acctCurrencyFor(effectiveAcct)
+        : null;
+  const toAccountCcy =
+    mode === 'transfer'
+      ? acctCurrencyFor(toAcct)
+      : mode === 'income'
+        ? acctCurrencyFor(effectiveAcct)
+        : null;
+  // Default transaction currency: From for expense/transfer, To for
+  // income (the money lands there; entry naturally reads in that ccy).
+  const primaryAccountCcy = mode === 'income' ? toAccountCcy : fromAccountCcy;
+  const effectiveEntryCurrency: CurrencyCode =
+    entryCurrency ?? primaryAccountCcy ?? currency;
+  // Per-side conversion need: shown when that side's account currency
+  // differs from the transaction currency.
+  const showFromConv =
+    (mode === 'expense' || mode === 'transfer') &&
+    !!fromAccountCcy && fromAccountCcy !== effectiveEntryCurrency;
+  const showToConv =
+    (mode === 'income' || mode === 'transfer') &&
+    !!toAccountCcy && toAccountCcy !== effectiveEntryCurrency;
+  // Legacy alias for the existing submit-side math: the single
+  // account-currency this transaction is recorded against. Equals the
+  // From for expense / transfer (debit side) and the To for income.
+  const accountCurrency: CurrencyCode =
+    mode === 'income' ? (toAccountCcy ?? currency) : (fromAccountCcy ?? currency);
   const isMixed = effectiveEntryCurrency !== accountCurrency;
 
   const doSubmit = (opts: { skipCashCheck?: boolean } = {}) => {
@@ -472,38 +505,38 @@ export default function AddScreen() {
             <MaterialCommunityIcons name="chevron-down" size={14} color={theme.text2} />
           </Pressable>
         </View>
-        {isMixed && Number(amount) > 0 && (
-          <View style={styles.fxConvertedRow}>
-            <Text style={styles.fxConvertedPrefix}>
-              {accountAmountOverride ? '=' : '≈'} {currencyPrefix(accountCurrency)}
-            </Text>
-            <TextInput
-              value={
-                accountAmountOverride ??
-                convert(parseFloat(amount) || 0, effectiveEntryCurrency, accountCurrency).toFixed(
-                  CURRENCIES[accountCurrency].decimalDigits,
-                )
-              }
-              onChangeText={(v) => setAccountAmountOverride(v === '' ? null : v)}
-              keyboardType="numbers-and-punctuation"
-              style={styles.fxConvertedInput}
-              accessibilityLabel={`Converted amount in ${accountCurrency}`}
+        {/* Phase 10z: conversion slot — always reserves height so the
+            screen never jumps when the user picks a different currency
+            or swaps accounts. Empty when transaction currency matches
+            both relevant account currencies; one line for expense /
+            income / matching-side transfer; two lines for a true
+            cross-currency transfer. */}
+        <View style={styles.conversionSlot}>
+          {showFromConv && Number(amount) > 0 && fromAccountCcy && (
+            <ConversionLine
+              direction="from"
+              fromAcctName={accounts.find((a) => a.id === (mode === 'transfer' ? fromAcct : effectiveAcct))?.name ?? ''}
+              srcAmount={parseFloat(amount) || 0}
+              srcCurrency={effectiveEntryCurrency}
+              dstCurrency={fromAccountCcy}
+              override={accountAmountOverride}
+              onChange={setAccountAmountOverride}
+              showAcctName={mode === 'transfer'}
             />
-            <Text style={styles.fxConvertedSuffix}>
-              {accountCurrency}{' '}
-              {accountAmountOverride ? '(edited)' : 'auto'}
-            </Text>
-            {accountAmountOverride && (
-              <Pressable
-                onPress={() => setAccountAmountOverride(null)}
-                hitSlop={10}
-                accessibilityLabel="Reset to auto-convert"
-              >
-                <MaterialCommunityIcons name="refresh" size={14} color={theme.text3} />
-              </Pressable>
-            )}
-          </View>
-        )}
+          )}
+          {showToConv && Number(amount) > 0 && toAccountCcy && (
+            <ConversionLine
+              direction="to"
+              fromAcctName={accounts.find((a) => a.id === (mode === 'transfer' ? toAcct : effectiveAcct))?.name ?? ''}
+              srcAmount={parseFloat(amount) || 0}
+              srcCurrency={effectiveEntryCurrency}
+              dstCurrency={toAccountCcy}
+              override={mode === 'transfer' ? accountAmountOverrideTo : accountAmountOverride}
+              onChange={mode === 'transfer' ? setAccountAmountOverrideTo : setAccountAmountOverride}
+              showAcctName={mode === 'transfer'}
+            />
+          )}
+        </View>
         {/* Date — small grey text directly under the amount. Always
             visible; tap (or the 📅 key in the numpad's right column)
             to open the picker. Day matters for analytics, budgets,
@@ -832,6 +865,67 @@ export default function AddScreen() {
  *  Shows label + currently-picked account name. Tap → PickerSheet opens
  *  with all accounts.
  */
+/** One row inside the conversion slot. Shows the FX-converted amount
+ *  in the relevant account's currency with an editable field — bank
+ *  rates sometimes diverge from mid-market, so the user can override.
+ *  Source tag toggles between "auto" (using the cached market rate)
+ *  and "edited"; pencil-icon resets back to auto. */
+function ConversionLine({
+  direction,
+  fromAcctName,
+  srcAmount,
+  srcCurrency,
+  dstCurrency,
+  override,
+  onChange,
+  showAcctName,
+}: {
+  direction: 'from' | 'to';
+  fromAcctName: string;
+  srcAmount: number;
+  srcCurrency: CurrencyCode;
+  dstCurrency: CurrencyCode;
+  override: string | null;
+  onChange: (v: string | null) => void;
+  showAcctName: boolean;
+}) {
+  const auto = convert(srcAmount, srcCurrency, dstCurrency).toFixed(
+    CURRENCIES[dstCurrency].decimalDigits,
+  );
+  const label = direction === 'from'
+    ? (showAcctName ? `deducted from ${fromAcctName}` : 'will be deducted')
+    : (showAcctName ? `deposited to ${fromAcctName}` : 'will be deposited');
+  return (
+    <View style={styles.fxConvertedRow}>
+      <Text style={styles.fxConvertedPrefix}>
+        {override ? '=' : '≈'} {currencyPrefix(dstCurrency)}
+      </Text>
+      <TextInput
+        value={override ?? auto}
+        onChangeText={(v) => onChange(v === '' ? null : v)}
+        keyboardType="numbers-and-punctuation"
+        style={styles.fxConvertedInput}
+        accessibilityLabel={`Converted amount ${direction === 'from' ? 'deducted' : 'deposited'} in ${dstCurrency}`}
+      />
+      <Text style={styles.fxConvertedSuffix}>
+        {dstCurrency} · {label}
+      </Text>
+      <Text style={styles.fxSourceTag}>
+        {override ? 'manual' : 'auto'}
+      </Text>
+      {override && (
+        <Pressable
+          onPress={() => onChange(null)}
+          hitSlop={10}
+          accessibilityLabel="Reset to market rate"
+        >
+          <MaterialCommunityIcons name="refresh" size={14} color={theme.text3} />
+        </Pressable>
+      )}
+    </View>
+  );
+}
+
 function TransferAcctRow({
   label,
   accounts,
@@ -993,12 +1087,20 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg2,
   },
   currencyChipText: { color: theme.text1, fontSize: 13, fontFamily: 'PlusJakartaSans_600SemiBold' },
+  conversionSlot: {
+    // Reserve enough height for two stacked conversion lines so the
+    // layout doesn't jump when transfer currencies straddle both
+    // accounts. ~22px per line × 2 + a touch of padding.
+    minHeight: 48,
+    gap: 4,
+    marginTop: -2,
+    justifyContent: 'center',
+  },
   fxConvertedRow: {
     flexDirection: 'row',
     alignItems: 'center',
     alignSelf: 'center',
     gap: 4,
-    marginTop: -4,
   },
   fxConvertedPrefix: { color: theme.text3, fontSize: 13 },
   fxConvertedInput: {
@@ -1013,6 +1115,19 @@ const styles = StyleSheet.create({
     textAlign: 'right',
   },
   fxConvertedSuffix: { color: theme.text3, fontSize: 13 },
+  fxSourceTag: {
+    color: theme.text3,
+    fontSize: 10,
+    fontFamily: font.bodySemi,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: theme.border,
+    overflow: 'hidden',
+  },
   dateInlineText: {
     color: theme.text3,
     fontSize: 12,
