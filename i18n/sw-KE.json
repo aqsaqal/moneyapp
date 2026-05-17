@@ -76,7 +76,7 @@
   "plan.debts.payoffIn": "Imelipwa kwa miezi {months} · riba {interest}",
   "plan.debts.tooSlow": "Kwa minimums tu, haitalipwa hata kwa miaka 50.",
   "plan.audit.title": "Ukaguzi wa usajili",
-  "plan.audit.annual": "Gharama ya kila mwaka ya usajili",
+  "plan.audit.annual": "Bei ya kila mwaka ya usajili",
   "plan.audit.annual.suffix": "/ mwaka unaorudia",
   "plan.audit.detected": "Inaonekana kama usajili: {token}",
   "plan.audit.detected.subtitle": "Imetozwa miezi {months} mfululizo",

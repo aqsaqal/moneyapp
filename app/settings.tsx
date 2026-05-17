@@ -533,15 +533,16 @@ function NotificationsRow() {
       <PickerSheet
         visible={pickerOpen}
         title={t('notifications.leadDays')}
-        options={[0, 1, 2, 3, 5, 7].map<PickerOption<number>>((n) => ({
-          value: n,
+        options={[0, 1, 2, 3, 5, 7].map<PickerOption<string>>((n) => ({
+          value: String(n),
           label:
             n === 0
               ? t('notifications.leadDays.sameDay')
               : t('notifications.leadDays.value', { n }),
         }))}
-        selected={leadDays}
-        onPick={async (n) => {
+        selected={String(leadDays)}
+        onPick={async (raw) => {
+          const n = parseInt(raw, 10);
           setLeadDays(n);
           await notif.setReminderLeadDays(n, toRows());
         }}

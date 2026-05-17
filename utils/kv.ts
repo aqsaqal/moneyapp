@@ -70,6 +70,9 @@ export interface KVSchema {
   smartSuggestions: string;    // '1' = show frequent-merchant chips on Smart Add (default ON)
   hasSeededOnce: string;       // '1' once the sample dataset has been inserted on this install — prevents re-seeding for new profiles
   'islamic.nisabAutoRefresh': string;  // '1' = fetch gold/silver spot daily (Phase 10q.2)
+  currencyFormat: string;      // preset id from CURRENCY_FORMAT_PRESETS (Phase 10x)
+  remindersEnabled: string;    // '1' = local bill-reminder notifications active (Phase 10t)
+  reminderLeadDays: string;    // '0'..'7' days before dayOfMonth (Phase 10t)
 }
 
 export const kv = {

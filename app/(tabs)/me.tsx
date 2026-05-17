@@ -269,8 +269,6 @@ function OverviewAndAccounts() {
           }}
         />
 
-      />
-
       <AccountSheet
         visible={editing !== undefined}
         account={editing ?? undefined}
