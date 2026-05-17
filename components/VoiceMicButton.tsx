@@ -1,38 +1,34 @@
 // VoiceMicButton — tap-to-record speech that fills the Add modal's amount + note.
 //
-// Uses @react-native-voice/voice (Apple Speech / Android Speech Recognizer).
-// Free, on-device-when-possible. Privacy disclosure in iOS Info.plist
-// NSSpeechRecognitionUsageDescription + Android RECORD_AUDIO permission.
+// Phase 10z: switched from @react-native-voice/voice (unmaintained,
+// autolinking issues under SDK 54) to expo-speech-recognition. Same
+// UX, cleaner native integration via the package's config plugin,
+// permissions declared in app.config.ts.
 //
-// Parser:
+// Parser unchanged:
 //   "twelve fifty coffee" → amount=12.50, note="coffee"
 //   "12 lunch"            → amount=12,    note="lunch"
 //   "uber 14"             → amount=14,    note="uber"
 //   "coffee"              → amount=null,  note="coffee"
-// Numbers are extracted greedy-first (largest decimal-like substring); the
-// remaining text becomes the note. Verbal numerals ("twelve fifty") are mapped
-// via a small word→digit table covering 0-99 + decimals.
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Pressable, StyleSheet, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { theme, font, sizes, radii } from '@/constants/theme';
+import { theme, font, sizes } from '@/constants/theme';
 import { useHaptics } from '@/hooks/useHaptics';
 import { t as i18nT } from '@/utils/i18n';
 import { kv } from '@/utils/kv';
 
-// Lazy-imported so the dev client without native module installed doesn't crash.
-// We DON'T probe `NativeModules.Voice` here — under the new architecture that
-// reference can be null even when the module works fine via the interop
-// layer. Real availability is decided by `Voice.isAvailable()` at mount.
-type VoiceModule = typeof import('@react-native-voice/voice').default;
-let _voice: VoiceModule | null = null;
-function getVoice(): VoiceModule | null {
-  if (_voice) return _voice;
+// Lazy-imported so a binary that predates the native module shows the
+// graceful fallback alert instead of crashing on require().
+type Esr = typeof import('expo-speech-recognition');
+let _esr: Esr | null = null;
+function getEsr(): Esr | null {
+  if (_esr) return _esr;
   try {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    _voice = require('@react-native-voice/voice').default;
-    return _voice;
+    _esr = require('expo-speech-recognition');
+    return _esr;
   } catch {
     return null;
   }
@@ -45,11 +41,7 @@ export interface VoiceParse {
 
 export function parseVoiceInput(text: string): VoiceParse {
   if (!text) return { amount: null, note: '' };
-  // Convert spelled numbers ("twelve fifty") → "12.50". This handles common
-  // English; Arabic / Spanish / etc. ride entirely on numeric digits in the
-  // recognizer output.
   const expanded = expandSpelledNumbers(text);
-  // Pull the first number-like substring.
   const m = expanded.match(/(-?\d+(?:[.,]\d+)?)/);
   let amount: number | null = null;
   let note = expanded;
@@ -57,7 +49,6 @@ export function parseVoiceInput(text: string): VoiceParse {
     amount = parseFloat(m[1].replace(',', '.'));
     note = (expanded.slice(0, m.index!) + ' ' + expanded.slice(m.index! + m[0].length)).trim();
   }
-  // Strip filler words.
   note = note
     .replace(/\b(?:dollars?|bucks?|riyal|riyals|dirham|dirhams|euros?|pounds?|cents?|for|on|at|the|a|an)\b/gi, '')
     .replace(/\s+/g, ' ')
@@ -72,7 +63,6 @@ const SPELLED: Record<string, number> = {
   sixty: 60, seventy: 70, eighty: 80, ninety: 90, hundred: 100,
 };
 
-/** Replaces sequences like "twelve fifty" with "12.50" or "twenty five" with "25". */
 function expandSpelledNumbers(s: string): string {
   const tokens = s.toLowerCase().split(/\s+/);
   const out: string[] = [];
@@ -83,19 +73,16 @@ function expandSpelledNumbers(s: string): string {
     if (a in SPELLED && b in SPELLED) {
       const va = SPELLED[a];
       const vb = SPELLED[b];
-      // "twenty five" → 25
       if (va >= 20 && va < 100 && vb < 10) {
         out.push(String(va + vb));
         i += 2;
         continue;
       }
-      // "twelve fifty" → 12.50 (when the second is a "tens" word)
       if (va < 20 && vb >= 20 && vb < 100) {
         out.push(`${va}.${vb.toString().padStart(2, '0')}`);
         i += 2;
         continue;
       }
-      // "five point fifty" handled below
     }
     if (a in SPELLED) {
       out.push(String(SPELLED[a]));
@@ -109,22 +96,11 @@ function expandSpelledNumbers(s: string): string {
 }
 
 export interface VoiceMicButtonProps {
-  /** Called with the parsed amount + note when speech ends. */
   onResult: (parsed: VoiceParse) => void;
-  /** ISO locale for the recognizer; pass 'ar-SA' for Arabic, etc. Default 'en-US'. */
+  /** BCP-47 locale code; 'en-US' / 'ar-SA' / 'ru-RU'. Default 'en-US'. */
   locale?: string;
   size?: number;
   style?: StyleProp<ViewStyle>;
-}
-
-function friendlyError(raw: unknown): string {
-  const msg = String(typeof raw === 'object' && raw && 'message' in raw ? (raw as { message: string }).message : raw);
-  // iOS SFSpeechRecognizer error 1700 / 300 family: recognizer not available.
-  if (/^\s*300\b|recognizer/i.test(msg)) return i18nT('voice.unsupported.sim');
-  // Android: native module missing → "cannot read property 'startSpeech' of null".
-  if (/startSpeech/i.test(msg) || /null is not an object/i.test(msg)) return i18nT('voice.unsupported.build');
-  if (/permission|denied/i.test(msg)) return i18nT('voice.permissionDenied');
-  return msg;
 }
 
 export function VoiceMicButton({
@@ -136,51 +112,70 @@ export function VoiceMicButton({
   const haptics = useHaptics();
   const [recording, setRecording] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const Voice = getVoice();
+  const Esr = getEsr();
+  // Keep the latest partial transcript so onend can report it even when
+  // the recognizer didn't emit a final result (common on Android when
+  // the user stops speaking briefly).
+  const transcriptRef = useRef<string>('');
 
   useEffect(() => {
-    if (!Voice) return;
-    Voice.onSpeechStart = () => setRecording(true);
-    Voice.onSpeechEnd = () => setRecording(false);
-    Voice.onSpeechError = (e) => {
-      setRecording(false);
-      setError(friendlyError(e.error));
-    };
-    Voice.onSpeechResults = (e) => {
-      setRecording(false);
-      const text = (e.value && e.value[0]) ?? '';
-      if (text) onResult(parseVoiceInput(text));
-    };
+    if (!Esr) return;
+    const subs = [
+      Esr.ExpoSpeechRecognitionModule.addListener('start', () => setRecording(true)),
+      Esr.ExpoSpeechRecognitionModule.addListener('end', () => {
+        setRecording(false);
+        const text = transcriptRef.current;
+        transcriptRef.current = '';
+        if (text) onResult(parseVoiceInput(text));
+      }),
+      Esr.ExpoSpeechRecognitionModule.addListener('result', (e) => {
+        // Each result event carries an array of candidate transcripts;
+        // the first is the highest-confidence guess.
+        const txt = e?.results?.[0]?.transcript ?? '';
+        if (txt) transcriptRef.current = txt;
+      }),
+      Esr.ExpoSpeechRecognitionModule.addListener('error', (e) => {
+        setRecording(false);
+        const code = e?.error ?? '';
+        const msg = e?.message ?? '';
+        if (/permission/i.test(code + msg)) setError(i18nT('voice.permissionDenied'));
+        else if (/not-allowed|service-not-allowed/i.test(code)) setError(i18nT('voice.unsupported.build'));
+        else setError(msg || code || i18nT('voice.unsupported.build'));
+      }),
+    ];
     return () => {
-      Voice.destroy().then(Voice.removeAllListeners).catch(() => {});
+      for (const s of subs) s.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [Voice, onResult]);
+  }, [Esr, onResult]);
 
-  // Always render the mic. On tap, try to start; surface a friendly inline
-  // error if the recognizer isn't usable (Simulator, missing services, etc.)
-  // — better than silently hiding the affordance.
   const startRecording = async () => {
-    if (!Voice) return;
+    if (!Esr) return;
     try {
-      // EXTRA_PREFER_OFFLINE: ask Android's SpeechRecognizer to keep audio
-      // on-device when possible. Honored by Pixel/Samsung/most Android 12+;
-      // ignored by older recognizers (which then fall back to cloud per
-      // their own policy — disclosed in privacy policy).
-      // requiresOnDeviceRecognition: same intent on iOS via
-      // SFSpeechRecognitionRequest (handled internally by the lib).
-      await Voice.start(locale, {
-        EXTRA_PREFER_OFFLINE: true,
+      const perm = await Esr.ExpoSpeechRecognitionModule.requestPermissionsAsync();
+      if (!perm.granted) {
+        setError(i18nT('voice.permissionDenied'));
+        return;
+      }
+      transcriptRef.current = '';
+      Esr.ExpoSpeechRecognitionModule.start({
+        lang: locale,
+        interimResults: true,
+        // Keep audio on-device when possible. Honored by Android 12+ /
+        // recent iOS; older devices may still fall back to cloud per
+        // OS policy (disclosed in our privacy policy).
         requiresOnDeviceRecognition: true,
-      } as never);
+        continuous: false,
+        maxAlternatives: 1,
+      });
     } catch (e) {
-      setError(friendlyError(e));
+      setError(String((e as Error)?.message ?? e));
       setRecording(false);
     }
   };
 
   const tap = async () => {
-    if (!Voice) {
+    if (!Esr) {
       setError(i18nT('voice.unsupported.build'));
       return;
     }
@@ -188,17 +183,13 @@ export function VoiceMicButton({
     haptics.tap();
     if (recording) {
       try {
-        await Voice.stop();
+        await Esr.ExpoSpeechRecognitionModule.stop();
       } catch (e) {
-        setError(friendlyError(e));
+        setError(String((e as Error)?.message ?? e));
         setRecording(false);
       }
       return;
     }
-    // First-tap explainer: show our own privacy-respecting copy BEFORE the
-    // OS permission prompt fires. Once acknowledged we never show it again.
-    // The OS dialog still appears immediately after — this just gives the
-    // user the "why" instead of the bare "Allow access?" prompt.
     if (!kv.getBool('voicePromptShown', false)) {
       Alert.alert(
         i18nT('voice.permission.title'),
@@ -220,7 +211,7 @@ export function VoiceMicButton({
     void startRecording();
   };
 
-  if (!Voice) return null;
+  if (!Esr) return null;
 
   return (
     <View style={style}>

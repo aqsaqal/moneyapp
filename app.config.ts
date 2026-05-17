@@ -109,13 +109,24 @@ const config: ExpoConfig = {
     'expo-local-authentication',
     'expo-localization',
     [
+      'expo-speech-recognition',
+      {
+        // Phase 10z: voice replaces @react-native-voice/voice with
+        // expo-speech-recognition (jamsch). Permission strings drop
+        // straight into Info.plist / AndroidManifest via the plugin.
+        microphonePermission: 'Allow MoneyFlow to access the microphone to log expenses by voice.',
+        speechRecognitionPermission: 'Allow MoneyFlow to use speech recognition to fill the transaction form.',
+        androidSpeechServicePackages: [],
+      },
+    ],
+    [
       'expo-build-properties',
       {
         android: {
-          // Phase 7: @react-native-voice/voice 3.2.4 still ships
-          // com.android.support:* (pre-AndroidX). Jetifier rewrites those
-          // references to androidx.* at build time, eliminating the
-          // duplicate-class conflict that otherwise blocks assembleRelease.
+          // Jetifier was originally for @react-native-voice/voice's
+          // pre-AndroidX deps. The replacement (expo-speech-recognition)
+          // is AndroidX-native, but leaving Jetifier on is harmless and
+          // covers any other legacy dep.
           enableJetifier: true,
         },
       },
