@@ -37,6 +37,7 @@ import vi from '@/i18n/vi-VN.json';
 import th from '@/i18n/th-TH.json';
 import fa from '@/i18n/fa-IR.json';
 import nl from '@/i18n/nl-NL.json';
+import pl from '@/i18n/pl-PL.json';
 
 // LocaleCode is a wide string union — every entry in LOCALES inside the
 // settings screen must use a code listed here. Most are not yet mapped
@@ -78,6 +79,7 @@ const DICTS: Partial<Record<LocaleCode, Dictionary>> = {
   'th-TH': th as Dictionary,
   'fa-IR': fa as Dictionary,
   'nl-NL': nl as Dictionary,
+  'pl-PL': pl as Dictionary,
 };
 
 let currentLocale: LocaleCode = (kv.get('locale') as LocaleCode) ?? 'en-US';
