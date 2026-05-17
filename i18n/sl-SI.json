@@ -292,5 +292,16 @@
   "cat.investment": "Naložba",
   "cat.gift_in": "Darilo",
   "cat.refund": "Vračilo",
-  "cat.other_in": "Drugo"
+  "cat.other_in": "Drugo",
+  "categories.count": "{n} kategorij",
+  "categories.withBudget": "{n} s proračunom",
+  "categories.type.expense": "Strošek",
+  "categories.type.income": "Prihodek",
+  "categories.type.both": "Oboje",
+  "categories.system": "sistem",
+  "categories.archived": "arhivirano",
+  "categories.pinned": "PRIPETO",
+  "categories.all": "VSE",
+  "categories.showArchived": "Pokaži arhiv ({n})",
+  "categories.hideArchived": "Skrij arhiv"
 }

@@ -159,14 +159,14 @@ export default function Home() {
             account exists — at that point the hero ITSELF rolls forward
             to the income empty state. */}
         {accounts.length === 0 && (
-          <View style={styles.disabledNextCard} accessible accessibilityLabel="Next step (disabled): set your income">
+          <View style={styles.disabledNextCard} accessible accessibilityLabel={`${t('common.next')}: ${t('hero.thenSetIncome')}`}>
             <View style={styles.disabledNextHead}>
               <MaterialCommunityIcons name="lock-outline" size={14} color={theme.text3} />
-              <Text style={styles.disabledNextLabel}>Next</Text>
+              <Text style={styles.disabledNextLabel}>{t('common.next')}</Text>
             </View>
-            <Text style={styles.disabledNextTitle}>Then set your income</Text>
+            <Text style={styles.disabledNextTitle}>{t('hero.thenSetIncome')}</Text>
             <Text style={styles.disabledNextHint}>
-              Available once you have at least one account.
+              {t('hero.thenSetIncome.hint')}
             </Text>
           </View>
         )}

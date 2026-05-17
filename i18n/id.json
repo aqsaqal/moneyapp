@@ -291,5 +291,16 @@
   "cat.investment": "Investasi",
   "cat.gift_in": "Hadiah",
   "cat.refund": "Pengembalian",
-  "cat.other_in": "Lainnya"
+  "cat.other_in": "Lainnya",
+  "categories.count": "{n} kategori",
+  "categories.withBudget": "{n} dengan anggaran",
+  "categories.type.expense": "Pengeluaran",
+  "categories.type.income": "Pemasukan",
+  "categories.type.both": "Keduanya",
+  "categories.system": "sistem",
+  "categories.archived": "diarsipkan",
+  "categories.pinned": "DISEMAT",
+  "categories.all": "SEMUA",
+  "categories.showArchived": "Tampilkan arsip ({n})",
+  "categories.hideArchived": "Sembunyikan arsip"
 }

@@ -292,5 +292,16 @@
   "cat.investment": "Інвестиції",
   "cat.gift_in": "Подарунок",
   "cat.refund": "Повернення",
-  "cat.other_in": "Інше"
+  "cat.other_in": "Інше",
+  "categories.count": "{n} категорій",
+  "categories.withBudget": "{n} з бюджетом",
+  "categories.type.expense": "Витрата",
+  "categories.type.income": "Дохід",
+  "categories.type.both": "Обидва",
+  "categories.system": "система",
+  "categories.archived": "архів",
+  "categories.pinned": "ЗАКРІПЛЕНО",
+  "categories.all": "ВСЕ",
+  "categories.showArchived": "Показати архів ({n})",
+  "categories.hideArchived": "Сховати архів"
 }

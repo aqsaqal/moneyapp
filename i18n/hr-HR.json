@@ -292,5 +292,16 @@
   "cat.investment": "Ulaganje",
   "cat.gift_in": "Poklon",
   "cat.refund": "Povrat",
-  "cat.other_in": "Ostalo"
+  "cat.other_in": "Ostalo",
+  "categories.count": "{n} kategorija",
+  "categories.withBudget": "{n} s proračunom",
+  "categories.type.expense": "Trošak",
+  "categories.type.income": "Prihod",
+  "categories.type.both": "Oba",
+  "categories.system": "sustav",
+  "categories.archived": "arhivirano",
+  "categories.pinned": "PRIKVAČENO",
+  "categories.all": "SVE",
+  "categories.showArchived": "Prikaži arhivirane ({n})",
+  "categories.hideArchived": "Sakrij arhivirane"
 }

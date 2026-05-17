@@ -292,5 +292,16 @@
   "cat.investment": "Sarmoya",
   "cat.gift_in": "Sovgʻa",
   "cat.refund": "Qaytarish",
-  "cat.other_in": "Boshqa"
+  "cat.other_in": "Boshqa",
+  "categories.count": "{n} kategoriya",
+  "categories.withBudget": "{n} byudjetli",
+  "categories.type.expense": "Xarajat",
+  "categories.type.income": "Daromad",
+  "categories.type.both": "Ikkalasi",
+  "categories.system": "tizim",
+  "categories.archived": "arxivlangan",
+  "categories.pinned": "MAHKAMLANGAN",
+  "categories.all": "BARCHASI",
+  "categories.showArchived": "Arxivni koʻrsat ({n})",
+  "categories.hideArchived": "Arxivni yashirish"
 }

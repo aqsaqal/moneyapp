@@ -292,5 +292,16 @@
   "cat.investment": "Uwekezaji",
   "cat.gift_in": "Zawadi",
   "cat.refund": "Marejesho",
-  "cat.other_in": "Nyingine"
+  "cat.other_in": "Nyingine",
+  "categories.count": "kategoria {n}",
+  "categories.withBudget": "{n} zenye bajeti",
+  "categories.type.expense": "Matumizi",
+  "categories.type.income": "Mapato",
+  "categories.type.both": "Vyote",
+  "categories.system": "mfumo",
+  "categories.archived": "imehifadhiwa",
+  "categories.pinned": "IMEBANDIKWA",
+  "categories.all": "YOTE",
+  "categories.showArchived": "Onyesha kumbukumbu ({n})",
+  "categories.hideArchived": "Ficha kumbukumbu"
 }

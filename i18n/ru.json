@@ -291,5 +291,16 @@
   "cat.investment": "Инвестиции",
   "cat.gift_in": "Подарок",
   "cat.refund": "Возврат",
-  "cat.other_in": "Другое"
+  "cat.other_in": "Другое",
+  "categories.count": "{n} категорий",
+  "categories.withBudget": "{n} с бюджетом",
+  "categories.type.expense": "Расход",
+  "categories.type.income": "Доход",
+  "categories.type.both": "Оба",
+  "categories.system": "система",
+  "categories.archived": "архив",
+  "categories.pinned": "ЗАКРЕПЛЕНО",
+  "categories.all": "ВСЕ",
+  "categories.showArchived": "Показать архив ({n})",
+  "categories.hideArchived": "Скрыть архив"
 }

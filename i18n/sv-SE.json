@@ -292,5 +292,16 @@
   "cat.investment": "Investering",
   "cat.gift_in": "Gåva",
   "cat.refund": "Återbetalning",
-  "cat.other_in": "Övrigt"
+  "cat.other_in": "Övrigt",
+  "categories.count": "{n} kategorier",
+  "categories.withBudget": "{n} med budget",
+  "categories.type.expense": "Utgift",
+  "categories.type.income": "Inkomst",
+  "categories.type.both": "Båda",
+  "categories.system": "system",
+  "categories.archived": "arkiverad",
+  "categories.pinned": "FÄSTAD",
+  "categories.all": "ALLA",
+  "categories.showArchived": "Visa arkiverade ({n})",
+  "categories.hideArchived": "Dölj arkiverade"
 }

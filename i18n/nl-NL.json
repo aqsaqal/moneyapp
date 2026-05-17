@@ -292,5 +292,16 @@
   "cat.investment": "Investering",
   "cat.gift_in": "Cadeau",
   "cat.refund": "Terugbetaling",
-  "cat.other_in": "Overig"
+  "cat.other_in": "Overig",
+  "categories.count": "{n} categorieën",
+  "categories.withBudget": "{n} met budget",
+  "categories.type.expense": "Uitgave",
+  "categories.type.income": "Inkomen",
+  "categories.type.both": "Beide",
+  "categories.system": "systeem",
+  "categories.archived": "gearchiveerd",
+  "categories.pinned": "VASTGEMAAKT",
+  "categories.all": "ALLE",
+  "categories.showArchived": "Toon gearchiveerd ({n})",
+  "categories.hideArchived": "Verberg gearchiveerd"
 }

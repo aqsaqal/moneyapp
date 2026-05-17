@@ -292,5 +292,16 @@
   "cat.investment": "投資",
   "cat.gift_in": "禮物",
   "cat.refund": "退款",
-  "cat.other_in": "其他"
+  "cat.other_in": "其他",
+  "categories.count": "{n} 個類別",
+  "categories.withBudget": "{n} 個有預算",
+  "categories.type.expense": "支出",
+  "categories.type.income": "收入",
+  "categories.type.both": "兩者",
+  "categories.system": "系統",
+  "categories.archived": "已封存",
+  "categories.pinned": "已置頂",
+  "categories.all": "全部",
+  "categories.showArchived": "顯示封存 ({n})",
+  "categories.hideArchived": "隱藏封存"
 }

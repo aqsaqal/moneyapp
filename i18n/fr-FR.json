@@ -292,5 +292,16 @@
   "cat.investment": "Investissement",
   "cat.gift_in": "Cadeau",
   "cat.refund": "Remboursement",
-  "cat.other_in": "Autre"
+  "cat.other_in": "Autre",
+  "categories.count": "{n} catégories",
+  "categories.withBudget": "{n} avec budget",
+  "categories.type.expense": "Dépense",
+  "categories.type.income": "Revenu",
+  "categories.type.both": "Les deux",
+  "categories.system": "système",
+  "categories.archived": "archivé",
+  "categories.pinned": "ÉPINGLÉ",
+  "categories.all": "TOUT",
+  "categories.showArchived": "Afficher archivées ({n})",
+  "categories.hideArchived": "Masquer archivées"
 }

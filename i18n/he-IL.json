@@ -292,5 +292,16 @@
   "cat.investment": "השקעה",
   "cat.gift_in": "מתנה",
   "cat.refund": "החזר",
-  "cat.other_in": "אחר"
+  "cat.other_in": "אחר",
+  "categories.count": "{n} קטגוריות",
+  "categories.withBudget": "{n} עם תקציב",
+  "categories.type.expense": "הוצאה",
+  "categories.type.income": "הכנסה",
+  "categories.type.both": "שניהם",
+  "categories.system": "מערכת",
+  "categories.archived": "בארכיון",
+  "categories.pinned": "מוצמד",
+  "categories.all": "הכל",
+  "categories.showArchived": "הצג ארכיון ({n})",
+  "categories.hideArchived": "הסתר ארכיון"
 }

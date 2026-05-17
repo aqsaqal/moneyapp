@@ -292,5 +292,16 @@
   "cat.investment": "سرمایہ کاری",
   "cat.gift_in": "تحفہ",
   "cat.refund": "واپسی",
-  "cat.other_in": "دیگر"
+  "cat.other_in": "دیگر",
+  "categories.count": "{n} زمرے",
+  "categories.withBudget": "{n} بجٹ کے ساتھ",
+  "categories.type.expense": "خرچ",
+  "categories.type.income": "آمدنی",
+  "categories.type.both": "دونوں",
+  "categories.system": "سسٹم",
+  "categories.archived": "آرکائیو",
+  "categories.pinned": "پن",
+  "categories.all": "تمام",
+  "categories.showArchived": "آرکائیو دکھائیں ({n})",
+  "categories.hideArchived": "آرکائیو چھپائیں"
 }

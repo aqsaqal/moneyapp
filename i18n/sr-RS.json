@@ -292,5 +292,16 @@
   "cat.investment": "Улагање",
   "cat.gift_in": "Поклон",
   "cat.refund": "Повраћај",
-  "cat.other_in": "Остало"
+  "cat.other_in": "Остало",
+  "categories.count": "{n} категорија",
+  "categories.withBudget": "{n} са буџетом",
+  "categories.type.expense": "Трошак",
+  "categories.type.income": "Приход",
+  "categories.type.both": "Оба",
+  "categories.system": "систем",
+  "categories.archived": "архивирано",
+  "categories.pinned": "ЗАКАЧЕНО",
+  "categories.all": "СВЕ",
+  "categories.showArchived": "Прикажи архиву ({n})",
+  "categories.hideArchived": "Сакриј архиву"
 }

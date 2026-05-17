@@ -292,5 +292,16 @@
   "cat.investment": "投资",
   "cat.gift_in": "礼物",
   "cat.refund": "退款",
-  "cat.other_in": "其他"
+  "cat.other_in": "其他",
+  "categories.count": "{n} 个类别",
+  "categories.withBudget": "{n} 个有预算",
+  "categories.type.expense": "支出",
+  "categories.type.income": "收入",
+  "categories.type.both": "双向",
+  "categories.system": "系统",
+  "categories.archived": "已归档",
+  "categories.pinned": "已置顶",
+  "categories.all": "全部",
+  "categories.showArchived": "显示已归档 ({n})",
+  "categories.hideArchived": "隐藏已归档"
 }

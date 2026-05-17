@@ -292,5 +292,16 @@
   "cat.investment": "Sijoitus",
   "cat.gift_in": "Lahja",
   "cat.refund": "Palautus",
-  "cat.other_in": "Muu"
+  "cat.other_in": "Muu",
+  "categories.count": "{n} kategoriaa",
+  "categories.withBudget": "{n} budjetilla",
+  "categories.type.expense": "Meno",
+  "categories.type.income": "Tulo",
+  "categories.type.both": "Molemmat",
+  "categories.system": "järjestelmä",
+  "categories.archived": "arkistoitu",
+  "categories.pinned": "KIINNITETTY",
+  "categories.all": "KAIKKI",
+  "categories.showArchived": "Näytä arkistoidut ({n})",
+  "categories.hideArchived": "Piilota arkistoidut"
 }

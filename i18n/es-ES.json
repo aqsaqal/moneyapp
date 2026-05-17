@@ -292,5 +292,16 @@
   "cat.investment": "Inversión",
   "cat.gift_in": "Regalo",
   "cat.refund": "Reembolso",
-  "cat.other_in": "Otros"
+  "cat.other_in": "Otros",
+  "categories.count": "{n} categorías",
+  "categories.withBudget": "{n} con presupuesto",
+  "categories.type.expense": "Gasto",
+  "categories.type.income": "Ingreso",
+  "categories.type.both": "Ambos",
+  "categories.system": "sistema",
+  "categories.archived": "archivado",
+  "categories.pinned": "FIJADO",
+  "categories.all": "TODO",
+  "categories.showArchived": "Mostrar archivados ({n})",
+  "categories.hideArchived": "Ocultar archivados"
 }

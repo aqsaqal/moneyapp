@@ -292,5 +292,16 @@
   "cat.investment": "Investícia",
   "cat.gift_in": "Darček",
   "cat.refund": "Vrátenie",
-  "cat.other_in": "Iné"
+  "cat.other_in": "Iné",
+  "categories.count": "{n} kategórií",
+  "categories.withBudget": "{n} s rozpočtom",
+  "categories.type.expense": "Výdavok",
+  "categories.type.income": "Príjem",
+  "categories.type.both": "Oba",
+  "categories.system": "systém",
+  "categories.archived": "archivované",
+  "categories.pinned": "PRIPNUTÉ",
+  "categories.all": "VŠETKO",
+  "categories.showArchived": "Zobraziť archív ({n})",
+  "categories.hideArchived": "Skryť archív"
 }

@@ -292,5 +292,16 @@
   "cat.investment": "Investim",
   "cat.gift_in": "Dhuratë",
   "cat.refund": "Rimbursim",
-  "cat.other_in": "Tjetër"
+  "cat.other_in": "Tjetër",
+  "categories.count": "{n} kategori",
+  "categories.withBudget": "{n} me buxhet",
+  "categories.type.expense": "Shpenzim",
+  "categories.type.income": "Të ardhura",
+  "categories.type.both": "Të dyja",
+  "categories.system": "sistem",
+  "categories.archived": "arkivuar",
+  "categories.pinned": "I FIKSUAR",
+  "categories.all": "TË GJITHA",
+  "categories.showArchived": "Shfaq arkivuara ({n})",
+  "categories.hideArchived": "Fshih arkivuara"
 }

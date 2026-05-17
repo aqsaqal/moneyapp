@@ -292,5 +292,16 @@
   "cat.investment": "निवेश",
   "cat.gift_in": "उपहार",
   "cat.refund": "रिफ़ंड",
-  "cat.other_in": "अन्य"
+  "cat.other_in": "अन्य",
+  "categories.count": "{n} श्रेणियाँ",
+  "categories.withBudget": "{n} बजट के साथ",
+  "categories.type.expense": "व्यय",
+  "categories.type.income": "आय",
+  "categories.type.both": "दोनों",
+  "categories.system": "सिस्टम",
+  "categories.archived": "संग्रहित",
+  "categories.pinned": "पिन किया",
+  "categories.all": "सभी",
+  "categories.showArchived": "संग्रहित दिखाएँ ({n})",
+  "categories.hideArchived": "संग्रहित छिपाएँ"
 }

@@ -292,5 +292,16 @@
   "cat.investment": "Pamumuhunan",
   "cat.gift_in": "Regalo",
   "cat.refund": "Refund",
-  "cat.other_in": "Iba pa"
+  "cat.other_in": "Iba pa",
+  "categories.count": "{n} kategorya",
+  "categories.withBudget": "{n} may badyet",
+  "categories.type.expense": "Gastos",
+  "categories.type.income": "Kita",
+  "categories.type.both": "Pareho",
+  "categories.system": "sistema",
+  "categories.archived": "naka-archive",
+  "categories.pinned": "NAKA-PIN",
+  "categories.all": "LAHAT",
+  "categories.showArchived": "Ipakita ang archive ({n})",
+  "categories.hideArchived": "Itago ang archive"
 }

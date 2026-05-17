@@ -292,5 +292,16 @@
   "cat.investment": "Επένδυση",
   "cat.gift_in": "Δώρο",
   "cat.refund": "Επιστροφή",
-  "cat.other_in": "Άλλο"
+  "cat.other_in": "Άλλο",
+  "categories.count": "{n} κατηγορίες",
+  "categories.withBudget": "{n} με προϋπολογισμό",
+  "categories.type.expense": "Έξοδο",
+  "categories.type.income": "Έσοδο",
+  "categories.type.both": "Και τα δύο",
+  "categories.system": "σύστημα",
+  "categories.archived": "αρχειοθετημένο",
+  "categories.pinned": "ΚΑΡΦΙΤΣΩΜΕΝΟ",
+  "categories.all": "ΟΛΑ",
+  "categories.showArchived": "Εμφάνιση αρχειοθετημένων ({n})",
+  "categories.hideArchived": "Απόκρυψη αρχειοθετημένων"
 }

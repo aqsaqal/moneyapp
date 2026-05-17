@@ -292,5 +292,16 @@
   "cat.investment": "Investeering",
   "cat.gift_in": "Kingitus",
   "cat.refund": "Tagastus",
-  "cat.other_in": "Muu"
+  "cat.other_in": "Muu",
+  "categories.count": "{n} kategooriat",
+  "categories.withBudget": "{n} eelarvega",
+  "categories.type.expense": "Kulu",
+  "categories.type.income": "Tulu",
+  "categories.type.both": "Mõlemad",
+  "categories.system": "süsteem",
+  "categories.archived": "arhiveeritud",
+  "categories.pinned": "KINNITATUD",
+  "categories.all": "KÕIK",
+  "categories.showArchived": "Näita arhiveerituid ({n})",
+  "categories.hideArchived": "Peida arhiveeritud"
 }

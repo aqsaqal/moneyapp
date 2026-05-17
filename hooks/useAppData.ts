@@ -37,7 +37,7 @@ import { seedIfEmpty } from '@/utils/db/seed';
 import { onProfileChange } from '@/utils/profiles';
 import { snapshotTodayIfMissing } from '@/utils/netWorthSnapshot';
 import { FX_TTL_MS, oldestFetchedAt, refreshRates } from '@/utils/fx';
-import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '@/constants/categories';
+import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, localizedSeededName } from '@/constants/categories';
 import { kv } from '@/utils/kv';
 import { getLocale } from '@/utils/i18n';
 import { LOCALES } from '@/constants/locales';
@@ -266,7 +266,7 @@ export function useCategoriesWithMeta(): CategoryWithMeta[] {
     const out = new Map<string, CategoryWithMeta>();
     for (const c of EXPENSE_CATEGORIES) {
       out.set(c.id, {
-        id: c.id, name: c.name, icon: c.icon, color: c.color, type: 'expense',
+        id: c.id, name: localizedSeededName(c.id, c.name), icon: c.icon, color: c.color, type: 'expense',
         isSystem: c.id === 'other' || c.id === 'adjustment',
         isPinned: false, archived: false,
         monthlyBudget: null, budgetCurrency: null, rolloverEnabled: false,
@@ -279,7 +279,7 @@ export function useCategoriesWithMeta(): CategoryWithMeta[] {
         existing.type = 'both';
       } else {
         out.set(c.id, {
-          id: c.id, name: c.name, icon: c.icon, color: c.color, type: 'income',
+          id: c.id, name: localizedSeededName(c.id, c.name), icon: c.icon, color: c.color, type: 'income',
           isSystem: c.id === 'other_in' || c.id === 'adjustment',
           isPinned: false, archived: false,
           monthlyBudget: null, budgetCurrency: null, rolloverEnabled: false,

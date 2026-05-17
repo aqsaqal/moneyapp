@@ -292,5 +292,16 @@
   "cat.investment": "বিনিয়োগ",
   "cat.gift_in": "উপহার",
   "cat.refund": "ফেরত",
-  "cat.other_in": "অন্যান্য"
+  "cat.other_in": "অন্যান্য",
+  "categories.count": "{n} বিভাগ",
+  "categories.withBudget": "{n} বাজেট সহ",
+  "categories.type.expense": "খরচ",
+  "categories.type.income": "আয়",
+  "categories.type.both": "উভয়",
+  "categories.system": "সিস্টেম",
+  "categories.archived": "সংরক্ষিত",
+  "categories.pinned": "পিন করা",
+  "categories.all": "সব",
+  "categories.showArchived": "সংরক্ষিত দেখান ({n})",
+  "categories.hideArchived": "সংরক্ষিত লুকান"
 }

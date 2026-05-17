@@ -291,5 +291,16 @@
   "cat.investment": "Инвестиция",
   "cat.gift_in": "Сыйлық",
   "cat.refund": "Қайтару",
-  "cat.other_in": "Басқа"
+  "cat.other_in": "Басқа",
+  "categories.count": "{n} санат",
+  "categories.withBudget": "{n} бюджетпен",
+  "categories.type.expense": "Шығын",
+  "categories.type.income": "Кіріс",
+  "categories.type.both": "Екеуі",
+  "categories.system": "жүйе",
+  "categories.archived": "мұрағатталған",
+  "categories.pinned": "БЕКІТІЛГЕН",
+  "categories.all": "БАРЛЫҒЫ",
+  "categories.showArchived": "Мұрағатты көрсету ({n})",
+  "categories.hideArchived": "Мұрағатты жасыру"
 }

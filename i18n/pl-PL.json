@@ -292,5 +292,16 @@
   "cat.investment": "Inwestycja",
   "cat.gift_in": "Prezent",
   "cat.refund": "Zwrot",
-  "cat.other_in": "Inne"
+  "cat.other_in": "Inne",
+  "categories.count": "{n} kategorii",
+  "categories.withBudget": "{n} z budżetem",
+  "categories.type.expense": "Wydatek",
+  "categories.type.income": "Przychód",
+  "categories.type.both": "Oba",
+  "categories.system": "system",
+  "categories.archived": "zarchiwizowane",
+  "categories.pinned": "PRZYPIĘTE",
+  "categories.all": "WSZYSTKIE",
+  "categories.showArchived": "Pokaż archiwum ({n})",
+  "categories.hideArchived": "Ukryj archiwum"
 }

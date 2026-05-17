@@ -292,5 +292,16 @@
   "cat.investment": "Investiție",
   "cat.gift_in": "Cadou",
   "cat.refund": "Rambursare",
-  "cat.other_in": "Altele"
+  "cat.other_in": "Altele",
+  "categories.count": "{n} categorii",
+  "categories.withBudget": "{n} cu buget",
+  "categories.type.expense": "Cheltuială",
+  "categories.type.income": "Venit",
+  "categories.type.both": "Ambele",
+  "categories.system": "sistem",
+  "categories.archived": "arhivat",
+  "categories.pinned": "FIXAT",
+  "categories.all": "TOATE",
+  "categories.showArchived": "Arată arhivate ({n})",
+  "categories.hideArchived": "Ascunde arhivate"
 }

@@ -292,5 +292,16 @@
   "cat.investment": "ลงทุน",
   "cat.gift_in": "ของขวัญ",
   "cat.refund": "คืนเงิน",
-  "cat.other_in": "อื่นๆ"
+  "cat.other_in": "อื่นๆ",
+  "categories.count": "{n} หมวด",
+  "categories.withBudget": "{n} มีงบ",
+  "categories.type.expense": "รายจ่าย",
+  "categories.type.income": "รายรับ",
+  "categories.type.both": "ทั้งสอง",
+  "categories.system": "ระบบ",
+  "categories.archived": "เก็บถาวร",
+  "categories.pinned": "ปักหมุด",
+  "categories.all": "ทั้งหมด",
+  "categories.showArchived": "แสดงเก็บถาวร ({n})",
+  "categories.hideArchived": "ซ่อนเก็บถาวร"
 }

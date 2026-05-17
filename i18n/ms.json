@@ -291,5 +291,16 @@
   "cat.investment": "Pelaburan",
   "cat.gift_in": "Hadiah",
   "cat.refund": "Pemulangan",
-  "cat.other_in": "Lain-lain"
+  "cat.other_in": "Lain-lain",
+  "categories.count": "{n} kategori",
+  "categories.withBudget": "{n} dengan bajet",
+  "categories.type.expense": "Perbelanjaan",
+  "categories.type.income": "Pendapatan",
+  "categories.type.both": "Kedua-duanya",
+  "categories.system": "sistem",
+  "categories.archived": "diarkibkan",
+  "categories.pinned": "DISEMAT",
+  "categories.all": "SEMUA",
+  "categories.showArchived": "Tunjuk arkib ({n})",
+  "categories.hideArchived": "Sembunyi arkib"
 }

@@ -292,5 +292,16 @@
   "cat.investment": "முதலீடு",
   "cat.gift_in": "பரிசு",
   "cat.refund": "திருப்பித் தருதல்",
-  "cat.other_in": "மற்றவை"
+  "cat.other_in": "மற்றவை",
+  "categories.count": "{n} வகைகள்",
+  "categories.withBudget": "{n} பட்ஜெட்டுடன்",
+  "categories.type.expense": "செலவு",
+  "categories.type.income": "வருமானம்",
+  "categories.type.both": "இரண்டும்",
+  "categories.system": "அமைப்பு",
+  "categories.archived": "காப்பகம்",
+  "categories.pinned": "பின் செய்யப்பட்டது",
+  "categories.all": "அனைத்தும்",
+  "categories.showArchived": "காப்பகம் காட்டு ({n})",
+  "categories.hideArchived": "காப்பகம் மறை"
 }

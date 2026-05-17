@@ -292,5 +292,16 @@
   "cat.investment": "İnvestisiya",
   "cat.gift_in": "Hədiyyə",
   "cat.refund": "Geri qaytarma",
-  "cat.other_in": "Digər"
+  "cat.other_in": "Digər",
+  "categories.count": "{n} kateqoriya",
+  "categories.withBudget": "{n} büdcəli",
+  "categories.type.expense": "Xərc",
+  "categories.type.income": "Gəlir",
+  "categories.type.both": "Hər ikisi",
+  "categories.system": "sistem",
+  "categories.archived": "arxivləndi",
+  "categories.pinned": "BƏRKİDİLİB",
+  "categories.all": "HAMISI",
+  "categories.showArchived": "Arxivi göstər ({n})",
+  "categories.hideArchived": "Arxivi gizlət"
 }

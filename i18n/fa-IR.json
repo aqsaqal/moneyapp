@@ -292,5 +292,16 @@
   "cat.investment": "سرمایه‌گذاری",
   "cat.gift_in": "هدیه",
   "cat.refund": "بازپرداخت",
-  "cat.other_in": "سایر"
+  "cat.other_in": "سایر",
+  "categories.count": "{n} دسته",
+  "categories.withBudget": "{n} با بودجه",
+  "categories.type.expense": "هزینه",
+  "categories.type.income": "درآمد",
+  "categories.type.both": "هردو",
+  "categories.system": "سیستم",
+  "categories.archived": "بایگانی",
+  "categories.pinned": "سنجاق",
+  "categories.all": "همه",
+  "categories.showArchived": "نمایش بایگانی ({n})",
+  "categories.hideArchived": "پنهان بایگانی"
 }

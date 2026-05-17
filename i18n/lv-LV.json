@@ -292,5 +292,16 @@
   "cat.investment": "Investīcijas",
   "cat.gift_in": "Dāvana",
   "cat.refund": "Atmaksa",
-  "cat.other_in": "Cits"
+  "cat.other_in": "Cits",
+  "categories.count": "{n} kategorijas",
+  "categories.withBudget": "{n} ar budžetu",
+  "categories.type.expense": "Izdevums",
+  "categories.type.income": "Ienākumi",
+  "categories.type.both": "Abi",
+  "categories.system": "sistēma",
+  "categories.archived": "arhivēts",
+  "categories.pinned": "PIESPRAUSTS",
+  "categories.all": "VISI",
+  "categories.showArchived": "Rādīt arhivētos ({n})",
+  "categories.hideArchived": "Slēpt arhivētos"
 }

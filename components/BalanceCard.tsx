@@ -70,13 +70,16 @@ export function DisposableHeroCard({
   if (emptyKind) {
     const title =
       emptyKind === 'no-accounts'
-        ? 'Set up your first account'
-        : 'Set your income to see disposable';
+        ? t('hero.empty.noAcct.title')
+        : t('hero.empty.noIncome.title');
     const body =
       emptyKind === 'no-accounts'
-        ? 'Add a wallet, bank, credit card, or savings account so we can track your balances.'
-        : 'Add a salary, freelance income, or any recurring deposit so we can compute what you have left to spend.';
-    const cta = emptyKind === 'no-accounts' ? 'Add account' : 'Set up income';
+        ? t('hero.empty.noAcct.body')
+        : t('hero.empty.noIncome.body');
+    const cta =
+      emptyKind === 'no-accounts'
+        ? t('hero.empty.noAcct.cta')
+        : t('hero.empty.noIncome.cta');
     return (
       <View style={styles.heroCard} accessible accessibilityLabel={title}>
         <Text style={styles.heroEmptyTitle}>{title}</Text>

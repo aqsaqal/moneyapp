@@ -291,5 +291,16 @@
   "cat.investment": "استثمار",
   "cat.gift_in": "هدية",
   "cat.refund": "استرداد",
-  "cat.other_in": "أخرى"
+  "cat.other_in": "أخرى",
+  "categories.count": "{n} فئات",
+  "categories.withBudget": "{n} بميزانية",
+  "categories.type.expense": "مصروف",
+  "categories.type.income": "دخل",
+  "categories.type.both": "كلاهما",
+  "categories.system": "نظام",
+  "categories.archived": "مؤرشف",
+  "categories.pinned": "مثبت",
+  "categories.all": "الكل",
+  "categories.showArchived": "عرض المؤرشف ({n})",
+  "categories.hideArchived": "إخفاء المؤرشف"
 }

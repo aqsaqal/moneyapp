@@ -291,5 +291,16 @@
   "cat.investment": "Investment",
   "cat.gift_in": "Gift",
   "cat.refund": "Refund",
-  "cat.other_in": "Other"
+  "cat.other_in": "Other",
+  "categories.count": "{n} categories",
+  "categories.withBudget": "{n} with budget",
+  "categories.type.expense": "Expense",
+  "categories.type.income": "Income",
+  "categories.type.both": "Both",
+  "categories.system": "system",
+  "categories.archived": "archived",
+  "categories.pinned": "PINNED",
+  "categories.all": "ALL",
+  "categories.showArchived": "Show archived ({n})",
+  "categories.hideArchived": "Hide archived"
 }

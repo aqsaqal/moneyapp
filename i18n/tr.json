@@ -291,5 +291,16 @@
   "cat.investment": "Yatırım",
   "cat.gift_in": "Hediye",
   "cat.refund": "İade",
-  "cat.other_in": "Diğer"
+  "cat.other_in": "Diğer",
+  "categories.count": "{n} kategori",
+  "categories.withBudget": "{n} bütçeli",
+  "categories.type.expense": "Gider",
+  "categories.type.income": "Gelir",
+  "categories.type.both": "İkisi",
+  "categories.system": "sistem",
+  "categories.archived": "arşivlendi",
+  "categories.pinned": "SABİT",
+  "categories.all": "TÜMÜ",
+  "categories.showArchived": "Arşivi göster ({n})",
+  "categories.hideArchived": "Arşivi gizle"
 }

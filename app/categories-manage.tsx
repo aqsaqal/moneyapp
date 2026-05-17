@@ -41,10 +41,12 @@ export default function CategoriesManageScreen() {
   const renderRow = (c: CategoryWithMeta) => {
     const budgetLabel = c.monthlyBudget != null
       ? `${c.monthlyBudget.toFixed(0)} ${c.budgetCurrency ?? ''}`.trim()
-      : c.type === 'income' ? 'Income' : c.type === 'both' ? 'Both' : 'Expense';
+      : c.type === 'income' ? t('categories.type.income')
+        : c.type === 'both' ? t('categories.type.both')
+        : t('categories.type.expense');
     const hint =
-      (c.isSystem ? '🔒 system · ' : '') +
-      (c.archived ? 'archived · ' : '') +
+      (c.isSystem ? `🔒 ${t('categories.system')} · ` : '') +
+      (c.archived ? `${t('categories.archived')} · ` : '') +
       budgetLabel;
     return (
       <SettingRow
@@ -79,13 +81,13 @@ export default function CategoriesManageScreen() {
         />
         {pinned.length > 0 && (
           <>
-            <Text style={styles.subHeading}>PINNED</Text>
+            <Text style={styles.subHeading}>{t('categories.pinned')}</Text>
             {pinned.map(renderRow)}
           </>
         )}
         {unpinned.length > 0 && (
           <>
-            {pinned.length > 0 && <Text style={styles.subHeading}>ALL</Text>}
+            {pinned.length > 0 && <Text style={styles.subHeading}>{t('categories.all')}</Text>}
             {unpinned.map(renderRow)}
           </>
         )}
@@ -101,7 +103,9 @@ export default function CategoriesManageScreen() {
               color={theme.text3}
             />
             <Text style={styles.archiveText}>
-              {showArchived ? 'Hide archived' : `Show archived (${archivedCount})`}
+              {showArchived
+                ? t('categories.hideArchived')
+                : t('categories.showArchived', { n: archivedCount })}
             </Text>
           </Pressable>
         )}

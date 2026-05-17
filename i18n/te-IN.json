@@ -292,5 +292,16 @@
   "cat.investment": "పెట్టుబడి",
   "cat.gift_in": "బహుమతి",
   "cat.refund": "రీఫండ్",
-  "cat.other_in": "ఇతరం"
+  "cat.other_in": "ఇతరం",
+  "categories.count": "{n} వర్గాలు",
+  "categories.withBudget": "{n} బడ్జెట్‌తో",
+  "categories.type.expense": "ఖర్చు",
+  "categories.type.income": "ఆదాయం",
+  "categories.type.both": "రెండూ",
+  "categories.system": "సిస్టమ్",
+  "categories.archived": "ఆర్కైవ్",
+  "categories.pinned": "పిన్",
+  "categories.all": "అన్నీ",
+  "categories.showArchived": "ఆర్కైవ్ చూపు ({n})",
+  "categories.hideArchived": "ఆర్కైవ్ దాచు"
 }

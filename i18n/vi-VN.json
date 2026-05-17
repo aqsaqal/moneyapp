@@ -292,5 +292,16 @@
   "cat.investment": "Đầu tư",
   "cat.gift_in": "Quà",
   "cat.refund": "Hoàn tiền",
-  "cat.other_in": "Khác"
+  "cat.other_in": "Khác",
+  "categories.count": "{n} danh mục",
+  "categories.withBudget": "{n} có ngân sách",
+  "categories.type.expense": "Chi",
+  "categories.type.income": "Thu",
+  "categories.type.both": "Cả hai",
+  "categories.system": "hệ thống",
+  "categories.archived": "đã lưu trữ",
+  "categories.pinned": "ĐÃ GHIM",
+  "categories.all": "TẤT CẢ",
+  "categories.showArchived": "Hiện đã lưu trữ ({n})",
+  "categories.hideArchived": "Ẩn đã lưu trữ"
 }

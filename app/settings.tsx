@@ -589,8 +589,8 @@ function CategoriesSection() {
   const active = categories.filter((c) => !c.archived && c.id !== 'adjustment');
   const budgetCount = categories.filter((c) => c.monthlyBudget != null && !c.archived).length;
   const hint =
-    `${active.length} categories` +
-    (budgetCount > 0 ? ` · ${budgetCount} with budget` : '');
+    t('categories.count', { n: active.length }) +
+    (budgetCount > 0 ? ` · ${t('categories.withBudget', { n: budgetCount })}` : '');
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
       <SettingRow

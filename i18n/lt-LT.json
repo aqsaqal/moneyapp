@@ -292,5 +292,16 @@
   "cat.investment": "Investicija",
   "cat.gift_in": "Dovana",
   "cat.refund": "Grąžinimas",
-  "cat.other_in": "Kita"
+  "cat.other_in": "Kita",
+  "categories.count": "{n} kategorijų",
+  "categories.withBudget": "{n} su biudžetu",
+  "categories.type.expense": "Išlaida",
+  "categories.type.income": "Pajamos",
+  "categories.type.both": "Abu",
+  "categories.system": "sistema",
+  "categories.archived": "archyvuota",
+  "categories.pinned": "PRISEGTA",
+  "categories.all": "VISI",
+  "categories.showArchived": "Rodyti archyvuotus ({n})",
+  "categories.hideArchived": "Slėpti archyvuotus"
 }

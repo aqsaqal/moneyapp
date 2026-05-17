@@ -292,5 +292,16 @@
   "cat.investment": "投資",
   "cat.gift_in": "贈り物",
   "cat.refund": "返金",
-  "cat.other_in": "その他"
+  "cat.other_in": "その他",
+  "categories.count": "{n} カテゴリ",
+  "categories.withBudget": "{n} 予算付き",
+  "categories.type.expense": "支出",
+  "categories.type.income": "収入",
+  "categories.type.both": "両方",
+  "categories.system": "システム",
+  "categories.archived": "アーカイブ",
+  "categories.pinned": "ピン留め",
+  "categories.all": "すべて",
+  "categories.showArchived": "アーカイブを表示 ({n})",
+  "categories.hideArchived": "アーカイブを隠す"
 }

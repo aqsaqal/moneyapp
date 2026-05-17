@@ -292,5 +292,16 @@
   "cat.investment": "Investering",
   "cat.gift_in": "Gave",
   "cat.refund": "Refusjon",
-  "cat.other_in": "Annet"
+  "cat.other_in": "Annet",
+  "categories.count": "{n} kategorier",
+  "categories.withBudget": "{n} med budsjett",
+  "categories.type.expense": "Utgift",
+  "categories.type.income": "Inntekt",
+  "categories.type.both": "Begge",
+  "categories.system": "system",
+  "categories.archived": "arkivert",
+  "categories.pinned": "FESTET",
+  "categories.all": "ALLE",
+  "categories.showArchived": "Vis arkiverte ({n})",
+  "categories.hideArchived": "Skjul arkiverte"
 }

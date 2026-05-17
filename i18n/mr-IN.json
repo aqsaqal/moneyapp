@@ -292,5 +292,16 @@
   "cat.investment": "गुंतवणूक",
   "cat.gift_in": "भेट",
   "cat.refund": "परतावा",
-  "cat.other_in": "इतर"
+  "cat.other_in": "इतर",
+  "categories.count": "{n} श्रेण्या",
+  "categories.withBudget": "{n} बजेटसह",
+  "categories.type.expense": "खर्च",
+  "categories.type.income": "उत्पन्न",
+  "categories.type.both": "दोन्ही",
+  "categories.system": "सिस्टम",
+  "categories.archived": "संग्रहित",
+  "categories.pinned": "पिन केले",
+  "categories.all": "सर्व",
+  "categories.showArchived": "संग्रहित दाखवा ({n})",
+  "categories.hideArchived": "संग्रहित लपवा"
 }

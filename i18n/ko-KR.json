@@ -292,5 +292,16 @@
   "cat.investment": "투자",
   "cat.gift_in": "선물",
   "cat.refund": "환불",
-  "cat.other_in": "기타"
+  "cat.other_in": "기타",
+  "categories.count": "{n}개 카테고리",
+  "categories.withBudget": "{n}개 예산",
+  "categories.type.expense": "지출",
+  "categories.type.income": "수입",
+  "categories.type.both": "둘 다",
+  "categories.system": "시스템",
+  "categories.archived": "보관",
+  "categories.pinned": "고정",
+  "categories.all": "전체",
+  "categories.showArchived": "보관 표시 ({n})",
+  "categories.hideArchived": "보관 숨기기"
 }

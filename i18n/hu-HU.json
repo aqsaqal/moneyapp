@@ -292,5 +292,16 @@
   "cat.investment": "Befektetés",
   "cat.gift_in": "Ajándék",
   "cat.refund": "Visszatérítés",
-  "cat.other_in": "Egyéb"
+  "cat.other_in": "Egyéb",
+  "categories.count": "{n} kategória",
+  "categories.withBudget": "{n} költségvetéssel",
+  "categories.type.expense": "Kiadás",
+  "categories.type.income": "Bevétel",
+  "categories.type.both": "Mindkettő",
+  "categories.system": "rendszer",
+  "categories.archived": "archivált",
+  "categories.pinned": "RÖGZÍTETT",
+  "categories.all": "ÖSSZES",
+  "categories.showArchived": "Archivált megjelenítése ({n})",
+  "categories.hideArchived": "Archivált elrejtése"
 }

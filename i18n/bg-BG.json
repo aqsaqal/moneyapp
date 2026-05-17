@@ -292,5 +292,16 @@
   "cat.investment": "Инвестиция",
   "cat.gift_in": "Подарък",
   "cat.refund": "Възстановяване",
-  "cat.other_in": "Друго"
+  "cat.other_in": "Друго",
+  "categories.count": "{n} категории",
+  "categories.withBudget": "{n} с бюджет",
+  "categories.type.expense": "Разход",
+  "categories.type.income": "Доход",
+  "categories.type.both": "И двете",
+  "categories.system": "система",
+  "categories.archived": "архивирано",
+  "categories.pinned": "ЗАКАЧЕНО",
+  "categories.all": "ВСИЧКИ",
+  "categories.showArchived": "Покажи архив ({n})",
+  "categories.hideArchived": "Скрий архив"
 }

@@ -292,5 +292,16 @@
   "cat.investment": "Investering",
   "cat.gift_in": "Gave",
   "cat.refund": "Refusion",
-  "cat.other_in": "Andet"
+  "cat.other_in": "Andet",
+  "categories.count": "{n} kategorier",
+  "categories.withBudget": "{n} med budget",
+  "categories.type.expense": "Udgift",
+  "categories.type.income": "Indkomst",
+  "categories.type.both": "Begge",
+  "categories.system": "system",
+  "categories.archived": "arkiveret",
+  "categories.pinned": "FASTGJORT",
+  "categories.all": "ALLE",
+  "categories.showArchived": "Vis arkiverede ({n})",
+  "categories.hideArchived": "Skjul arkiverede"
 }
