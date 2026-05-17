@@ -2,23 +2,43 @@
 // (recurring / goal / debt → log a payment) and Activity rows (tap a
 // transaction → edit it in Smart Add).
 //
-// IMPORTANT: payloads are JSON-stringified then UTF-8 → base64 encoded.
-// We can't use plain `btoa(json)` because notes / category labels may
-// contain non-Latin-1 characters (Cyrillic, Arabic, Chinese, …) and
-// `btoa` throws on bytes outside 0x00–0xFF. Going through Buffer
-// guarantees UTF-8 round-tripping on every platform RN runs on.
+// IMPORTANT — Unicode safety:
+//   - Plain `btoa(JSON.stringify(...))` throws on any character outside
+//     Latin-1, which means any non-ASCII goal name / recurring title /
+//     transaction note (Cyrillic, Arabic, Chinese, …) silently failed
+//     decode and left Smart Add with no prefill (blank screen).
+//   - We can't use Node's Buffer here: Hermes ships neither it nor a
+//     polyfill, so `Buffer.from(...)` throws ReferenceError on device.
+//   - Solution: encode to UTF-8 bytes via TextEncoder, fold them into a
+//     binary string of char-codes 0–255 (which btoa accepts), then
+//     base64. Decode reverses it via TextDecoder. Both APIs are
+//     available in Hermes on every RN ≥ 0.71 (= Expo SDK 49+).
 import type { Transaction } from '@/utils/db/schema';
 
-export function encodePrefill(data: Record<string, unknown>): string {
-  return Buffer.from(JSON.stringify(data), 'utf8').toString('base64');
+function utf8ToBase64(s: string): string {
+  const bytes = new TextEncoder().encode(s);
+  // Build a Latin-1 binary string char-by-char; btoa accepts that.
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
 }
 
-/** Symmetric decoder used by add.tsx. Exported so the encoding path has a
- *  single source of truth — bug-fixed in one place. */
+function base64ToUtf8(b64: string): string {
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+export function encodePrefill(data: Record<string, unknown>): string {
+  return utf8ToBase64(JSON.stringify(data));
+}
+
+/** Symmetric decoder used by add.tsx. Exported so the encoding path has
+ *  a single source of truth — bug-fixes in one place only. */
 export function decodePrefill(raw: string): Record<string, unknown> | null {
   try {
-    const json = Buffer.from(raw, 'base64').toString('utf8');
-    return JSON.parse(json);
+    return JSON.parse(base64ToUtf8(raw));
   } catch {
     return null;
   }
