@@ -119,6 +119,12 @@ export const customCategories = sqliteTable('custom_categories', {
   // Stored as a JSON map { "2026-05": ["80","100"], … } — small enough
   // to live inline; saves a separate `budget_alerts` table.
   budgetAlertsSent: text('budget_alerts_sent'),
+  // Phase 10ab: per-locale name overrides. JSON map { "<locale>": "<name>", … }.
+  // Create-flow flood-fills the user-typed name across all 50 locales.
+  // Edit-flow only updates the active locale's entry — other locales keep
+  // their existing value. `name` (above) stays in sync with the active-locale
+  // entry for back-compat and as a final fallback.
+  nameTranslations: text('name_translations'),
 });
 
 // Phase 10p: daily net-worth snapshots so the Activity analytics can chart

@@ -278,6 +278,7 @@ function createTables(db: SQLite.SQLiteDatabase) {
     add('budget_currency', 'TEXT');
     add('rollover_enabled', 'INTEGER');
     add('budget_alerts_sent', 'TEXT');
+    add('name_translations', 'TEXT');
   } catch {
     /* swallow */
   }

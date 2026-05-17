@@ -51,7 +51,7 @@ export const INCOME_CATEGORIES: CategoryDef[] = [
 
 import { FeatureSlots } from '@/features';
 import { getRawDB } from '@/utils/db/client';
-import { t as i18nT } from '@/utils/i18n';
+import { t as i18nT, getLocale as i18nGetLocale } from '@/utils/i18n';
 
 // Seeded categories carry English `name` strings in the table above so
 // other tooling (search index, exports, OCR matchers) still has stable
@@ -82,13 +82,27 @@ interface CustomRow {
 function readCustoms(type: 'expense' | 'income'): CustomRow[] {
   try {
     const raw = getRawDB();
-    return raw.getAllSync(
-      `SELECT id, name, icon, color, type, archived, is_pinned, sort_order
+    const rows = raw.getAllSync(
+      `SELECT id, name, icon, color, type, archived, is_pinned, sort_order,
+              name_translations
          FROM custom_categories
         WHERE type = ? OR type = 'both'
         ORDER BY is_pinned DESC, sort_order, created_at`,
       [type],
-    ) as CustomRow[];
+    ) as Array<CustomRow & { name_translations: string | null }>;
+    const activeLocale = i18nGetLocale();
+    return rows.map((r) => {
+      if (!r.name_translations) return r;
+      try {
+        const map = JSON.parse(r.name_translations) as Record<string, string>;
+        if (typeof map[activeLocale] === 'string') {
+          return { ...r, name: map[activeLocale] };
+        }
+      } catch {
+        /* swallow */
+      }
+      return r;
+    });
   } catch {
     return [];
   }

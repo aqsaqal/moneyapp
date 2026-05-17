@@ -39,6 +39,8 @@ import { snapshotTodayIfMissing } from '@/utils/netWorthSnapshot';
 import { FX_TTL_MS, oldestFetchedAt, refreshRates } from '@/utils/fx';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '@/constants/categories';
 import { kv } from '@/utils/kv';
+import { getLocale } from '@/utils/i18n';
+import { LOCALES } from '@/constants/locales';
 
 // Single process-wide version counter that all hooks watch. Bumped on every
 // mutation so useEffect-driven re-queries fire.
@@ -289,7 +291,7 @@ export function useCategoriesWithMeta(): CategoryWithMeta[] {
       const rows = raw.getAllSync(
         `SELECT id, name, icon, color, type, is_system, is_pinned, sort_order,
                 archived, monthly_budget, budget_currency, rollover_enabled,
-                budget_alerts_sent
+                budget_alerts_sent, name_translations
            FROM custom_categories`,
       ) as Array<{
         id: string; name: string; icon: string; color: string; type: string;
@@ -297,10 +299,22 @@ export function useCategoriesWithMeta(): CategoryWithMeta[] {
         sort_order: number | null; archived: number | null;
         monthly_budget: number | null; budget_currency: string | null;
         rollover_enabled: number | null; budget_alerts_sent: string | null;
+        name_translations: string | null;
       }>;
+      const activeLocale = getLocale();
       for (const r of rows) {
+        // Resolve display name: active locale override → `name` field.
+        let displayName = r.name;
+        if (r.name_translations) {
+          try {
+            const map = JSON.parse(r.name_translations) as Record<string, string>;
+            if (typeof map[activeLocale] === 'string') displayName = map[activeLocale];
+          } catch {
+            /* malformed JSON — fall back to `name` */
+          }
+        }
         out.set(r.id, {
-          id: r.id, name: r.name, icon: r.icon, color: r.color,
+          id: r.id, name: displayName, icon: r.icon, color: r.color,
           type: (r.type as 'expense' | 'income' | 'both'),
           isSystem: r.is_system === 1,
           isPinned: r.is_pinned === 1,
@@ -347,14 +361,20 @@ export function setCategoryMeta(
     [id],
   ) as { id: string } | undefined;
   if (!existing) {
+    // Create: flood-fill the user's typed name across all 50 locales so
+    // it shows up uniformly until they re-edit in a specific language.
+    const initialName = patch.name ?? seeded?.name ?? id;
+    const floodFilled: Record<string, string> = {};
+    for (const l of LOCALES) floodFilled[l.code] = initialName;
     raw.runSync(
       `INSERT INTO custom_categories
          (id, name, icon, color, type, created_at, is_pinned, archived,
-          monthly_budget, budget_currency, rollover_enabled, sort_order)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          monthly_budget, budget_currency, rollover_enabled, sort_order,
+          name_translations)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
-        patch.name ?? seeded?.name ?? id,
+        initialName,
         patch.icon ?? seeded?.icon ?? 'MoreHorizontal',
         patch.color ?? seeded?.color ?? '#8888AA',
         patch.type ?? (seededIncome && !seededExpense ? 'income' : 'expense'),
@@ -365,6 +385,7 @@ export function setCategoryMeta(
         patch.budgetCurrency ?? null,
         patch.rolloverEnabled ? 1 : 0,
         patch.sortOrder ?? 0,
+        JSON.stringify(floodFilled),
       ],
     );
   } else {
@@ -374,7 +395,29 @@ export function setCategoryMeta(
       sets.push(`${col} = ?`);
       args.push(val);
     };
-    if (patch.name != null) push('name', patch.name);
+    if (patch.name != null) {
+      // Edit-of-name: update ONLY the active locale's entry in the
+      // translations map; leave other locales' values alone. Also keep
+      // the `name` column in sync with the active-locale string so
+      // legacy code paths don't regress.
+      push('name', patch.name);
+      const existingRow = raw.getFirstSync(
+        `SELECT name_translations FROM custom_categories WHERE id = ?`,
+        [id],
+      ) as { name_translations: string | null } | undefined;
+      let map: Record<string, string> = {};
+      if (existingRow?.name_translations) {
+        try { map = JSON.parse(existingRow.name_translations); } catch { map = {}; }
+      }
+      // Ensure every locale has *some* value, defaulting to the new name
+      // for any locale we haven't yet recorded — keeps the picker readable
+      // in unfamiliar languages until the user explicitly edits there.
+      for (const l of LOCALES) {
+        if (typeof map[l.code] !== 'string') map[l.code] = patch.name;
+      }
+      map[getLocale()] = patch.name;
+      push('name_translations', JSON.stringify(map));
+    }
     if (patch.icon != null) push('icon', patch.icon);
     if (patch.color != null) push('color', patch.color);
     if (patch.type != null) push('type', patch.type);
