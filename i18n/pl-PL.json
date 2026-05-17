@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — dług nie pojawi się już w monitorze.",
   "goal.targetAmount": "KWOTA DOCELOWA",
   "notifications.title": "Powiadomienia",
-  "notifications.hint": "Przypomnienia o rachunkach, alerty budżetu (wkrótce)"
+  "notifications.hint": "Wyłączone — włącz przypomnienia o rachunkach",
+  "notifications.hint.enabled": "Włączone — {count} rachunków, {lead} dni przed",
+  "notifications.leadDays": "Wyprzedzenie",
+  "notifications.leadDays.value": "{n} dni przed",
+  "notifications.leadDays.sameDay": "W tym samym dniu"
 }

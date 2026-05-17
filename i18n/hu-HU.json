@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — az adósság már nem jelenik meg a követőben.",
   "goal.targetAmount": "CÉLÖSSZEG",
   "notifications.title": "Értesítések",
-  "notifications.hint": "Számlaértesítők, költségvetési riasztások (hamarosan)"
+  "notifications.hint": "Ki — kapcsold be a számlaértesítőkhöz",
+  "notifications.hint.enabled": "Be — {count} számla, {lead} nappal előtte",
+  "notifications.leadDays": "Előjelzés",
+  "notifications.leadDays.value": "{n} nappal előtte",
+  "notifications.leadDays.sameDay": "Aznap"
 }

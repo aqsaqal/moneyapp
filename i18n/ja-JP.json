@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — 負債はトラッカーに表示されなくなります。",
   "goal.targetAmount": "目標金額",
   "notifications.title": "通知",
-  "notifications.hint": "請求リマインダー、予算アラート（近日対応）"
+  "notifications.hint": "オフ — オンにすると請求リマインダー",
+  "notifications.hint.enabled": "オン — {count} 件、{lead} 日前",
+  "notifications.leadDays": "リマインド時期",
+  "notifications.leadDays.value": "{n} 日前",
+  "notifications.leadDays.sameDay": "当日"
 }

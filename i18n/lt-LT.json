@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — skola nebebus rodoma stebėtojuje.",
   "goal.targetAmount": "TIKSLO SUMA",
   "notifications.title": "Pranešimai",
-  "notifications.hint": "Sąskaitų priminimai, biudžeto įspėjimai (greitai)"
+  "notifications.hint": "Išjungta — įjunk sąskaitų priminimus",
+  "notifications.hint.enabled": "Įjungta — {count} sąskaitų, prieš {lead} d.",
+  "notifications.leadDays": "Priminimo laikas",
+  "notifications.leadDays.value": "prieš {n} d.",
+  "notifications.leadDays.sameDay": "Tą pačią dieną"
 }

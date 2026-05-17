@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — дуг се више неће приказивати.",
   "goal.targetAmount": "ЦИЉНИ ИЗНОС",
   "notifications.title": "Обавештења",
-  "notifications.hint": "Подсетници за рачуне, обавештења буџета (ускоро)"
+  "notifications.hint": "Искључено — укључи за подсетнике",
+  "notifications.hint.enabled": "Укључено — {count} рачуна, {lead} дана раније",
+  "notifications.leadDays": "Време подсетника",
+  "notifications.leadDays.value": "{n} дана раније",
+  "notifications.leadDays.sameDay": "Истог дана"
 }

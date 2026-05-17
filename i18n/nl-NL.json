@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — de schuld verschijnt niet meer in tracker.",
   "goal.targetAmount": "DOELBEDRAG",
   "notifications.title": "Meldingen",
-  "notifications.hint": "Factuur-herinneringen, budgetwaarschuwingen (binnenkort)"
+  "notifications.hint": "Uit — schakel in voor factuur-herinneringen",
+  "notifications.hint.enabled": "Aan — {count} factu(u)r(en), {lead} dag(en) van tevoren",
+  "notifications.leadDays": "Voorlooptijd",
+  "notifications.leadDays.value": "{n} dag(en) van tevoren",
+  "notifications.leadDays.sameDay": "Op de dag zelf"
 }

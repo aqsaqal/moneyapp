@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — velka ei enää näy seurannassa.",
   "goal.targetAmount": "TAVOITESUMMA",
   "notifications.title": "Ilmoitukset",
-  "notifications.hint": "Laskumuistutukset, budjettihälytykset (tulossa)"
+  "notifications.hint": "Pois — kytke päälle laskumuistutuksia varten",
+  "notifications.hint.enabled": "Päällä — {count} laskua, {lead} päivää ennen",
+  "notifications.leadDays": "Ennakkoaika",
+  "notifications.leadDays.value": "{n} päivää ennen",
+  "notifications.leadDays.sameDay": "Samana päivänä"
 }

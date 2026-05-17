@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — το χρέος δεν θα εμφανίζεται πλέον στον παρακολουθητή.",
   "goal.targetAmount": "ΠΟΣΟ ΣΤΟΧΟΣ",
   "notifications.title": "Ειδοποιήσεις",
-  "notifications.hint": "Υπενθυμίσεις λογαριασμών, ειδοποιήσεις προϋπολογισμού (σύντομα)"
+  "notifications.hint": "Ανενεργό — ενεργοποίηση για υπενθυμίσεις",
+  "notifications.hint.enabled": "Ενεργό — {count} λογ., {lead} ημέρες πριν",
+  "notifications.leadDays": "Χρόνος υπενθύμισης",
+  "notifications.leadDays.value": "{n} ημέρες πριν",
+  "notifications.leadDays.sameDay": "Την ίδια μέρα"
 }

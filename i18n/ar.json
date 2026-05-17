@@ -344,5 +344,9 @@
   "debt.deleteBody": "\"{name}\" — لن يظهر الدين في متتبعك بعد الآن.",
   "goal.targetAmount": "المبلغ المستهدف",
   "notifications.title": "الإشعارات",
-  "notifications.hint": "تذكير الفواتير وتنبيهات الميزانية (قريبًا)"
+  "notifications.hint": "معطل — قم بالتشغيل لتلقي تذكيرات الفواتير",
+  "notifications.hint.enabled": "مفعل — {count} فاتورة، قبل {lead} يوم",
+  "notifications.leadDays": "وقت التذكير",
+  "notifications.leadDays.value": "قبل {n} يوم",
+  "notifications.leadDays.sameDay": "في اليوم نفسه"
 }

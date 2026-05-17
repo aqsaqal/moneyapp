@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — 부채가 추적기에 더 이상 표시되지 않습니다.",
   "goal.targetAmount": "목표 금액",
   "notifications.title": "알림",
-  "notifications.hint": "청구 알림, 예산 알림 (곧 제공)"
+  "notifications.hint": "꺼짐 — 청구 알림을 켜려면 활성화",
+  "notifications.hint.enabled": "켜짐 — {count}건, {lead}일 전",
+  "notifications.leadDays": "알림 시점",
+  "notifications.leadDays.value": "{n}일 전",
+  "notifications.leadDays.sameDay": "당일"
 }

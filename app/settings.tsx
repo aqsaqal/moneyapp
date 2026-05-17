@@ -11,7 +11,7 @@
 // The PickerSheets, locale-change-and-reload flow, and theme-change-and-reload
 // flow are unchanged from where they used to live on Me — pure relocation.
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   DevSettings,
@@ -52,7 +52,8 @@ import { exportData } from '@/utils/dataExport';
 import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
 import { monthKey as monthKeyOf } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
-import { useCategoriesWithMeta, setCategoryMeta, type CategoryWithMeta } from '@/hooks/useAppData';
+import { useCategoriesWithMeta, setCategoryMeta, type CategoryWithMeta, useRecurring } from '@/hooks/useAppData';
+import { DEFAULT_LEAD_DAYS } from '@/utils/notifications';
 import { convert } from '@/utils/fx';
 import { getRawDB } from '@/utils/db/client';
 import { APP_NAME } from '@/constants/flavor';
@@ -462,17 +463,91 @@ function AppearanceRow() {
 
 
 function NotificationsRow() {
-  // Placeholder until expo-notifications wiring lands (Round 2 follow-up).
-  // Toggle does nothing yet but the row reserves its place in the
-  // App settings flow so muscle memory doesn't shift later.
+  // Phase 10t — bill reminders via expo-notifications. Master toggle +
+  // lead-days picker. Income recurring items are intentionally skipped
+  // by the scheduler; this row controls only the expense alerts.
   const t = useT();
+  const recurringRows = useRecurring();
+  const [enabled, setEnabled] = useState(false);
+  const [leadDays, setLeadDays] = useState(DEFAULT_LEAD_DAYS);
+  const [pickerOpen, setPickerOpen] = useState(false);
+
+  // Lazy-require so unit-test / web bundles that miss the native module
+  // don't crash importing settings.tsx.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const notif = require('@/utils/notifications') as typeof import('@/utils/notifications');
+
+  useEffect(() => {
+    setEnabled(notif.getRemindersEnabled());
+    setLeadDays(notif.getReminderLeadDays());
+  }, [notif]);
+
+  const toRows = () =>
+    recurringRows.map((r) => ({
+      id: r.id, name: r.name, amount: r.amount, dayOfMonth: r.dayOfMonth, type: r.type,
+    }));
+
+  const onToggle = async () => {
+    const next = !enabled;
+    setEnabled(next);
+    const result = await notif.setRemindersEnabled(next, toRows());
+    if (next && result === 'denied') {
+      // User declined the OS prompt — flip the visible state back off.
+      setEnabled(false);
+      Alert.alert(t('voice.permissionDenied'), t('me.biometric.hintUnsupported'));
+    }
+  };
+
+  const eligible = recurringRows.filter((r) => r.type === 'expense').length;
+  const hint = enabled
+    ? t('notifications.hint.enabled', { lead: leadDays, count: eligible })
+    : t('notifications.hint');
+
   return (
-    <SettingRow
-      label={t('notifications.title')}
-      hint={t('notifications.hint')}
-      icon="bell-outline"
-      iconColor={theme.text2}
-    />
+    <>
+      <SettingRow
+        label={t('notifications.title')}
+        hint={hint}
+        icon="bell-outline"
+        iconColor={enabled ? theme.accent : theme.text2}
+        trailing={
+          <Pressable
+            onPress={onToggle}
+            style={[sectionStyles.toggle, enabled && { backgroundColor: theme.accent }]}
+            accessibilityRole="switch"
+            accessibilityState={{ checked: enabled }}
+          >
+            <View style={[sectionStyles.toggleKnob, enabled && { transform: [{ translateX: 18 }] }]} />
+          </Pressable>
+        }
+      />
+      {enabled && (
+        <SettingRow
+          label={t('notifications.leadDays')}
+          hint={t('notifications.leadDays.value', { n: leadDays })}
+          icon="clock-outline"
+          iconColor={theme.text2}
+          onPress={() => setPickerOpen(true)}
+        />
+      )}
+      <PickerSheet
+        visible={pickerOpen}
+        title={t('notifications.leadDays')}
+        options={[0, 1, 2, 3, 5, 7].map<PickerOption<number>>((n) => ({
+          value: n,
+          label:
+            n === 0
+              ? t('notifications.leadDays.sameDay')
+              : t('notifications.leadDays.value', { n }),
+        }))}
+        selected={leadDays}
+        onPick={async (n) => {
+          setLeadDays(n);
+          await notif.setReminderLeadDays(n, toRows());
+        }}
+        onClose={() => setPickerOpen(false)}
+      />
+    </>
   );
 }
 

@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — qarz endi kuzatuvchida koʻrinmaydi.",
   "goal.targetAmount": "MAQSADLI SUMMA",
   "notifications.title": "Bildirishnomalar",
-  "notifications.hint": "Hisob eslatmalari, byudjet ogohlantirishlari (tez orada)"
+  "notifications.hint": "Oʻchirilgan — hisob eslatmalari uchun yoqing",
+  "notifications.hint.enabled": "Yoqilgan — {count} hisob, {lead} kun oldin",
+  "notifications.leadDays": "Eslatma vaqti",
+  "notifications.leadDays.value": "{n} kun oldin",
+  "notifications.leadDays.sameDay": "Oʻsha kuni"
 }

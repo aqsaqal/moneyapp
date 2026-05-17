@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — khoản nợ ngưng xuất hiện trong trình theo dõi.",
   "goal.targetAmount": "SỐ TIỀN MỤC TIÊU",
   "notifications.title": "Thông báo",
-  "notifications.hint": "Nhắc hoá đơn, cảnh báo ngân sách (sắp ra mắt)"
+  "notifications.hint": "Tắt — bật để nhận nhắc hoá đơn",
+  "notifications.hint.enabled": "Bật — {count} hoá đơn, trước {lead} ngày",
+  "notifications.leadDays": "Thời gian nhắc",
+  "notifications.leadDays.value": "trước {n} ngày",
+  "notifications.leadDays.sameDay": "Cùng ngày"
 }

@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — задължението спира да се показва.",
   "goal.targetAmount": "ЦЕЛЕВА СУМА",
   "notifications.title": "Известия",
-  "notifications.hint": "Напомняния за сметки, известия за бюджет (скоро)"
+  "notifications.hint": "Изкл — вкл за напомняния за сметки",
+  "notifications.hint.enabled": "Вкл — {count} сметки, {lead} дни предварително",
+  "notifications.leadDays": "Време за напомняне",
+  "notifications.leadDays.value": "{n} дни предварително",
+  "notifications.leadDays.sameDay": "В същия ден"
 }

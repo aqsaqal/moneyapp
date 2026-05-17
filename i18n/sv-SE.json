@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — skulden visas inte längre i spåraren.",
   "goal.targetAmount": "MÅLBELOPP",
   "notifications.title": "Aviseringar",
-  "notifications.hint": "Räkningspåminnelser, budgetvarningar (kommer snart)"
+  "notifications.hint": "Av — slå på för räkningspåminnelser",
+  "notifications.hint.enabled": "På — {count} räkningar, {lead} dagar före",
+  "notifications.leadDays": "Framförhållning",
+  "notifications.leadDays.value": "{n} dagar före",
+  "notifications.leadDays.sameDay": "Samma dag"
 }

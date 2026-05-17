@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — dlh sa už nebude zobrazovať.",
   "goal.targetAmount": "CIEĽOVÁ SUMA",
   "notifications.title": "Oznámenia",
-  "notifications.hint": "Pripomenutia účtov, upozornenia rozpočtu (čoskoro)"
+  "notifications.hint": "Vypnuté — zapni pre pripomenutia účtov",
+  "notifications.hint.enabled": "Zapnuté — {count} účtov, {lead} dní vopred",
+  "notifications.leadDays": "Predstih",
+  "notifications.leadDays.value": "{n} dní vopred",
+  "notifications.leadDays.sameDay": "V deň splatnosti"
 }

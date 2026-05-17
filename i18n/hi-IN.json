@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — कर्ज अब ट्रैकर में दिखाई नहीं देगा।",
   "goal.targetAmount": "लक्ष्य राशि",
   "notifications.title": "सूचनाएँ",
-  "notifications.hint": "बिल अनुस्मारक, बजट अलर्ट (जल्द आ रहा)"
+  "notifications.hint": "बंद — बिल अनुस्मारक के लिए चालू करें",
+  "notifications.hint.enabled": "चालू — {count} बिल, {lead} दिन पहले",
+  "notifications.leadDays": "अनुस्मारक समय",
+  "notifications.leadDays.value": "{n} दिन पहले",
+  "notifications.leadDays.sameDay": "उसी दिन"
 }

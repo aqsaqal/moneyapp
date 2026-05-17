@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — ঋণ ট্র্যাকারে দেখা যাবে না।",
   "goal.targetAmount": "লক্ষ্য পরিমাণ",
   "notifications.title": "বিজ্ঞপ্তি",
-  "notifications.hint": "বিল রিমাইন্ডার, বাজেট সতর্কতা (শীঘ্রই)"
+  "notifications.hint": "বন্ধ — বিল রিমাইন্ডারের জন্য চালু করুন",
+  "notifications.hint.enabled": "চালু — {count} বিল, {lead} দিন আগে",
+  "notifications.leadDays": "স্মরণ সময়",
+  "notifications.leadDays.value": "{n} দিন আগে",
+  "notifications.leadDays.sameDay": "একই দিনে"
 }

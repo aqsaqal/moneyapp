@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — கடன் ட்ராக்கரில் தோன்றாது.",
   "goal.targetAmount": "இலக்கு தொகை",
   "notifications.title": "அறிவிப்புகள்",
-  "notifications.hint": "பில் நினைவூட்டல்கள், பட்ஜெட் எச்சரிக்கைகள் (விரைவில்)"
+  "notifications.hint": "ஆஃப் — பில் நினைவூட்டல்களுக்கு ஆன் செய்க",
+  "notifications.hint.enabled": "ஆன் — {count} பில், {lead} நாட்கள் முன்",
+  "notifications.leadDays": "நினைவூட்டல் நேரம்",
+  "notifications.leadDays.value": "{n} நாட்கள் முன்",
+  "notifications.leadDays.sameDay": "அதே நாளில்"
 }

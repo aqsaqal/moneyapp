@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — борг більше не з'являтиметься у трекері.",
   "goal.targetAmount": "ЦІЛЬОВА СУМА",
   "notifications.title": "Сповіщення",
-  "notifications.hint": "Нагадування про рахунки, сповіщення бюджету (незабаром)"
+  "notifications.hint": "Вимк — увімкни для нагадувань про рахунки",
+  "notifications.hint.enabled": "Увімк — {count} рахунків, за {lead} дн.",
+  "notifications.leadDays": "Заздалегідь",
+  "notifications.leadDays.value": "за {n} дн.",
+  "notifications.leadDays.sameDay": "У той же день"
 }

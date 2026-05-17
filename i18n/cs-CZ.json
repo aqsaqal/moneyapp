@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — dluh se v trackeru přestane zobrazovat.",
   "goal.targetAmount": "CÍLOVÁ ČÁSTKA",
   "notifications.title": "Oznámení",
-  "notifications.hint": "Připomenutí účtů, upozornění rozpočtu (brzy)"
+  "notifications.hint": "Vypnuto — zapni pro připomenutí účtů",
+  "notifications.hint.enabled": "Zapnuto — {count} účtů, {lead} dní předem",
+  "notifications.leadDays": "Předstih",
+  "notifications.leadDays.value": "{n} dní předem",
+  "notifications.leadDays.sameDay": "V den splatnosti"
 }

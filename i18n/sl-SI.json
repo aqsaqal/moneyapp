@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — dolg se ne bo več prikazoval.",
   "goal.targetAmount": "CILJNI ZNESEK",
   "notifications.title": "Obvestila",
-  "notifications.hint": "Opomniki za račune, opozorila proračuna (kmalu)"
+  "notifications.hint": "Izklopljeno — vklopi za opomnike",
+  "notifications.hint.enabled": "Vklopljeno — {count} računov, {lead} dni prej",
+  "notifications.leadDays": "Predčasno",
+  "notifications.leadDays.value": "{n} dni prej",
+  "notifications.leadDays.sameDay": "Isti dan"
 }

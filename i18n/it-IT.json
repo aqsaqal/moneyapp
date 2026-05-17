@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — il debito non apparirà più nel tracker.",
   "goal.targetAmount": "IMPORTO OBIETTIVO",
   "notifications.title": "Notifiche",
-  "notifications.hint": "Promemoria bollette, avvisi budget (in arrivo)"
+  "notifications.hint": "Off — attiva per ricevere promemoria",
+  "notifications.hint.enabled": "On — {count} bollette, {lead} giorno(i) prima",
+  "notifications.leadDays": "Anticipo",
+  "notifications.leadDays.value": "{n} giorno(i) prima",
+  "notifications.leadDays.sameDay": "Stesso giorno"
 }

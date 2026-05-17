@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — 该债务将不再出现在追踪器中。",
   "goal.targetAmount": "目标金额",
   "notifications.title": "通知",
-  "notifications.hint": "账单提醒、预算提醒（即将推出）"
+  "notifications.hint": "关闭 — 开启以接收账单提醒",
+  "notifications.hint.enabled": "开启 — {count} 笔账单，提前 {lead} 天",
+  "notifications.leadDays": "提前时间",
+  "notifications.leadDays.value": "提前 {n} 天",
+  "notifications.leadDays.sameDay": "当天"
 }

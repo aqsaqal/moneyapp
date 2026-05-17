@@ -344,5 +344,9 @@
   "debt.deleteBody": "\"{name}\" — the debt will stop appearing in your tracker.",
   "goal.targetAmount": "TARGET AMOUNT",
   "notifications.title": "Notifications",
-  "notifications.hint": "Bill reminders, budget alerts (coming soon)"
+  "notifications.hint": "Off — turn on to get bill reminders",
+  "notifications.hint.enabled": "On — {count} bill(s), {lead} day(s) before",
+  "notifications.leadDays": "Reminder lead",
+  "notifications.leadDays.value": "{n} day(s) before",
+  "notifications.leadDays.sameDay": "On the day"
 }

@@ -344,5 +344,9 @@
   "debt.deleteBody": "\"{name}\" — hutang berhenti muncul dalam pejejak.",
   "goal.targetAmount": "JUMLAH SASARAN",
   "notifications.title": "Pemberitahuan",
-  "notifications.hint": "Peringatan bil, makluman bajet (akan datang)"
+  "notifications.hint": "Mati — hidupkan untuk peringatan bil",
+  "notifications.hint.enabled": "Hidup — {count} bil, {lead} hari sebelum",
+  "notifications.leadDays": "Masa peringatan",
+  "notifications.leadDays.value": "{n} hari sebelum",
+  "notifications.leadDays.sameDay": "Hari yang sama"
 }

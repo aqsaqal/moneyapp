@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — రుణం ట్రాకర్‌లో కనిపించదు.",
   "goal.targetAmount": "లక్ష్య మొత్తం",
   "notifications.title": "నోటిఫికేషన్లు",
-  "notifications.hint": "బిల్లు రిమైండర్లు, బడ్జెట్ హెచ్చరికలు (త్వరలో)"
+  "notifications.hint": "ఆఫ్ — బిల్లు రిమైండర్‌లకు ఆన్ చేయండి",
+  "notifications.hint.enabled": "ఆన్ — {count} బిల్లులు, {lead} రోజుల ముందు",
+  "notifications.leadDays": "రిమైండర్ సమయం",
+  "notifications.leadDays.value": "{n} రోజుల ముందు",
+  "notifications.leadDays.sameDay": "అదే రోజు"
 }

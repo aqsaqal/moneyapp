@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — gjelden vises ikke lenger i sporeren.",
   "goal.targetAmount": "MÅLBELØP",
   "notifications.title": "Varsler",
-  "notifications.hint": "Regningspåminnelser, budsjettvarsler (kommer snart)"
+  "notifications.hint": "Av — slå på for regningspåminnelser",
+  "notifications.hint.enabled": "På — {count} regninger, {lead} dager før",
+  "notifications.leadDays": "Forhåndsvarsel",
+  "notifications.leadDays.value": "{n} dager før",
+  "notifications.leadDays.sameDay": "Samme dag"
 }

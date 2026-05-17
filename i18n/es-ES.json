@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — la deuda dejará de aparecer en tu seguimiento.",
   "goal.targetAmount": "IMPORTE OBJETIVO",
   "notifications.title": "Notificaciones",
-  "notifications.hint": "Recordatorios de facturas, alertas de presupuesto (próximamente)"
+  "notifications.hint": "Desactivado — actívalo para recordatorios",
+  "notifications.hint.enabled": "Activo — {count} facturas, {lead} día(s) antes",
+  "notifications.leadDays": "Anticipación",
+  "notifications.leadDays.value": "{n} día(s) antes",
+  "notifications.leadDays.sameDay": "El mismo día"
 }

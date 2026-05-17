@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — borxhi nuk do të shfaqet më në ndjekës.",
   "goal.targetAmount": "SHUMA E SYNUAR",
   "notifications.title": "Njoftime",
-  "notifications.hint": "Kujtues faturash, alarmet e buxhetit (së shpejti)"
+  "notifications.hint": "Çaktivizuar — aktivizo për kujtues faturash",
+  "notifications.hint.enabled": "Aktiv — {count} fatura, {lead} ditë para",
+  "notifications.leadDays": "Koha e kujtesës",
+  "notifications.leadDays.value": "{n} ditë para",
+  "notifications.leadDays.sameDay": "Të njëjtën ditë"
 }

@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — 該債務不再出現在追蹤器中。",
   "goal.targetAmount": "目標金額",
   "notifications.title": "通知",
-  "notifications.hint": "帳單提醒、預算提醒（即將推出）"
+  "notifications.hint": "關閉 — 開啟以接收帳單提醒",
+  "notifications.hint.enabled": "開啟 — {count} 筆帳單，提前 {lead} 天",
+  "notifications.leadDays": "提前時間",
+  "notifications.leadDays.value": "提前 {n} 天",
+  "notifications.leadDays.sameDay": "當天"
 }

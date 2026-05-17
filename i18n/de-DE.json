@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — die Schuld erscheint nicht mehr im Tracker.",
   "goal.targetAmount": "ZIELBETRAG",
   "notifications.title": "Benachrichtigungen",
-  "notifications.hint": "Rechnungserinnerungen, Budget-Warnungen (bald)"
+  "notifications.hint": "Aus — einschalten für Rechnungserinnerungen",
+  "notifications.hint.enabled": "An — {count} Rechnung(en), {lead} Tag(e) vorher",
+  "notifications.leadDays": "Vorlaufzeit",
+  "notifications.leadDays.value": "{n} Tag(e) vorher",
+  "notifications.leadDays.sameDay": "Am selben Tag"
 }

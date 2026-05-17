@@ -344,5 +344,9 @@
   "debt.deleteBody": "\"{name}\" — қарыз енді трекерде көрсетілмейді.",
   "goal.targetAmount": "МАҚСАТТЫ СОМА",
   "notifications.title": "Хабарландырулар",
-  "notifications.hint": "Шот еске салулары, бюджет хабарламалары (жақында)"
+  "notifications.hint": "Өшірілген — шот еске салулары үшін қос",
+  "notifications.hint.enabled": "Қосылған — {count} шот, {lead} күн бұрын",
+  "notifications.leadDays": "Еске салу уақыты",
+  "notifications.leadDays.value": "{n} күн бұрын",
+  "notifications.leadDays.sameDay": "Сол күні"
 }

@@ -122,6 +122,10 @@ export function bootAppData(): Promise<void> {
         } catch { /* never block boot */ }
       }
       booted = true;
+      // Phase 10t: resync local bill reminders so the device queue matches
+      // the current `recurring` table after every cold start. Fire-and-
+      // forget — failures are silent (notifications are non-critical).
+      void resyncReminders();
     })();
   }
   return bootPromise;
@@ -1041,11 +1045,40 @@ export function upsertRecurring(r: typeof recurring.$inferInsert): void {
   if (existing) db.update(recurring).set(r).where(eq(recurring.id, r.id)).run();
   else db.insert(recurring).values(r).run();
   bump();
+  void resyncReminders();
 }
 
 export function deleteRecurring(id: string): void {
   getDB().delete(recurring).where(eq(recurring.id, id)).run();
   bump();
+  void resyncReminders();
+}
+
+/** Phase 10t — re-emit the device's scheduled bill reminders to match the
+ *  current `recurring` table. Fire-and-forget; lazy-required so test
+ *  environments without expo-notifications don't blow up. */
+async function resyncReminders(): Promise<void> {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const mod = require('@/utils/notifications') as typeof import('@/utils/notifications');
+    const rows = getDB().select().from(recurring).all();
+    await mod.rescheduleAllReminders(
+      rows.map((r) => ({
+        id: r.id,
+        name: r.name,
+        amount: r.amount,
+        dayOfMonth: r.dayOfMonth,
+        type: r.type,
+      })),
+    );
+  } catch {
+    /* swallow — notifications optional */
+  }
+}
+
+/** Public hook for the boot path and the Notifications settings row. */
+export function syncBillReminders(): Promise<void> {
+  return resyncReminders();
 }
 
 export function markRecurringPaid(rec: Recurring, date: Date = new Date()): void {

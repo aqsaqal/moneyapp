@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — deni halitaonekana tena.",
   "goal.targetAmount": "KIASI CHA LENGO",
   "notifications.title": "Arifa",
-  "notifications.hint": "Vikumbusho vya bili, arifa za bajeti (inakuja)"
+  "notifications.hint": "Imezimwa — washa kwa vikumbusho",
+  "notifications.hint.enabled": "Imewashwa — bili {count}, siku {lead} kabla",
+  "notifications.leadDays": "Muda wa kukumbushwa",
+  "notifications.leadDays.value": "siku {n} kabla",
+  "notifications.leadDays.sameDay": "Siku hiyo hiyo"
 }

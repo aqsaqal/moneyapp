@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — la dette n'apparaîtra plus dans votre suivi.",
   "goal.targetAmount": "MONTANT CIBLE",
   "notifications.title": "Notifications",
-  "notifications.hint": "Rappels de factures, alertes de budget (bientôt)"
+  "notifications.hint": "Désactivé — activez pour des rappels de factures",
+  "notifications.hint.enabled": "Activé — {count} facture(s), {lead} jour(s) avant",
+  "notifications.leadDays": "Délai",
+  "notifications.leadDays.value": "{n} jour(s) avant",
+  "notifications.leadDays.sameDay": "Le jour même"
 }

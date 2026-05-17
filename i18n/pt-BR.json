@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — a dívida não vai mais aparecer no rastreador.",
   "goal.targetAmount": "VALOR META",
   "notifications.title": "Notificações",
-  "notifications.hint": "Lembretes de contas, alertas de orçamento (em breve)"
+  "notifications.hint": "Desligado — ative para lembretes de contas",
+  "notifications.hint.enabled": "Ligado — {count} conta(s), {lead} dia(s) antes",
+  "notifications.leadDays": "Antecedência",
+  "notifications.leadDays.value": "{n} dia(s) antes",
+  "notifications.leadDays.sameDay": "No mesmo dia"
 }

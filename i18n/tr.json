@@ -344,5 +344,9 @@
   "debt.deleteBody": "\"{name}\" — borç artık izleyicide görünmeyecek.",
   "goal.targetAmount": "HEDEF TUTAR",
   "notifications.title": "Bildirimler",
-  "notifications.hint": "Fatura hatırlatıcı, bütçe uyarısı (yakında)"
+  "notifications.hint": "Kapalı — fatura hatırlatıcısı için aç",
+  "notifications.hint.enabled": "Açık — {count} fatura, {lead} gün önce",
+  "notifications.leadDays": "Hatırlatma süresi",
+  "notifications.leadDays.value": "{n} gün önce",
+  "notifications.leadDays.sameDay": "Aynı gün"
 }

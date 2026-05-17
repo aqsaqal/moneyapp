@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — hindi na lalabas ang utang.",
   "goal.targetAmount": "TARGET HALAGA",
   "notifications.title": "Mga Abiso",
-  "notifications.hint": "Mga paalala sa bill, alerto sa badyet (paparating)"
+  "notifications.hint": "Off — i-on para sa mga paalala ng bill",
+  "notifications.hint.enabled": "On — {count} bill, {lead} araw bago",
+  "notifications.leadDays": "Paalala bago",
+  "notifications.leadDays.value": "{n} araw bago",
+  "notifications.leadDays.sameDay": "Sa mismong araw"
 }

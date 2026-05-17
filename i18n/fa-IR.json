@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — بدهی دیگر در پیگیر نمایش داده نمی‌شود.",
   "goal.targetAmount": "مبلغ هدف",
   "notifications.title": "اعلان‌ها",
-  "notifications.hint": "یادآور قبض، هشدار بودجه (به‌زودی)"
+  "notifications.hint": "خاموش — برای یادآور قبض روشن کنید",
+  "notifications.hint.enabled": "روشن — {count} قبض، {lead} روز قبل",
+  "notifications.leadDays": "زمان یادآور",
+  "notifications.leadDays.value": "{n} روز قبل",
+  "notifications.leadDays.sameDay": "همان روز"
 }

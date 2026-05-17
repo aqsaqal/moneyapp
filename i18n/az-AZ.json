@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — borc daha izləyicidə görünməyəcək.",
   "goal.targetAmount": "HƏDƏF MƏBLƏĞ",
   "notifications.title": "Bildirişlər",
-  "notifications.hint": "Hesab xatırlatmaları, büdcə xəbərdarlıqları (tezliklə)"
+  "notifications.hint": "Söndürülüb — hesab xatırlatmaları üçün aç",
+  "notifications.hint.enabled": "Açıq — {count} hesab, {lead} gün əvvəl",
+  "notifications.leadDays": "Xatırlatma vaxtı",
+  "notifications.leadDays.value": "{n} gün əvvəl",
+  "notifications.leadDays.sameDay": "Eyni gün"
 }

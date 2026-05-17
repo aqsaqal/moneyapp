@@ -345,5 +345,9 @@
   "debt.deleteBody": "\"{name}\" — החוב יפסיק להופיע במעקב.",
   "goal.targetAmount": "סכום יעד",
   "notifications.title": "התראות",
-  "notifications.hint": "תזכורות חשבוניות, התראות תקציב (בקרוב)"
+  "notifications.hint": "כבוי — הפעל לקבלת תזכורות חשבוניות",
+  "notifications.hint.enabled": "פעיל — {count} חשבוניות, {lead} ימים לפני",
+  "notifications.leadDays": "זמן תזכורת",
+  "notifications.leadDays.value": "{n} ימים לפני",
+  "notifications.leadDays.sameDay": "באותו יום"
 }
