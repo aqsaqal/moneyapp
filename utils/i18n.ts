@@ -24,8 +24,22 @@ import id from '@/i18n/id.json';
 import ms from '@/i18n/ms.json';
 import ru from '@/i18n/ru.json';
 import kk from '@/i18n/kk.json';
+import es from '@/i18n/es-ES.json';
 
-export type LocaleCode = 'en-US' | 'ar-SA' | 'tr-TR' | 'id-ID' | 'ms-MY' | 'ru-RU' | 'kk-KZ';
+// LocaleCode is a wide string union — every entry in LOCALES inside the
+// settings screen must use a code listed here. Most are not yet mapped
+// into DICTS (no translation file yet); selecting them today renders
+// the English fallback per the t() function below. Translation files
+// land incrementally per follow-up commit.
+export type LocaleCode =
+  | 'en-US' | 'ar-SA' | 'tr-TR' | 'id-ID' | 'ms-MY' | 'ru-RU' | 'kk-KZ'
+  | 'es-ES' | 'fr-FR' | 'de-DE' | 'pt-BR' | 'it-IT' | 'nl-NL'
+  | 'ja-JP' | 'ko-KR' | 'zh-CN' | 'zh-TW' | 'hi-IN' | 'bn-BD' | 'ur-PK'
+  | 'vi-VN' | 'th-TH' | 'fa-IR' | 'he-IL' | 'pl-PL' | 'uk-UA' | 'cs-CZ'
+  | 'hu-HU' | 'ro-RO' | 'el-GR' | 'sv-SE' | 'da-DK' | 'nb-NO' | 'fi-FI'
+  | 'bg-BG' | 'hr-HR' | 'sr-RS' | 'sk-SK' | 'sl-SI' | 'lt-LT' | 'lv-LV'
+  | 'et-EE' | 'sq-AL' | 'az-AZ' | 'uz-UZ' | 'fil-PH' | 'sw-KE' | 'ta-IN'
+  | 'te-IN' | 'mr-IN';
 export type Dictionary = Record<string, string>;
 
 // Stable English source. All other locales fall back to this on missing keys.
@@ -39,6 +53,7 @@ const DICTS: Partial<Record<LocaleCode, Dictionary>> = {
   'ms-MY': ms as Dictionary,
   'ru-RU': ru as Dictionary,
   'kk-KZ': kk as Dictionary,
+  'es-ES': es as Dictionary,
 };
 
 let currentLocale: LocaleCode = (kv.get('locale') as LocaleCode) ?? 'en-US';

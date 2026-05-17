@@ -22,6 +22,7 @@ import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import { convert } from '@/utils/fx';
 import { kv } from '@/utils/kv';
+import { t as i18nT } from '@/utils/i18n';
 import type { Account } from '@/utils/db/schema';
 
 export interface AccountPickerProps {

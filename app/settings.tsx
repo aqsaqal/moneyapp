@@ -58,14 +58,61 @@ import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
 import { ProfileSheet } from '@/components/ProfileSheet';
 import type { Profile } from '@/utils/profiles';
 
+// Top-50 locales by global usage. Entries marked TRANSLATED have a
+// dedicated translation file under i18n/<code>.json; the rest fall back
+// to English at runtime via the t() function's missing-key path until a
+// translation file lands (incremental commits roll these in).
 const LOCALES = [
   { code: 'en-US', name: 'English', rtl: false },
-  { code: 'ar-SA', name: 'العربية', rtl: true },
-  { code: 'tr-TR', name: 'Türkçe', rtl: false },
-  { code: 'id-ID', name: 'Bahasa Indonesia', rtl: false },
-  { code: 'ms-MY', name: 'Bahasa Melayu', rtl: false },
-  { code: 'ru-RU', name: 'Русский', rtl: false },
-  { code: 'kk-KZ', name: 'Қазақша', rtl: false },
+  { code: 'zh-CN', name: '中文 (简体)', rtl: false },
+  { code: 'hi-IN', name: 'हिन्दी', rtl: false },
+  { code: 'es-ES', name: 'Español', rtl: false },          // TRANSLATED
+  { code: 'fr-FR', name: 'Français', rtl: false },
+  { code: 'ar-SA', name: 'العربية', rtl: true },           // TRANSLATED
+  { code: 'bn-BD', name: 'বাংলা', rtl: false },
+  { code: 'ru-RU', name: 'Русский', rtl: false },           // TRANSLATED
+  { code: 'pt-BR', name: 'Português (BR)', rtl: false },
+  { code: 'id-ID', name: 'Bahasa Indonesia', rtl: false },  // TRANSLATED
+  { code: 'ur-PK', name: 'اردو', rtl: true },
+  { code: 'de-DE', name: 'Deutsch', rtl: false },
+  { code: 'ja-JP', name: '日本語', rtl: false },
+  { code: 'ko-KR', name: '한국어', rtl: false },
+  { code: 'mr-IN', name: 'मराठी', rtl: false },
+  { code: 'te-IN', name: 'తెలుగు', rtl: false },
+  { code: 'vi-VN', name: 'Tiếng Việt', rtl: false },
+  { code: 'it-IT', name: 'Italiano', rtl: false },
+  { code: 'tr-TR', name: 'Türkçe', rtl: false },           // TRANSLATED
+  { code: 'ta-IN', name: 'தமிழ்', rtl: false },
+  { code: 'th-TH', name: 'ไทย', rtl: false },
+  { code: 'fa-IR', name: 'فارسی', rtl: true },
+  { code: 'pl-PL', name: 'Polski', rtl: false },
+  { code: 'uk-UA', name: 'Українська', rtl: false },
+  { code: 'nl-NL', name: 'Nederlands', rtl: false },
+  { code: 'ro-RO', name: 'Română', rtl: false },
+  { code: 'hu-HU', name: 'Magyar', rtl: false },
+  { code: 'cs-CZ', name: 'Čeština', rtl: false },
+  { code: 'sv-SE', name: 'Svenska', rtl: false },
+  { code: 'da-DK', name: 'Dansk', rtl: false },
+  { code: 'fi-FI', name: 'Suomi', rtl: false },
+  { code: 'nb-NO', name: 'Norsk', rtl: false },
+  { code: 'he-IL', name: 'עברית', rtl: true },
+  { code: 'el-GR', name: 'Ελληνικά', rtl: false },
+  { code: 'bg-BG', name: 'Български', rtl: false },
+  { code: 'hr-HR', name: 'Hrvatski', rtl: false },
+  { code: 'sr-RS', name: 'Српски', rtl: false },
+  { code: 'sk-SK', name: 'Slovenčina', rtl: false },
+  { code: 'sl-SI', name: 'Slovenščina', rtl: false },
+  { code: 'lt-LT', name: 'Lietuvių', rtl: false },
+  { code: 'lv-LV', name: 'Latviešu', rtl: false },
+  { code: 'et-EE', name: 'Eesti', rtl: false },
+  { code: 'fil-PH', name: 'Filipino', rtl: false },
+  { code: 'ms-MY', name: 'Bahasa Melayu', rtl: false },     // TRANSLATED
+  { code: 'sw-KE', name: 'Kiswahili', rtl: false },
+  { code: 'kk-KZ', name: 'Қазақша', rtl: false },           // TRANSLATED
+  { code: 'uz-UZ', name: 'Oʻzbekcha', rtl: false },
+  { code: 'az-AZ', name: 'Azərbaycanca', rtl: false },
+  { code: 'sq-AL', name: 'Shqip', rtl: false },
+  { code: 'zh-TW', name: '中文 (繁體)', rtl: false },
 ];
 
 export default function SettingsScreen() {
