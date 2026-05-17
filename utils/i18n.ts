@@ -42,6 +42,7 @@ import uk from '@/i18n/uk-UA.json';
 import cs from '@/i18n/cs-CZ.json';
 import hu from '@/i18n/hu-HU.json';
 import ro from '@/i18n/ro-RO.json';
+import el from '@/i18n/el-GR.json';
 
 // LocaleCode is a wide string union — every entry in LOCALES inside the
 // settings screen must use a code listed here. Most are not yet mapped
@@ -88,6 +89,7 @@ const DICTS: Partial<Record<LocaleCode, Dictionary>> = {
   'cs-CZ': cs as Dictionary,
   'hu-HU': hu as Dictionary,
   'ro-RO': ro as Dictionary,
+  'el-GR': el as Dictionary,
 };
 
 let currentLocale: LocaleCode = (kv.get('locale') as LocaleCode) ?? 'en-US';
