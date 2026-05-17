@@ -342,5 +342,8 @@
   "debt.none": "Yox — əl ilə izlə",
   "debt.currency": "Valyuta",
   "debt.required": "Ad + balans + İFD + min",
-  "debt.deleteBody": "\"{name}\" — borc daha izləyicidə görünməyəcək."
+  "debt.deleteBody": "\"{name}\" — borc daha izləyicidə görünməyəcək.",
+  "goal.targetAmount": "HƏDƏF MƏBLƏĞ",
+  "notifications.title": "Bildirişlər",
+  "notifications.hint": "Hesab xatırlatmaları, büdcə xəbərdarlıqları (tezliklə)"
 }

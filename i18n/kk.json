@@ -341,5 +341,8 @@
   "debt.none": "Жоқ — қолмен қадағалау",
   "debt.currency": "Валюта",
   "debt.required": "Аты + баланс + ЖСМ + мин төлем",
-  "debt.deleteBody": "\"{name}\" — қарыз енді трекерде көрсетілмейді."
+  "debt.deleteBody": "\"{name}\" — қарыз енді трекерде көрсетілмейді.",
+  "goal.targetAmount": "МАҚСАТТЫ СОМА",
+  "notifications.title": "Хабарландырулар",
+  "notifications.hint": "Шот еске салулары, бюджет хабарламалары (жақында)"
 }

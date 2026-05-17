@@ -342,5 +342,8 @@
   "debt.none": "אין — מעקב ידני",
   "debt.currency": "מטבע",
   "debt.required": "שם + יתרה + ריבית + מינ'",
-  "debt.deleteBody": "\"{name}\" — החוב יפסיק להופיע במעקב."
+  "debt.deleteBody": "\"{name}\" — החוב יפסיק להופיע במעקב.",
+  "goal.targetAmount": "סכום יעד",
+  "notifications.title": "התראות",
+  "notifications.hint": "תזכורות חשבוניות, התראות תקציב (בקרוב)"
 }

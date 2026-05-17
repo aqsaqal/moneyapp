@@ -342,5 +342,8 @@
   "debt.none": "কেউ নয় — ম্যানুয়ালি ট্র্যাক",
   "debt.currency": "মুদ্রা",
   "debt.required": "নাম + ব্যালেন্স + APR + ন্যূনতম",
-  "debt.deleteBody": "\"{name}\" — ঋণ ট্র্যাকারে দেখা যাবে না।"
+  "debt.deleteBody": "\"{name}\" — ঋণ ট্র্যাকারে দেখা যাবে না।",
+  "goal.targetAmount": "লক্ষ্য পরিমাণ",
+  "notifications.title": "বিজ্ঞপ্তি",
+  "notifications.hint": "বিল রিমাইন্ডার, বাজেট সতর্কতা (শীঘ্রই)"
 }

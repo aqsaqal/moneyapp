@@ -342,5 +342,8 @@
   "debt.none": "Hakuna — fuatilia kwa mkono",
   "debt.currency": "Sarafu",
   "debt.required": "Jina + salio + APR + min",
-  "debt.deleteBody": "\"{name}\" — deni halitaonekana tena."
+  "debt.deleteBody": "\"{name}\" — deni halitaonekana tena.",
+  "goal.targetAmount": "KIASI CHA LENGO",
+  "notifications.title": "Arifa",
+  "notifications.hint": "Vikumbusho vya bili, arifa za bajeti (inakuja)"
 }

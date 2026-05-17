@@ -342,5 +342,8 @@
   "debt.none": "कोई नहीं — मैनुअल ट्रैक",
   "debt.currency": "मुद्रा",
   "debt.required": "नाम + शेष + APR + न्यूनतम भुगतान",
-  "debt.deleteBody": "\"{name}\" — कर्ज अब ट्रैकर में दिखाई नहीं देगा।"
+  "debt.deleteBody": "\"{name}\" — कर्ज अब ट्रैकर में दिखाई नहीं देगा।",
+  "goal.targetAmount": "लक्ष्य राशि",
+  "notifications.title": "सूचनाएँ",
+  "notifications.hint": "बिल अनुस्मारक, बजट अलर्ट (जल्द आ रहा)"
 }

@@ -342,5 +342,8 @@
   "debt.none": "Няма — ръчно проследяване",
   "debt.currency": "Валута",
   "debt.required": "Име + салдо + ГПР + мин",
-  "debt.deleteBody": "\"{name}\" — задължението спира да се показва."
+  "debt.deleteBody": "\"{name}\" — задължението спира да се показва.",
+  "goal.targetAmount": "ЦЕЛЕВА СУМА",
+  "notifications.title": "Известия",
+  "notifications.hint": "Напомняния за сметки, известия за бюджет (скоро)"
 }

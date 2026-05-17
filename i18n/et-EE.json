@@ -342,5 +342,8 @@
   "debt.none": "Pole — jälgi käsitsi",
   "debt.currency": "Valuuta",
   "debt.required": "Nimi + saldo + KKM + min",
-  "debt.deleteBody": "\"{name}\" — võlg ei kuva enam jälgijas."
+  "debt.deleteBody": "\"{name}\" — võlg ei kuva enam jälgijas.",
+  "goal.targetAmount": "SIHTSUMMA",
+  "notifications.title": "Teavitused",
+  "notifications.hint": "Arvete meeldetuletused, eelarve hoiatused (peagi)"
 }

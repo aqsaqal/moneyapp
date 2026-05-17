@@ -342,5 +342,8 @@
   "debt.none": "کوئی نہیں — دستی ٹریک",
   "debt.currency": "کرنسی",
   "debt.required": "نام + بیلنس + APR + کم از کم",
-  "debt.deleteBody": "\"{name}\" — قرض ٹریکر میں نہیں دکھائی دے گا۔"
+  "debt.deleteBody": "\"{name}\" — قرض ٹریکر میں نہیں دکھائی دے گا۔",
+  "goal.targetAmount": "ہدف رقم",
+  "notifications.title": "اطلاعات",
+  "notifications.hint": "بل یاد دہانیاں، بجٹ انتباہات (جلد آرہا)"
 }

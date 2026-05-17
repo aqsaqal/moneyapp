@@ -342,5 +342,8 @@
   "debt.none": "Nenhuma — rastrear manual",
   "debt.currency": "Moeda",
   "debt.required": "Nome + saldo + CET + pag mín",
-  "debt.deleteBody": "\"{name}\" — a dívida não vai mais aparecer no rastreador."
+  "debt.deleteBody": "\"{name}\" — a dívida não vai mais aparecer no rastreador.",
+  "goal.targetAmount": "VALOR META",
+  "notifications.title": "Notificações",
+  "notifications.hint": "Lembretes de contas, alertas de orçamento (em breve)"
 }

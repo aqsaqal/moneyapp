@@ -342,5 +342,8 @@
   "debt.none": "هیچ — پیگیری دستی",
   "debt.currency": "ارز",
   "debt.required": "نام + موجودی + نرخ سالانه + حداقل پرداخت",
-  "debt.deleteBody": "\"{name}\" — بدهی دیگر در پیگیر نمایش داده نمی‌شود."
+  "debt.deleteBody": "\"{name}\" — بدهی دیگر در پیگیر نمایش داده نمی‌شود.",
+  "goal.targetAmount": "مبلغ هدف",
+  "notifications.title": "اعلان‌ها",
+  "notifications.hint": "یادآور قبض، هشدار بودجه (به‌زودی)"
 }

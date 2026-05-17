@@ -161,7 +161,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
 
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>NAME</Text>
+            <Text style={styles.fieldLabel}>{t('profile.field.name')}</Text>
             <TextInput
               value={name}
               onChangeText={setName}
@@ -172,7 +172,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
           </View>
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>TARGET AMOUNT</Text>
+            <Text style={styles.fieldLabel}>{t('goal.targetAmount')}</Text>
             <TextInput
               value={target}
               onChangeText={setTarget}
@@ -192,7 +192,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
           />
 
           <SettingRow
-            label="Currency"
+            label={t('recurring.currency')}
             hint={currency}
             icon="currency-usd"
             iconColor={theme.accent}
@@ -213,7 +213,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
           </View>
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>COLOR</Text>
+            <Text style={styles.fieldLabel}>{t('profile.field.color')}</Text>
             <View style={styles.swatchRow}>
               {PALETTE.map((c) => (
                 <Pressable
@@ -227,7 +227,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
           </View>
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>ICON</Text>
+            <Text style={styles.fieldLabel}>{t('profile.field.icon')}</Text>
             <View style={styles.iconRow}>
               {ICONS.map((i) => (
                 <Pressable

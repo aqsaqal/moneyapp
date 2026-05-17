@@ -466,11 +466,10 @@ function NotificationsRow() {
   // Toggle does nothing yet but the row reserves its place in the
   // App settings flow so muscle memory doesn't shift later.
   const t = useT();
-  void t;
   return (
     <SettingRow
-      label="Notifications"
-      hint="Bill reminders, budget alerts (coming soon)"
+      label={t('notifications.title')}
+      hint={t('notifications.hint')}
       icon="bell-outline"
       iconColor={theme.text2}
     />
@@ -622,6 +621,8 @@ function SecuritySection() {
             ? t('me.biometric.hintSupported')
             : t('me.biometric.hintUnsupported')
         }
+        icon="fingerprint"
+        iconColor={theme.accent}
         trailing={
           <Pressable
             onPress={() => {

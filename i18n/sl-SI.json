@@ -342,5 +342,8 @@
   "debt.none": "Brez — sledi ročno",
   "debt.currency": "Valuta",
   "debt.required": "Ime + stanje + EOM + min",
-  "debt.deleteBody": "\"{name}\" — dolg se ne bo več prikazoval."
+  "debt.deleteBody": "\"{name}\" — dolg se ne bo več prikazoval.",
+  "goal.targetAmount": "CILJNI ZNESEK",
+  "notifications.title": "Obvestila",
+  "notifications.hint": "Opomniki za račune, opozorila proračuna (kmalu)"
 }

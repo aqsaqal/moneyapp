@@ -342,5 +342,8 @@
   "debt.none": "काहीच नाही — मॅन्युअली ट्रॅक",
   "debt.currency": "चलन",
   "debt.required": "नाव + शिल्लक + APR + मि",
-  "debt.deleteBody": "\"{name}\" — कर्ज ट्रॅकरमध्ये दिसणार नाही."
+  "debt.deleteBody": "\"{name}\" — कर्ज ट्रॅकरमध्ये दिसणार नाही.",
+  "goal.targetAmount": "लक्ष्य रक्कम",
+  "notifications.title": "सूचना",
+  "notifications.hint": "बिल स्मरणपत्रे, बजेट अलर्ट (लवकरच)"
 }

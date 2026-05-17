@@ -342,5 +342,8 @@
   "debt.none": "無 — 手動追蹤",
   "debt.currency": "貨幣",
   "debt.required": "名稱 + 餘額 + 年化利率 + 最低",
-  "debt.deleteBody": "\"{name}\" — 該債務不再出現在追蹤器中。"
+  "debt.deleteBody": "\"{name}\" — 該債務不再出現在追蹤器中。",
+  "goal.targetAmount": "目標金額",
+  "notifications.title": "通知",
+  "notifications.hint": "帳單提醒、預算提醒（即將推出）"
 }

@@ -342,5 +342,8 @@
   "debt.none": "Nessuno — traccia manuale",
   "debt.currency": "Valuta",
   "debt.required": "Nome + saldo + TAEG + pagamento min",
-  "debt.deleteBody": "\"{name}\" — il debito non apparirà più nel tracker."
+  "debt.deleteBody": "\"{name}\" — il debito non apparirà più nel tracker.",
+  "goal.targetAmount": "IMPORTO OBIETTIVO",
+  "notifications.title": "Notifiche",
+  "notifications.hint": "Promemoria bollette, avvisi budget (in arrivo)"
 }

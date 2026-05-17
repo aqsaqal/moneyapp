@@ -342,5 +342,8 @@
   "debt.none": "ఏదీ లేదు — మాన్యువల్‌గా ట్రాక్ చేయండి",
   "debt.currency": "కరెన్సీ",
   "debt.required": "పేరు + బ్యాలెన్స్ + APR + మిన్",
-  "debt.deleteBody": "\"{name}\" — రుణం ట్రాకర్‌లో కనిపించదు."
+  "debt.deleteBody": "\"{name}\" — రుణం ట్రాకర్‌లో కనిపించదు.",
+  "goal.targetAmount": "లక్ష్య మొత్తం",
+  "notifications.title": "నోటిఫికేషన్లు",
+  "notifications.hint": "బిల్లు రిమైండర్లు, బడ్జెట్ హెచ్చరికలు (త్వరలో)"
 }

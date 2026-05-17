@@ -119,8 +119,8 @@ export default function Activity() {
             <FilterChip
               label={
                 filterCat && !top5Categories.some((c) => c.id === filterCat)
-                  ? `More · ${catInfo(filterCat).name}`
-                  : 'More…'
+                  ? `${t('smartAdd.more')} · ${catInfo(filterCat).name}`
+                  : t('smartAdd.more')
               }
               active={Boolean(filterCat && !top5Categories.some((c) => c.id === filterCat))}
               onPress={() => setFilterMoreOpen(true)}

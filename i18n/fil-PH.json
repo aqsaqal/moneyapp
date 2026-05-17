@@ -342,5 +342,8 @@
   "debt.none": "Wala — manual",
   "debt.currency": "Currency",
   "debt.required": "Pangalan + balanse + APR + min",
-  "debt.deleteBody": "\"{name}\" — hindi na lalabas ang utang."
+  "debt.deleteBody": "\"{name}\" — hindi na lalabas ang utang.",
+  "goal.targetAmount": "TARGET HALAGA",
+  "notifications.title": "Mga Abiso",
+  "notifications.hint": "Mga paalala sa bill, alerto sa badyet (paparating)"
 }

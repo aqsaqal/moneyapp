@@ -342,5 +342,8 @@
   "debt.none": "Nėra — sekti rankiniu būdu",
   "debt.currency": "Valiuta",
   "debt.required": "Pavadinimas + likutis + BVKKMN + min",
-  "debt.deleteBody": "\"{name}\" — skola nebebus rodoma stebėtojuje."
+  "debt.deleteBody": "\"{name}\" — skola nebebus rodoma stebėtojuje.",
+  "goal.targetAmount": "TIKSLO SUMA",
+  "notifications.title": "Pranešimai",
+  "notifications.hint": "Sąskaitų priminimai, biudžeto įspėjimai (greitai)"
 }

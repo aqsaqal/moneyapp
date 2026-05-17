@@ -342,5 +342,8 @@
   "debt.none": "Yoʻq — qoʻlda kuzatish",
   "debt.currency": "Valyuta",
   "debt.required": "Nomi + balans + YFS + min",
-  "debt.deleteBody": "\"{name}\" — qarz endi kuzatuvchida koʻrinmaydi."
+  "debt.deleteBody": "\"{name}\" — qarz endi kuzatuvchida koʻrinmaydi.",
+  "goal.targetAmount": "MAQSADLI SUMMA",
+  "notifications.title": "Bildirishnomalar",
+  "notifications.hint": "Hisob eslatmalari, byudjet ogohlantirishlari (tez orada)"
 }

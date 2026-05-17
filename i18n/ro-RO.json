@@ -342,5 +342,8 @@
   "debt.none": "Niciunul — urmărire manuală",
   "debt.currency": "Monedă",
   "debt.required": "Nume + sold + DAE + plată min",
-  "debt.deleteBody": "\"{name}\" — datoria nu va mai apărea în urmăritor."
+  "debt.deleteBody": "\"{name}\" — datoria nu va mai apărea în urmăritor.",
+  "goal.targetAmount": "SUMĂ ȚINTĂ",
+  "notifications.title": "Notificări",
+  "notifications.hint": "Memento facturi, alerte buget (în curând)"
 }

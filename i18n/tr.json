@@ -341,5 +341,8 @@
   "debt.none": "Yok — manuel takip",
   "debt.currency": "Para birimi",
   "debt.required": "Ad + bakiye + YYO + min ödeme",
-  "debt.deleteBody": "\"{name}\" — borç artık izleyicide görünmeyecek."
+  "debt.deleteBody": "\"{name}\" — borç artık izleyicide görünmeyecek.",
+  "goal.targetAmount": "HEDEF TUTAR",
+  "notifications.title": "Bildirimler",
+  "notifications.hint": "Fatura hatırlatıcı, bütçe uyarısı (yakında)"
 }

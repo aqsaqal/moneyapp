@@ -342,5 +342,8 @@
   "debt.none": "Ei mitään — seuraa manuaalisesti",
   "debt.currency": "Valuutta",
   "debt.required": "Nimi + saldo + TOK + väh maksu",
-  "debt.deleteBody": "\"{name}\" — velka ei enää näy seurannassa."
+  "debt.deleteBody": "\"{name}\" — velka ei enää näy seurannassa.",
+  "goal.targetAmount": "TAVOITESUMMA",
+  "notifications.title": "Ilmoitukset",
+  "notifications.hint": "Laskumuistutukset, budjettihälytykset (tulossa)"
 }

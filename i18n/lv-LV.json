@@ -342,5 +342,8 @@
   "debt.none": "Nav — sekot manuāli",
   "debt.currency": "Valūta",
   "debt.required": "Nosaukums + atlikums + GPL + min",
-  "debt.deleteBody": "\"{name}\" — parāds vairs nebūs redzams sekotājā."
+  "debt.deleteBody": "\"{name}\" — parāds vairs nebūs redzams sekotājā.",
+  "goal.targetAmount": "MĒRĶA SUMMA",
+  "notifications.title": "Paziņojumi",
+  "notifications.hint": "Rēķinu atgādinājumi, budžeta brīdinājumi (drīzumā)"
 }

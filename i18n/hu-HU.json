@@ -342,5 +342,8 @@
   "debt.none": "Nincs — kézi követés",
   "debt.currency": "Pénznem",
   "debt.required": "Név + egyenleg + THM + min fizetés",
-  "debt.deleteBody": "\"{name}\" — az adósság már nem jelenik meg a követőben."
+  "debt.deleteBody": "\"{name}\" — az adósság már nem jelenik meg a követőben.",
+  "goal.targetAmount": "CÉLÖSSZEG",
+  "notifications.title": "Értesítések",
+  "notifications.hint": "Számlaértesítők, költségvetési riasztások (hamarosan)"
 }

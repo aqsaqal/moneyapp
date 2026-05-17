@@ -342,5 +342,8 @@
   "debt.none": "Žiadny — sledovať ručne",
   "debt.currency": "Mena",
   "debt.required": "Názov + zostatok + RPMN + min",
-  "debt.deleteBody": "\"{name}\" — dlh sa už nebude zobrazovať."
+  "debt.deleteBody": "\"{name}\" — dlh sa už nebude zobrazovať.",
+  "goal.targetAmount": "CIEĽOVÁ SUMA",
+  "notifications.title": "Oznámenia",
+  "notifications.hint": "Pripomenutia účtov, upozornenia rozpočtu (čoskoro)"
 }

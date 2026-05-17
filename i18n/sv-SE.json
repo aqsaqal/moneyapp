@@ -342,5 +342,8 @@
   "debt.none": "Inget — manuell spårning",
   "debt.currency": "Valuta",
   "debt.required": "Namn + saldo + ÅR + min betalning",
-  "debt.deleteBody": "\"{name}\" — skulden visas inte längre i spåraren."
+  "debt.deleteBody": "\"{name}\" — skulden visas inte längre i spåraren.",
+  "goal.targetAmount": "MÅLBELOPP",
+  "notifications.title": "Aviseringar",
+  "notifications.hint": "Räkningspåminnelser, budgetvarningar (kommer snart)"
 }

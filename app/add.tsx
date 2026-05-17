@@ -848,7 +848,7 @@ export default function AddScreen() {
         transactionType={mode === 'income' ? 'income' : 'expense'}
         showBudgetProgress
         showAddNew
-        headerText="Pick category"
+        headerText={t('picker.pickCategory')}
         onSelect={(id) => {
           setCatOverride(id);
           setGridOpen(false);
@@ -946,6 +946,7 @@ function TransferAcctRow({
    *  that would go negative if this debit landed on them. */
   debit?: { amount: number; currency: CurrencyCode };
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const acct = accounts.find((a) => a.id === value);
   void autoLabel;
@@ -960,10 +961,10 @@ function TransferAcctRow({
           auto && styles.transferRowChipAuto,
         ]}
         accessibilityRole="button"
-        accessibilityLabel={`${label}: ${acct?.name ?? 'pick account'}${auto ? ', auto-filled' : ''}`}
+        accessibilityLabel={`${label}: ${acct?.name ?? t('picker.pickAccount')}${auto ? ', auto-filled' : ''}`}
       >
         <View style={[styles.transferDot, { backgroundColor: acct?.color ?? theme.text3 }]} />
-        <Text style={styles.transferRowText}>{acct?.name ?? 'Pick account'}</Text>
+        <Text style={styles.transferRowText}>{acct?.name ?? t('picker.pickAccount')}</Text>
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
       <AccountPicker
@@ -971,7 +972,7 @@ function TransferAcctRow({
         accounts={accounts}
         value={value}
         debit={debit}
-        headerText={`${label} account`}
+        headerText={t('picker.pickAccount')}
         onSelect={onPick}
         onClose={() => setOpen(false)}
       />
@@ -998,6 +999,7 @@ function CategoryPickerRow({
   autoLabel?: string;
   transactionType: 'expense' | 'income';
 }) {
+  const t = useT();
   const [open, setOpen] = useState(false);
   const cat = value ? cats.find((c) => c.id === value) : undefined;
   void autoLabel;
@@ -1012,10 +1014,10 @@ function CategoryPickerRow({
           auto && styles.transferRowChipAuto,
         ]}
         accessibilityRole="button"
-        accessibilityLabel={`${label}: ${cat?.name ?? 'pick category'}${auto ? ', auto-filled' : ''}`}
+        accessibilityLabel={`${label}: ${cat?.name ?? t('picker.pickCategory')}${auto ? ', auto-filled' : ''}`}
       >
         <View style={[styles.transferDot, { backgroundColor: cat?.color ?? theme.text3 }]} />
-        <Text style={styles.transferRowText}>{cat?.name ?? 'Pick category'}</Text>
+        <Text style={styles.transferRowText}>{cat?.name ?? t('picker.pickCategory')}</Text>
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
       <CategoryPicker

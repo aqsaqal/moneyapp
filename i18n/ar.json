@@ -341,5 +341,8 @@
   "debt.none": "لا شيء — تتبع يدوي",
   "debt.currency": "العملة",
   "debt.required": "الاسم + الرصيد + معدل الفائدة + الحد الأدنى",
-  "debt.deleteBody": "\"{name}\" — لن يظهر الدين في متتبعك بعد الآن."
+  "debt.deleteBody": "\"{name}\" — لن يظهر الدين في متتبعك بعد الآن.",
+  "goal.targetAmount": "المبلغ المستهدف",
+  "notifications.title": "الإشعارات",
+  "notifications.hint": "تذكير الفواتير وتنبيهات الميزانية (قريبًا)"
 }

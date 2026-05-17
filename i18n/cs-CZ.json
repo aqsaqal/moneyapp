@@ -342,5 +342,8 @@
   "debt.none": "Žádný — sledovat ručně",
   "debt.currency": "Měna",
   "debt.required": "Název + zůstatek + RPSN + min platba",
-  "debt.deleteBody": "\"{name}\" — dluh se v trackeru přestane zobrazovat."
+  "debt.deleteBody": "\"{name}\" — dluh se v trackeru přestane zobrazovat.",
+  "goal.targetAmount": "CÍLOVÁ ČÁSTKA",
+  "notifications.title": "Oznámení",
+  "notifications.hint": "Připomenutí účtů, upozornění rozpočtu (brzy)"
 }

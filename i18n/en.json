@@ -341,5 +341,8 @@
   "debt.none": "None — track manually",
   "debt.currency": "Currency",
   "debt.required": "Name + balance + APR + min payment",
-  "debt.deleteBody": "\"{name}\" — the debt will stop appearing in your tracker."
+  "debt.deleteBody": "\"{name}\" — the debt will stop appearing in your tracker.",
+  "goal.targetAmount": "TARGET AMOUNT",
+  "notifications.title": "Notifications",
+  "notifications.hint": "Bill reminders, budget alerts (coming soon)"
 }

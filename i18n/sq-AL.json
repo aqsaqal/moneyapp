@@ -342,5 +342,8 @@
   "debt.none": "Asnjë — ndiqe manualisht",
   "debt.currency": "Monedha",
   "debt.required": "Emri + gjendja + NEV + min",
-  "debt.deleteBody": "\"{name}\" — borxhi nuk do të shfaqet më në ndjekës."
+  "debt.deleteBody": "\"{name}\" — borxhi nuk do të shfaqet më në ndjekës.",
+  "goal.targetAmount": "SHUMA E SYNUAR",
+  "notifications.title": "Njoftime",
+  "notifications.hint": "Kujtues faturash, alarmet e buxhetit (së shpejti)"
 }

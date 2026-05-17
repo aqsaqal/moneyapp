@@ -342,5 +342,8 @@
   "debt.none": "Không — theo dõi thủ công",
   "debt.currency": "Tiền tệ",
   "debt.required": "Tên + số dư + APR + tối thiểu",
-  "debt.deleteBody": "\"{name}\" — khoản nợ ngưng xuất hiện trong trình theo dõi."
+  "debt.deleteBody": "\"{name}\" — khoản nợ ngưng xuất hiện trong trình theo dõi.",
+  "goal.targetAmount": "SỐ TIỀN MỤC TIÊU",
+  "notifications.title": "Thông báo",
+  "notifications.hint": "Nhắc hoá đơn, cảnh báo ngân sách (sắp ra mắt)"
 }

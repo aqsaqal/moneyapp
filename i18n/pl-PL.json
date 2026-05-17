@@ -342,5 +342,8 @@
   "debt.none": "Brak — śledź ręcznie",
   "debt.currency": "Waluta",
   "debt.required": "Nazwa + saldo + RRSO + min płatność",
-  "debt.deleteBody": "\"{name}\" — dług nie pojawi się już w monitorze."
+  "debt.deleteBody": "\"{name}\" — dług nie pojawi się już w monitorze.",
+  "goal.targetAmount": "KWOTA DOCELOWA",
+  "notifications.title": "Powiadomienia",
+  "notifications.hint": "Przypomnienia o rachunkach, alerty budżetu (wkrótce)"
 }

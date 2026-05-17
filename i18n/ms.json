@@ -341,5 +341,8 @@
   "debt.none": "Tiada — jejak manual",
   "debt.currency": "Mata wang",
   "debt.required": "Nama + baki + APR + min bayaran",
-  "debt.deleteBody": "\"{name}\" — hutang berhenti muncul dalam pejejak."
+  "debt.deleteBody": "\"{name}\" — hutang berhenti muncul dalam pejejak.",
+  "goal.targetAmount": "JUMLAH SASARAN",
+  "notifications.title": "Pemberitahuan",
+  "notifications.hint": "Peringatan bil, makluman bajet (akan datang)"
 }

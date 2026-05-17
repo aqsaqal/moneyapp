@@ -342,5 +342,8 @@
   "debt.none": "Ninguna — seguimiento manual",
   "debt.currency": "Moneda",
   "debt.required": "Nombre + saldo + TAE + pago mín",
-  "debt.deleteBody": "\"{name}\" — la deuda dejará de aparecer en tu seguimiento."
+  "debt.deleteBody": "\"{name}\" — la deuda dejará de aparecer en tu seguimiento.",
+  "goal.targetAmount": "IMPORTE OBJETIVO",
+  "notifications.title": "Notificaciones",
+  "notifications.hint": "Recordatorios de facturas, alertas de presupuesto (próximamente)"
 }

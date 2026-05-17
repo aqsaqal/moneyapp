@@ -342,5 +342,8 @@
   "debt.none": "Keins — manuell verfolgen",
   "debt.currency": "Währung",
   "debt.required": "Name + Saldo + Eff. Jahreszins + Min Zahlung",
-  "debt.deleteBody": "\"{name}\" — die Schuld erscheint nicht mehr im Tracker."
+  "debt.deleteBody": "\"{name}\" — die Schuld erscheint nicht mehr im Tracker.",
+  "goal.targetAmount": "ZIELBETRAG",
+  "notifications.title": "Benachrichtigungen",
+  "notifications.hint": "Rechnungserinnerungen, Budget-Warnungen (bald)"
 }

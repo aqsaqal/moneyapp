@@ -342,5 +342,8 @@
   "debt.none": "Geen — handmatig volgen",
   "debt.currency": "Valuta",
   "debt.required": "Naam + saldo + JKP + min betaling",
-  "debt.deleteBody": "\"{name}\" — de schuld verschijnt niet meer in tracker."
+  "debt.deleteBody": "\"{name}\" — de schuld verschijnt niet meer in tracker.",
+  "goal.targetAmount": "DOELBEDRAG",
+  "notifications.title": "Meldingen",
+  "notifications.hint": "Factuur-herinneringen, budgetwaarschuwingen (binnenkort)"
 }

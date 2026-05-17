@@ -342,5 +342,8 @@
   "debt.none": "없음 — 수동 추적",
   "debt.currency": "통화",
   "debt.required": "이름 + 잔액 + 연이율 + 월 최소 결제",
-  "debt.deleteBody": "\"{name}\" — 부채가 추적기에 더 이상 표시되지 않습니다."
+  "debt.deleteBody": "\"{name}\" — 부채가 추적기에 더 이상 표시되지 않습니다.",
+  "goal.targetAmount": "목표 금액",
+  "notifications.title": "알림",
+  "notifications.hint": "청구 알림, 예산 알림 (곧 제공)"
 }

@@ -342,5 +342,8 @@
   "debt.none": "Aucun — suivi manuel",
   "debt.currency": "Devise",
   "debt.required": "Nom + solde + TAEG + paiement min",
-  "debt.deleteBody": "\"{name}\" — la dette n'apparaîtra plus dans votre suivi."
+  "debt.deleteBody": "\"{name}\" — la dette n'apparaîtra plus dans votre suivi.",
+  "goal.targetAmount": "MONTANT CIBLE",
+  "notifications.title": "Notifications",
+  "notifications.hint": "Rappels de factures, alertes de budget (bientôt)"
 }

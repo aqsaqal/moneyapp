@@ -342,5 +342,8 @@
   "debt.none": "Ingen — spor manuelt",
   "debt.currency": "Valuta",
   "debt.required": "Navn + saldo + ÅOP + min betaling",
-  "debt.deleteBody": "\"{name}\" — gælden vises ikke længere i sporeren."
+  "debt.deleteBody": "\"{name}\" — gælden vises ikke længere i sporeren.",
+  "goal.targetAmount": "MÅLBELØB",
+  "notifications.title": "Notifikationer",
+  "notifications.hint": "Regningspåmindelser, budgetadvarsler (kommer snart)"
 }

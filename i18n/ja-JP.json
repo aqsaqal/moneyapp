@@ -342,5 +342,8 @@
   "debt.none": "なし — 手動で追跡",
   "debt.currency": "通貨",
   "debt.required": "名前 + 残高 + 実質年率 + 月最低支払",
-  "debt.deleteBody": "\"{name}\" — 負債はトラッカーに表示されなくなります。"
+  "debt.deleteBody": "\"{name}\" — 負債はトラッカーに表示されなくなります。",
+  "goal.targetAmount": "目標金額",
+  "notifications.title": "通知",
+  "notifications.hint": "請求リマインダー、予算アラート（近日対応）"
 }

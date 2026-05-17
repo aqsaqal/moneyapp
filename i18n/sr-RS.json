@@ -342,5 +342,8 @@
   "debt.none": "Ниједан — прати ручно",
   "debt.currency": "Валута",
   "debt.required": "Назив + стање + ЕКС + мин",
-  "debt.deleteBody": "\"{name}\" — дуг се више неће приказивати."
+  "debt.deleteBody": "\"{name}\" — дуг се више неће приказивати.",
+  "goal.targetAmount": "ЦИЉНИ ИЗНОС",
+  "notifications.title": "Обавештења",
+  "notifications.hint": "Подсетници за рачуне, обавештења буџета (ускоро)"
 }

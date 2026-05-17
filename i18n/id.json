@@ -341,5 +341,8 @@
   "debt.none": "Tidak ada — lacak manual",
   "debt.currency": "Mata uang",
   "debt.required": "Nama + saldo + APR + min bayar",
-  "debt.deleteBody": "\"{name}\" — utang berhenti muncul di pelacak."
+  "debt.deleteBody": "\"{name}\" — utang berhenti muncul di pelacak.",
+  "goal.targetAmount": "TARGET JUMLAH",
+  "notifications.title": "Notifikasi",
+  "notifications.hint": "Pengingat tagihan, peringatan anggaran (segera)"
 }

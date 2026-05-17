@@ -342,5 +342,8 @@
   "debt.none": "ไม่มี — ติดตามด้วยตนเอง",
   "debt.currency": "สกุลเงิน",
   "debt.required": "ชื่อ + ยอด + APR + ขั้นต่ำ",
-  "debt.deleteBody": "\"{name}\" — หนี้จะไม่ปรากฏในตัวติดตาม"
+  "debt.deleteBody": "\"{name}\" — หนี้จะไม่ปรากฏในตัวติดตาม",
+  "goal.targetAmount": "เป้าหมายจำนวน",
+  "notifications.title": "การแจ้งเตือน",
+  "notifications.hint": "แจ้งเตือนบิล แจ้งเตือนงบ (เร็วๆ นี้)"
 }
