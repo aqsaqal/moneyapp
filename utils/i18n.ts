@@ -25,6 +25,7 @@ import ms from '@/i18n/ms.json';
 import ru from '@/i18n/ru.json';
 import kk from '@/i18n/kk.json';
 import es from '@/i18n/es-ES.json';
+import fr from '@/i18n/fr-FR.json';
 
 // LocaleCode is a wide string union — every entry in LOCALES inside the
 // settings screen must use a code listed here. Most are not yet mapped
@@ -54,6 +55,7 @@ const DICTS: Partial<Record<LocaleCode, Dictionary>> = {
   'ru-RU': ru as Dictionary,
   'kk-KZ': kk as Dictionary,
   'es-ES': es as Dictionary,
+  'fr-FR': fr as Dictionary,
 };
 
 let currentLocale: LocaleCode = (kv.get('locale') as LocaleCode) ?? 'en-US';
