@@ -34,8 +34,10 @@ import { VoiceMicButton } from '@/components/VoiceMicButton';
 import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
-import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, useCategoriesWithMeta, useCategoryFrequency, useMonthTotalsByCategory, AccountValidationError } from '@/hooks/useAppData';
+import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, useCategoriesWithMeta, useMonthTotalsByCategory, AccountValidationError } from '@/hooks/useAppData';
 import { CategoryPicker } from '@/components/CategoryPicker';
+import { AccountPicker } from '@/components/AccountPicker';
+import type { Account } from '@/utils/db/schema';
 import { monthKey, daysDiff, relativeDayLabel } from '@/utils/format';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
@@ -148,30 +150,12 @@ export default function AddScreen() {
     prefill?.accountAmount != null ? String(prefill.accountAmount) : null,
   );
 
-  // Phase 10w: top-6 category chip strip + grid bottom sheet for fast
-  // picking. Order: pinned → recency frequency → alpha. Stable within a
-  // session (recomputed only when category set or frequency map changes).
+  // Phase 10z: categories metadata still used by the budget context
+  // line (below From/To) and the inline CategoryPicker — the top-6
+  // chip strip is gone. SmartSuggestionRow handles "More…" → grid now.
   const categories = useCategoriesWithMeta();
-  const catFreq = useCategoryFrequency({ days: 60 });
   const monthTotals = useMonthTotalsByCategory(monthKey(), 'expense');
   const [gridOpen, setGridOpen] = useState(false);
-  const top6Categories = useMemo(() => {
-    const eligible = categories.filter(
-      (c) =>
-        !c.archived &&
-        c.id !== 'adjustment' &&
-        (mode === 'income' ? c.type !== 'expense' : c.type !== 'income'),
-    );
-    return [...eligible]
-      .sort((a, b) => {
-        if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
-        const fa = catFreq.get(a.id) ?? 0;
-        const fb = catFreq.get(b.id) ?? 0;
-        if (fa !== fb) return fb - fa;
-        return a.name.localeCompare(b.name);
-      })
-      .slice(0, 6);
-  }, [categories, catFreq, mode]);
 
   // Confidence check: L1 (keyword) or L2 (merchant memory) with at least
   // one supporting prior add count as "high confidence" (~>70%). L3 (time
@@ -595,102 +579,16 @@ export default function AddScreen() {
           />
         </View>
 
-        {/* Phase 10w: top-6 category chip strip + "More…" → full grid.
-            Tapping a chip sets catOverride directly so the user doesn't
-            have to expand the override drawer for common categories. */}
-        {(mode === 'expense' || mode === 'income') && (
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.chipStrip}
-            keyboardShouldPersistTaps="handled"
-          >
-            {top6Categories.map((c) => {
-              const selected = effectiveCat === c.id;
-              return (
-                <Pressable
-                  key={c.id}
-                  onPress={() => setCatOverride(c.id)}
-                  style={[
-                    styles.catChip,
-                    selected && { borderColor: c.color, backgroundColor: `${c.color}22` },
-                  ]}
-                  accessibilityRole="button"
-                  accessibilityState={{ selected }}
-                  accessibilityLabel={c.name}
-                >
-                  <MaterialCommunityIcons
-                    name={(c.icon as never) || 'tag-outline'}
-                    size={14}
-                    color={selected ? c.color : theme.text2}
-                  />
-                  <Text style={[styles.catChipText, selected && { color: c.color }]} numberOfLines={1}>
-                    {c.name}
-                  </Text>
-                </Pressable>
-              );
-            })}
-            <Pressable
-              onPress={() => setGridOpen(true)}
-              style={[styles.catChip, styles.catChipMore]}
-              accessibilityRole="button"
-              accessibilityLabel="More categories"
-            >
-              <Text style={[styles.catChipText, { color: theme.text2 }]}>More…</Text>
-            </Pressable>
-          </ScrollView>
-        )}
-
-        {/* Inline budget bar — only when an expense category with a
-            monthly_budget is selected. Live-projects the impact of the
-            currently-typed amount. */}
-        {mode === 'expense' && effectiveCat && (() => {
-          const cat = categories.find((c) => c.id === effectiveCat);
-          if (!cat || cat.monthlyBudget == null) return null;
-          const spent = monthTotals.find((m) => m.category === effectiveCat)?.total ?? 0;
-          const ccy = cat.budgetCurrency ?? currency;
-          // Display in the budget's currency. Convert spent + the new
-          // amount via FX cache when they differ from budget currency.
-          const enteredInBudgetCcy =
-            (parseFloat(amount) || 0) > 0
-              ? ccy === effectiveEntryCurrency
-                ? parseFloat(amount)
-                : convert(parseFloat(amount) || 0, effectiveEntryCurrency, ccy)
-              : 0;
-          const spentInBudgetCcy = ccy === currency ? spent : convert(spent, currency, ccy);
-          const projected = spentInBudgetCcy + enteredInBudgetCcy;
-          const pct = cat.monthlyBudget > 0 ? Math.min(projected / cat.monthlyBudget, 1) : 0;
-          const over = projected > cat.monthlyBudget;
-          const warn = !over && projected / cat.monthlyBudget >= 0.8;
-          const overBy = over ? projected - cat.monthlyBudget : 0;
-          const barColor = over ? theme.expense : warn ? '#F97316' : cat.color;
-          return (
-            <View style={styles.budgetBarWrap}>
-              <View style={styles.budgetBarHead}>
-                <Text style={styles.budgetBarLabel}>
-                  {cat.name}: {spentInBudgetCcy.toFixed(0)} / {cat.monthlyBudget.toFixed(0)} {ccy} this month
-                </Text>
-              </View>
-              <View style={styles.budgetBarBg}>
-                <View style={[styles.budgetBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
-              </View>
-              {over && enteredInBudgetCcy > 0 && (
-                <Text style={styles.budgetWarn}>
-                  This will put you {overBy.toFixed(0)} {ccy} over your {cat.name} budget.
-                </Text>
-              )}
-            </View>
-          );
-        })()}
-
-        {/* Smart suggestions — top-3 exact replays from the last month.
-            Off by default; user opts in via Settings → Preferences. Tap
-            now PREFILLS the form (amount, note, account, category) so
-            the user can verify / edit before submitting. */}
+        {/* Frequent-merchant chip strip — opts in via Settings. Each
+            chip prefills amount/note/account/category. A "More…" chip
+            at the end opens the full category grid for fresh entries
+            without prior exact matches. */}
         {mode === 'expense' && kv.getBool('smartSuggestions', true) && (
           <SmartSuggestionRow
             currency={currency}
             amountEntered={amount !== '0' && amount !== ''}
+            activeCategoryId={effectiveCat}
+            onMore={() => setGridOpen(true)}
             onPickExact={(tx) => {
               setAmount(String(tx.amount));
               setNote(tx.note ?? '');
@@ -755,6 +653,10 @@ export default function AddScreen() {
                       onPick={setAccountOverride}
                       auto={acctAuto}
                       autoLabel={badge}
+                      debit={{
+                        amount: parseFloat(amount) || 0,
+                        currency: effectiveEntryCurrency,
+                      }}
                     />
                     <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
                     <CategoryPickerRow
@@ -764,6 +666,7 @@ export default function AddScreen() {
                       onPick={setCatOverride}
                       auto={catAuto}
                       autoLabel={badge}
+                      transactionType="expense"
                     />
                   </>
                 ) : (
@@ -775,6 +678,7 @@ export default function AddScreen() {
                       onPick={setCatOverride}
                       auto={catAuto}
                       autoLabel={badge}
+                      transactionType="income"
                     />
                     <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
                     <TransferAcctRow
@@ -791,6 +695,77 @@ export default function AddScreen() {
             );
           })()
         )}
+
+        {/* Phase 10z: budget context line sits directly below From/To.
+            Three states:
+              1. Category has a budget → live progress bar with
+                 "spent / cap CCY this month" header. Bar projects
+                 the typed amount in real time.
+              2. Category has no budget → grey one-liner with current
+                 spend ("Coffee: 45 USD this month").
+              3. First transaction this month → "Coffee: 0 USD —
+                 your first this month".
+            Hidden for income, transfers, and the Adjustment system
+            category (irrelevant context). */}
+        {mode === 'expense' && effectiveCat && effectiveCat !== 'adjustment' && (() => {
+          const cat = categories.find((c) => c.id === effectiveCat);
+          if (!cat) return null;
+          const ccy = (cat.budgetCurrency as CurrencyCode | null) ?? currency;
+          const spentRaw = monthTotals.find((m) => m.category === effectiveCat)?.total ?? 0;
+          const spentInCcy = ccy === currency ? spentRaw : convert(spentRaw, currency, ccy);
+          const entered = parseFloat(amount) || 0;
+          const enteredInCcy =
+            entered > 0
+              ? ccy === effectiveEntryCurrency
+                ? entered
+                : convert(entered, effectiveEntryCurrency, ccy)
+              : 0;
+          const projected = spentInCcy + enteredInCcy;
+
+          if (cat.monthlyBudget != null && cat.monthlyBudget > 0) {
+            const pct = Math.min(projected / cat.monthlyBudget, 1);
+            const over = projected > cat.monthlyBudget;
+            const warn = !over && projected / cat.monthlyBudget >= 0.8;
+            const barColor = over ? theme.expense : warn ? '#F97316' : '#10B981';
+            return (
+              <View style={styles.budgetBarWrap}>
+                <Text style={styles.budgetBarLabel}>
+                  {cat.name}:{' '}
+                  {enteredInCcy > 0
+                    ? `${spentInCcy.toFixed(0)} → ${projected.toFixed(0)}`
+                    : spentInCcy.toFixed(0)}
+                  {' '}/ {cat.monthlyBudget.toFixed(0)} {ccy} this month
+                </Text>
+                <View style={styles.budgetBarBg}>
+                  <View style={[styles.budgetBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
+                </View>
+                {over && enteredInCcy > 0 && (
+                  <Text style={styles.budgetWarn}>
+                    {(projected - cat.monthlyBudget).toFixed(0)} {ccy} over your {cat.name} budget.
+                  </Text>
+                )}
+              </View>
+            );
+          }
+
+          // No budget — grey one-liner. First-of-month gets a friendly tail.
+          if (spentInCcy === 0 && enteredInCcy === 0) {
+            return (
+              <Text style={styles.budgetNeutralLine}>
+                {cat.name}: 0 {ccy} — your first this month
+              </Text>
+            );
+          }
+          return (
+            <Text style={styles.budgetNeutralLine}>
+              {cat.name}:{' '}
+              {enteredInCcy > 0
+                ? `${spentInCcy.toFixed(0)} → ${projected.toFixed(0)}`
+                : spentInCcy.toFixed(0)}
+              {' '}{ccy} this month
+            </Text>
+          );
+        })()}
 
         {/* Islamic AddTxExtras — halal selector + asnaf for giving categories.
             Generic: nothing renders. We pass `category: effectiveCat` so the
@@ -865,22 +840,22 @@ function TransferAcctRow({
   onPick,
   auto = false,
   autoLabel,
+  debit,
 }: {
   label: string;
-  accounts: { id: string; name: string; color: string }[];
+  accounts: Account[];
   value: string;
   onPick: (id: string) => void;
-  /** True when the value came from a high-confidence Smart prediction
-   *  rather than an explicit user pick. Renders with a dashed border +
-   *  small badge so the user knows this was guessed and can tap to
-   *  override. */
+  /** Auto-filled visual state (dashed border). */
   auto?: boolean;
-  /** Override the badge text. Defaults to "auto". Use "predicted" for
-   *  high-confidence model output and "last" for last-used fallback. */
   autoLabel?: string;
+  /** Pre-flight: amount + currency, so the picker can tag accounts
+   *  that would go negative if this debit landed on them. */
+  debit?: { amount: number; currency: CurrencyCode };
 }) {
   const [open, setOpen] = useState(false);
   const acct = accounts.find((a) => a.id === value);
+  void autoLabel;
   return (
     <View style={{ flex: 1 }}>
       <Text style={styles.transferLabel}>{label}</Text>
@@ -896,17 +871,15 @@ function TransferAcctRow({
       >
         <View style={[styles.transferDot, { backgroundColor: acct?.color ?? theme.text3 }]} />
         <Text style={styles.transferRowText}>{acct?.name ?? 'Pick account'}</Text>
-        {/* Signal of auto-fill is the dashed border (transferRowChipAuto);
-            no text badge — labels like LAST USED / PREDICTED ate the
-            chip's horizontal budget. */}
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
-      <PickerSheet
+      <AccountPicker
         visible={open}
-        title={`${label} account`}
-        options={accounts.map((a) => ({ value: a.id, label: a.name, iconColor: a.color, icon: 'wallet-outline' }))}
-        selected={value}
-        onPick={onPick}
+        accounts={accounts}
+        value={value}
+        debit={debit}
+        headerText={`${label} account`}
+        onSelect={onPick}
         onClose={() => setOpen(false)}
       />
     </View>
@@ -922,6 +895,7 @@ function CategoryPickerRow({
   onPick,
   auto = false,
   autoLabel,
+  transactionType,
 }: {
   label: string;
   cats: { id: string; name: string; color: string }[];
@@ -929,9 +903,11 @@ function CategoryPickerRow({
   onPick: (id: string) => void;
   auto?: boolean;
   autoLabel?: string;
+  transactionType: 'expense' | 'income';
 }) {
   const [open, setOpen] = useState(false);
   const cat = value ? cats.find((c) => c.id === value) : undefined;
+  void autoLabel;
   return (
     <View style={{ flex: 1 }}>
       <Text style={styles.transferLabel}>{label}</Text>
@@ -947,17 +923,19 @@ function CategoryPickerRow({
       >
         <View style={[styles.transferDot, { backgroundColor: cat?.color ?? theme.text3 }]} />
         <Text style={styles.transferRowText}>{cat?.name ?? 'Pick category'}</Text>
-        {/* Signal of auto-fill is the dashed border (transferRowChipAuto);
-            no text badge — labels like LAST USED / PREDICTED ate the
-            chip's horizontal budget. */}
         <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text3} />
       </Pressable>
-      <PickerSheet
+      <CategoryPicker
         visible={open}
-        title={label}
-        options={cats.map((c) => ({ value: c.id, label: c.name, iconColor: c.color }))}
-        selected={value ?? ''}
-        onPick={onPick}
+        mode="select"
+        transactionType={transactionType}
+        showBudgetProgress
+        showAddNew
+        headerText={label}
+        onSelect={(id) => {
+          onPick(id);
+          setOpen(false);
+        }}
         onClose={() => setOpen(false)}
       />
     </View>
@@ -1111,24 +1089,10 @@ const styles = StyleSheet.create({
     marginTop: spacing.sm,
   },
   deleteText: { color: theme.expense, fontSize: sizes.sm, fontFamily: font.bodySemi },
-  chipStrip: { gap: 8, paddingVertical: 4 },
-  catChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: radii.pill,
-    borderWidth: 1,
-    borderColor: theme.border,
-    backgroundColor: theme.bg2,
-  },
-  catChipMore: { borderStyle: 'dashed' },
-  catChipText: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.body },
   budgetBarWrap: { gap: 4 },
-  budgetBarHead: { flexDirection: 'row', justifyContent: 'space-between' },
   budgetBarLabel: { color: theme.text2, fontSize: sizes.xs },
   budgetBarBg: { height: 5, backgroundColor: theme.bg3, borderRadius: 3, overflow: 'hidden' },
   budgetBarFill: { height: '100%', borderRadius: 3 },
   budgetWarn: { color: theme.expense, fontSize: sizes.xs, fontFamily: font.bodySemi },
+  budgetNeutralLine: { color: theme.text3, fontSize: sizes.xs },
 });
