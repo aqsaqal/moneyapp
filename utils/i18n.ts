@@ -53,6 +53,7 @@ import hr from '@/i18n/hr-HR.json';
 import sr from '@/i18n/sr-RS.json';
 import sk from '@/i18n/sk-SK.json';
 import sl from '@/i18n/sl-SI.json';
+import lt from '@/i18n/lt-LT.json';
 
 // LocaleCode is a wide string union — every entry in LOCALES inside the
 // settings screen must use a code listed here. Most are not yet mapped
@@ -110,6 +111,7 @@ const DICTS: Partial<Record<LocaleCode, Dictionary>> = {
   'sr-RS': sr as Dictionary,
   'sk-SK': sk as Dictionary,
   'sl-SI': sl as Dictionary,
+  'lt-LT': lt as Dictionary,
 };
 
 let currentLocale: LocaleCode = (kv.get('locale') as LocaleCode) ?? 'en-US';
