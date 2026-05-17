@@ -85,7 +85,7 @@ export default function SettingsScreen() {
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* ───── PROFILE SETTINGS ───── */}
-        <Text style={settingsTopStyles.groupTitle}>PROFILE SETTINGS</Text>
+        <Text style={settingsTopStyles.groupTitle}>{t('settings.groups.profile')}</Text>
         <ActiveProfileRow />
         <CurrencyRow />
         <CurrencyFormatRow />
@@ -95,7 +95,7 @@ export default function SettingsScreen() {
         <FeatureSlots.MeTabExtras onNavigate={(p) => router.push(p as never)} />
 
         {/* ───── APP SETTINGS ───── */}
-        <Text style={[settingsTopStyles.groupTitle, { marginTop: spacing.xl }]}>APP SETTINGS</Text>
+        <Text style={[settingsTopStyles.groupTitle, { marginTop: spacing.xl }]}>{t('settings.groups.app')}</Text>
         <LanguageRow />
         <ArabicNumeralsRow />
         <AppearanceRow />

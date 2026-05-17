@@ -93,7 +93,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
 
   const save = () => {
     if (!name.trim()) {
-      Alert.alert(t('common.required'), 'Name');
+      Alert.alert(t('common.required'), t('category.nameRequired'));
       return;
     }
     const id = category?.id ?? `cc${Date.now()}${Math.floor(Math.random() * 1000)}`;
@@ -116,18 +116,18 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
   const askDelete = () => {
     if (!category) return;
     if (category.isSystem) {
-      Alert.alert('System category', `"${category.name}" is a system category and can't be deleted.`);
+      Alert.alert(t('category.system.title'), t('category.system.body', { name: category.name }));
       return;
     }
     const count = categoryTxnCount(category.id);
     if (count > 0) {
       Alert.alert(
-        'Archive instead?',
-        `"${category.name}" has ${count} transaction${count === 1 ? '' : 's'}. Deleting would orphan them — archive keeps history intact and hides the category from pickers.`,
+        t('category.archiveInstead.title'),
+        t('category.archiveInstead.body', { name: category.name, count }),
         [
           { text: t('common.cancel'), style: 'cancel' },
           {
-            text: 'Archive',
+            text: t('category.archive.cta'),
             onPress: () => {
               setCategoryMeta(category.id, { archived: true });
               onClose();
@@ -139,7 +139,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
     }
     Alert.alert(
       t('common.delete') + '?',
-      `"${category.name}" will be removed.`,
+      t('category.deleteBody', { name: category.name }),
       [
         { text: t('common.cancel'), style: 'cancel' },
         {
@@ -165,7 +165,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
           <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
             <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
           </Pressable>
-          <Text style={styles.title}>{editing ? t('common.edit') : 'New category'}</Text>
+          <Text style={styles.title}>{editing ? t('common.edit') : t('category.new')}</Text>
           <Pressable onPress={save} hitSlop={10} accessibilityLabel={t('common.save')}>
             <MaterialCommunityIcons name="check" size={22} color={theme.accent} />
           </Pressable>
@@ -173,11 +173,11 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
 
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>NAME</Text>
+            <Text style={styles.fieldLabel}>{t('category.field.name')}</Text>
             <TextInput
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Pets, Side hustle, Charity"
+              placeholder={t('category.namePlaceholder')}
               placeholderTextColor={theme.text3}
               style={styles.input}
               editable={!category?.isSystem}
@@ -185,7 +185,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
           </View>
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>TYPE</Text>
+            <Text style={styles.fieldLabel}>{t('category.field.type')}</Text>
             <View style={styles.typeRow}>
               {(['expense', 'income', 'both'] as const).map((t2) => (
                 <Pressable
@@ -196,7 +196,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
                   accessibilityState={{ selected: type === t2 }}
                 >
                   <Text style={[styles.typeText, type === t2 && styles.typeTextActive]}>
-                    {t2 === 'expense' ? 'Expense' : t2 === 'income' ? 'Income' : 'Both'}
+                    {t2 === 'expense' ? t('categories.type.expense') : t2 === 'income' ? t('categories.type.income') : t('categories.type.both')}
                   </Text>
                 </Pressable>
               ))}
@@ -204,7 +204,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
           </View>
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>MONTHLY BUDGET (optional)</Text>
+            <Text style={styles.fieldLabel}>{t('category.field.budget')}</Text>
             <View style={{ flexDirection: 'row', gap: 8 }}>
               <TextInput
                 value={budget}
@@ -226,7 +226,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
             </View>
             {budget.trim() && Number.isFinite(parseFloat(budget)) && parseFloat(budget) > 0 && (
               <Text style={styles.fieldHint}>
-                Currency locks at save; default-currency changes won&apos;t rewrite it.
+                {t('category.budgetCurrencyLock')}
               </Text>
             )}
           </View>
@@ -244,9 +244,9 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
                 color={rollover ? theme.accent : theme.text2}
               />
               <View style={{ flex: 1 }}>
-                <Text style={styles.toggleLabel}>Rollover unused budget</Text>
+                <Text style={styles.toggleLabel}>{t('category.rollover.label')}</Text>
                 <Text style={styles.toggleHint}>
-                  Positive-only — under-spend adds to next month&apos;s effective cap.
+                  {t('category.rollover.hint')}
                 </Text>
               </View>
               <View style={[styles.toggle, rollover && { backgroundColor: theme.accent }]}>
@@ -269,9 +269,9 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
                   color={pinned ? theme.accent : theme.text2}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.toggleLabel}>Pin to top</Text>
+                  <Text style={styles.toggleLabel}>{t('category.pin.label')}</Text>
                   <Text style={styles.toggleHint}>
-                    Pinned categories appear first in pickers and chip rows.
+                    {t('category.pin.hint')}
                   </Text>
                 </View>
                 <View style={[styles.toggle, pinned && { backgroundColor: theme.accent }]}>
@@ -291,9 +291,9 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
                   color={archived ? theme.warning : theme.text2}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.toggleLabel}>Archive</Text>
+                  <Text style={styles.toggleLabel}>{t('category.archive.label')}</Text>
                   <Text style={styles.toggleHint}>
-                    Hidden from pickers; budget paused; historical transactions preserved.
+                    {t('category.archive.hint')}
                   </Text>
                 </View>
                 <View style={[styles.toggle, archived && { backgroundColor: theme.warning }]}>
@@ -304,7 +304,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
           )}
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>COLOR</Text>
+            <Text style={styles.fieldLabel}>{t('category.field.color')}</Text>
             <View style={styles.swatchRow}>
               {PALETTE.map((c) => (
                 <Pressable
@@ -318,7 +318,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
           </View>
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>ICON</Text>
+            <Text style={styles.fieldLabel}>{t('category.field.icon')}</Text>
             <View style={styles.iconRow}>
               {ICONS.map((i) => (
                 <Pressable
@@ -345,7 +345,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
 
           <CurrencyPickerSheet
             visible={currencyPicker}
-            title="Budget currency"
+            title={t('category.budgetCurrencyPicker')}
             selected={budgetCurrency}
             onPick={setBudgetCurrency}
             onClose={() => setCurrencyPicker(false)}

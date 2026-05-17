@@ -83,7 +83,7 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
     const a = parseFloat(apr.replace(',', '.'));
     const m = parseFloat(minPayment.replace(',', '.'));
     if (!name.trim() || !Number.isFinite(b) || b <= 0 || !Number.isFinite(a) || a < 0 || !Number.isFinite(m) || m < 0) {
-      Alert.alert(t('common.required'), 'Name + balance + APR + min payment');
+      Alert.alert(t('common.required'), t('debt.required'));
       return;
     }
     upsertDebt({
@@ -105,7 +105,7 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
     if (!debt) return;
     Alert.alert(
       t('common.delete') + '?',
-      `"${debt.name}" — the debt will stop appearing in your tracker.`,
+      t('debt.deleteBody', { name: debt.name }),
       [
         { text: t('common.cancel'), style: 'cancel' },
         {
@@ -137,7 +137,7 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
 
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>NAME</Text>
+            <Text style={styles.fieldLabel}>{t('debt.field.name')}</Text>
             <TextInput
               value={name}
               onChangeText={setName}
@@ -147,7 +147,7 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
             />
           </View>
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>BALANCE</Text>
+            <Text style={styles.fieldLabel}>{t('debt.field.balance')}</Text>
             <TextInput
               value={balance}
               onChangeText={setBalance}
@@ -158,18 +158,18 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
             />
           </View>
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>APR (%)</Text>
+            <Text style={styles.fieldLabel}>{t('debt.field.apr')}</Text>
             <TextInput
               value={apr}
               onChangeText={setApr}
               keyboardType="numbers-and-punctuation"
-              placeholder="e.g. 18.99"
+              placeholder={t('debt.aprPlaceholder')}
               placeholderTextColor={theme.text3}
               style={styles.input}
             />
           </View>
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>MIN PAYMENT / MONTH</Text>
+            <Text style={styles.fieldLabel}>{t('debt.field.minPayment')}</Text>
             <TextInput
               value={minPayment}
               onChangeText={setMinPayment}
@@ -181,15 +181,15 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
           </View>
 
           <SettingRow
-            label="Linked account (optional)"
-            hint={linkedAcct ? `${linkedAcct.name} — transfers auto-update balance` : 'Manual balance only'}
+            label={t('debt.linkedAccount')}
+            hint={linkedAcct ? t('debt.linkedAccount.hint', { name: linkedAcct.name }) : t('debt.manualBalance')}
             icon="link-variant"
             iconColor={linkedAcct?.color ?? theme.text3}
             onPress={() => setAccountPicker(true)}
           />
 
           <SettingRow
-            label="Currency"
+            label={t('debt.currency')}
             hint={currency}
             icon="currency-usd"
             iconColor={theme.accent}
@@ -198,9 +198,9 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
 
           <PickerSheet
             visible={accountPicker}
-            title="Linked account"
+            title={t('debt.linkedAccount.title')}
             options={[
-              { value: '', label: 'None — track manually', icon: 'link-variant-off' },
+              { value: '', label: t('debt.none'), icon: 'link-variant-off' },
               ...accounts.map<PickerOption<string>>((a) => ({
                 value: a.id,
                 label: a.name,
@@ -214,7 +214,7 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
             onClose={() => setAccountPicker(false)}
           />
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>COLOR</Text>
+            <Text style={styles.fieldLabel}>{t('debt.field.color')}</Text>
             <View style={styles.swatchRow}>
               {PALETTE.map((c) => (
                 <Pressable
@@ -227,7 +227,7 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
             </View>
           </View>
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>ICON</Text>
+            <Text style={styles.fieldLabel}>{t('debt.field.icon')}</Text>
             <View style={styles.iconRow}>
               {ICONS.map((i) => (
                 <Pressable
