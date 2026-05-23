@@ -122,7 +122,9 @@ export default function TabsLayout() {
       <View style={[styles.fabWrap, { bottom: fabBottom }]} pointerEvents="box-none">
         <FabButton
           onPress={() => router.push('/add')}
-          onLongPress={() => router.push('/category-grid')}
+          // Long-press → category grid hidden for now. The /category-grid
+          // route still exists for SmartSuggestionRow's "More…" chip.
+          // onLongPress={() => router.push('/category-grid')}
         />
       </View>
     </View>

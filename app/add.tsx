@@ -609,13 +609,18 @@ export default function AddScreen() {
             placeholderTextColor={theme.text3}
             style={styles.note}
           />
-          <VoiceMicButton
-            locale={locale}
-            onResult={({ amount: a, note: n }) => {
-              if (a !== null) setAmount(String(a));
-              if (n) setNote(n);
-            }}
-          />
+          {/* VoiceMicButton hidden for now — keeping the import and the
+              `locale` prop wiring intact so re-enabling is a one-line
+              toggle once we ship the permission-explainer modal. */}
+          {false && (
+            <VoiceMicButton
+              locale={locale}
+              onResult={({ amount: a, note: n }) => {
+                if (a !== null) setAmount(String(a));
+                if (n) setNote(n);
+              }}
+            />
+          )}
           <ReceiptScanButton
             onScanned={({ amount: a, note: n, receiptUri }) => {
               if (a !== null) setAmount(String(a));
