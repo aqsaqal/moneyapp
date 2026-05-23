@@ -55,12 +55,10 @@ export default function Activity() {
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
   // List-view filter drawer: collapsed by default so the top of the
   // tab is just the title + segmented control. Tap the filter icon
-  // to reveal the search bar + category chip row. Auto-opens when a
-  // filter is already active so the user can see *why* their list
-  // is reduced.
-  const [filtersOpen, setFiltersOpen] = useState(
-    () => Boolean(filterCat) || search.length > 0 || Boolean(halalFilter),
-  );
+  // to reveal the search bar + category chip row. The auto-open-on-
+  // filter-already-active case is wired below via useEffect once the
+  // filter states have been declared.
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [filterCat, setFilterCat] = useState<string | null>(null);
   // Filter chip strip: same pattern as the Smart Add chip row —
   // "All" + top 5 by THIS MONTH spend + "More". The full picker
@@ -82,6 +80,13 @@ export default function Activity() {
   const [filterMoreOpen, setFilterMoreOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [halalFilter, setHalalFilter] = useState<string | null>(null);
+  // One-shot: if Activity mounts with any list filter already active
+  // (e.g. user tapped a category from the analytics view), open the
+  // filter drawer so the chip row is visible.
+  React.useEffect(() => {
+    if (filterCat || search.length > 0 || halalFilter) setFiltersOpen(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterCat, halalFilter]);
   const [analyticsOpen, setAnalyticsOpen] = useState(false);
   const [recapOpen, setRecapOpen] = useState(false);
   const [pageLimit, setPageLimit] = useState(200);
