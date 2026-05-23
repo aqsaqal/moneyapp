@@ -357,5 +357,11 @@
   "account.reconcile.note": "Изравнение на салдо",
   "forecast.avgPerDay": "СРЕДНО/ДЕН",
   "forecast.remainingBills": "ОСТАНАЛИ СМЕТКИ",
-  "forecast.seeBreakdown": "Виж разбивка"
+  "forecast.seeBreakdown": "Виж разбивка",
+  "activity.view.list": "Списък",
+  "activity.view.categories": "Категории",
+  "analytics.expense": "Разходи",
+  "analytics.income": "Доходи",
+  "analytics.breakdown": "РАЗПРЕДЕЛЕНИЕ ПО КАТЕГОРИИ",
+  "analytics.empty": "Няма транзакции за този период"
 }

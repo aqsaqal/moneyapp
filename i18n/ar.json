@@ -356,5 +356,11 @@
   "account.reconcile.note": "تسوية الرصيد",
   "forecast.avgPerDay": "المتوسط اليومي",
   "forecast.remainingBills": "الفواتير المتبقية",
-  "forecast.seeBreakdown": "عرض التفاصيل"
+  "forecast.seeBreakdown": "عرض التفاصيل",
+  "activity.view.list": "قائمة",
+  "activity.view.categories": "الفئات",
+  "analytics.expense": "المصروفات",
+  "analytics.income": "الدخل",
+  "analytics.breakdown": "تفصيل الفئات",
+  "analytics.empty": "لا توجد معاملات لهذه الفترة"
 }

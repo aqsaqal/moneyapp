@@ -357,5 +357,11 @@
   "account.reconcile.note": "Saldoavstämning",
   "forecast.avgPerDay": "GENOM./DAG",
   "forecast.remainingBills": "KVARV. RÄKNINGAR",
-  "forecast.seeBreakdown": "Visa detaljer"
+  "forecast.seeBreakdown": "Visa detaljer",
+  "activity.view.list": "Lista",
+  "activity.view.categories": "Kategorier",
+  "analytics.expense": "Utgifter",
+  "analytics.income": "Inkomster",
+  "analytics.breakdown": "KATEGORI-UPPDELNING",
+  "analytics.empty": "Inga transaktioner under denna period"
 }

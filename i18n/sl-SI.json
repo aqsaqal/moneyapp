@@ -357,5 +357,11 @@
   "account.reconcile.note": "Uskladitev stanja",
   "forecast.avgPerDay": "POVPR./DAN",
   "forecast.remainingBills": "PREOSTALI RAČUNI",
-  "forecast.seeBreakdown": "Prikaži razčlenitev"
+  "forecast.seeBreakdown": "Prikaži razčlenitev",
+  "activity.view.list": "Seznam",
+  "activity.view.categories": "Kategorije",
+  "analytics.expense": "Stroški",
+  "analytics.income": "Prihodki",
+  "analytics.breakdown": "RAZČLENITEV KATEGORIJ",
+  "analytics.empty": "V tem obdobju ni transakcij"
 }

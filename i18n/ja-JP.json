@@ -357,5 +357,11 @@
   "account.reconcile.note": "残高調整",
   "forecast.avgPerDay": "日平均",
   "forecast.remainingBills": "残り請求",
-  "forecast.seeBreakdown": "内訳を見る"
+  "forecast.seeBreakdown": "内訳を見る",
+  "activity.view.list": "リスト",
+  "activity.view.categories": "カテゴリ",
+  "analytics.expense": "支出",
+  "analytics.income": "収入",
+  "analytics.breakdown": "カテゴリ別内訳",
+  "analytics.empty": "この期間に取引はありません"
 }

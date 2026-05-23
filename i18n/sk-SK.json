@@ -357,5 +357,11 @@
   "account.reconcile.note": "Vyrovnanie zostatku",
   "forecast.avgPerDay": "PRIEMER/DEŇ",
   "forecast.remainingBills": "ZOSTÁVAJÚCE ÚČTY",
-  "forecast.seeBreakdown": "Zobraziť rozpis"
+  "forecast.seeBreakdown": "Zobraziť rozpis",
+  "activity.view.list": "Zoznam",
+  "activity.view.categories": "Kategórie",
+  "analytics.expense": "Výdavky",
+  "analytics.income": "Príjmy",
+  "analytics.breakdown": "ROZPIS KATEGÓRIÍ",
+  "analytics.empty": "Žiadne transakcie v tomto období"
 }

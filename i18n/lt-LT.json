@@ -357,5 +357,11 @@
   "account.reconcile.note": "Likučio suderinimas",
   "forecast.avgPerDay": "VID./DIENA",
   "forecast.remainingBills": "LIKĘ SĄSKAITŲ",
-  "forecast.seeBreakdown": "Žiūrėti išskaidymą"
+  "forecast.seeBreakdown": "Žiūrėti išskaidymą",
+  "activity.view.list": "Sąrašas",
+  "activity.view.categories": "Kategorijos",
+  "analytics.expense": "Išlaidos",
+  "analytics.income": "Pajamos",
+  "analytics.breakdown": "KATEGORIJŲ IŠSKAIDYMAS",
+  "analytics.empty": "Šiuo laikotarpiu operacijų nėra"
 }

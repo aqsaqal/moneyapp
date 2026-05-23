@@ -357,5 +357,11 @@
   "account.reconcile.note": "బ్యాలెన్స్ సర్దుబాటు",
   "forecast.avgPerDay": "రోజువారీ సగటు",
   "forecast.remainingBills": "మిగిలిన బిల్లులు",
-  "forecast.seeBreakdown": "వివరాలు చూడండి"
+  "forecast.seeBreakdown": "వివరాలు చూడండి",
+  "activity.view.list": "జాబితా",
+  "activity.view.categories": "వర్గాలు",
+  "analytics.expense": "ఖర్చులు",
+  "analytics.income": "ఆదాయం",
+  "analytics.breakdown": "వర్గ విభజన",
+  "analytics.empty": "ఈ కాలానికి లావాదేవీలు లేవు"
 }

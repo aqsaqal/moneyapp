@@ -356,5 +356,11 @@
   "account.reconcile.body": "Balance changed by {sign}{amount} {currency}. Save the new balance, or create an Adjustment transaction so the gap is explainable from Activity.",
   "account.reconcile.skip": "Save without adjustment",
   "account.reconcile.create": "Create adjustment",
-  "account.reconcile.note": "Balance reconciliation"
+  "account.reconcile.note": "Balance reconciliation",
+  "activity.view.list": "List",
+  "activity.view.categories": "Categories",
+  "analytics.expense": "Expenses",
+  "analytics.income": "Income",
+  "analytics.breakdown": "CATEGORY BREAKDOWN",
+  "analytics.empty": "No transactions for this period"
 }

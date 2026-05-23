@@ -357,5 +357,11 @@
   "account.reconcile.note": "Звірка балансу",
   "forecast.avgPerDay": "СЕРЕДНЄ/ДЕНЬ",
   "forecast.remainingBills": "РАХУНКИ ДО СПЛАТИ",
-  "forecast.seeBreakdown": "Деталі"
+  "forecast.seeBreakdown": "Деталі",
+  "activity.view.list": "Список",
+  "activity.view.categories": "Категорії",
+  "analytics.expense": "Витрати",
+  "analytics.income": "Доходи",
+  "analytics.breakdown": "РОЗПОДІЛ ЗА КАТЕГОРІЯМИ",
+  "analytics.empty": "Немає операцій за цей період"
 }

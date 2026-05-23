@@ -357,5 +357,11 @@
   "account.reconcile.note": "بیلنس ہم آہنگی",
   "forecast.avgPerDay": "یومیہ اوسط",
   "forecast.remainingBills": "بقیہ بل",
-  "forecast.seeBreakdown": "تفصیل دیکھیں"
+  "forecast.seeBreakdown": "تفصیل دیکھیں",
+  "activity.view.list": "فہرست",
+  "activity.view.categories": "زمرے",
+  "analytics.expense": "اخراجات",
+  "analytics.income": "آمدنی",
+  "analytics.breakdown": "زمرہ بریک ڈاؤن",
+  "analytics.empty": "اس مدت میں کوئی لین دین نہیں"
 }

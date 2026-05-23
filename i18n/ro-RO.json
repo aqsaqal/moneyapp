@@ -357,5 +357,11 @@
   "account.reconcile.note": "Reconciliere sold",
   "forecast.avgPerDay": "MEDIE ZILNICĂ",
   "forecast.remainingBills": "FACTURI RĂMASE",
-  "forecast.seeBreakdown": "Vezi detalii"
+  "forecast.seeBreakdown": "Vezi detalii",
+  "activity.view.list": "Listă",
+  "activity.view.categories": "Categorii",
+  "analytics.expense": "Cheltuieli",
+  "analytics.income": "Venituri",
+  "analytics.breakdown": "DEFALCARE PE CATEGORII",
+  "analytics.empty": "Nicio tranzacție în această perioadă"
 }

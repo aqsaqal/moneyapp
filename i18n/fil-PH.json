@@ -357,5 +357,11 @@
   "account.reconcile.note": "Reconciliation ng balanse",
   "forecast.avgPerDay": "AVE/ARAW",
   "forecast.remainingBills": "NATITIRANG BILL",
-  "forecast.seeBreakdown": "Tingnan ang detalye"
+  "forecast.seeBreakdown": "Tingnan ang detalye",
+  "activity.view.list": "Listahan",
+  "activity.view.categories": "Mga Kategorya",
+  "analytics.expense": "Gastos",
+  "analytics.income": "Kita",
+  "analytics.breakdown": "BREAKDOWN NG KATEGORYA",
+  "analytics.empty": "Walang transaksyon sa panahong ito"
 }

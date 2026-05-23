@@ -357,5 +357,11 @@
   "account.reconcile.note": "Đối chiếu số dư",
   "forecast.avgPerDay": "TB MỖI NGÀY",
   "forecast.remainingBills": "HOÁ ĐƠN CÒN LẠI",
-  "forecast.seeBreakdown": "Xem chi tiết"
+  "forecast.seeBreakdown": "Xem chi tiết",
+  "activity.view.list": "Danh sách",
+  "activity.view.categories": "Danh mục",
+  "analytics.expense": "Chi tiêu",
+  "analytics.income": "Thu nhập",
+  "analytics.breakdown": "PHÂN TÍCH DANH MỤC",
+  "analytics.empty": "Không có giao dịch trong kỳ này"
 }

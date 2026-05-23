@@ -32,11 +32,25 @@ import { CategoryPicker } from '@/components/CategoryPicker';
 import { dayStr, monthKey, formatMoney } from '@/utils/format';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
+import { CategoriesAnalytics } from '@/components/CategoriesAnalytics';
 
 export default function Activity() {
   const t = useT();
   const router = useRouter();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  // List | Categories segmented control. Defaults to whatever the user
+  // saw last in this session (kv-backed so a profile switch reset
+  // doesn't accidentally drop the user back to List). Spec calls it
+  // "per session" so we don't sync across devices either way.
+  const [view, setView] = useState<'list' | 'categories'>(
+    () => (kv.get('activityView') as 'list' | 'categories' | undefined) ?? 'list',
+  );
+  // Month anchor for the Categories view. Step ±1 with the arrows;
+  // the label opens a placeholder picker (TODO: wire to existing
+  // PickerSheet once we add Day/Week/Year/Range presets).
+  const [analyticsMonth, setAnalyticsMonth] = useState(() => {
+    const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d;
+  });
   const [filterCat, setFilterCat] = useState<string | null>(null);
   // Filter chip strip: same pattern as the Smart Add chip row —
   // "All" + top 5 by THIS MONTH spend + "More". The full picker
@@ -93,6 +107,27 @@ export default function Activity() {
     return Array.from(g.entries());
   }, [txns]);
 
+  // ─── Categories analytics period range ────────────────────────────
+  // For Month view: [first of month, first of next month).
+  const analyticsRange = useMemo(() => {
+    const start = analyticsMonth.getTime();
+    const end = new Date(
+      analyticsMonth.getFullYear(),
+      analyticsMonth.getMonth() + 1,
+      1,
+    ).getTime();
+    return { start, end };
+  }, [analyticsMonth]);
+  const analyticsLabel = useMemo(
+    () => analyticsMonth.toLocaleString('default', { month: 'long', year: 'numeric' }),
+    [analyticsMonth],
+  );
+
+  const setViewPersist = (v: 'list' | 'categories') => {
+    setView(v);
+    kv.set('activityView', v);
+  };
+
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.top}>
@@ -100,6 +135,27 @@ export default function Activity() {
           <Text style={styles.title}>{t('activity.title')}</Text>
           <HeaderSettingsButton />
         </View>
+        {/* Segmented control: List | Categories. Persists per session
+            via kv.activityView. Switching preserves the active category/
+            search filter so the user can flip back and forth without
+            losing state. */}
+        <View style={styles.segmented}>
+          {(['list', 'categories'] as const).map((v) => (
+            <Pressable
+              key={v}
+              onPress={() => setViewPersist(v)}
+              style={[styles.segmentedBtn, view === v && styles.segmentedBtnActive]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: view === v }}
+            >
+              <Text style={[styles.segmentedText, view === v && styles.segmentedTextActive]}>
+                {t(v === 'list' ? 'activity.view.list' : 'activity.view.categories')}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+        {view === 'list' && (
+          <>
         <SearchBar value={search} onChange={setSearch} placeholder={t('activity.searchPlaceholder')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
           <FilterChip label={t('activity.allChip')} active={!filterCat} onPress={() => setFilterCat(null)} />
@@ -128,7 +184,29 @@ export default function Activity() {
           )}
           <FeatureSlots.HistoryFilterExtras value={halalFilter} onChange={setHalalFilter} />
         </ScrollView>
+          </>
+        )}
       </View>
+      {view === 'categories' ? (
+        <CategoriesAnalytics
+          rangeStart={analyticsRange.start}
+          rangeEnd={analyticsRange.end}
+          periodLabel={analyticsLabel}
+          onPrevPeriod={() =>
+            setAnalyticsMonth((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))
+          }
+          onNextPeriod={() =>
+            setAnalyticsMonth((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))
+          }
+          onPickPeriod={() => { /* TODO: open period sheet once presets land */ }}
+          accountId={null}
+          currency={currency}
+          onSelectCategory={(catId) => {
+            setFilterCat(catId);
+            setViewPersist('list');
+          }}
+        />
+      ) : (
       <ScrollView contentContainerStyle={styles.scroll}>
         <InsightsStrip />
         <AnalyticsHeader
@@ -209,6 +287,7 @@ export default function Activity() {
         )}
         <View style={{ height: 100 }} />
       </ScrollView>
+      )}
       <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
       <CategoryPicker
         visible={filterMoreOpen}
@@ -344,6 +423,23 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
   top: { padding: spacing.lg, gap: spacing.md },
   titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  segmented: {
+    flexDirection: 'row',
+    backgroundColor: theme.bg2,
+    borderRadius: radii.pill,
+    padding: 3,
+    marginTop: spacing.sm,
+    marginBottom: spacing.xs,
+    alignSelf: 'flex-start',
+  },
+  segmentedBtn: {
+    paddingHorizontal: spacing.md,
+    paddingVertical: 6,
+    borderRadius: radii.pill,
+  },
+  segmentedBtnActive: { backgroundColor: theme.accent },
+  segmentedText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  segmentedTextActive: { color: theme.bg },
   title: { color: theme.text1, fontSize: sizes.xxxl, fontFamily: font.displayBold },
   chipRow: { gap: 8, paddingVertical: 4 },
   chip: {

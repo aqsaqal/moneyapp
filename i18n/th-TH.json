@@ -357,5 +357,11 @@
   "account.reconcile.note": "กระทบยอด",
   "forecast.avgPerDay": "เฉลี่ย/วัน",
   "forecast.remainingBills": "บิลคงเหลือ",
-  "forecast.seeBreakdown": "ดูรายละเอียด"
+  "forecast.seeBreakdown": "ดูรายละเอียด",
+  "activity.view.list": "รายการ",
+  "activity.view.categories": "หมวด",
+  "analytics.expense": "รายจ่าย",
+  "analytics.income": "รายรับ",
+  "analytics.breakdown": "แยกตามหมวด",
+  "analytics.empty": "ไม่มีรายการในช่วงนี้"
 }

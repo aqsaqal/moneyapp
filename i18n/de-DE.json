@@ -357,5 +357,11 @@
   "account.reconcile.note": "Saldo-Abgleich",
   "forecast.avgPerDay": "DURCHSCHN./TAG",
   "forecast.remainingBills": "OFFENE RECHNUNGEN",
-  "forecast.seeBreakdown": "Aufschlüsselung anzeigen"
+  "forecast.seeBreakdown": "Aufschlüsselung anzeigen",
+  "activity.view.list": "Liste",
+  "activity.view.categories": "Kategorien",
+  "analytics.expense": "Ausgaben",
+  "analytics.income": "Einkommen",
+  "analytics.breakdown": "KATEGORIE-AUFTEILUNG",
+  "analytics.empty": "Keine Transaktionen in diesem Zeitraum"
 }

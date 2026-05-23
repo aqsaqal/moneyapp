@@ -357,5 +357,11 @@
   "account.reconcile.note": "शिल्लक जुळवणी",
   "forecast.avgPerDay": "दैनिक सरासरी",
   "forecast.remainingBills": "उर्वरित बिले",
-  "forecast.seeBreakdown": "तपशील पाहा"
+  "forecast.seeBreakdown": "तपशील पाहा",
+  "activity.view.list": "यादी",
+  "activity.view.categories": "श्रेण्या",
+  "analytics.expense": "खर्च",
+  "analytics.income": "उत्पन्न",
+  "analytics.breakdown": "श्रेणी विभाजन",
+  "analytics.empty": "या कालावधीसाठी व्यवहार नाहीत"
 }

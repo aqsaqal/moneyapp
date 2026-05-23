@@ -356,5 +356,11 @@
   "account.reconcile.note": "Сверка баланса",
   "forecast.avgPerDay": "В СРЕДНЕМ/ДЕНЬ",
   "forecast.remainingBills": "СЧЕТА К ОПЛАТЕ",
-  "forecast.seeBreakdown": "Подробнее"
+  "forecast.seeBreakdown": "Подробнее",
+  "activity.view.list": "Список",
+  "activity.view.categories": "Категории",
+  "analytics.expense": "Расходы",
+  "analytics.income": "Доход",
+  "analytics.breakdown": "РАЗБИВКА ПО КАТЕГОРИЯМ",
+  "analytics.empty": "Нет операций за этот период"
 }

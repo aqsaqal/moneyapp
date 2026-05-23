@@ -356,5 +356,11 @@
   "account.reconcile.note": "Rekonsiliasi saldo",
   "forecast.avgPerDay": "RATA HARIAN",
   "forecast.remainingBills": "TAGIHAN TERSISA",
-  "forecast.seeBreakdown": "Lihat rincian"
+  "forecast.seeBreakdown": "Lihat rincian",
+  "activity.view.list": "Daftar",
+  "activity.view.categories": "Kategori",
+  "analytics.expense": "Pengeluaran",
+  "analytics.income": "Pemasukan",
+  "analytics.breakdown": "RINCIAN KATEGORI",
+  "analytics.empty": "Tidak ada transaksi periode ini"
 }

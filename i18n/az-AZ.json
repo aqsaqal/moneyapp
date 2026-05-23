@@ -357,5 +357,11 @@
   "account.reconcile.note": "Balans uzlaşması",
   "forecast.avgPerDay": "ORTA/GÜN",
   "forecast.remainingBills": "QALAN HESABLAR",
-  "forecast.seeBreakdown": "Təfərrüatlara bax"
+  "forecast.seeBreakdown": "Təfərrüatlara bax",
+  "activity.view.list": "Siyahı",
+  "activity.view.categories": "Kateqoriyalar",
+  "analytics.expense": "Xərclər",
+  "analytics.income": "Gəlir",
+  "analytics.breakdown": "KATEQORİYALAR ÜZRƏ",
+  "analytics.empty": "Bu dövrdə əməliyyat yoxdur"
 }

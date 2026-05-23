@@ -357,5 +357,11 @@
   "account.reconcile.note": "Saldoafstemning",
   "forecast.avgPerDay": "GENNEM./DAG",
   "forecast.remainingBills": "RESTREGNINGER",
-  "forecast.seeBreakdown": "Vis opdeling"
+  "forecast.seeBreakdown": "Vis opdeling",
+  "activity.view.list": "Liste",
+  "activity.view.categories": "Kategorier",
+  "analytics.expense": "Udgifter",
+  "analytics.income": "Indkomst",
+  "analytics.breakdown": "KATEGORIOPDELING",
+  "analytics.empty": "Ingen transaktioner i denne periode"
 }

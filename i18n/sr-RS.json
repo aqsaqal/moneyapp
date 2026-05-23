@@ -357,5 +357,11 @@
   "account.reconcile.note": "Усаглашавање стања",
   "forecast.avgPerDay": "ПРОС./ДАН",
   "forecast.remainingBills": "ПРЕОСТАЛИ РАЧУНИ",
-  "forecast.seeBreakdown": "Прикажи детаље"
+  "forecast.seeBreakdown": "Прикажи детаље",
+  "activity.view.list": "Листа",
+  "activity.view.categories": "Категорије",
+  "analytics.expense": "Трошкови",
+  "analytics.income": "Приходи",
+  "analytics.breakdown": "РАСПОДЕЛА ПО КАТЕГОРИЈАМА",
+  "analytics.empty": "Нема трансакција за овај период"
 }

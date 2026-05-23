@@ -357,5 +357,11 @@
   "account.reconcile.note": "餘額對帳",
   "forecast.avgPerDay": "日均",
   "forecast.remainingBills": "剩餘帳單",
-  "forecast.seeBreakdown": "查看明細"
+  "forecast.seeBreakdown": "查看明細",
+  "activity.view.list": "列表",
+  "activity.view.categories": "類別",
+  "analytics.expense": "支出",
+  "analytics.income": "收入",
+  "analytics.breakdown": "類別明細",
+  "analytics.empty": "此期間沒有交易"
 }

@@ -357,5 +357,11 @@
   "account.reconcile.note": "Uzgodnienie salda",
   "forecast.avgPerDay": "ŚREDNIO/DZIEŃ",
   "forecast.remainingBills": "POZOSTAŁE RACHUNKI",
-  "forecast.seeBreakdown": "Zobacz szczegóły"
+  "forecast.seeBreakdown": "Zobacz szczegóły",
+  "activity.view.list": "Lista",
+  "activity.view.categories": "Kategorie",
+  "analytics.expense": "Wydatki",
+  "analytics.income": "Przychody",
+  "analytics.breakdown": "PODZIAŁ NA KATEGORIE",
+  "analytics.empty": "Brak transakcji w tym okresie"
 }

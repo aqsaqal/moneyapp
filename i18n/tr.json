@@ -356,5 +356,11 @@
   "account.reconcile.note": "Bakiye mutabakatı",
   "forecast.avgPerDay": "GÜNLÜK ORTALAMA",
   "forecast.remainingBills": "KALAN FATURALAR",
-  "forecast.seeBreakdown": "Detayları gör"
+  "forecast.seeBreakdown": "Detayları gör",
+  "activity.view.list": "Liste",
+  "activity.view.categories": "Kategoriler",
+  "analytics.expense": "Gider",
+  "analytics.income": "Gelir",
+  "analytics.breakdown": "KATEGORİ DÖKÜMÜ",
+  "analytics.empty": "Bu dönemde işlem yok"
 }

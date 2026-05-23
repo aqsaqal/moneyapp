@@ -357,5 +357,11 @@
   "account.reconcile.note": "התאמת יתרה",
   "forecast.avgPerDay": "ממוצע יומי",
   "forecast.remainingBills": "חשבוניות שנותרו",
-  "forecast.seeBreakdown": "הצג פירוט"
+  "forecast.seeBreakdown": "הצג פירוט",
+  "activity.view.list": "רשימה",
+  "activity.view.categories": "קטגוריות",
+  "analytics.expense": "הוצאות",
+  "analytics.income": "הכנסות",
+  "analytics.breakdown": "פילוח קטגוריות",
+  "analytics.empty": "אין עסקאות בתקופה זו"
 }

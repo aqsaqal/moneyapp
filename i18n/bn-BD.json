@@ -357,5 +357,11 @@
   "account.reconcile.note": "ব্যালেন্স মেলানো",
   "forecast.avgPerDay": "দৈনিক গড়",
   "forecast.remainingBills": "অবশিষ্ট বিল",
-  "forecast.seeBreakdown": "বিভাজন দেখুন"
+  "forecast.seeBreakdown": "বিভাজন দেখুন",
+  "activity.view.list": "তালিকা",
+  "activity.view.categories": "বিভাগ",
+  "analytics.expense": "খরচ",
+  "analytics.income": "আয়",
+  "analytics.breakdown": "বিভাগ অনুসারে",
+  "analytics.empty": "এই সময়কালে কোনো লেনদেন নেই"
 }

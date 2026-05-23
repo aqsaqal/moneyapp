@@ -357,5 +357,11 @@
   "account.reconcile.note": "Conciliación de saldo",
   "forecast.avgPerDay": "PROMEDIO DIARIO",
   "forecast.remainingBills": "FACTURAS RESTANTES",
-  "forecast.seeBreakdown": "Ver desglose"
+  "forecast.seeBreakdown": "Ver desglose",
+  "activity.view.list": "Lista",
+  "activity.view.categories": "Categorías",
+  "analytics.expense": "Gastos",
+  "analytics.income": "Ingresos",
+  "analytics.breakdown": "DESGLOSE POR CATEGORÍA",
+  "analytics.empty": "Sin transacciones en este periodo"
 }

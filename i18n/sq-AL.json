@@ -357,5 +357,11 @@
   "account.reconcile.note": "Rakordim i gjendjes",
   "forecast.avgPerDay": "MES. DITORE",
   "forecast.remainingBills": "FATURA TË MBETURA",
-  "forecast.seeBreakdown": "Shih ndarjen"
+  "forecast.seeBreakdown": "Shih ndarjen",
+  "activity.view.list": "Listë",
+  "activity.view.categories": "Kategori",
+  "analytics.expense": "Shpenzime",
+  "analytics.income": "Të ardhura",
+  "analytics.breakdown": "NDARJA SIPAS KATEGORIVE",
+  "analytics.empty": "Nuk ka transaksione për këtë periudhë"
 }

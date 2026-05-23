@@ -357,5 +357,11 @@
   "account.reconcile.note": "शेष मिलान",
   "forecast.avgPerDay": "दैनिक औसत",
   "forecast.remainingBills": "शेष बिल",
-  "forecast.seeBreakdown": "विवरण देखें"
+  "forecast.seeBreakdown": "विवरण देखें",
+  "activity.view.list": "सूची",
+  "activity.view.categories": "श्रेणियाँ",
+  "analytics.expense": "व्यय",
+  "analytics.income": "आय",
+  "analytics.breakdown": "श्रेणी विवरण",
+  "analytics.empty": "इस अवधि में कोई लेन-देन नहीं"
 }

@@ -357,5 +357,11 @@
   "account.reconcile.note": "Balans tekshiruvi",
   "forecast.avgPerDay": "OʻRT./KUN",
   "forecast.remainingBills": "QOLGAN HISOBLAR",
-  "forecast.seeBreakdown": "Tafsilotni koʻrish"
+  "forecast.seeBreakdown": "Tafsilotni koʻrish",
+  "activity.view.list": "Roʻyxat",
+  "activity.view.categories": "Kategoriyalar",
+  "analytics.expense": "Xarajatlar",
+  "analytics.income": "Daromad",
+  "analytics.breakdown": "KATEGORIYA BOʻYICHA",
+  "analytics.empty": "Bu davrda tranzaksiya yoʻq"
 }

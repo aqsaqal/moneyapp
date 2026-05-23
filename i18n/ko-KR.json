@@ -357,5 +357,11 @@
   "account.reconcile.note": "잔액 조정",
   "forecast.avgPerDay": "일평균",
   "forecast.remainingBills": "남은 청구",
-  "forecast.seeBreakdown": "세부 정보"
+  "forecast.seeBreakdown": "세부 정보",
+  "activity.view.list": "목록",
+  "activity.view.categories": "카테고리",
+  "analytics.expense": "지출",
+  "analytics.income": "수입",
+  "analytics.breakdown": "카테고리 분석",
+  "analytics.empty": "이 기간에 거래가 없습니다"
 }

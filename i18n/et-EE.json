@@ -357,5 +357,11 @@
   "account.reconcile.note": "Saldo ühildamine",
   "forecast.avgPerDay": "KESKM./PÄEV",
   "forecast.remainingBills": "JÄÄNUD ARVED",
-  "forecast.seeBreakdown": "Vaata jaotust"
+  "forecast.seeBreakdown": "Vaata jaotust",
+  "activity.view.list": "Loend",
+  "activity.view.categories": "Kategooriad",
+  "analytics.expense": "Kulud",
+  "analytics.income": "Tulud",
+  "analytics.breakdown": "KATEGOORIATE JAOTUS",
+  "analytics.empty": "Sel perioodil tehinguid pole"
 }

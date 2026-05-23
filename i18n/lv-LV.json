@@ -357,5 +357,11 @@
   "account.reconcile.note": "Atlikuma saskaņošana",
   "forecast.avgPerDay": "VID./DIENA",
   "forecast.remainingBills": "ATLIK. RĒĶINI",
-  "forecast.seeBreakdown": "Skatīt sadalījumu"
+  "forecast.seeBreakdown": "Skatīt sadalījumu",
+  "activity.view.list": "Saraksts",
+  "activity.view.categories": "Kategorijas",
+  "analytics.expense": "Izdevumi",
+  "analytics.income": "Ienākumi",
+  "analytics.breakdown": "KATEGORIJU SADALĪJUMS",
+  "analytics.empty": "Šajā periodā nav darījumu"
 }

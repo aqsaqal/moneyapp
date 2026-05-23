@@ -357,5 +357,11 @@
   "account.reconcile.note": "Réconciliation du solde",
   "forecast.avgPerDay": "MOYENNE/JOUR",
   "forecast.remainingBills": "FACTURES RESTANTES",
-  "forecast.seeBreakdown": "Voir le détail"
+  "forecast.seeBreakdown": "Voir le détail",
+  "activity.view.list": "Liste",
+  "activity.view.categories": "Catégories",
+  "analytics.expense": "Dépenses",
+  "analytics.income": "Revenus",
+  "analytics.breakdown": "RÉPARTITION PAR CATÉGORIE",
+  "analytics.empty": "Aucune transaction sur cette période"
 }

@@ -357,5 +357,11 @@
   "account.reconcile.note": "இருப்பு சரிசெய்தல்",
   "forecast.avgPerDay": "நாள் சராசரி",
   "forecast.remainingBills": "மீதி பில்கள்",
-  "forecast.seeBreakdown": "விவரம் காண்க"
+  "forecast.seeBreakdown": "விவரம் காண்க",
+  "activity.view.list": "பட்டியல்",
+  "activity.view.categories": "வகைகள்",
+  "analytics.expense": "செலவுகள்",
+  "analytics.income": "வருமானம்",
+  "analytics.breakdown": "வகை விவரம்",
+  "analytics.empty": "இந்தக் காலத்திற்கு பரிவர்த்தனைகள் இல்லை"
 }

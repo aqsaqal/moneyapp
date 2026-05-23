@@ -357,5 +357,11 @@
   "account.reconcile.note": "Saldon sovitus",
   "forecast.avgPerDay": "KESKIM./PÄIVÄ",
   "forecast.remainingBills": "JÄLJ. LASKUT",
-  "forecast.seeBreakdown": "Näytä erittely"
+  "forecast.seeBreakdown": "Näytä erittely",
+  "activity.view.list": "Lista",
+  "activity.view.categories": "Kategoriat",
+  "analytics.expense": "Menot",
+  "analytics.income": "Tulot",
+  "analytics.breakdown": "KATEGORIOIDEN ERITTELY",
+  "analytics.empty": "Ei tapahtumia tällä ajalla"
 }

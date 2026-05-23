@@ -357,5 +357,11 @@
   "account.reconcile.note": "Riconciliazione saldo",
   "forecast.avgPerDay": "MEDIA GIORNALIERA",
   "forecast.remainingBills": "BOLLETTE RESIDUE",
-  "forecast.seeBreakdown": "Vedi dettagli"
+  "forecast.seeBreakdown": "Vedi dettagli",
+  "activity.view.list": "Elenco",
+  "activity.view.categories": "Categorie",
+  "analytics.expense": "Spese",
+  "analytics.income": "Entrate",
+  "analytics.breakdown": "DETTAGLIO CATEGORIE",
+  "analytics.empty": "Nessuna transazione in questo periodo"
 }

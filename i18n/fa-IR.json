@@ -357,5 +357,11 @@
   "account.reconcile.note": "تطبیق موجودی",
   "forecast.avgPerDay": "میانگین روزانه",
   "forecast.remainingBills": "قبض‌های باقی‌مانده",
-  "forecast.seeBreakdown": "مشاهده جزئیات"
+  "forecast.seeBreakdown": "مشاهده جزئیات",
+  "activity.view.list": "فهرست",
+  "activity.view.categories": "دسته‌ها",
+  "analytics.expense": "هزینه‌ها",
+  "analytics.income": "درآمد",
+  "analytics.breakdown": "تفکیک دسته‌ها",
+  "analytics.empty": "تراکنشی برای این بازه نیست"
 }

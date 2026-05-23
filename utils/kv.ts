@@ -73,6 +73,7 @@ export interface KVSchema {
   currencyFormat: string;      // preset id from CURRENCY_FORMAT_PRESETS (Phase 10x)
   remindersEnabled: string;    // '1' = local bill-reminder notifications active (Phase 10t)
   reminderLeadDays: string;    // '0'..'7' days before dayOfMonth (Phase 10t)
+  activityView: string;        // 'list' | 'categories' (Phase 10ac)
 }
 
 export const kv = {

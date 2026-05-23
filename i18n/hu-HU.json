@@ -357,5 +357,11 @@
   "account.reconcile.note": "Egyenleg-egyeztetés",
   "forecast.avgPerDay": "NAPI ÁTLAG",
   "forecast.remainingBills": "FENNMARADÓ SZÁMLÁK",
-  "forecast.seeBreakdown": "Részletek"
+  "forecast.seeBreakdown": "Részletek",
+  "activity.view.list": "Lista",
+  "activity.view.categories": "Kategóriák",
+  "analytics.expense": "Kiadások",
+  "analytics.income": "Bevételek",
+  "analytics.breakdown": "KATEGÓRIA-BONTÁS",
+  "analytics.empty": "Nincs tranzakció ebben az időszakban"
 }

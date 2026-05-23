@@ -357,5 +357,11 @@
   "account.reconcile.note": "Συμφωνία υπολοίπου",
   "forecast.avgPerDay": "ΗΜΕΡΗΣΙΟΣ ΜΕΣΟΣ",
   "forecast.remainingBills": "ΥΠΟΛΟΙΠΟΙ ΛΟΓΑΡΙΑΣΜΟΙ",
-  "forecast.seeBreakdown": "Δείτε ανάλυση"
+  "forecast.seeBreakdown": "Δείτε ανάλυση",
+  "activity.view.list": "Λίστα",
+  "activity.view.categories": "Κατηγορίες",
+  "analytics.expense": "Έξοδα",
+  "analytics.income": "Έσοδα",
+  "analytics.breakdown": "ΑΝΑΛΥΣΗ ΑΝΑ ΚΑΤΗΓΟΡΙΑ",
+  "analytics.empty": "Δεν υπάρχουν συναλλαγές για αυτή την περίοδο"
 }

@@ -357,5 +357,11 @@
   "account.reconcile.note": "Usawazishaji wa salio",
   "forecast.avgPerDay": "WAST./SIKU",
   "forecast.remainingBills": "BILI ZILIZOBAKI",
-  "forecast.seeBreakdown": "Tazama mchanganuo"
+  "forecast.seeBreakdown": "Tazama mchanganuo",
+  "activity.view.list": "Orodha",
+  "activity.view.categories": "Kategoria",
+  "analytics.expense": "Matumizi",
+  "analytics.income": "Mapato",
+  "analytics.breakdown": "MCHANGANUO WA KATEGORIA",
+  "analytics.empty": "Hakuna miamala kwa kipindi hiki"
 }
