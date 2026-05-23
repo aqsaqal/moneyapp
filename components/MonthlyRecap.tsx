@@ -257,33 +257,39 @@ const styles = StyleSheet.create({
   shareText: { color: theme.bg, fontSize: sizes.sm, fontFamily: font.bodySemi },
   scroll: { padding: spacing.lg, gap: spacing.lg, paddingBottom: spacing.xxl },
   cardWrap: { alignSelf: 'center', width: '100%' },
+  // Square card targeted at 1080×1080 social share. The content blocks
+  // (header + net flow + 2x2 grid + footer) used to overflow at viewport
+  // widths > ~330pt — overflow: hidden was clipping the bottom row off
+  // screen and out of the captured PNG. Tightened paddings, gap, and the
+  // headline font so the four blocks fit the square at every supported
+  // screen width without losing legibility.
   card: {
     aspectRatio: 1,
     backgroundColor: CARD_BG,
     borderRadius: 28,
-    padding: 28,
-    gap: 22,
+    padding: 20,
+    gap: 14,
     overflow: 'hidden',
     ...Platform.select({
       ios: { shadowColor: '#000', shadowOpacity: 0.4, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } },
       android: { elevation: 8 },
     }),
   },
-  cardHeader: { gap: 4 },
-  brand: { color: theme.text1, fontSize: 22, fontFamily: font.displayBold },
+  cardHeader: { gap: 2 },
+  brand: { color: theme.text1, fontSize: 20, fontFamily: font.displayBold },
   month: { color: theme.text3, fontSize: sizes.sm, letterSpacing: 0.5 },
-  netBlock: { gap: 4 },
+  netBlock: { gap: 2 },
   netLabel: { color: theme.text3, fontSize: sizes.xs, textTransform: 'uppercase', letterSpacing: 1 },
-  netValue: { fontSize: 56, fontFamily: font.displayBold, lineHeight: 62 },
+  netValue: { fontSize: 40, fontFamily: font.displayBold, lineHeight: 46 },
   netHint: { color: theme.text2, fontSize: sizes.sm, marginTop: 2 },
-  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   stat: {
     flexBasis: '47%',
     flexGrow: 1,
-    padding: 14,
+    padding: 10,
     borderRadius: radii.md,
     backgroundColor: '#1F2937',
-    gap: 4,
+    gap: 2,
   },
   statAccent: { width: 24, height: 3, borderRadius: 2, marginBottom: 4 },
   statLabel: { color: theme.text3, fontSize: sizes.xs, textTransform: 'uppercase', letterSpacing: 0.5 },
