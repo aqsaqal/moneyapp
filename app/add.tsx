@@ -1050,11 +1050,16 @@ function CategoryPickerRow({
   );
 }
 
+/** Symbol to render on the left of the amount in Smart Add's header.
+ *  Was hard-coded to $/€/£ with a "CHF "-style fallback that read as a
+ *  3-letter code rather than a glyph — now goes through the currency
+ *  catalog so CHF → Fr., KZT → ₸, JPY → ¥, etc. Falls back to the
+ *  code only when the catalog has no entry (truly unknown). The
+ *  right-side picker chip keeps the ISO code so the user has both
+ *  signals visible. */
 function currencyPrefix(c: CurrencyCode): string {
-  if (c === 'USD') return '$';
-  if (c === 'EUR') return '€';
-  if (c === 'GBP') return '£';
-  return c + ' ';
+  const sym = CURRENCIES[c]?.symbolNative;
+  return sym ? `${sym} ` : `${c} `;
 }
 
 const styles = StyleSheet.create({

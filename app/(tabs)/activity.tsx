@@ -33,6 +33,7 @@ import { dayStr, monthKey, formatMoney } from '@/utils/format';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
 import { CategoriesAnalytics } from '@/components/CategoriesAnalytics';
+import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 
 export default function Activity() {
   const t = useT();
@@ -43,7 +44,7 @@ export default function Activity() {
   // doesn't accidentally drop the user back to List). Spec calls it
   // "per session" so we don't sync across devices either way.
   const [view, setView] = useState<'list' | 'categories'>(
-    () => (kv.get('activityView') as 'list' | 'categories' | undefined) ?? 'list',
+    () => (kv.get('activityView') as 'list' | 'categories' | undefined) ?? 'categories',
   );
   // Month anchor for the Categories view. Step ±1 with the arrows;
   // the label opens a placeholder picker (TODO: wire to existing
@@ -51,6 +52,7 @@ export default function Activity() {
   const [analyticsMonth, setAnalyticsMonth] = useState(() => {
     const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d;
   });
+  const [monthPickerOpen, setMonthPickerOpen] = useState(false);
   const [filterCat, setFilterCat] = useState<string | null>(null);
   // Filter chip strip: same pattern as the Smart Add chip row —
   // "All" + top 5 by THIS MONTH spend + "More". The full picker
@@ -140,7 +142,7 @@ export default function Activity() {
             search filter so the user can flip back and forth without
             losing state. */}
         <View style={styles.segmented}>
-          {(['list', 'categories'] as const).map((v) => (
+          {(['categories', 'list'] as const).map((v) => (
             <Pressable
               key={v}
               onPress={() => setViewPersist(v)}
@@ -198,7 +200,7 @@ export default function Activity() {
           onNextPeriod={() =>
             setAnalyticsMonth((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))
           }
-          onPickPeriod={() => { /* TODO: open period sheet once presets land */ }}
+          onPickPeriod={() => setMonthPickerOpen(true)}
           accountId={null}
           currency={currency}
           onSelectCategory={(catId) => {
@@ -289,6 +291,29 @@ export default function Activity() {
       </ScrollView>
       )}
       <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
+      {/* Month picker for Categories view — 24 entries (this month +
+          previous 23) is a usable window without dragging in a real
+          date picker dependency. Wider ranges can land alongside the
+          Day/Week/Year/All-time presets in a follow-up. */}
+      <PickerSheet
+        visible={monthPickerOpen}
+        title={t('activity.view.categories')}
+        selected={analyticsMonth.toISOString().slice(0, 7)}
+        options={Array.from({ length: 24 }, (_, i) => {
+          const d = new Date();
+          d.setDate(1); d.setHours(0, 0, 0, 0);
+          d.setMonth(d.getMonth() - i);
+          return {
+            value: d.toISOString().slice(0, 7),
+            label: d.toLocaleString('default', { month: 'long', year: 'numeric' }),
+          } as PickerOption<string>;
+        })}
+        onPick={(iso) => {
+          const [y, m] = iso.split('-').map(Number);
+          setAnalyticsMonth(new Date(y, m - 1, 1));
+        }}
+        onClose={() => setMonthPickerOpen(false)}
+      />
       <CategoryPicker
         visible={filterMoreOpen}
         mode="select"

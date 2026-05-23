@@ -200,7 +200,7 @@ export function useTransactions(opts: UseTransactionsOpts = {}): Transaction[] {
     q = q.limit(cap) as typeof q;
     return q.all();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [version, opts.monthKey, opts.category, opts.accountId, opts.type, opts.search, opts.halalStatus, opts.limit]);
+  }, [version, opts.monthKey, opts.category, opts.accountId, opts.type, opts.search, opts.halalStatus, opts.limit, opts.dateLte, opts.dateGt]);
 }
 
 export interface UseAccountsOpts {
