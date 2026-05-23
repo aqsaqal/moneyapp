@@ -25,15 +25,14 @@ interface AccountRow {
   currency: string | null;
 }
 
-export function snapshotTodayIfMissing(): void {
+/** Compute today's snapshot from the current account balances and
+ *  INSERT-OR-REPLACE it. Always overwrites — used by both the boot-time
+ *  call (where the row may be missing) and the post-write hook in
+ *  useAppData (where the row exists but is stale because a tx just
+ *  shifted a balance). */
+export function refreshTodaySnapshot(): void {
   const raw = getRawDB();
   const today = isoDate();
-  const exists = raw.getFirstSync(
-    `SELECT 1 AS x FROM net_worth_snapshots WHERE date = ?`,
-    [today],
-  ) as { x: number } | undefined;
-  if (exists) return;
-
   const display = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const accounts = raw.getAllSync(
     `SELECT balance, currency FROM accounts`,
@@ -53,6 +52,19 @@ export function snapshotTodayIfMissing(): void {
      VALUES (?, ?, ?, ?)`,
     [today, assets, debt, net],
   );
+}
+
+/** Called once per boot. Skips work when today's row is already there;
+ *  the post-write hook handles intra-day refreshes. */
+export function snapshotTodayIfMissing(): void {
+  const raw = getRawDB();
+  const today = isoDate();
+  const exists = raw.getFirstSync(
+    `SELECT 1 AS x FROM net_worth_snapshots WHERE date = ?`,
+    [today],
+  ) as { x: number } | undefined;
+  if (exists) return;
+  refreshTodaySnapshot();
 }
 
 export interface NetWorthPoint {

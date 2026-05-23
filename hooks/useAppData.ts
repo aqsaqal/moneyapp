@@ -35,7 +35,7 @@ import {
 import { monthKey } from '@/utils/format';
 import { seedIfEmpty } from '@/utils/db/seed';
 import { onProfileChange } from '@/utils/profiles';
-import { snapshotTodayIfMissing } from '@/utils/netWorthSnapshot';
+import { snapshotTodayIfMissing, refreshTodaySnapshot } from '@/utils/netWorthSnapshot';
 import { FX_TTL_MS, oldestFetchedAt, refreshRates } from '@/utils/fx';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, localizedSeededName } from '@/constants/categories';
 import { kv } from '@/utils/kv';
@@ -707,6 +707,10 @@ export function addTransaction(
       bumpMerchantMemoryInline(raw, input.note, input.category, input.accountId, now);
     }
   });
+  // Phase 10p: balances just moved, so the cached snapshot for today is
+  // stale. Recompute and INSERT-OR-REPLACE so the Net Worth chart reads
+  // the current state on the next render.
+  try { refreshTodaySnapshot(); } catch { /* never block the write path */ }
   bump();
   return { ...row } as Transaction;
 }
@@ -800,6 +804,7 @@ export function deleteTransaction(id: string): void {
     db.delete(transactions).where(eq(transactions.id, id)).run();
     db.delete(paidItems).where(eq(paidItems.transactionId, id)).run();
   });
+  try { refreshTodaySnapshot(); } catch { /* never block delete path */ }
   bump();
 }
 
@@ -844,6 +849,7 @@ export function updateTransaction(id: string, patch: Partial<Transaction>): void
     }
     db.update(transactions).set(patch).where(eq(transactions.id, id)).run();
   });
+  try { refreshTodaySnapshot(); } catch { /* never block update path */ }
   bump();
 }
 
@@ -930,6 +936,7 @@ export function upsertAccount(a: typeof accounts.$inferInsert): void {
   const existing = db.select().from(accounts).where(eq(accounts.id, a.id)).get();
   if (existing) db.update(accounts).set(a).where(eq(accounts.id, a.id)).run();
   else db.insert(accounts).values(a).run();
+  try { refreshTodaySnapshot(); } catch { /* never block account write */ }
   bump();
 }
 
@@ -938,6 +945,7 @@ export function deleteAccount(id: string): void {
   // Low-level: removes the account row WITHOUT touching transactions.
   // Callers typically want deleteAccountCascade() — see below.
   db.delete(accounts).where(eq(accounts.id, id)).run();
+  try { refreshTodaySnapshot(); } catch { /* never block delete path */ }
   bump();
 }
 
