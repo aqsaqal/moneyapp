@@ -384,22 +384,11 @@ function AnalyticsHeader({
             <StatCard label={t('activity.stat.total')} value={formatMoney(totalSpend, currency)} />
             <StatCard label={t('activity.stat.categories')} value={String(totals.length)} />
           </View>
-          <View style={{ gap: 4, marginTop: spacing.sm }}>
-            {totals
-              .sort((a, b) => b.total - a.total)
-              .map((t) => {
-                const cat = catInfo(t.category);
-                const pct = totalSpend > 0 ? (t.total / totalSpend) * 100 : 0;
-                return (
-                  <View key={t.category} style={styles.catLine}>
-                    <View style={[styles.catDot, { backgroundColor: cat.color }]} />
-                    <Text style={styles.catName}>{cat.name}</Text>
-                    <Text style={styles.catAmt}>{formatMoney(t.total, currency)}</Text>
-                    <Text style={styles.catPct}>{pct.toFixed(0)}%</Text>
-                  </View>
-                );
-              })}
-          </View>
+          {/* Per-category breakdown lived here in v1. Removed — the
+              dedicated Categories view in the segmented control above
+              owns this surface now (with month nav + Expense/Income
+              toggle + tap-to-filter), and duplicating it inside the
+              List view was confusing readers. */}
           <NetWorthChart />
           <Pressable
             onPress={onShareRecap}
@@ -488,11 +477,6 @@ const styles = StyleSheet.create({
   },
   analyticsHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   analyticsTitle: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi },
-  catLine: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: 6 },
-  catDot: { width: 8, height: 8, borderRadius: 4 },
-  catName: { color: theme.text1, fontSize: sizes.sm, flex: 1 },
-  catAmt: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.display },
-  catPct: { color: theme.text3, fontSize: sizes.xs, marginStart: 6, width: 36, textAlign: 'right' },
   group: { gap: spacing.sm },
   dayLabel: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body, textTransform: 'uppercase' },
   empty: { color: theme.text3, textAlign: 'center', marginTop: spacing.xxl },
