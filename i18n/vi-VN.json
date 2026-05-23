@@ -354,5 +354,8 @@
   "account.reconcile.body": "Số dư đã thay đổi {sign}{amount} {currency}. Lưu số dư mới hoặc tạo giao dịch Điều chỉnh để giải thích chênh lệch trong Hoạt động.",
   "account.reconcile.skip": "Lưu mà không điều chỉnh",
   "account.reconcile.create": "Tạo điều chỉnh",
-  "account.reconcile.note": "Đối chiếu số dư"
+  "account.reconcile.note": "Đối chiếu số dư",
+  "forecast.avgPerDay": "TB MỖI NGÀY",
+  "forecast.remainingBills": "HOÁ ĐƠN CÒN LẠI",
+  "forecast.seeBreakdown": "Xem chi tiết"
 }

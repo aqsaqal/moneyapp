@@ -353,5 +353,8 @@
   "account.reconcile.body": "Баланс изменился на {sign}{amount} {currency}. Сохрани новый баланс или создай Корректировку, чтобы пояснить разницу в Активности.",
   "account.reconcile.skip": "Сохранить без корректировки",
   "account.reconcile.create": "Создать корректировку",
-  "account.reconcile.note": "Сверка баланса"
+  "account.reconcile.note": "Сверка баланса",
+  "forecast.avgPerDay": "В СРЕДНЕМ/ДЕНЬ",
+  "forecast.remainingBills": "СЧЕТА К ОПЛАТЕ",
+  "forecast.seeBreakdown": "Подробнее"
 }

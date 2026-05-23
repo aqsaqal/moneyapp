@@ -140,63 +140,145 @@ export interface ForecastCardProps {
   forecast: number;
   disposable: number;
   daysLeft: number;
+  /** Days of variable spend data behind the projection. Used to gate
+   *  the card off until there's enough signal — < 3 days = noise. */
+  daysOfData: number;
+  /** Average daily variable spend so far this month (for transparency
+   *  in the expanded body). */
+  avgDailyVariable: number;
+  /** Recurring expenses dated later this month that aren't yet paid. */
+  remainingBills: number;
   currency?: CurrencyCode;
+  /** Tap-through for the user to act on the forecast — e.g. open the
+   *  budgets section. Optional; the body still expands without it. */
+  onSeeBreakdown?: () => void;
 }
 
-/** Tappable forecast card. Collapsed: shows the headline. Expanded:
- *  reveals projected end-of-month + a one-line explanation of how it's
- *  computed (avg daily variable spend × days left + remaining bills). */
+/** Tappable forecast card. Collapsed: shows the headline + chevron.
+ *  Expanded: projected end-of-month, the two contributing numbers, and
+ *  an optional "See breakdown" CTA. */
 export function ForecastCard({
   forecast,
   disposable,
   daysLeft,
+  daysOfData,
+  avgDailyVariable,
+  remainingBills,
   currency = 'USD',
+  onSeeBreakdown,
 }: ForecastCardProps) {
   const [open, setOpen] = React.useState(false);
-  // Tone matches the hero's trajectory color.
+
+  // Combined absolute + relative threshold for the yellow tier — fixes
+  // the case where disposable is tiny and a $4 cushion still reads as
+  // 8% buffer (warning), or where disposable is huge and a $50 cushion
+  // reads as 0.5% buffer (also warning). Yellow if EITHER signal trips.
+  const ABS_WARN = 20; // currency-units of forecast cushion
+  const REL_WARN = 0.1;
   let toneColor = theme.accent;
   let tone: 'good' | 'warn' | 'bad' = 'good';
   if (forecast < 0) {
     toneColor = theme.expense;
     tone = 'bad';
-  } else if (forecast < disposable * 0.1) {
+  } else if (forecast < ABS_WARN && forecast < disposable * REL_WARN) {
     toneColor = '#EAB308';
     tone = 'warn';
   }
+
   const headline =
     tone === 'bad'
       ? t('forecast.overshoot')
       : tone === 'warn'
         ? t('forecast.close')
         : t('forecast.onTrack');
+
   return (
     <Pressable
       onPress={() => setOpen((v) => !v)}
       style={styles.forecastCard}
       accessibilityRole="button"
+      accessibilityState={{ expanded: open }}
       accessibilityLabel={headline}
     >
       <View style={styles.forecastRow}>
         <View style={[styles.forecastDot, { backgroundColor: toneColor }]} />
-        <Text style={[styles.forecastHead, { color: toneColor }]}>{headline}</Text>
-        <Text style={styles.forecastCta}>{open ? t('forecast.hide') : t('forecast.tap')}</Text>
+        {/* Edge #2: only the dot carries the tone color now. The
+            headline stays neutral so the dot + headline aren't two
+            duplicate signals of the same thing. */}
+        <Text style={styles.forecastHead}>{headline}</Text>
+        <MaterialCommunityIcons
+          name={open ? 'chevron-up' : 'chevron-down'}
+          size={18}
+          color={theme.text2}
+        />
       </View>
       {open && (
-        <View style={styles.forecastBody}>
-          <Text style={styles.forecastLine}>
-            {t('forecast.projected')}{' '}
-            <Text style={{ color: toneColor, fontFamily: font.bodySemi }}>
+        <View
+          style={styles.forecastBody}
+          accessible
+          // Edge #8: announce the projected number when the body unfolds.
+          accessibilityLiveRegion="polite"
+        >
+          {/* Edge #9: split prefix and amount into two siblings so RTL
+              composition keeps the symbol on the correct side of the
+              colon. The label hugs the number visually but doesn't
+              concatenate at the bidi level. */}
+          <View style={styles.forecastProjectedRow}>
+            <Text style={styles.forecastLine}>{t('forecast.projected')}</Text>
+            <Text style={[styles.forecastProjected, { color: toneColor }]}>
               {forecast < 0 ? '−' : ''}{formatMoney(forecast, currency)}
             </Text>
-          </Text>
+          </View>
+
+          {/* Edge #4: surface the two contributing numbers so users
+              don't have to take the headline on faith. */}
+          <View style={styles.forecastNumbers}>
+            <View style={styles.forecastNumberCell}>
+              <Text style={styles.forecastNumberLabel}>
+                {t('forecast.avgPerDay')}
+              </Text>
+              <Text style={styles.forecastNumberValue}>
+                {formatMoney(avgDailyVariable, currency)}
+              </Text>
+            </View>
+            <View style={styles.forecastNumberCell}>
+              <Text style={styles.forecastNumberLabel}>
+                {t('forecast.remainingBills')}
+              </Text>
+              <Text style={styles.forecastNumberValue}>
+                {formatMoney(remainingBills, currency)}
+              </Text>
+            </View>
+          </View>
+
           <Text style={styles.forecastHint}>
             {t('forecast.basedOn', { days: daysLeft })}
           </Text>
+
+          {/* Edge #5: a real next step from the explanation. */}
+          {onSeeBreakdown && (
+            <Pressable
+              onPress={onSeeBreakdown}
+              style={styles.forecastCta}
+              accessibilityRole="button"
+              accessibilityLabel={t('forecast.seeBreakdown')}
+              hitSlop={6}
+            >
+              <Text style={styles.forecastCtaText}>{t('forecast.seeBreakdown')}</Text>
+              <MaterialCommunityIcons name="chevron-right" size={14} color={theme.accent} />
+            </Pressable>
+          )}
         </View>
       )}
     </Pressable>
   );
 }
+
+// Surface `daysOfData` outside the component so the gate at the call
+// site has one place to ask "is the card worth showing?".
+ForecastCard.shouldRender = function (daysOfData: number): boolean {
+  return daysOfData >= 3;
+};
 
 // =============================================================================
 // v1 — BalanceCard (kept for any caller still using it; e.g. future Me screen)
@@ -341,11 +423,43 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   forecastDot: { width: 8, height: 8, borderRadius: 4 },
-  forecastHead: { fontSize: sizes.sm, fontFamily: font.bodySemi, flex: 1 },
-  forecastCta: { color: theme.text3, fontSize: sizes.xs, textTransform: 'uppercase', letterSpacing: 0.5 },
-  forecastBody: { marginTop: spacing.sm, gap: 4 },
+  // Edge #2 + #7: headline stays neutral text1 (high contrast) so the
+  // tone dot is the only color carrier. Chevron handles the affordance.
+  forecastHead: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.bodySemi, flex: 1 },
+  forecastBody: { marginTop: spacing.md, gap: spacing.sm },
+  forecastProjectedRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
   forecastLine: { color: theme.text2, fontSize: sizes.sm },
+  forecastProjected: { fontSize: sizes.md, fontFamily: font.bodySemi },
+  forecastNumbers: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    paddingVertical: 6,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.border,
+  },
+  forecastNumberCell: { flex: 1, gap: 2 },
+  forecastNumberLabel: {
+    color: theme.text3,
+    fontSize: sizes.xs,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  forecastNumberValue: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.bodySemi },
   forecastHint: { color: theme.text3, fontSize: sizes.xs, lineHeight: 16 },
+  forecastCta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    alignSelf: 'flex-start',
+    paddingVertical: 6,
+  },
+  forecastCtaText: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },
 
   // v1 (kept)
   card: {

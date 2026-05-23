@@ -354,5 +354,8 @@
   "account.reconcile.body": "Saldo zmieniło się o {sign}{amount} {currency}. Zapisz nowe saldo lub utwórz transakcję Korekta, by różnica była widoczna w Aktywności.",
   "account.reconcile.skip": "Zapisz bez korekty",
   "account.reconcile.create": "Utwórz korektę",
-  "account.reconcile.note": "Uzgodnienie salda"
+  "account.reconcile.note": "Uzgodnienie salda",
+  "forecast.avgPerDay": "ŚREDNIO/DZIEŃ",
+  "forecast.remainingBills": "POZOSTAŁE RACHUNKI",
+  "forecast.seeBreakdown": "Zobacz szczegóły"
 }

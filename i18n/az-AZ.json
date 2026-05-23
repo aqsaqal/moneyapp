@@ -354,5 +354,8 @@
   "account.reconcile.body": "Balans {sign}{amount} {currency} dəyişdi. Yeni balansı yadda saxla və ya fərqi Fəaliyyətdə izah etmək üçün Düzəliş əməliyyatı yarat.",
   "account.reconcile.skip": "Düzəlişsiz yadda saxla",
   "account.reconcile.create": "Düzəliş yarat",
-  "account.reconcile.note": "Balans uzlaşması"
+  "account.reconcile.note": "Balans uzlaşması",
+  "forecast.avgPerDay": "ORTA/GÜN",
+  "forecast.remainingBills": "QALAN HESABLAR",
+  "forecast.seeBreakdown": "Təfərrüatlara bax"
 }

@@ -354,5 +354,8 @@
   "account.reconcile.body": "Salio limebadilika kwa {sign}{amount} {currency}. Hifadhi salio jipya au unda muamala wa Marekebisho ili tofauti ielezeke katika Shughuli.",
   "account.reconcile.skip": "Hifadhi bila marekebisho",
   "account.reconcile.create": "Unda marekebisho",
-  "account.reconcile.note": "Usawazishaji wa salio"
+  "account.reconcile.note": "Usawazishaji wa salio",
+  "forecast.avgPerDay": "WAST./SIKU",
+  "forecast.remainingBills": "BILI ZILIZOBAKI",
+  "forecast.seeBreakdown": "Tazama mchanganuo"
 }

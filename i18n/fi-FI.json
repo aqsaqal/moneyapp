@@ -354,5 +354,8 @@
   "account.reconcile.body": "Saldo muuttui {sign}{amount} {currency}. Tallenna uusi saldo tai luo Oikaisu-tapahtuma, jotta ero näkyy Toiminnassa.",
   "account.reconcile.skip": "Tallenna ilman oikaisua",
   "account.reconcile.create": "Luo oikaisu",
-  "account.reconcile.note": "Saldon sovitus"
+  "account.reconcile.note": "Saldon sovitus",
+  "forecast.avgPerDay": "KESKIM./PÄIVÄ",
+  "forecast.remainingBills": "JÄLJ. LASKUT",
+  "forecast.seeBreakdown": "Näytä erittely"
 }

@@ -354,5 +354,8 @@
   "account.reconcile.body": "بیلنس {sign}{amount} {currency} تبدیل ہوا۔ نیا بیلنس محفوظ کریں یا فرق سرگرمی میں واضح کرنے کے لیے ایڈجسٹمنٹ ٹرانزیکشن بنائیں۔",
   "account.reconcile.skip": "ایڈجسٹمنٹ کے بغیر محفوظ کریں",
   "account.reconcile.create": "ایڈجسٹمنٹ بنائیں",
-  "account.reconcile.note": "بیلنس ہم آہنگی"
+  "account.reconcile.note": "بیلنس ہم آہنگی",
+  "forecast.avgPerDay": "یومیہ اوسط",
+  "forecast.remainingBills": "بقیہ بل",
+  "forecast.seeBreakdown": "تفصیل دیکھیں"
 }

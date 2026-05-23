@@ -354,5 +354,8 @@
   "account.reconcile.body": "शेष में {sign}{amount} {currency} परिवर्तन हुआ। नया शेष सहेजें या समायोजन लेन-देन बनाएँ ताकि गतिविधि में अंतर समझा जा सके।",
   "account.reconcile.skip": "बिना समायोजन सहेजें",
   "account.reconcile.create": "समायोजन बनाएँ",
-  "account.reconcile.note": "शेष मिलान"
+  "account.reconcile.note": "शेष मिलान",
+  "forecast.avgPerDay": "दैनिक औसत",
+  "forecast.remainingBills": "शेष बिल",
+  "forecast.seeBreakdown": "विवरण देखें"
 }

@@ -354,5 +354,8 @@
   "account.reconcile.body": "Saldo veranderde met {sign}{amount} {currency}. Sla het nieuwe saldo op, of maak een Aanpassing-transactie zodat het verschil zichtbaar is in Activiteit.",
   "account.reconcile.skip": "Opslaan zonder aanpassing",
   "account.reconcile.create": "Aanpassing maken",
-  "account.reconcile.note": "Saldo-verrekening"
+  "account.reconcile.note": "Saldo-verrekening",
+  "forecast.avgPerDay": "GEM. PER DAG",
+  "forecast.remainingBills": "OPENSTAANDE",
+  "forecast.seeBreakdown": "Toon details"
 }

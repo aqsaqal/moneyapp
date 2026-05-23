@@ -353,5 +353,8 @@
   "account.reconcile.body": "تغيّر الرصيد بمقدار {sign}{amount} {currency}. احفظ الرصيد الجديد، أو أنشئ معاملة تعديل لتفسير الفرق من النشاط.",
   "account.reconcile.skip": "حفظ بدون تعديل",
   "account.reconcile.create": "إنشاء تعديل",
-  "account.reconcile.note": "تسوية الرصيد"
+  "account.reconcile.note": "تسوية الرصيد",
+  "forecast.avgPerDay": "المتوسط اليومي",
+  "forecast.remainingBills": "الفواتير المتبقية",
+  "forecast.seeBreakdown": "عرض التفاصيل"
 }

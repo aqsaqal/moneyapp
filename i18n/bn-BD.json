@@ -354,5 +354,8 @@
   "account.reconcile.body": "ব্যালেন্স {sign}{amount} {currency} পরিবর্তিত হয়েছে। নতুন ব্যালেন্স সংরক্ষণ করুন বা পার্থক্য কার্যকলাপে ব্যাখ্যা করতে সমন্বয় লেনদেন তৈরি করুন।",
   "account.reconcile.skip": "সমন্বয় ছাড়া সংরক্ষণ",
   "account.reconcile.create": "সমন্বয় তৈরি করুন",
-  "account.reconcile.note": "ব্যালেন্স মেলানো"
+  "account.reconcile.note": "ব্যালেন্স মেলানো",
+  "forecast.avgPerDay": "দৈনিক গড়",
+  "forecast.remainingBills": "অবশিষ্ট বিল",
+  "forecast.seeBreakdown": "বিভাজন দেখুন"
 }

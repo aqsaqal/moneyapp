@@ -354,5 +354,8 @@
   "account.reconcile.body": "Το υπόλοιπο άλλαξε κατά {sign}{amount} {currency}. Αποθήκευσε το νέο υπόλοιπο ή δημιούργησε συναλλαγή Προσαρμογής για να εξηγηθεί η διαφορά στην Δραστηριότητα.",
   "account.reconcile.skip": "Αποθήκευση χωρίς προσαρμογή",
   "account.reconcile.create": "Δημιουργία προσαρμογής",
-  "account.reconcile.note": "Συμφωνία υπολοίπου"
+  "account.reconcile.note": "Συμφωνία υπολοίπου",
+  "forecast.avgPerDay": "ΗΜΕΡΗΣΙΟΣ ΜΕΣΟΣ",
+  "forecast.remainingBills": "ΥΠΟΛΟΙΠΟΙ ΛΟΓΑΡΙΑΣΜΟΙ",
+  "forecast.seeBreakdown": "Δείτε ανάλυση"
 }

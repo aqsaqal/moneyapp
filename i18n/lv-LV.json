@@ -354,5 +354,8 @@
   "account.reconcile.body": "Atlikums mainījās par {sign}{amount} {currency}. Saglabā jauno atlikumu vai izveido Korekcijas darījumu, lai starpība būtu redzama Aktivitātē.",
   "account.reconcile.skip": "Saglabāt bez korekcijas",
   "account.reconcile.create": "Izveidot korekciju",
-  "account.reconcile.note": "Atlikuma saskaņošana"
+  "account.reconcile.note": "Atlikuma saskaņošana",
+  "forecast.avgPerDay": "VID./DIENA",
+  "forecast.remainingBills": "ATLIK. RĒĶINI",
+  "forecast.seeBreakdown": "Skatīt sadalījumu"
 }

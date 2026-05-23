@@ -354,5 +354,8 @@
   "account.reconcile.body": "Stanje se promijenilo za {sign}{amount} {currency}. Spremi novo stanje ili stvori Prilagodbu kako bi razlika bila vidljiva u Aktivnosti.",
   "account.reconcile.skip": "Spremi bez prilagodbe",
   "account.reconcile.create": "Stvori prilagodbu",
-  "account.reconcile.note": "Usklađenje stanja"
+  "account.reconcile.note": "Usklađenje stanja",
+  "forecast.avgPerDay": "PROS./DAN",
+  "forecast.remainingBills": "PREOSTALI RAČUNI",
+  "forecast.seeBreakdown": "Prikaži detalje"
 }

@@ -354,5 +354,8 @@
   "account.reconcile.body": "Zůstatek se změnil o {sign}{amount} {currency}. Ulož nový zůstatek nebo vytvoř transakci Úprava, aby byl rozdíl vysvětlitelný z Aktivity.",
   "account.reconcile.skip": "Uložit bez úpravy",
   "account.reconcile.create": "Vytvořit úpravu",
-  "account.reconcile.note": "Vyrovnání zůstatku"
+  "account.reconcile.note": "Vyrovnání zůstatku",
+  "forecast.avgPerDay": "PRŮMĚR/DEN",
+  "forecast.remainingBills": "ZBÝVAJÍCÍ ÚČTY",
+  "forecast.seeBreakdown": "Zobrazit detaily"
 }

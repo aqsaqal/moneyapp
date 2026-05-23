@@ -354,5 +354,8 @@
   "account.reconcile.body": "Saldot ändrades med {sign}{amount} {currency}. Spara nytt saldo eller skapa en Justering-transaktion så skillnaden syns i Aktivitet.",
   "account.reconcile.skip": "Spara utan justering",
   "account.reconcile.create": "Skapa justering",
-  "account.reconcile.note": "Saldoavstämning"
+  "account.reconcile.note": "Saldoavstämning",
+  "forecast.avgPerDay": "GENOM./DAG",
+  "forecast.remainingBills": "KVARV. RÄKNINGAR",
+  "forecast.seeBreakdown": "Visa detaljer"
 }

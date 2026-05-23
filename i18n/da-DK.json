@@ -354,5 +354,8 @@
   "account.reconcile.body": "Saldoen ændrede sig med {sign}{amount} {currency}. Gem ny saldo, eller opret en Justering-transaktion så forskellen ses i Aktivitet.",
   "account.reconcile.skip": "Gem uden justering",
   "account.reconcile.create": "Opret justering",
-  "account.reconcile.note": "Saldoafstemning"
+  "account.reconcile.note": "Saldoafstemning",
+  "forecast.avgPerDay": "GENNEM./DAG",
+  "forecast.remainingBills": "RESTREGNINGER",
+  "forecast.seeBreakdown": "Vis opdeling"
 }

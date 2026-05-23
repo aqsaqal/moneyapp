@@ -353,5 +353,8 @@
   "account.reconcile.body": "Saldo berubah {sign}{amount} {currency}. Simpan saldo baru, atau buat transaksi Penyesuaian agar selisih terlihat di Aktivitas.",
   "account.reconcile.skip": "Simpan tanpa penyesuaian",
   "account.reconcile.create": "Buat penyesuaian",
-  "account.reconcile.note": "Rekonsiliasi saldo"
+  "account.reconcile.note": "Rekonsiliasi saldo",
+  "forecast.avgPerDay": "RATA HARIAN",
+  "forecast.remainingBills": "TAGIHAN TERSISA",
+  "forecast.seeBreakdown": "Lihat rincian"
 }

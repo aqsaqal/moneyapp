@@ -354,5 +354,8 @@
   "account.reconcile.body": "Saldo muutus {sign}{amount} {currency}. Salvesta uus saldo või loo Kohanduse tehing, et erinevus oleks Tegevuses jälgitav.",
   "account.reconcile.skip": "Salvesta ilma kohanduseta",
   "account.reconcile.create": "Loo kohandus",
-  "account.reconcile.note": "Saldo ühildamine"
+  "account.reconcile.note": "Saldo ühildamine",
+  "forecast.avgPerDay": "KESKM./PÄEV",
+  "forecast.remainingBills": "JÄÄNUD ARVED",
+  "forecast.seeBreakdown": "Vaata jaotust"
 }

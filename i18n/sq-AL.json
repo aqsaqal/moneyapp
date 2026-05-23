@@ -354,5 +354,8 @@
   "account.reconcile.body": "Gjendja ndryshoi me {sign}{amount} {currency}. Ruaj gjendjen e re ose krijo një transaksion Përshtatje që dallimi të jetë i shpjegueshëm nga Aktiviteti.",
   "account.reconcile.skip": "Ruaj pa përshtatje",
   "account.reconcile.create": "Krijo përshtatje",
-  "account.reconcile.note": "Rakordim i gjendjes"
+  "account.reconcile.note": "Rakordim i gjendjes",
+  "forecast.avgPerDay": "MES. DITORE",
+  "forecast.remainingBills": "FATURA TË MBETURA",
+  "forecast.seeBreakdown": "Shih ndarjen"
 }

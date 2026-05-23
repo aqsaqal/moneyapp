@@ -354,5 +354,8 @@
   "account.reconcile.body": "ยอดเปลี่ยน {sign}{amount} {currency} บันทึกยอดใหม่หรือสร้างรายการปรับปรุงเพื่อระบุส่วนต่างในกิจกรรม",
   "account.reconcile.skip": "บันทึกโดยไม่ปรับ",
   "account.reconcile.create": "สร้างการปรับ",
-  "account.reconcile.note": "กระทบยอด"
+  "account.reconcile.note": "กระทบยอด",
+  "forecast.avgPerDay": "เฉลี่ย/วัน",
+  "forecast.remainingBills": "บิลคงเหลือ",
+  "forecast.seeBreakdown": "ดูรายละเอียด"
 }

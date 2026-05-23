@@ -354,5 +354,8 @@
   "account.reconcile.body": "Az egyenleg {sign}{amount} {currency}-vel változott. Mentsd az új egyenleget, vagy hozz létre Korrekció tranzakciót, hogy a különbség az Aktivitásban követhető legyen.",
   "account.reconcile.skip": "Mentés korrekció nélkül",
   "account.reconcile.create": "Korrekció létrehozása",
-  "account.reconcile.note": "Egyenleg-egyeztetés"
+  "account.reconcile.note": "Egyenleg-egyeztetés",
+  "forecast.avgPerDay": "NAPI ÁTLAG",
+  "forecast.remainingBills": "FENNMARADÓ SZÁMLÁK",
+  "forecast.seeBreakdown": "Részletek"
 }

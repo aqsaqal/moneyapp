@@ -354,5 +354,8 @@
   "account.reconcile.body": "Салдото се промени с {sign}{amount} {currency}. Запази ново салдо или създай Корекция, за да се проследи разликата в Активност.",
   "account.reconcile.skip": "Запази без корекция",
   "account.reconcile.create": "Създай корекция",
-  "account.reconcile.note": "Изравнение на салдо"
+  "account.reconcile.note": "Изравнение на салдо",
+  "forecast.avgPerDay": "СРЕДНО/ДЕН",
+  "forecast.remainingBills": "ОСТАНАЛИ СМЕТКИ",
+  "forecast.seeBreakdown": "Виж разбивка"
 }

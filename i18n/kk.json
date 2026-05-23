@@ -353,5 +353,8 @@
   "account.reconcile.body": "Баланс {sign}{amount} {currency} өзгерді. Жаңа балансты сақта немесе айырмашылықты Белсенділікте түсіндіру үшін Түзету операциясын жаса.",
   "account.reconcile.skip": "Түзетусіз сақтау",
   "account.reconcile.create": "Түзету жасау",
-  "account.reconcile.note": "Баланс түзетуі"
+  "account.reconcile.note": "Баланс түзетуі",
+  "forecast.avgPerDay": "КҮНДІК ОРТА",
+  "forecast.remainingBills": "ҚАЛҒАН ШОТТАР",
+  "forecast.seeBreakdown": "Бөлшектерді көру"
 }

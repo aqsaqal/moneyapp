@@ -354,5 +354,8 @@
   "account.reconcile.body": "היתרה השתנתה ב-{sign}{amount} {currency}. שמור יתרה חדשה או צור עסקת התאמה כדי שההפרש ייראה בפעילות.",
   "account.reconcile.skip": "שמור ללא התאמה",
   "account.reconcile.create": "צור התאמה",
-  "account.reconcile.note": "התאמת יתרה"
+  "account.reconcile.note": "התאמת יתרה",
+  "forecast.avgPerDay": "ממוצע יומי",
+  "forecast.remainingBills": "חשבוניות שנותרו",
+  "forecast.seeBreakdown": "הצג פירוט"
 }

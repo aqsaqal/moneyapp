@@ -354,5 +354,8 @@
   "account.reconcile.body": "Soldul s-a schimbat cu {sign}{amount} {currency}. Salvează noul sold sau creează o tranzacție de Ajustare pentru a explica diferența în Activitate.",
   "account.reconcile.skip": "Salvează fără ajustare",
   "account.reconcile.create": "Creează ajustare",
-  "account.reconcile.note": "Reconciliere sold"
+  "account.reconcile.note": "Reconciliere sold",
+  "forecast.avgPerDay": "MEDIE ZILNICĂ",
+  "forecast.remainingBills": "FACTURI RĂMASE",
+  "forecast.seeBreakdown": "Vezi detalii"
 }

@@ -354,5 +354,8 @@
   "account.reconcile.body": "Saldo um {sign}{amount} {currency} geändert. Neuen Saldo speichern oder eine Anpassungs-Transaktion erstellen, damit die Differenz in Aktivität erklärbar ist.",
   "account.reconcile.skip": "Ohne Anpassung speichern",
   "account.reconcile.create": "Anpassung erstellen",
-  "account.reconcile.note": "Saldo-Abgleich"
+  "account.reconcile.note": "Saldo-Abgleich",
+  "forecast.avgPerDay": "DURCHSCHN./TAG",
+  "forecast.remainingBills": "OFFENE RECHNUNGEN",
+  "forecast.seeBreakdown": "Aufschlüsselung anzeigen"
 }

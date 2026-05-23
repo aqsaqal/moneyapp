@@ -354,5 +354,8 @@
   "account.reconcile.body": "餘額變動 {sign}{amount} {currency}。儲存新餘額，或建立調整交易以便在活動中追溯差額。",
   "account.reconcile.skip": "直接儲存",
   "account.reconcile.create": "建立調整",
-  "account.reconcile.note": "餘額對帳"
+  "account.reconcile.note": "餘額對帳",
+  "forecast.avgPerDay": "日均",
+  "forecast.remainingBills": "剩餘帳單",
+  "forecast.seeBreakdown": "查看明細"
 }

@@ -354,5 +354,8 @@
   "account.reconcile.body": "Balans {sign}{amount} {currency} ga oʻzgardi. Yangi balansni saqlang yoki farqni Faoliyatda tushuntirish uchun Tuzatish tranzaksiyasi yarating.",
   "account.reconcile.skip": "Tuzatishsiz saqlash",
   "account.reconcile.create": "Tuzatish yaratish",
-  "account.reconcile.note": "Balans tekshiruvi"
+  "account.reconcile.note": "Balans tekshiruvi",
+  "forecast.avgPerDay": "OʻRT./KUN",
+  "forecast.remainingBills": "QOLGAN HISOBLAR",
+  "forecast.seeBreakdown": "Tafsilotni koʻrish"
 }

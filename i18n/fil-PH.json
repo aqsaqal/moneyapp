@@ -354,5 +354,8 @@
   "account.reconcile.body": "Nagbago ang balanse ng {sign}{amount} {currency}. I-save ang bagong balanse o gumawa ng Adjustment para makita ang puwang sa Aktibidad.",
   "account.reconcile.skip": "I-save nang walang adjustment",
   "account.reconcile.create": "Gumawa ng adjustment",
-  "account.reconcile.note": "Reconciliation ng balanse"
+  "account.reconcile.note": "Reconciliation ng balanse",
+  "forecast.avgPerDay": "AVE/ARAW",
+  "forecast.remainingBills": "NATITIRANG BILL",
+  "forecast.seeBreakdown": "Tingnan ang detalye"
 }

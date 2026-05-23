@@ -353,5 +353,8 @@
   "account.reconcile.body": "Baki berubah {sign}{amount} {currency}. Simpan baki baru, atau cipta transaksi Pelarasan untuk jelaskan jurang dalam Aktiviti.",
   "account.reconcile.skip": "Simpan tanpa pelarasan",
   "account.reconcile.create": "Cipta pelarasan",
-  "account.reconcile.note": "Mutabakat baki"
+  "account.reconcile.note": "Mutabakat baki",
+  "forecast.avgPerDay": "PURATA HARIAN",
+  "forecast.remainingBills": "BIL BAKI",
+  "forecast.seeBreakdown": "Lihat butiran"
 }

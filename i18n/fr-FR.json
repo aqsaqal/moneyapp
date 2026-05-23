@@ -354,5 +354,8 @@
   "account.reconcile.body": "Le solde a changé de {sign}{amount} {currency}. Enregistrez le nouveau solde, ou créez une transaction d'Ajustement pour expliquer l'écart depuis Activité.",
   "account.reconcile.skip": "Enregistrer sans ajustement",
   "account.reconcile.create": "Créer un ajustement",
-  "account.reconcile.note": "Réconciliation du solde"
+  "account.reconcile.note": "Réconciliation du solde",
+  "forecast.avgPerDay": "MOYENNE/JOUR",
+  "forecast.remainingBills": "FACTURES RESTANTES",
+  "forecast.seeBreakdown": "Voir le détail"
 }

@@ -354,5 +354,8 @@
   "account.reconcile.body": "موجودی {sign}{amount} {currency} تغییر کرد. موجودی جدید را ذخیره کنید یا یک تراکنش تعدیل ایجاد کنید تا تفاوت در فعالیت‌ها مشخص باشد.",
   "account.reconcile.skip": "ذخیره بدون تعدیل",
   "account.reconcile.create": "ایجاد تعدیل",
-  "account.reconcile.note": "تطبیق موجودی"
+  "account.reconcile.note": "تطبیق موجودی",
+  "forecast.avgPerDay": "میانگین روزانه",
+  "forecast.remainingBills": "قبض‌های باقی‌مانده",
+  "forecast.seeBreakdown": "مشاهده جزئیات"
 }

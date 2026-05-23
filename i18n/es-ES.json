@@ -354,5 +354,8 @@
   "account.reconcile.body": "El saldo cambió en {sign}{amount} {currency}. Guarda el nuevo saldo o crea una transacción de Ajuste para explicar la diferencia desde Actividad.",
   "account.reconcile.skip": "Guardar sin ajuste",
   "account.reconcile.create": "Crear ajuste",
-  "account.reconcile.note": "Conciliación de saldo"
+  "account.reconcile.note": "Conciliación de saldo",
+  "forecast.avgPerDay": "PROMEDIO DIARIO",
+  "forecast.remainingBills": "FACTURAS RESTANTES",
+  "forecast.seeBreakdown": "Ver desglose"
 }

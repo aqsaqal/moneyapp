@@ -354,5 +354,8 @@
   "account.reconcile.body": "Il saldo è cambiato di {sign}{amount} {currency}. Salva il nuovo saldo o crea una transazione di Rettifica per spiegare la differenza da Attività.",
   "account.reconcile.skip": "Salva senza rettifica",
   "account.reconcile.create": "Crea rettifica",
-  "account.reconcile.note": "Riconciliazione saldo"
+  "account.reconcile.note": "Riconciliazione saldo",
+  "forecast.avgPerDay": "MEDIA GIORNALIERA",
+  "forecast.remainingBills": "BOLLETTE RESIDUE",
+  "forecast.seeBreakdown": "Vedi dettagli"
 }

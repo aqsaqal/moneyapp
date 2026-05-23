@@ -354,5 +354,8 @@
   "account.reconcile.body": "Likutis pasikeitė {sign}{amount} {currency}. Išsaugok naują likutį arba sukurk Koregavimo operaciją, kad skirtumas būtų matomas Veikloje.",
   "account.reconcile.skip": "Išsaugoti be koregavimo",
   "account.reconcile.create": "Sukurti koregavimą",
-  "account.reconcile.note": "Likučio suderinimas"
+  "account.reconcile.note": "Likučio suderinimas",
+  "forecast.avgPerDay": "VID./DIENA",
+  "forecast.remainingBills": "LIKĘ SĄSKAITŲ",
+  "forecast.seeBreakdown": "Žiūrėti išskaidymą"
 }

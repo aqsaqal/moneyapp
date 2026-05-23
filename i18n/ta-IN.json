@@ -354,5 +354,8 @@
   "account.reconcile.body": "இருப்பு {sign}{amount} {currency} மாறியது. புதிய இருப்பை சேமிக்கவும் அல்லது வேறுபாட்டை செயல்பாட்டில் விளக்க சரிசெய்தல் பரிவர்த்தனை உருவாக்கவும்.",
   "account.reconcile.skip": "சரிசெய்தல் இல்லாமல் சேமி",
   "account.reconcile.create": "சரிசெய்தல் உருவாக்கு",
-  "account.reconcile.note": "இருப்பு சரிசெய்தல்"
+  "account.reconcile.note": "இருப்பு சரிசெய்தல்",
+  "forecast.avgPerDay": "நாள் சராசரி",
+  "forecast.remainingBills": "மீதி பில்கள்",
+  "forecast.seeBreakdown": "விவரம் காண்க"
 }

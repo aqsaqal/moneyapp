@@ -88,18 +88,21 @@ export default function Home() {
   //   - average daily *variable* spend so far × days left (forecast var)
   //   - remaining recurring expenses not yet paid (forecast bills)
   // Returns null when there's not enough data (first day of the month).
-  const forecast = useMemo(() => {
+  const forecastBundle = useMemo(() => {
     if (daysElapsed < 1 || daysLeft === 0) return null;
     const avgDailyVar = expense / daysElapsed;
     const projectedVar = avgDailyVar * daysLeft;
-    // Remaining recurring expenses for this month: bills with
-    // dayOfMonth >= today that aren't already counted in `expense` because
-    // recurring → transactions are created when marked paid.
     const remainingBills = recurring
       .filter((r) => r.type === 'expense' && r.dayOfMonth > daysElapsed)
       .reduce((s, r) => s + r.amount, 0);
-    return disposable - projectedVar - remainingBills;
+    return {
+      forecast: disposable - projectedVar - remainingBills,
+      avgDailyVariable: avgDailyVar,
+      remainingBills,
+      daysOfData: daysElapsed,
+    };
   }, [expense, daysElapsed, daysLeft, disposable, recurring]);
+  const forecast = forecastBundle?.forecast ?? null;
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -176,16 +179,24 @@ export default function Home() {
 
         {/* Phase 10x: forecast moved out of the hero into its own
             tappable card. Collapsed by default; tap to reveal projected
-            end-of-month + how it's computed. Hidden when income is
-            zero (the empty-state hero already covers that case). */}
-        {income > 0 && typeof forecast === 'number' && (
-          <ForecastCard
-            forecast={forecast}
-            disposable={disposable}
-            daysLeft={daysLeft}
-            currency={currency}
-          />
-        )}
+            end-of-month + the two contributing numbers. Hidden when
+            income is zero OR there are fewer than 3 days of variable-
+            spend data — projecting from 1 day's spend is noise, not
+            signal. ForecastCard.shouldRender encapsulates the gate. */}
+        {income > 0 &&
+          forecastBundle != null &&
+          ForecastCard.shouldRender(forecastBundle.daysOfData) && (
+            <ForecastCard
+              forecast={forecastBundle.forecast}
+              disposable={disposable}
+              daysLeft={daysLeft}
+              daysOfData={forecastBundle.daysOfData}
+              avgDailyVariable={forecastBundle.avgDailyVariable}
+              remainingBills={forecastBundle.remainingBills}
+              currency={currency}
+              onSeeBreakdown={() => router.push('/(tabs)/plan' as never)}
+            />
+          )}
 
         {/* Islamic flavor: ZakatHomeCard + RamadanHomeCard. Generic: nothing. */}
         <FeatureSlots.HomeExtras />
