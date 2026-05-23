@@ -364,5 +364,6 @@
   "analytics.income": "उत्पन्न",
   "analytics.breakdown": "श्रेणी विभाजन",
   "analytics.empty": "या कालावधीसाठी व्यवहार नाहीत",
-  "activity.filterToggle": "फिल्टर"
+  "activity.filterToggle": "फिल्टर",
+  "accounts.percentUsed": "{n}% वापरले"
 }

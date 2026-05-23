@@ -364,5 +364,6 @@
   "analytics.income": "Daromad",
   "analytics.breakdown": "KATEGORIYA BOʻYICHA",
   "analytics.empty": "Bu davrda tranzaksiya yoʻq",
-  "activity.filterToggle": "Filtrlar"
+  "activity.filterToggle": "Filtrlar",
+  "accounts.percentUsed": "{n}% ishlatildi"
 }

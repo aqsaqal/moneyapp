@@ -351,7 +351,7 @@ export default function Activity() {
       <CategoryPicker
         visible={filterMoreOpen}
         mode="select"
-        headerText="Filter by category"
+        headerText={t('picker.filterByCategory')}
         onSelect={(id) => {
           setFilterCat(id);
           setFilterMoreOpen(false);

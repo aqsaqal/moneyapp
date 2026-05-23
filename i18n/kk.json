@@ -363,5 +363,6 @@
   "analytics.income": "Кірістер",
   "analytics.breakdown": "САНАТТАР БОЙЫНША",
   "analytics.empty": "Бұл кезеңде операция жоқ",
-  "activity.filterToggle": "Сүзгілер"
+  "activity.filterToggle": "Сүзгілер",
+  "accounts.percentUsed": "{n}% пайдаланылған"
 }

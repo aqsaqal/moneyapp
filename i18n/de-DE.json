@@ -364,5 +364,6 @@
   "analytics.income": "Einkommen",
   "analytics.breakdown": "KATEGORIE-AUFTEILUNG",
   "analytics.empty": "Keine Transaktionen in diesem Zeitraum",
-  "activity.filterToggle": "Filter"
+  "activity.filterToggle": "Filter",
+  "accounts.percentUsed": "{n}% genutzt"
 }

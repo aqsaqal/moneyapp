@@ -784,14 +784,18 @@ export default function AddScreen() {
                   {enteredInCcy > 0
                     ? `${spentInCcy.toFixed(0)} → ${projected.toFixed(0)}`
                     : spentInCcy.toFixed(0)}
-                  {' '}/ {cat.monthlyBudget.toFixed(0)} {ccy} this month
+                  {' '}/ {cat.monthlyBudget.toFixed(0)} {ccy} {t('budget.thisMonth')}
                 </Text>
                 <View style={styles.budgetBarBg}>
                   <View style={[styles.budgetBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
                 </View>
                 {over && enteredInCcy > 0 && (
                   <Text style={styles.budgetWarn}>
-                    {(projected - cat.monthlyBudget).toFixed(0)} {ccy} over your {cat.name} budget.
+                    {t('budget.over', {
+                      over: (projected - cat.monthlyBudget).toFixed(0),
+                      ccy,
+                      name: cat.name,
+                    })}
                   </Text>
                 )}
               </View>
@@ -802,7 +806,7 @@ export default function AddScreen() {
           if (spentInCcy === 0 && enteredInCcy === 0) {
             return (
               <Text style={styles.budgetNeutralLine}>
-                {cat.name}: 0 {ccy} — your first this month
+                {t('budget.firstThisMonth', { name: cat.name, ccy })}
               </Text>
             );
           }
@@ -812,7 +816,7 @@ export default function AddScreen() {
               {enteredInCcy > 0
                 ? `${spentInCcy.toFixed(0)} → ${projected.toFixed(0)}`
                 : spentInCcy.toFixed(0)}
-              {' '}{ccy} this month
+              {' '}{ccy} {t('budget.thisMonth')}
             </Text>
           );
         })()}

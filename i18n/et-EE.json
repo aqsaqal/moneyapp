@@ -364,5 +364,6 @@
   "analytics.income": "Tulud",
   "analytics.breakdown": "KATEGOORIATE JAOTUS",
   "analytics.empty": "Sel perioodil tehinguid pole",
-  "activity.filterToggle": "Filtrid"
+  "activity.filterToggle": "Filtrid",
+  "accounts.percentUsed": "{n}% kasutatud"
 }

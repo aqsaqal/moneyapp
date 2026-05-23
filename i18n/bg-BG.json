@@ -364,5 +364,6 @@
   "analytics.income": "Доходи",
   "analytics.breakdown": "РАЗПРЕДЕЛЕНИЕ ПО КАТЕГОРИИ",
   "analytics.empty": "Няма транзакции за този период",
-  "activity.filterToggle": "Филтри"
+  "activity.filterToggle": "Филтри",
+  "accounts.percentUsed": "{n}% използвани"
 }

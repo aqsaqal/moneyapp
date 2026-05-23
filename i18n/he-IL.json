@@ -364,5 +364,6 @@
   "analytics.income": "הכנסות",
   "analytics.breakdown": "פילוח קטגוריות",
   "analytics.empty": "אין עסקאות בתקופה זו",
-  "activity.filterToggle": "מסננים"
+  "activity.filterToggle": "מסננים",
+  "accounts.percentUsed": "{n}% בשימוש"
 }

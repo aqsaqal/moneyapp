@@ -364,5 +364,6 @@
   "analytics.income": "Ienākumi",
   "analytics.breakdown": "KATEGORIJU SADALĪJUMS",
   "analytics.empty": "Šajā periodā nav darījumu",
-  "activity.filterToggle": "Filtri"
+  "activity.filterToggle": "Filtri",
+  "accounts.percentUsed": "{n}% izlietots"
 }

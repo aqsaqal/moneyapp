@@ -363,5 +363,6 @@
   "analytics.income": "Доход",
   "analytics.breakdown": "РАЗБИВКА ПО КАТЕГОРИЯМ",
   "analytics.empty": "Нет операций за этот период",
-  "activity.filterToggle": "Фильтры"
+  "activity.filterToggle": "Фильтры",
+  "accounts.percentUsed": "{n}% использовано"
 }

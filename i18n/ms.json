@@ -363,5 +363,6 @@
   "analytics.income": "Pendapatan",
   "analytics.breakdown": "PECAHAN KATEGORI",
   "analytics.empty": "Tiada transaksi untuk tempoh ini",
-  "activity.filterToggle": "Penapis"
+  "activity.filterToggle": "Penapis",
+  "accounts.percentUsed": "{n}% digunakan"
 }

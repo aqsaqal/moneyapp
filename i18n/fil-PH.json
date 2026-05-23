@@ -364,5 +364,6 @@
   "analytics.income": "Kita",
   "analytics.breakdown": "BREAKDOWN NG KATEGORYA",
   "analytics.empty": "Walang transaksyon sa panahong ito",
-  "activity.filterToggle": "Mga Filter"
+  "activity.filterToggle": "Mga Filter",
+  "accounts.percentUsed": "{n}% nagamit"
 }

@@ -364,5 +364,6 @@
   "analytics.income": "Inkomster",
   "analytics.breakdown": "KATEGORI-UPPDELNING",
   "analytics.empty": "Inga transaktioner under denna period",
-  "activity.filterToggle": "Filter"
+  "activity.filterToggle": "Filter",
+  "accounts.percentUsed": "{n}% använt"
 }

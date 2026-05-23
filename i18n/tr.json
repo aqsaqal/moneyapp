@@ -363,5 +363,6 @@
   "analytics.income": "Gelir",
   "analytics.breakdown": "KATEGORİ DÖKÜMÜ",
   "analytics.empty": "Bu dönemde işlem yok",
-  "activity.filterToggle": "Filtreler"
+  "activity.filterToggle": "Filtreler",
+  "accounts.percentUsed": "%{n} kullanıldı"
 }

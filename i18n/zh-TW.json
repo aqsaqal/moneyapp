@@ -364,5 +364,6 @@
   "analytics.income": "收入",
   "analytics.breakdown": "類別明細",
   "analytics.empty": "此期間沒有交易",
-  "activity.filterToggle": "篩選"
+  "activity.filterToggle": "篩選",
+  "accounts.percentUsed": "已用 {n}%"
 }

@@ -364,5 +364,6 @@
   "analytics.income": "Приходи",
   "analytics.breakdown": "РАСПОДЕЛА ПО КАТЕГОРИЈАМА",
   "analytics.empty": "Нема трансакција за овај период",
-  "activity.filterToggle": "Филтери"
+  "activity.filterToggle": "Филтери",
+  "accounts.percentUsed": "{n}% искоришћено"
 }

@@ -364,5 +364,6 @@
   "analytics.income": "収入",
   "analytics.breakdown": "カテゴリ別内訳",
   "analytics.empty": "この期間に取引はありません",
-  "activity.filterToggle": "フィルター"
+  "activity.filterToggle": "フィルター",
+  "accounts.percentUsed": "{n}% 使用中"
 }

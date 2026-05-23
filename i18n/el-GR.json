@@ -364,5 +364,6 @@
   "analytics.income": "Έσοδα",
   "analytics.breakdown": "ΑΝΑΛΥΣΗ ΑΝΑ ΚΑΤΗΓΟΡΙΑ",
   "analytics.empty": "Δεν υπάρχουν συναλλαγές για αυτή την περίοδο",
-  "activity.filterToggle": "Φίλτρα"
+  "activity.filterToggle": "Φίλτρα",
+  "accounts.percentUsed": "{n}% σε χρήση"
 }

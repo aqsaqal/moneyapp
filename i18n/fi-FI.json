@@ -364,5 +364,6 @@
   "analytics.income": "Tulot",
   "analytics.breakdown": "KATEGORIOIDEN ERITTELY",
   "analytics.empty": "Ei tapahtumia tällä ajalla",
-  "activity.filterToggle": "Suodattimet"
+  "activity.filterToggle": "Suodattimet",
+  "accounts.percentUsed": "{n}% käytetty"
 }

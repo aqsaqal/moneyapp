@@ -364,5 +364,6 @@
   "analytics.income": "Доходи",
   "analytics.breakdown": "РОЗПОДІЛ ЗА КАТЕГОРІЯМИ",
   "analytics.empty": "Немає операцій за цей період",
-  "activity.filterToggle": "Фільтри"
+  "activity.filterToggle": "Фільтри",
+  "accounts.percentUsed": "{n}% використано"
 }

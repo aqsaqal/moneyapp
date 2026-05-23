@@ -364,5 +364,6 @@
   "analytics.income": "Prihodki",
   "analytics.breakdown": "RAZČLENITEV KATEGORIJ",
   "analytics.empty": "V tem obdobju ni transakcij",
-  "activity.filterToggle": "Filtri"
+  "activity.filterToggle": "Filtri",
+  "accounts.percentUsed": "{n}% porabljeno"
 }

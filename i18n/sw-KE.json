@@ -364,5 +364,6 @@
   "analytics.income": "Mapato",
   "analytics.breakdown": "MCHANGANUO WA KATEGORIA",
   "analytics.empty": "Hakuna miamala kwa kipindi hiki",
-  "activity.filterToggle": "Vichujio"
+  "activity.filterToggle": "Vichujio",
+  "accounts.percentUsed": "{n}% imetumika"
 }

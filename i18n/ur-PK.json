@@ -364,5 +364,6 @@
   "analytics.income": "آمدنی",
   "analytics.breakdown": "زمرہ بریک ڈاؤن",
   "analytics.empty": "اس مدت میں کوئی لین دین نہیں",
-  "activity.filterToggle": "فلٹرز"
+  "activity.filterToggle": "فلٹرز",
+  "accounts.percentUsed": "{n}% استعمال"
 }

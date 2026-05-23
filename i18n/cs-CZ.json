@@ -364,5 +364,6 @@
   "analytics.income": "Příjmy",
   "analytics.breakdown": "ROZPIS KATEGORIÍ",
   "analytics.empty": "Žádné transakce v tomto období",
-  "activity.filterToggle": "Filtry"
+  "activity.filterToggle": "Filtry",
+  "accounts.percentUsed": "{n}% využito"
 }

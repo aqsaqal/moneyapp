@@ -205,12 +205,12 @@ export function CategoryPicker({
               onPress={() => setCreating(true)}
               style={[styles.tile, styles.tileNew]}
               accessibilityRole="button"
-              accessibilityLabel="New category"
+              accessibilityLabel={t('category.new')}
             >
               <View style={[styles.tileIcon, { backgroundColor: theme.bg3 }]}>
                 <MaterialCommunityIcons name="plus" size={22} color={theme.text2} />
               </View>
-              <Text style={[styles.tileName, { color: theme.text2 }]}>New</Text>
+              <Text style={[styles.tileName, { color: theme.text2 }]}>{t('common.new')}</Text>
             </Pressable>
           )}
         </ScrollView>

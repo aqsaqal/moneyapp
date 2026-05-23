@@ -364,5 +364,6 @@
   "analytics.income": "Të ardhura",
   "analytics.breakdown": "NDARJA SIPAS KATEGORIVE",
   "analytics.empty": "Nuk ka transaksione për këtë periudhë",
-  "activity.filterToggle": "Filtrat"
+  "activity.filterToggle": "Filtrat",
+  "accounts.percentUsed": "{n}% e përdorur"
 }

@@ -364,5 +364,6 @@
   "analytics.income": "Gəlir",
   "analytics.breakdown": "KATEQORİYALAR ÜZRƏ",
   "analytics.empty": "Bu dövrdə əməliyyat yoxdur",
-  "activity.filterToggle": "Filtrlər"
+  "activity.filterToggle": "Filtrlər",
+  "accounts.percentUsed": "{n}% istifadə"
 }

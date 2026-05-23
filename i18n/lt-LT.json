@@ -364,5 +364,6 @@
   "analytics.income": "Pajamos",
   "analytics.breakdown": "KATEGORIJŲ IŠSKAIDYMAS",
   "analytics.empty": "Šiuo laikotarpiu operacijų nėra",
-  "activity.filterToggle": "Filtrai"
+  "activity.filterToggle": "Filtrai",
+  "accounts.percentUsed": "{n}% panaudota"
 }

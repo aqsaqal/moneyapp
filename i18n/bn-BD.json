@@ -364,5 +364,6 @@
   "analytics.income": "আয়",
   "analytics.breakdown": "বিভাগ অনুসারে",
   "analytics.empty": "এই সময়কালে কোনো লেনদেন নেই",
-  "activity.filterToggle": "ফিল্টার"
+  "activity.filterToggle": "ফিল্টার",
+  "accounts.percentUsed": "{n}% ব্যবহৃত"
 }

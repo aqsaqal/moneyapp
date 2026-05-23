@@ -364,5 +364,6 @@
   "analytics.income": "Revenus",
   "analytics.breakdown": "RÉPARTITION PAR CATÉGORIE",
   "analytics.empty": "Aucune transaction sur cette période",
-  "activity.filterToggle": "Filtres"
+  "activity.filterToggle": "Filtres",
+  "accounts.percentUsed": "{n}% utilisé"
 }

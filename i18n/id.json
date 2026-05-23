@@ -363,5 +363,6 @@
   "analytics.income": "Pemasukan",
   "analytics.breakdown": "RINCIAN KATEGORI",
   "analytics.empty": "Tidak ada transaksi periode ini",
-  "activity.filterToggle": "Filter"
+  "activity.filterToggle": "Filter",
+  "accounts.percentUsed": "{n}% terpakai"
 }

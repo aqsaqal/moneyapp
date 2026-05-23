@@ -230,7 +230,7 @@ function OverviewAndAccounts() {
                       {!isArchived && isExcluded && <Text style={styles.acctTag}>excluded</Text>}
                     </View>
                     <Text style={styles.acctType}>
-                      {a.type}{ac !== currency ? ` · ${ac}` : ''}
+                      {t(`accountType.${a.type}`)}{ac !== currency ? ` · ${ac}` : ''}
                     </Text>
                     {utilPct != null && (
                       <>
@@ -243,7 +243,7 @@ function OverviewAndAccounts() {
                           />
                         </View>
                         <Text style={[styles.acctUtil, { color: utilColor }]}>
-                          {Math.round(utilPct * 100)}% used
+                          {t('accounts.percentUsed', { n: Math.round(utilPct * 100) })}
                         </Text>
                       </>
                     )}

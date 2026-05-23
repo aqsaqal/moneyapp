@@ -364,5 +364,6 @@
   "analytics.income": "درآمد",
   "analytics.breakdown": "تفکیک دسته‌ها",
   "analytics.empty": "تراکنشی برای این بازه نیست",
-  "activity.filterToggle": "فیلترها"
+  "activity.filterToggle": "فیلترها",
+  "accounts.percentUsed": "{n}٪ استفاده‌شده"
 }

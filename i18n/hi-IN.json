@@ -364,5 +364,6 @@
   "analytics.income": "आय",
   "analytics.breakdown": "श्रेणी विवरण",
   "analytics.empty": "इस अवधि में कोई लेन-देन नहीं",
-  "activity.filterToggle": "फ़िल्टर"
+  "activity.filterToggle": "फ़िल्टर",
+  "accounts.percentUsed": "{n}% उपयोग"
 }

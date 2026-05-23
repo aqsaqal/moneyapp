@@ -364,5 +364,6 @@
   "analytics.income": "ఆదాయం",
   "analytics.breakdown": "వర్గ విభజన",
   "analytics.empty": "ఈ కాలానికి లావాదేవీలు లేవు",
-  "activity.filterToggle": "ఫిల్టర్లు"
+  "activity.filterToggle": "ఫిల్టర్లు",
+  "accounts.percentUsed": "{n}% వాడబడింది"
 }

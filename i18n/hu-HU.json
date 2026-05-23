@@ -364,5 +364,6 @@
   "analytics.income": "Bevételek",
   "analytics.breakdown": "KATEGÓRIA-BONTÁS",
   "analytics.empty": "Nincs tranzakció ebben az időszakban",
-  "activity.filterToggle": "Szűrők"
+  "activity.filterToggle": "Szűrők",
+  "accounts.percentUsed": "{n}% felhasználva"
 }

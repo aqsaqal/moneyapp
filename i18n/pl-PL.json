@@ -364,5 +364,6 @@
   "analytics.income": "Przychody",
   "analytics.breakdown": "PODZIAŁ NA KATEGORIE",
   "analytics.empty": "Brak transakcji w tym okresie",
-  "activity.filterToggle": "Filtry"
+  "activity.filterToggle": "Filtry",
+  "accounts.percentUsed": "{n}% wykorzystano"
 }

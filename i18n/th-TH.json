@@ -364,5 +364,6 @@
   "analytics.income": "รายรับ",
   "analytics.breakdown": "แยกตามหมวด",
   "analytics.empty": "ไม่มีรายการในช่วงนี้",
-  "activity.filterToggle": "ตัวกรอง"
+  "activity.filterToggle": "ตัวกรอง",
+  "accounts.percentUsed": "ใช้ไป {n}%"
 }

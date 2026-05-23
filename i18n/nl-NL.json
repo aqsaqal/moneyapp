@@ -364,5 +364,6 @@
   "analytics.income": "Inkomen",
   "analytics.breakdown": "CATEGORIE-OVERZICHT",
   "analytics.empty": "Geen transacties in deze periode",
-  "activity.filterToggle": "Filters"
+  "activity.filterToggle": "Filters",
+  "accounts.percentUsed": "{n}% gebruikt"
 }
