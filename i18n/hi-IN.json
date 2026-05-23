@@ -363,5 +363,6 @@
   "analytics.expense": "व्यय",
   "analytics.income": "आय",
   "analytics.breakdown": "श्रेणी विवरण",
-  "analytics.empty": "इस अवधि में कोई लेन-देन नहीं"
+  "analytics.empty": "इस अवधि में कोई लेन-देन नहीं",
+  "activity.filterToggle": "फ़िल्टर"
 }

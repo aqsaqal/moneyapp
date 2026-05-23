@@ -363,5 +363,6 @@
   "analytics.expense": "খরচ",
   "analytics.income": "আয়",
   "analytics.breakdown": "বিভাগ অনুসারে",
-  "analytics.empty": "এই সময়কালে কোনো লেনদেন নেই"
+  "analytics.empty": "এই সময়কালে কোনো লেনদেন নেই",
+  "activity.filterToggle": "ফিল্টার"
 }

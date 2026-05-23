@@ -363,5 +363,6 @@
   "analytics.expense": "รายจ่าย",
   "analytics.income": "รายรับ",
   "analytics.breakdown": "แยกตามหมวด",
-  "analytics.empty": "ไม่มีรายการในช่วงนี้"
+  "analytics.empty": "ไม่มีรายการในช่วงนี้",
+  "activity.filterToggle": "ตัวกรอง"
 }

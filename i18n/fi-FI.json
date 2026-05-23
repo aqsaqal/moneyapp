@@ -363,5 +363,6 @@
   "analytics.expense": "Menot",
   "analytics.income": "Tulot",
   "analytics.breakdown": "KATEGORIOIDEN ERITTELY",
-  "analytics.empty": "Ei tapahtumia tällä ajalla"
+  "analytics.empty": "Ei tapahtumia tällä ajalla",
+  "activity.filterToggle": "Suodattimet"
 }

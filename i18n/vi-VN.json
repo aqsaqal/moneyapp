@@ -363,5 +363,6 @@
   "analytics.expense": "Chi tiêu",
   "analytics.income": "Thu nhập",
   "analytics.breakdown": "PHÂN TÍCH DANH MỤC",
-  "analytics.empty": "Không có giao dịch trong kỳ này"
+  "analytics.empty": "Không có giao dịch trong kỳ này",
+  "activity.filterToggle": "Bộ lọc"
 }

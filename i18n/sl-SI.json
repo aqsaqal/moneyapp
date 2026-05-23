@@ -363,5 +363,6 @@
   "analytics.expense": "Stroški",
   "analytics.income": "Prihodki",
   "analytics.breakdown": "RAZČLENITEV KATEGORIJ",
-  "analytics.empty": "V tem obdobju ni transakcij"
+  "analytics.empty": "V tem obdobju ni transakcij",
+  "activity.filterToggle": "Filtri"
 }

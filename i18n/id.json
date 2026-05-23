@@ -362,5 +362,6 @@
   "analytics.expense": "Pengeluaran",
   "analytics.income": "Pemasukan",
   "analytics.breakdown": "RINCIAN KATEGORI",
-  "analytics.empty": "Tidak ada transaksi periode ini"
+  "analytics.empty": "Tidak ada transaksi periode ini",
+  "activity.filterToggle": "Filter"
 }

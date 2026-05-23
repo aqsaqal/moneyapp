@@ -363,5 +363,6 @@
   "analytics.expense": "支出",
   "analytics.income": "収入",
   "analytics.breakdown": "カテゴリ別内訳",
-  "analytics.empty": "この期間に取引はありません"
+  "analytics.empty": "この期間に取引はありません",
+  "activity.filterToggle": "フィルター"
 }

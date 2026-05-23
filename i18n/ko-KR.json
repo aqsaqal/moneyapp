@@ -363,5 +363,6 @@
   "analytics.expense": "지출",
   "analytics.income": "수입",
   "analytics.breakdown": "카테고리 분석",
-  "analytics.empty": "이 기간에 거래가 없습니다"
+  "analytics.empty": "이 기간에 거래가 없습니다",
+  "activity.filterToggle": "필터"
 }

@@ -363,5 +363,6 @@
   "analytics.expense": "Cheltuieli",
   "analytics.income": "Venituri",
   "analytics.breakdown": "DEFALCARE PE CATEGORII",
-  "analytics.empty": "Nicio tranzacție în această perioadă"
+  "analytics.empty": "Nicio tranzacție în această perioadă",
+  "activity.filterToggle": "Filtre"
 }

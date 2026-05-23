@@ -363,5 +363,6 @@
   "analytics.expense": "Wydatki",
   "analytics.income": "Przychody",
   "analytics.breakdown": "PODZIAŁ NA KATEGORIE",
-  "analytics.empty": "Brak transakcji w tym okresie"
+  "analytics.empty": "Brak transakcji w tym okresie",
+  "activity.filterToggle": "Filtry"
 }

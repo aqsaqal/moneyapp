@@ -363,5 +363,6 @@
   "analytics.expense": "Udgifter",
   "analytics.income": "Indkomst",
   "analytics.breakdown": "KATEGORIOPDELING",
-  "analytics.empty": "Ingen transaktioner i denne periode"
+  "analytics.empty": "Ingen transaktioner i denne periode",
+  "activity.filterToggle": "Filtre"
 }

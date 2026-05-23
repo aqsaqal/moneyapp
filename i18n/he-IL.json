@@ -363,5 +363,6 @@
   "analytics.expense": "הוצאות",
   "analytics.income": "הכנסות",
   "analytics.breakdown": "פילוח קטגוריות",
-  "analytics.empty": "אין עסקאות בתקופה זו"
+  "analytics.empty": "אין עסקאות בתקופה זו",
+  "activity.filterToggle": "מסננים"
 }

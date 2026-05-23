@@ -363,5 +363,6 @@
   "analytics.expense": "اخراجات",
   "analytics.income": "آمدنی",
   "analytics.breakdown": "زمرہ بریک ڈاؤن",
-  "analytics.empty": "اس مدت میں کوئی لین دین نہیں"
+  "analytics.empty": "اس مدت میں کوئی لین دین نہیں",
+  "activity.filterToggle": "فلٹرز"
 }

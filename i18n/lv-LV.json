@@ -363,5 +363,6 @@
   "analytics.expense": "Izdevumi",
   "analytics.income": "Ienākumi",
   "analytics.breakdown": "KATEGORIJU SADALĪJUMS",
-  "analytics.empty": "Šajā periodā nav darījumu"
+  "analytics.empty": "Šajā periodā nav darījumu",
+  "activity.filterToggle": "Filtri"
 }

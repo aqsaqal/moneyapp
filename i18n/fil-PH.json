@@ -363,5 +363,6 @@
   "analytics.expense": "Gastos",
   "analytics.income": "Kita",
   "analytics.breakdown": "BREAKDOWN NG KATEGORYA",
-  "analytics.empty": "Walang transaksyon sa panahong ito"
+  "analytics.empty": "Walang transaksyon sa panahong ito",
+  "activity.filterToggle": "Mga Filter"
 }

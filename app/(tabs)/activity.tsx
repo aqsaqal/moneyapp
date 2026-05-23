@@ -53,6 +53,14 @@ export default function Activity() {
     const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d;
   });
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
+  // List-view filter drawer: collapsed by default so the top of the
+  // tab is just the title + segmented control. Tap the filter icon
+  // to reveal the search bar + category chip row. Auto-opens when a
+  // filter is already active so the user can see *why* their list
+  // is reduced.
+  const [filtersOpen, setFiltersOpen] = useState(
+    () => Boolean(filterCat) || search.length > 0 || Boolean(halalFilter),
+  );
   const [filterCat, setFilterCat] = useState<string | null>(null);
   // Filter chip strip: same pattern as the Smart Add chip row —
   // "All" + top 5 by THIS MONTH spend + "More". The full picker
@@ -137,26 +145,47 @@ export default function Activity() {
           <Text style={styles.title}>{t('activity.title')}</Text>
           <HeaderSettingsButton />
         </View>
-        {/* Segmented control: List | Categories. Persists per session
-            via kv.activityView. Switching preserves the active category/
-            search filter so the user can flip back and forth without
-            losing state. */}
-        <View style={styles.segmented}>
-          {(['categories', 'list'] as const).map((v) => (
+        {/* Segmented control + filter toggle on one line. The filter
+            toggle is visible only in List mode (Categories view has its
+            own period nav) and shows a green dot when any list filter is
+            active so the user knows the chip row exists. */}
+        <View style={styles.segmentedRow}>
+          <View style={styles.segmented}>
+            {(['categories', 'list'] as const).map((v) => (
+              <Pressable
+                key={v}
+                onPress={() => setViewPersist(v)}
+                style={[styles.segmentedBtn, view === v && styles.segmentedBtnActive]}
+                accessibilityRole="button"
+                accessibilityState={{ selected: view === v }}
+              >
+                <Text style={[styles.segmentedText, view === v && styles.segmentedTextActive]}>
+                  {t(v === 'list' ? 'activity.view.list' : 'activity.view.categories')}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+          {view === 'list' && (
             <Pressable
-              key={v}
-              onPress={() => setViewPersist(v)}
-              style={[styles.segmentedBtn, view === v && styles.segmentedBtnActive]}
+              onPress={() => setFiltersOpen((v) => !v)}
+              style={[styles.filterToggle, filtersOpen && styles.filterToggleActive]}
               accessibilityRole="button"
-              accessibilityState={{ selected: view === v }}
+              accessibilityLabel={t('activity.filterToggle')}
+              accessibilityState={{ expanded: filtersOpen }}
+              hitSlop={6}
             >
-              <Text style={[styles.segmentedText, view === v && styles.segmentedTextActive]}>
-                {t(v === 'list' ? 'activity.view.list' : 'activity.view.categories')}
-              </Text>
+              <MaterialCommunityIcons
+                name={filtersOpen ? 'filter' : 'filter-outline'}
+                size={18}
+                color={filtersOpen ? theme.bg : theme.text2}
+              />
+              {(Boolean(filterCat) || search.length > 0 || Boolean(halalFilter)) && !filtersOpen && (
+                <View style={styles.filterToggleBadge} />
+              )}
             </Pressable>
-          ))}
+          )}
         </View>
-        {view === 'list' && (
+        {view === 'list' && filtersOpen && (
           <>
         <SearchBar value={search} onChange={setSearch} placeholder={t('activity.searchPlaceholder')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
@@ -437,14 +466,44 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
   top: { padding: spacing.lg, gap: spacing.md },
   titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  segmentedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: spacing.sm,
+    marginBottom: spacing.xs,
+  },
   segmented: {
     flexDirection: 'row',
     backgroundColor: theme.bg2,
     borderRadius: radii.pill,
     padding: 3,
-    marginTop: spacing.sm,
-    marginBottom: spacing.xs,
     alignSelf: 'flex-start',
+  },
+  filterToggle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  filterToggleActive: {
+    backgroundColor: theme.accent,
+    borderColor: 'transparent',
+  },
+  filterToggleBadge: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: theme.accent,
+    borderWidth: 2,
+    borderColor: theme.bg,
   },
   segmentedBtn: {
     paddingHorizontal: spacing.md,

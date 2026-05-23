@@ -363,5 +363,6 @@
   "analytics.expense": "ఖర్చులు",
   "analytics.income": "ఆదాయం",
   "analytics.breakdown": "వర్గ విభజన",
-  "analytics.empty": "ఈ కాలానికి లావాదేవీలు లేవు"
+  "analytics.empty": "ఈ కాలానికి లావాదేవీలు లేవు",
+  "activity.filterToggle": "ఫిల్టర్లు"
 }

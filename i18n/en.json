@@ -362,5 +362,6 @@
   "analytics.expense": "Expenses",
   "analytics.income": "Income",
   "analytics.breakdown": "CATEGORY BREAKDOWN",
-  "analytics.empty": "No transactions for this period"
+  "analytics.empty": "No transactions for this period",
+  "activity.filterToggle": "Filters"
 }

@@ -363,5 +363,6 @@
   "analytics.expense": "Matumizi",
   "analytics.income": "Mapato",
   "analytics.breakdown": "MCHANGANUO WA KATEGORIA",
-  "analytics.empty": "Hakuna miamala kwa kipindi hiki"
+  "analytics.empty": "Hakuna miamala kwa kipindi hiki",
+  "activity.filterToggle": "Vichujio"
 }

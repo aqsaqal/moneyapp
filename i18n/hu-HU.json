@@ -363,5 +363,6 @@
   "analytics.expense": "Kiadások",
   "analytics.income": "Bevételek",
   "analytics.breakdown": "KATEGÓRIA-BONTÁS",
-  "analytics.empty": "Nincs tranzakció ebben az időszakban"
+  "analytics.empty": "Nincs tranzakció ebben az időszakban",
+  "activity.filterToggle": "Szűrők"
 }

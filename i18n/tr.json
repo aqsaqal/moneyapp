@@ -362,5 +362,6 @@
   "analytics.expense": "Gider",
   "analytics.income": "Gelir",
   "analytics.breakdown": "KATEGORİ DÖKÜMÜ",
-  "analytics.empty": "Bu dönemde işlem yok"
+  "analytics.empty": "Bu dönemde işlem yok",
+  "activity.filterToggle": "Filtreler"
 }

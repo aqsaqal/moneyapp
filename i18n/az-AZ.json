@@ -363,5 +363,6 @@
   "analytics.expense": "Xərclər",
   "analytics.income": "Gəlir",
   "analytics.breakdown": "KATEQORİYALAR ÜZRƏ",
-  "analytics.empty": "Bu dövrdə əməliyyat yoxdur"
+  "analytics.empty": "Bu dövrdə əməliyyat yoxdur",
+  "activity.filterToggle": "Filtrlər"
 }

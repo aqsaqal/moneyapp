@@ -363,5 +363,6 @@
   "analytics.expense": "هزینه‌ها",
   "analytics.income": "درآمد",
   "analytics.breakdown": "تفکیک دسته‌ها",
-  "analytics.empty": "تراکنشی برای این بازه نیست"
+  "analytics.empty": "تراکنشی برای این بازه نیست",
+  "activity.filterToggle": "فیلترها"
 }

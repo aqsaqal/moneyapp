@@ -362,5 +362,6 @@
   "analytics.expense": "Расходы",
   "analytics.income": "Доход",
   "analytics.breakdown": "РАЗБИВКА ПО КАТЕГОРИЯМ",
-  "analytics.empty": "Нет операций за этот период"
+  "analytics.empty": "Нет операций за этот период",
+  "activity.filterToggle": "Фильтры"
 }

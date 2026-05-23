@@ -363,5 +363,6 @@
   "analytics.expense": "Έξοδα",
   "analytics.income": "Έσοδα",
   "analytics.breakdown": "ΑΝΑΛΥΣΗ ΑΝΑ ΚΑΤΗΓΟΡΙΑ",
-  "analytics.empty": "Δεν υπάρχουν συναλλαγές για αυτή την περίοδο"
+  "analytics.empty": "Δεν υπάρχουν συναλλαγές για αυτή την περίοδο",
+  "activity.filterToggle": "Φίλτρα"
 }

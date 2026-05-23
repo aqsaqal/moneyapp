@@ -363,5 +363,6 @@
   "analytics.expense": "Разходи",
   "analytics.income": "Доходи",
   "analytics.breakdown": "РАЗПРЕДЕЛЕНИЕ ПО КАТЕГОРИИ",
-  "analytics.empty": "Няма транзакции за този период"
+  "analytics.empty": "Няма транзакции за този период",
+  "activity.filterToggle": "Филтри"
 }

@@ -363,5 +363,6 @@
   "analytics.expense": "Gastos",
   "analytics.income": "Ingresos",
   "analytics.breakdown": "DESGLOSE POR CATEGORÍA",
-  "analytics.empty": "Sin transacciones en este periodo"
+  "analytics.empty": "Sin transacciones en este periodo",
+  "activity.filterToggle": "Filtros"
 }

@@ -363,5 +363,6 @@
   "analytics.expense": "Витрати",
   "analytics.income": "Доходи",
   "analytics.breakdown": "РОЗПОДІЛ ЗА КАТЕГОРІЯМИ",
-  "analytics.empty": "Немає операцій за цей період"
+  "analytics.empty": "Немає операцій за цей період",
+  "activity.filterToggle": "Фільтри"
 }

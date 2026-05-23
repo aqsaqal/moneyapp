@@ -363,5 +363,6 @@
   "analytics.expense": "Ausgaben",
   "analytics.income": "Einkommen",
   "analytics.breakdown": "KATEGORIE-AUFTEILUNG",
-  "analytics.empty": "Keine Transaktionen in diesem Zeitraum"
+  "analytics.empty": "Keine Transaktionen in diesem Zeitraum",
+  "activity.filterToggle": "Filter"
 }

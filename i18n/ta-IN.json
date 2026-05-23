@@ -363,5 +363,6 @@
   "analytics.expense": "செலவுகள்",
   "analytics.income": "வருமானம்",
   "analytics.breakdown": "வகை விவரம்",
-  "analytics.empty": "இந்தக் காலத்திற்கு பரிவர்த்தனைகள் இல்லை"
+  "analytics.empty": "இந்தக் காலத்திற்கு பரிவர்த்தனைகள் இல்லை",
+  "activity.filterToggle": "வடிகட்டிகள்"
 }

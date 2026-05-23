@@ -363,5 +363,6 @@
   "analytics.expense": "Kulud",
   "analytics.income": "Tulud",
   "analytics.breakdown": "KATEGOORIATE JAOTUS",
-  "analytics.empty": "Sel perioodil tehinguid pole"
+  "analytics.empty": "Sel perioodil tehinguid pole",
+  "activity.filterToggle": "Filtrid"
 }

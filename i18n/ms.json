@@ -362,5 +362,6 @@
   "analytics.expense": "Perbelanjaan",
   "analytics.income": "Pendapatan",
   "analytics.breakdown": "PECAHAN KATEGORI",
-  "analytics.empty": "Tiada transaksi untuk tempoh ini"
+  "analytics.empty": "Tiada transaksi untuk tempoh ini",
+  "activity.filterToggle": "Penapis"
 }
