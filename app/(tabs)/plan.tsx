@@ -58,7 +58,11 @@ export default function PlanScreen() {
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <RecurringSection />
         <GoalsSection />
-        <DebtsSection />
+        {/* DebtsSection hidden for now — re-enable when the avalanche/
+            snowball flow is more polished. The component, DebtSheet,
+            and the `debts` table stay in the build so existing data is
+            preserved on toggle-back. */}
+        {/* <DebtsSection /> */}
         <BudgetsSection />
         {/* Islamic: Zakat + Sadaqa nav rows. Generic: renders nothing. */}
         <FeatureSlots.PlanTabExtras onNavigate={(p) => router.push(p as never)} />

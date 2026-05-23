@@ -124,7 +124,10 @@ export default function Home() {
               </Text>
             </Pressable>
           )}
-          {streak > 0 && <StreakBadge count={streak} />}
+          {/* StreakBadge hidden for now — we still compute the streak
+              under the hood so the recap surfaces still get it, just
+              not advertised in the home header. */}
+          {false && streak > 0 && <StreakBadge count={streak} />}
           <HeaderSettingsButton />
         </View>
         <ProfileSheet
