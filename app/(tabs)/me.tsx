@@ -146,7 +146,11 @@ function OverviewAndAccounts() {
           onPress={() => setShowArchived((v) => !v)}
           style={styles.archiveToggle}
           accessibilityRole="button"
-          accessibilityLabel={showArchived ? 'Hide archived accounts' : `Show ${archivedAccounts.length} archived accounts`}
+          accessibilityLabel={
+            showArchived
+              ? t('categories.hideArchived')
+              : t('categories.showArchived', { n: archivedAccounts.length })
+          }
         >
           <MaterialCommunityIcons
             name={showArchived ? 'eye-off-outline' : 'archive-outline'}
@@ -154,7 +158,9 @@ function OverviewAndAccounts() {
             color={theme.text3}
           />
           <Text style={styles.archiveToggleText}>
-            {showArchived ? 'Hide archived' : `Show archived (${archivedAccounts.length})`}
+            {showArchived
+              ? t('categories.hideArchived')
+              : t('categories.showArchived', { n: archivedAccounts.length })}
           </Text>
         </Pressable>
       )}
@@ -226,8 +232,8 @@ function OverviewAndAccounts() {
                   <View style={{ flex: 1 }}>
                     <View style={styles.acctNameRow}>
                       <Text style={styles.acctName}>{a.name}</Text>
-                      {isArchived && <Text style={styles.acctTag}>archived</Text>}
-                      {!isArchived && isExcluded && <Text style={styles.acctTag}>excluded</Text>}
+                      {isArchived && <Text style={styles.acctTag}>{t('categories.archived')}</Text>}
+                      {!isArchived && isExcluded && <Text style={styles.acctTag}>{t('account.excluded')}</Text>}
                     </View>
                     <Text style={styles.acctType}>
                       {t(`accountType.${a.type}`)}{ac !== currency ? ` · ${ac}` : ''}

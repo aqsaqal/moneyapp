@@ -303,15 +303,15 @@ export function BalanceCard({
 }: BalanceCardProps) {
   return (
     <View style={styles.card}>
-      <Text style={styles.label}>Net Balance{monthLabel ? ` · ${monthLabel}` : ''}</Text>
+      <Text style={styles.label}>{t('me.netBalance')}{monthLabel ? ` · ${monthLabel}` : ''}</Text>
       <Text style={styles.net}>{formatMoney(net, currency)}</Text>
       <View style={styles.row}>
-        <Pill label="Income" value={income} color={theme.accent} icon="arrow-top-right" currency={currency} />
-        <Pill label="Spent" value={expense} color={theme.expense} icon="arrow-bottom-left" currency={currency} />
+        <Pill label={t('analytics.income')} value={income} color={theme.accent} icon="arrow-top-right" currency={currency} />
+        <Pill label={t('balance.spent')} value={expense} color={theme.expense} icon="arrow-bottom-left" currency={currency} />
       </View>
       {disposable !== undefined && (
         <View style={styles.disposable}>
-          <Text style={styles.disposableLabel}>Disposable</Text>
+          <Text style={styles.disposableLabel}>{t('balance.disposable')}</Text>
           <Text
             style={[
               styles.disposableValue,

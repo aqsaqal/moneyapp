@@ -11,6 +11,7 @@ import { FeatureSlots } from '@/features';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import { deleteTransaction } from '@/hooks/useAppData';
 import { dayStr } from '@/utils/format';
+import { t as i18nT } from '@/utils/i18n';
 import type { Transaction } from '@/utils/db/schema';
 
 export interface TransactionRowProps {
@@ -58,7 +59,7 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag }: Transa
       style={styles.swipeAction}
       onPress={() => deleteTransaction(t.id)}
       accessibilityRole="button"
-      accessibilityLabel="Delete"
+      accessibilityLabel={i18nT('common.delete')}
     >
       <MaterialCommunityIcons name="trash-can-outline" size={22} color="#fff" />
     </Pressable>
@@ -135,12 +136,12 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag }: Transa
         <View style={styles.sheet}>
           <Pressable style={styles.sheetItem} onPress={() => { deleteTransaction(t.id); setSheetOpen(false); }}>
             <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.expense} />
-            <Text style={[styles.sheetText, { color: theme.expense }]}>Delete</Text>
+            <Text style={[styles.sheetText, { color: theme.expense }]}>{i18nT('common.delete')}</Text>
           </Pressable>
           <FeatureSlots.TxActionSheetExtras txId={t.id} />
           <Pressable style={styles.sheetItem} onPress={() => setSheetOpen(false)}>
             <MaterialCommunityIcons name="close" size={18} color={theme.text2} />
-            <Text style={styles.sheetText}>Cancel</Text>
+            <Text style={styles.sheetText}>{i18nT('common.cancel')}</Text>
           </Pressable>
         </View>
       )}

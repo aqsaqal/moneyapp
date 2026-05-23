@@ -6,6 +6,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, font, sizes, radii, spacing } from '@/constants/theme';
 import { APP_NAME } from '@/constants/flavor';
+import { t as i18nT } from '@/utils/i18n';
 
 export function LockScreen({ onUnlock }: { onUnlock: () => Promise<boolean> }) {
   useEffect(() => { onUnlock(); }, []);  // auto-prompt
@@ -13,9 +14,9 @@ export function LockScreen({ onUnlock }: { onUnlock: () => Promise<boolean> }) {
     <View style={styles.wrap}>
       <MaterialCommunityIcons name="lock" size={48} color={theme.accent} />
       <Text style={styles.title}>{APP_NAME}</Text>
-      <Text style={styles.sub}>Unlock with Face ID / fingerprint</Text>
+      <Text style={styles.sub}>{i18nT('lock.subtitle')}</Text>
       <Pressable onPress={onUnlock} style={styles.button}>
-        <Text style={styles.buttonText}>Unlock</Text>
+        <Text style={styles.buttonText}>{i18nT('lock.unlock')}</Text>
       </Pressable>
     </View>
   );

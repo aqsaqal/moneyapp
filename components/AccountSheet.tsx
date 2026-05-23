@@ -117,7 +117,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const commitSave = (opts: { skipBalanceCheck?: boolean } = {}) => {
     const balanceNum = parseFloat(balance.replace(',', '.'));
     if (!name.trim() || !Number.isFinite(balanceNum)) {
-      Alert.alert('Required', 'Name and a valid balance are required.');
+      Alert.alert(t('common.required'), t('account.nameBalanceRequired'));
       return;
     }
     const id = account?.id ?? `acct_${Date.now()}`;
@@ -224,15 +224,18 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
       (t) => t.type === 'transfer' && (t.accountId === account.id || t.toAccountId === account.id),
     ).length;
 
-    const summary =
-      `"${account.name}" — balance ${account.balance.toFixed(2)} ${currency}\n` +
-      `${directCount} direct transactions, ${transferCount} transfers.\n\n` +
-      `Archive (recommended) hides the account but keeps everything. Delete removes the account and its direct transactions; transfers are preserved on the other account.`;
+    const summary = t('account.delete.body', {
+      name: account.name,
+      balance: account.balance.toFixed(2),
+      currency,
+      directCount,
+      transferCount,
+    });
 
-    Alert.alert('Delete or archive?', summary, [
-      { text: 'Cancel', style: 'cancel' },
+    Alert.alert(t('account.delete.title'), summary, [
+      { text: t('common.cancel'), style: 'cancel' },
       {
-        text: 'Archive',
+        text: t('account.archive'),
         onPress: () => {
           upsertAccount({
             ...account,
@@ -243,7 +246,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
         },
       },
       {
-        text: 'Delete…',
+        text: t('common.delete') + '…',
         style: 'destructive',
         onPress: () => confirmCascade(directCount, transferCount),
       },
@@ -253,12 +256,12 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const confirmCascade = (directCount: number, transferCount: number) => {
     if (!account) return;
     Alert.alert(
-      'Really delete?',
-      `This will remove "${account.name}" and DELETE ${directCount} direct transactions. ${transferCount} transfers will be preserved on the other side. Cannot be undone.`,
+      t('account.deleteConfirm.title'),
+      t('account.deleteConfirm.body', { name: account.name, directCount, transferCount }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Delete',
+          text: t('common.delete'),
           style: 'destructive',
           onPress: () => {
             const res = deleteAccountCascade(account.id);
@@ -279,29 +282,29 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
       <SafeAreaView style={styles.sheet} edges={['bottom']}>
         <View style={styles.handle} />
         <View style={styles.header}>
-          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel="Close">
+          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
             <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
           </Pressable>
-          <Text style={styles.title}>{editing ? 'Edit account' : 'New account'}</Text>
-          <Pressable onPress={save} hitSlop={10} accessibilityLabel="Save">
+          <Text style={styles.title}>{editing ? t('account.edit') : t('account.new')}</Text>
+          <Pressable onPress={save} hitSlop={10} accessibilityLabel={t('common.save')}>
             <MaterialCommunityIcons name="check" size={22} color={theme.accent} />
           </Pressable>
         </View>
 
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
           <SettingRow
-            label="Type"
-            hint={typeMeta.label}
+            label={t('account.field.type')}
+            hint={t(`accountType.${typeMeta.value}`)}
             icon="shape-outline"
             onPress={() => setTypePicker(true)}
           />
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Name</Text>
+            <Text style={styles.fieldLabel}>{t('account.field.name')}</Text>
             <TextInput
               value={name}
               onChangeText={setName}
-              placeholder="e.g. Main Bank"
+              placeholder={t('account.namePlaceholder')}
               placeholderTextColor={theme.text3}
               style={styles.input}
             />
@@ -309,7 +312,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
-              {type === 'debt' ? 'Amount owed (will be stored as negative)' : 'Current balance'}
+              {type === 'debt' ? t('account.field.amountOwed') : t('account.field.balance')}
             </Text>
             <TextInput
               value={balance}
@@ -321,15 +324,18 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
             />
             {editing && account && parseFloat(balance) !== account.balance && Number.isFinite(parseFloat(balance)) && (
               <Text style={styles.adjustHint}>
-                Save will create an Adjustment transaction for the {(parseFloat(balance) - account.balance >= 0 ? '+' : '−')}
-                {Math.abs(parseFloat(balance) - account.balance).toFixed(2)} {currency} difference.
+                {t('account.adjustHint', {
+                  sign: parseFloat(balance) - account.balance >= 0 ? '+' : '−',
+                  diff: Math.abs(parseFloat(balance) - account.balance).toFixed(2),
+                  currency,
+                })}
               </Text>
             )}
           </View>
 
           {type === 'credit' && (
             <View style={styles.field}>
-              <Text style={styles.fieldLabel}>Credit limit</Text>
+              <Text style={styles.fieldLabel}>{t('account.field.creditLimit')}</Text>
               <TextInput
                 value={limit}
                 onChangeText={setLimit}
@@ -342,10 +348,10 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
           )}
 
           <SettingRow
-            label="Currency"
+            label={t('me.currency')}
             hint={
               editing
-                ? `${currency} · locked at creation`
+                ? t('account.currencyLocked', { currency })
                 : `${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`
             }
             icon="currency-usd"
@@ -372,9 +378,9 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
                   color={includeInTotal ? theme.accent : theme.text2}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.toggleLabel}>Include in net total</Text>
+                  <Text style={styles.toggleLabel}>{t('account.includeInTotal.label')}</Text>
                   <Text style={styles.toggleHint}>
-                    Off keeps the account on file but excludes it from Net Balance / Assets / Debt.
+                    {t('account.includeInTotal.hint')}
                   </Text>
                 </View>
                 <View style={[styles.toggle, includeInTotal && { backgroundColor: theme.accent }]}>
@@ -394,9 +400,9 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
                   color={archived ? theme.warning : theme.text2}
                 />
                 <View style={{ flex: 1 }}>
-                  <Text style={styles.toggleLabel}>Archive</Text>
+                  <Text style={styles.toggleLabel}>{t('account.archiveToggle.label')}</Text>
                   <Text style={styles.toggleHint}>
-                    Hides the account from active lists and pickers; history is preserved.
+                    {t('account.archiveToggle.hint')}
                   </Text>
                 </View>
                 <View style={[styles.toggle, archived && { backgroundColor: theme.warning }]}>
@@ -424,9 +430,9 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
                 color={isRiba ? theme.warning : theme.text2}
               />
               <View style={{ flex: 1 }}>
-                <Text style={styles.toggleLabel}>Earns interest (riba)</Text>
+                <Text style={styles.toggleLabel}>{t('me.account.riba.label')}</Text>
                 <Text style={styles.toggleHint}>
-                  Flagged accounts surface a footer warning in your Accounts list.
+                  {t('me.account.riba.hint')}
                 </Text>
               </View>
               <View style={[styles.toggle, isRiba && { backgroundColor: theme.warning }]}>
@@ -437,14 +443,14 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
 
           <CurrencyPickerSheet
             visible={currencyPicker}
-            title="Currency"
+            title={t('me.currency')}
             selected={currency}
             onPick={setCurrency}
             onClose={() => setCurrencyPicker(false)}
           />
 
           <View style={styles.field}>
-            <Text style={styles.fieldLabel}>Color</Text>
+            <Text style={styles.fieldLabel}>{t('profile.field.color')}</Text>
             <View style={styles.palette}>
               {PALETTE.map((c) => (
                 <Pressable
@@ -462,16 +468,16 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
           {editing && (
             <Pressable onPress={askDelete} style={styles.deleteRow} accessibilityRole="button">
               <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.expense} />
-              <Text style={styles.deleteText}>Delete account</Text>
+              <Text style={styles.deleteText}>{t('account.deleteAccount')}</Text>
             </Pressable>
           )}
 
           <PickerSheet
             visible={typePicker}
-            title="Account type"
-            options={TYPES.map<PickerOption<AccountType>>((t) => ({
-              value: t.value,
-              label: t.label,
+            title={t('account.field.type')}
+            options={TYPES.map<PickerOption<AccountType>>((tp) => ({
+              value: tp.value,
+              label: t(`accountType.${tp.value}`),
             }))}
             selected={type}
             onPick={(t) => {

@@ -13,6 +13,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { t as i18nT } from '@/utils/i18n';
 
 export interface FabButtonProps {
   onPress: () => void;
@@ -66,8 +67,8 @@ export function FabButton({ onPress, onLongPress, size = 56, icon = 'plus' }: Fa
           pressed && { transform: [{ scale: 0.94 }] },
         ]}
         accessibilityRole="button"
-        accessibilityLabel="Add transaction"
-        accessibilityHint={onLongPress ? 'Long-press for category grid' : undefined}
+        accessibilityLabel={i18nT('fab.addTransaction')}
+        accessibilityHint={onLongPress ? i18nT('fab.longPressHint') : undefined}
       >
         <MaterialCommunityIcons name={icon} size={size * 0.5} color={theme.bg} />
       </Pressable>
