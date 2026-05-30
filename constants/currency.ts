@@ -399,12 +399,12 @@ export function previewWithPreset(
  *  Always returns the absolute value formatted — callers that need a
  *  negative sign prepend it themselves (preserved from v1 contract).
  *
- *  Symbol placement: always **left** of the digits. The locale-aware
- *  Intl currency formatter used to honor regional conventions (₽/€
- *  trailing in ru-RU / fr-FR / de-DE etc.) but the product wants
- *  symbol-on-the-left consistently across accounts, balances, and
- *  totals. The user's explicit currency-format preset can still flip
- *  it via the `amount-symbol` position — that's a deliberate override. */
+ *  Source of truth for symbol placement is the user's currency-format
+ *  preset (Settings → Currency format). When a preset is set it owns
+ *  position and digit grouping. When no preset is set we fall back to
+ *  the locale-aware Intl currency formatter, which honors regional
+ *  convention (€ trailing in fr-FR, ₸ trailing in ru-RU, etc.). Users
+ *  who want a consistent symbol position pick the matching preset. */
 export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?: string): string {
   const c = CURRENCIES[code];
   const abs = Math.abs(amount);
@@ -415,17 +415,15 @@ export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?:
     if (preset.position === 'amount-symbol') return `${digits} ${c.symbolNative}`;
     return `${c.symbolNative} ${digits}`;
   }
-  // No preset: format digits with locale-aware grouping/decimal but
-  // anchor the symbol on the left ourselves.
   const eff = effectiveLocale(locale);
   try {
-    const digits = new Intl.NumberFormat(eff, {
-      minimumFractionDigits: c.decimalDigits,
-      maximumFractionDigits: c.decimalDigits,
+    return new Intl.NumberFormat(eff, {
+      style: 'currency',
+      currency: code,
+      currencyDisplay: 'narrowSymbol',
     }).format(abs);
-    return `${c.symbolNative} ${digits}`;
   } catch {
-    return `${c.symbolNative} ${abs.toFixed(c.decimalDigits)}`;
+    return `${c.symbol}${abs.toFixed(c.decimalDigits)}`;
   }
 }
 
