@@ -158,15 +158,27 @@ preset polish, etc.).
 
 ## 2. Polish / nice-to-have for v1.0
 
-### 2.1 Privacy policy + Terms of Use 🟡
-- Drafts live at `docs/legal/privacy.md` + `docs/legal/terms.md` —
-  refreshed for the v1.0 decision set: no third-party crash SDK,
-  voice deferred (no microphone permission), receipt OCR + reminders
-  + biometric documented, FX + Nisab opt-in network disclosures
-  current.
-- **Pending:** host on GitHub Pages and paste the resolved URLs into
-  `app/settings.tsx` AboutSection rows + each store listing's
-  Privacy / Terms URL fields.
+### 2.1 Privacy policy + Terms of Use 🟢
+- Two separate doc sets per flavor on the public `main` branch
+  (orphan, docs-only) at github.com/aqsaqal/moneyapp:
+  - `docs/flow/{privacy,terms}.md` — covers FX opt-in + camera/photos
+    for OCR + biometrics + bill reminders.
+  - `docs/amanah/{privacy,terms}.md` — adds zakat / nisab refresh /
+    sadaqa-privacy / halal-tagging / Hijri / prayer-times clauses,
+    plus an "informational only — consult a scholar" disclaimer in
+    the Terms.
+- Hosted on GitHub Pages with `jekyll-theme-minimal` + pretty
+  permalinks. Live URLs:
+  - Flow: `https://aqsaqal.github.io/moneyapp/flow/privacy/` and
+    `https://aqsaqal.github.io/moneyapp/flow/terms/`
+  - Amanah: `https://aqsaqal.github.io/moneyapp/amanah/privacy/` and
+    `https://aqsaqal.github.io/moneyapp/amanah/terms/`
+- `constants/legal.ts` is flavor-aware via
+  `process.env.APP_FLAVOR` — generic build links Flow's pages,
+  islamic build links Amanah's. Settings → About surfaces the
+  matching pair.
+- **Submit each pair to the matching store listing** (App Store
+  Connect Privacy URL + Play Console Data safety form).
 
 ### 2.2 Onboarding region detection 🟢
 - `constants/regionCurrency.ts` covers ~150 ISO-3166 regions →
