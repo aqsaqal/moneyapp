@@ -96,10 +96,16 @@ export default function RootLayout() {
     // between splash dismissal and first real frame. The splash itself
     // covers most of the boot — this catches the brief font-loading +
     // DB-seed window after splash hides.
+    //
+    // SafeAreaProvider is intentionally mounted on the boot path too,
+    // so the skeleton header isn't tucked under the status bar / notch
+    // on devices that boot fast enough to render this frame.
     return (
-      <View style={styles.root}>
-        <HomeSkeleton />
-      </View>
+      <SafeAreaProvider>
+        <View style={styles.root}>
+          <HomeSkeleton />
+        </View>
+      </SafeAreaProvider>
     );
   }
 

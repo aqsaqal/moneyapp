@@ -324,6 +324,8 @@ export default function Activity() {
             }
             hitSlop={8}
             style={styles.periodArrow}
+            accessibilityRole="button"
+            accessibilityLabel={t('activity.month.prev')}
           >
             <MaterialCommunityIcons name="chevron-left" size={22} color={theme.text2} />
           </Pressable>
@@ -331,6 +333,8 @@ export default function Activity() {
             onPress={() => setMonthPickerOpen(true)}
             style={styles.periodLabel}
             accessibilityRole="button"
+            accessibilityLabel={t('activity.month.pick')}
+            accessibilityValue={{ text: analyticsLabel }}
           >
             <Text style={styles.periodLabelText}>{analyticsLabel}</Text>
             <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text2} />
@@ -341,6 +345,8 @@ export default function Activity() {
             }
             hitSlop={8}
             style={styles.periodArrow}
+            accessibilityRole="button"
+            accessibilityLabel={t('activity.month.next')}
           >
             <MaterialCommunityIcons name="chevron-right" size={22} color={theme.text2} />
           </Pressable>
@@ -348,6 +354,11 @@ export default function Activity() {
         <FeatureSlots.ActivityHeaderExtras />
         {grouped.length === 0 && (
           <View style={styles.emptyWrap}>
+            <MaterialCommunityIcons
+              name={search || filterCat || halalFilter ? 'filter-off-outline' : 'inbox-outline'}
+              size={48}
+              color={theme.text3}
+            />
             <Text style={styles.emptyTitle}>
               {search || filterCat || halalFilter
                 ? t('activity.empty.filtered.title')

@@ -27,6 +27,7 @@ import {
   usePaidItemsForMonth,
 } from '@/hooks/useAppData';
 import { useInsights } from '@/hooks/useInsights';
+import { useT } from '@/hooks/useT';
 import { catInfo } from '@/constants/categories';
 import { monthKey } from '@/utils/format';
 import { kv } from '@/utils/kv';
@@ -44,6 +45,7 @@ interface Insight {
 
 export function HomeActionCard() {
   const router = useRouter();
+  const t = useT();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const key = monthKey();
   const budgets = useBudgets();
@@ -55,7 +57,7 @@ export function HomeActionCard() {
   const insight = useMemo<Insight | null>(() => {
     const today = new Date();
     const dom = today.getDate();
-    const totalsMap = new Map(totals.map((t) => [t.category, t.total]));
+    const totalsMap = new Map(totals.map((tot) => [tot.category, tot.total]));
 
     // 1. Over-budget — pick the category that's overshot the most (in $).
     type OverBudget = { name: string; overBy: number; limit: number; spent: number };
@@ -75,8 +77,11 @@ export function HomeActionCard() {
         icon: 'alert-circle-outline',
         iconColor: theme.expense,
         borderColor: `${theme.expense}55`,
-        title: `${topOver.name} budget exceeded`,
-        detail: `${formatMoney(topOver.spent, currency)} spent · ${formatMoney(topOver.overBy, currency)} over`,
+        title: t('homeAction.overbudget.title', { name: topOver.name }),
+        detail: t('homeAction.overbudget.detail', {
+          spent: formatMoney(topOver.spent, currency),
+          over: formatMoney(topOver.overBy, currency),
+        }),
       };
     }
 
@@ -89,14 +94,22 @@ export function HomeActionCard() {
       .sort((a, b) => a.daysUntil - b.daysUntil);
     if (upcoming.length > 0) {
       const u = upcoming[0];
-      const when = u.daysUntil === 0 ? 'today' : u.daysUntil === 1 ? 'tomorrow' : `in ${u.daysUntil} days`;
+      const when =
+        u.daysUntil === 0
+          ? t('homeAction.due.today')
+          : u.daysUntil === 1
+            ? t('homeAction.due.tomorrow')
+            : t('homeAction.due.inDays', { n: u.daysUntil });
       return {
         kind: 'bill-soon',
         icon: 'calendar-clock',
         iconColor: theme.warning,
         borderColor: `${theme.warning}55`,
-        title: `${u.rec.name} due ${when}`,
-        detail: `${formatMoney(u.rec.amount, currency)} · day ${u.rec.dayOfMonth}`,
+        title: t('homeAction.billSoon.title', { name: u.rec.name, when }),
+        detail: t('homeAction.billSoon.detail', {
+          amount: formatMoney(u.rec.amount, currency),
+          dom: u.rec.dayOfMonth,
+        }),
       };
     }
 
@@ -111,8 +124,11 @@ export function HomeActionCard() {
         icon: 'alert',
         iconColor: theme.expense,
         borderColor: `${theme.expense}55`,
-        title: `${r.name} overdue`,
-        detail: `${formatMoney(r.amount, currency)} · was due day ${r.dayOfMonth}`,
+        title: t('homeAction.overdue.title', { name: r.name }),
+        detail: t('homeAction.overdue.detail', {
+          amount: formatMoney(r.amount, currency),
+          dom: r.dayOfMonth,
+        }),
       };
     }
 
@@ -126,8 +142,11 @@ export function HomeActionCard() {
         icon: 'chart-line-variant',
         iconColor: spike.color,
         borderColor: `${spike.color}55`,
-        title: `${spike.name} spend up ${Math.round((ratio - 1) * 100)}%`,
-        detail: `${formatMoney(spike.thisMonth, currency)} this month · ${formatMoney(spike.rolling12Mean, currency)} typical`,
+        title: t('homeAction.spike.title', { name: spike.name, pct: Math.round((ratio - 1) * 100) }),
+        detail: t('homeAction.spike.detail', {
+          thisMonth: formatMoney(spike.thisMonth, currency),
+          typical: formatMoney(spike.rolling12Mean, currency),
+        }),
         route: '/activity',
       };
     }
@@ -146,11 +165,18 @@ export function HomeActionCard() {
             icon: 'hand-heart',
             iconColor: theme.gold,
             borderColor: `${theme.gold}55`,
-            title: z.zakatDue > 0 ? 'Zakat due now' : 'Hawl complete — review zakat',
+            title: z.zakatDue > 0
+              ? t('homeAction.zakatDue.title')
+              : t('homeAction.hawlComplete.title'),
             detail: z.zakatDue > 0
-              ? `${formatMoney(z.zakatDue, currency)} on ${formatMoney(z.netEligible, currency)} eligible wealth`
-              : `Wealth below nisab — no zakat due this hawl`,
-            route: '/(islamic)/zakat',
+              ? t('homeAction.zakatDue.detail', {
+                  due: formatMoney(z.zakatDue, currency),
+                  eligible: formatMoney(z.netEligible, currency),
+                })
+              : t('homeAction.belowNisab.detail'),
+            // Falls back to /plan (the default route below) — zakat
+            // budgeting + sadaqa categories live under the Plan tab in
+            // v1. A dedicated Zakat Calculator screen ships in v1.1.
           };
         }
         if (z && z.daysRemaining > 0 && z.daysRemaining <= 30) {
@@ -159,9 +185,10 @@ export function HomeActionCard() {
             icon: 'calendar-clock',
             iconColor: theme.gold,
             borderColor: `${theme.gold}55`,
-            title: `Hawl in ${z.daysRemaining} days`,
-            detail: `Review zakat — projected ${formatMoney(z.zakatDueProjected ?? 0, currency)}`,
-            route: '/(islamic)/zakat',
+            title: t('homeAction.hawlApproaching.title', { n: z.daysRemaining }),
+            detail: t('homeAction.hawlApproaching.detail', {
+              amount: formatMoney(z.zakatDueProjected ?? 0, currency),
+            }),
           };
         }
       } catch {
@@ -170,7 +197,7 @@ export function HomeActionCard() {
     }
 
     return null;
-  }, [budgets, totals, recurring, paid, currency, spike]);
+  }, [budgets, totals, recurring, paid, currency, spike, t]);
 
   if (!insight) return null;
 

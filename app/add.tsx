@@ -30,7 +30,6 @@ import { CategoryTile } from '@/components/CategoryTile';
 import { SuccessOverlay } from '@/components/SuccessOverlay';
 import { SmartSuggestionRow } from '@/components/SmartSuggestionRow';
 import { PredictedStrip } from '@/components/PredictedStrip';
-import { VoiceMicButton } from '@/components/VoiceMicButton';
 import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
@@ -659,18 +658,9 @@ export default function AddScreen() {
             placeholderTextColor={theme.text3}
             style={styles.note}
           />
-          {/* VoiceMicButton hidden for now — keeping the import and the
-              `locale` prop wiring intact so re-enabling is a one-line
-              toggle once we ship the permission-explainer modal. */}
-          {false && (
-            <VoiceMicButton
-              locale={locale}
-              onResult={({ amount: a, note: n }) => {
-                if (a !== null) setAmount(String(a));
-                if (n) setNote(n);
-              }}
-            />
-          )}
+          {/* Voice dictation deferred to v1.1+. Component file kept
+              in /components for the relaunch — re-add the import +
+              render here once the speech plugin is back in app.config. */}
           <ReceiptScanButton
             onScanned={({ amount: a, note: n, receiptUri }) => {
               if (a !== null) setAmount(String(a));

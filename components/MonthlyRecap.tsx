@@ -85,7 +85,16 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
   const expense = txns.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
   const net = income - expense;
   const daysTracked = new Set(daily.filter((d) => d.amount > 0).map((d) => d.day)).size;
-  const topCat = totals.slice().sort((a, b) => b.total - a.total)[0];
+  // Cultural review (islamic): ibadah categories (zakat / sadaqa /
+  // qurban) must NEVER appear in a shareable card. Filter them out of
+  // the candidate set used to pick the headline "top category."
+  const IBADAH = process.env.APP_FLAVOR === 'islamic'
+    ? new Set(['zakat', 'sadaqa', 'qurban'])
+    : null;
+  const shareTotals = IBADAH
+    ? totals.filter((t) => !IBADAH.has(t.category))
+    : totals;
+  const topCat = shareTotals.slice().sort((a, b) => b.total - a.total)[0];
   const topCatInfo = topCat ? catInfo(topCat.category) : null;
 
   const share = async () => {

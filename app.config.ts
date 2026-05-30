@@ -45,14 +45,9 @@ const config: ExpoConfig = {
     infoPlist: {
       // iPhone-only — keeps App Store from demanding iPad screenshots.
       UIDeviceFamily: [1],
-      // Microphone strings — wording reviewed for Apple privacy nutrition.
-      // Audio path:
-      //   - iOS 17+: on-device when Voice.start() succeeds via Apple Speech;
-      //   - older iOS: routed through Apple speech servers per OS contract.
-      NSMicrophoneUsageDescription:
-        'When you tap the voice button to dictate an expense, the microphone is used only for that utterance. Audio is processed by the system speech service and never recorded or sent to MoneyFlow servers.',
-      NSSpeechRecognitionUsageDescription:
-        'Speech recognition converts your dictated expense into text. On iOS 17+ this runs on-device when supported; on older iOS, audio is sent to Apple for transcription per the system speech service.',
+      // Voice dictation is deferred to v1.1+. The NSMicrophone /
+      // NSSpeechRecognition strings were intentionally removed so the
+      // privacy nutrition label doesn't have to declare microphone use.
       // Phase 10m receipt OCR — image picker camera + library access.
       NSCameraUsageDescription:
         'Used to capture receipts. The photo stays on your device; on-device text recognition extracts the total and merchant. No image data leaves the device.',
@@ -83,15 +78,16 @@ const config: ExpoConfig = {
       foregroundImage: ADAPTIVE_ICON,
       backgroundColor: SPLASH_BG,
     },
-    // RECORD_AUDIO: Phase 7 voice-to-add via Android SpeechRecognizer.
+    // Voice dictation deferred to v1.1+ — RECORD_AUDIO was removed so
+    // the Data safety form doesn't have to declare microphone usage.
     // We *don't* declare READ/WRITE_EXTERNAL_STORAGE — scoped storage
     // (API 30+) makes them ineffective and Play Console flags them.
     // We also exclude SYSTEM_ALERT_WINDOW (some legacy deps merge it in).
     permissions: [
-      'android.permission.RECORD_AUDIO',
       'android.permission.CAMERA',
     ],
     blockedPermissions: [
+      'android.permission.RECORD_AUDIO',
       'android.permission.READ_EXTERNAL_STORAGE',
       'android.permission.WRITE_EXTERNAL_STORAGE',
       'android.permission.SYSTEM_ALERT_WINDOW',
@@ -109,24 +105,11 @@ const config: ExpoConfig = {
     'expo-local-authentication',
     'expo-localization',
     [
-      'expo-speech-recognition',
-      {
-        // Phase 10z: voice replaces @react-native-voice/voice with
-        // expo-speech-recognition (jamsch). Permission strings drop
-        // straight into Info.plist / AndroidManifest via the plugin.
-        microphonePermission: 'Allow MoneyFlow to access the microphone to log expenses by voice.',
-        speechRecognitionPermission: 'Allow MoneyFlow to use speech recognition to fill the transaction form.',
-        androidSpeechServicePackages: [],
-      },
-    ],
-    [
       'expo-build-properties',
       {
         android: {
-          // Jetifier was originally for @react-native-voice/voice's
-          // pre-AndroidX deps. The replacement (expo-speech-recognition)
-          // is AndroidX-native, but leaving Jetifier on is harmless and
-          // covers any other legacy dep.
+          // Jetifier is harmless and covers any legacy AAR deps that
+          // still ship with non-AndroidX classnames.
           enableJetifier: true,
         },
       },

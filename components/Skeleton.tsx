@@ -14,6 +14,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { theme, radii, spacing } from '@/constants/theme';
 import { useReducedMotion } from '@/hooks/useReducedMotion';
 
@@ -53,8 +54,12 @@ export function Skeleton({ width = '100%', height = 16, style }: SkeletonProps) 
 /** Layout that approximates a Home tab so cold-boot feels like Home is
  *  loading, not crashing. Brand row + hero card + 3 placeholder rows. */
 export function HomeSkeleton() {
+  // Consume safe-area insets so the placeholder header isn't under the
+  // status bar / notch when the device boots fast enough to show this
+  // frame before the real Home tab takes over.
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { paddingTop: spacing.lg + insets.top }]}>
       <View style={styles.headerRow}>
         <Skeleton width={120} height={28} />
         <Skeleton width={36} height={36} style={{ borderRadius: 18 }} />
