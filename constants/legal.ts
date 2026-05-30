@@ -15,11 +15,11 @@ const IS_ISLAMIC = process.env.APP_FLAVOR === 'islamic';
 const BASE = 'https://aqsaqal.github.io/moneyapp';
 
 export const PRIVACY_POLICY_URL = IS_ISLAMIC
-  ? `${BASE}/amanah/privacy.html`
-  : `${BASE}/flow/privacy.html`;
+  ? `${BASE}/amanah/privacy/`
+  : `${BASE}/flow/privacy/`;
 
 export const TERMS_URL = IS_ISLAMIC
-  ? `${BASE}/amanah/terms.html`
-  : `${BASE}/flow/terms.html`;
+  ? `${BASE}/amanah/terms/`
+  : `${BASE}/flow/terms/`;
 
 export const SUPPORT_EMAIL = 'ak.saken@gmail.com';
