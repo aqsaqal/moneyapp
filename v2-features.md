@@ -158,29 +158,58 @@ preset polish, etc.).
 
 ## 2. Polish / nice-to-have for v1.0
 
-### 2.1 Privacy policy + Terms of Use 🔴
-- Two markdown docs hosted somewhere (GitHub Pages, custom domain).
-- Links wired into Settings → About. Required for both stores.
+### 2.1 Privacy policy + Terms of Use 🟡
+- Drafts live at `docs/legal/privacy.md` + `docs/legal/terms.md` —
+  refreshed for the v1.0 decision set: no third-party crash SDK,
+  voice deferred (no microphone permission), receipt OCR + reminders
+  + biometric documented, FX + Nisab opt-in network disclosures
+  current.
+- **Pending:** host on GitHub Pages and paste the resolved URLs into
+  `app/settings.tsx` AboutSection rows + each store listing's
+  Privacy / Terms URL fields.
 
-### 2.2 Onboarding region detection 🟡
-- `app/onboarding.tsx` already auto-detects, but the Localization
-  region → currency map needs the full set from the plan
-  (SA→SAR, AE→AED, EG→EGP, PK→PKR, ID→IDR, MY→MYR, TR→TRY) —
-  audit `constants/regionCurrency.ts` if it exists.
+### 2.2 Onboarding region detection 🟢
+- `constants/regionCurrency.ts` covers ~150 ISO-3166 regions →
+  ISO-4217 currency, including every target from the plan
+  (SA→SAR, AE→AED, EG→EGP, PK→PKR, ID→IDR, MY→MYR, TR→TRY),
+  plus GCC, MENA, South / Southeast / East Asia, Anatolia / CIS,
+  Eurozone + non-euro Europe, Americas, Africa, Pacific.
+- Also exports `REGION_TO_LOCALE` so a fresh ar-SA install lands on
+  Arabic UI + SAR + RTL, and `currencyAlternativesFor()` for the
+  onboarding step-2 "did we guess right?" picker.
 
-### 2.3 Cashflow forecast subtext on Home 🟡
-- Forecast card is now always-open. Re-verify the projected end-of-
-  month number reads correctly when the user has 0 recurring + 0
-  variable history.
+### 2.3 Cashflow forecast subtext on Home 🟢
+- Always-open card after this session's BalanceCard refactor.
+- Formula: `disposable − (avgDailyVar × daysLeft) − remainingBills`.
+  Zero-state breakdown:
+  - `expense = 0` → `avgDailyVar = 0` → `projectedVar = 0` →
+    `forecast = disposable − remainingBills`. Correct.
+  - `recurring = 0` → `remainingBills = 0` → forecast tracks daily
+    spend only. Correct.
+  - Both zero → `forecast = disposable` (no projection drag yet).
+- `ForecastCard.shouldRender(daysOfData ≥ 3)` hides the card during
+  the first 2 days of the month, so the zero-data window can't
+  display a misleadingly perfect forecast.
 
-### 2.4 PDF monthly reports 🔴
-- `expo-print` is transitive. Render MonthlyRecap card + per-
-  category breakdown + transaction list to PDF, share-sheet handoff.
-  "Tax-season bundle" = 12 monthly PDFs zipped.
+### 2.4 PDF monthly reports 🟢
+- `utils/pdfReport.ts` exports `exportMonthlyPdf(monthKey, currency)`
+  and `exportYearlyPdf(year, currency)` via `expo-print` +
+  `expo-sharing`. Both use a lazy-required `getPrint()` so test
+  environments missing the native module don't crash at eval.
+- Surfaced in Settings → Data with row labels `me.export.pdfMonth`
+  (current-month subtitle) and `me.export.pdfYear` (current-year
+  subtitle).
+- A single annual PDF covers the same ground as the "tax-season
+  bundle" the plan called for, with one fewer share-sheet step.
 
-### 2.5 Net worth chart polish 🟡
-- `NetWorthChart` exists. Confirm intra-day refresh still works
-  after the recent `refreshTodaySnapshot()` fix (commit 96edc0f).
+### 2.5 Net worth chart polish 🟢
+- `refreshTodaySnapshot()` is called on every transaction
+  add/update/delete and every account upsert/delete (and
+  balance-adjustment path) in `hooks/useAppData.ts`, plus boot.
+- `NetWorthChart` subscribes via `useTransactions({ limit: 1 })`,
+  which re-runs on every `bump()`; its `useMemo` keys off the
+  bump array length so the chart re-fetches `recentSnapshots(90)`
+  whenever today's snapshot is rewritten. Intra-day refresh works.
 
 ---
 
