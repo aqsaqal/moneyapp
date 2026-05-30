@@ -52,7 +52,7 @@ import { exportData } from '@/utils/dataExport';
 import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
 import { monthKey as monthKeyOf } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
-import { useCategoriesWithMeta, setCategoryMeta, type CategoryWithMeta, useRecurring } from '@/hooks/useAppData';
+import { useCategoriesWithMeta, setCategoryMeta, type CategoryWithMeta, useRecurring, bumpVersion } from '@/hooks/useAppData';
 import { DEFAULT_LEAD_DAYS } from '@/utils/notifications';
 import { convert } from '@/utils/fx';
 import { getRawDB } from '@/utils/db/client';
@@ -294,6 +294,9 @@ function CurrencyRow() {
           const prev = currency;
           kv.set('currency', c);
           setCurrency(c);
+          // Same reason as the format-preset onPick: kv changed but no
+          // hook is watching this key, so visible totals stay stale.
+          bumpVersion();
           if (prev !== c) maybeOfferBudgetConversion(prev, c);
         }}
         onClose={() => setOpen(false)}
@@ -332,6 +335,12 @@ function CurrencyFormatRow() {
         onPick={(id) => {
           setPresetId(id);
           kv.set('currencyFormat', id);
+          // formatMoney reads kv.currencyFormat on every call but no React
+          // state knows it changed — bump the global version so every
+          // useVersion-subscribed view (Home disposable, Accounts list,
+          // Activity, Plan budgets) re-renders against the new preset
+          // immediately instead of waiting for the next unrelated mutation.
+          bumpVersion();
         }}
         onClose={() => setOpen(false)}
       />

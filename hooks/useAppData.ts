@@ -52,6 +52,16 @@ function bump() {
   listeners.forEach((l) => l());
 }
 
+/** Public escape hatch so non-DB events (e.g. flipping the currency-format
+ *  preset in Settings, changing the display currency) can force every
+ *  useVersion-subscribed view to re-render against the same global tick.
+ *  Without this, formatMoney reads the new preset on next render — but no
+ *  one tells React anything changed, so visible balances stay stale until
+ *  the next unrelated mutation or an app restart. */
+export function bumpVersion(): void {
+  bump();
+}
+
 // Profile switch invalidates everything: getDB() will reopen against the
 // new profile's .db file, so we also need every subscribed query to re-run.
 // One-time wiring at module load.
