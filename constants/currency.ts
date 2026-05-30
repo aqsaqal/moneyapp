@@ -382,6 +382,30 @@ export function composeWithPreset(
   }
 }
 
+/** Format a bare number with the user's currency-format preset
+ *  (digit grouping + decimal style) but NO currency symbol. Used in
+ *  inline strings where the symbol/code is already adjacent (e.g.
+ *  "spent / cap USD this month"). Falls back to a locale-aware
+ *  Intl.NumberFormat when no preset is set, so a user on en-US still
+ *  sees "12,345" instead of "12345". */
+export function formatNumber(amount: number, code: CurrencyCode = 'USD', locale?: string): string {
+  const c = CURRENCIES[code];
+  const abs = Math.abs(amount);
+  const fixed = abs.toFixed(c.decimalDigits);
+  const presetId = kv.get('currencyFormat');
+  const preset = getCurrencyFormatPreset(presetId);
+  if (preset) return applyNumberStyle(fixed, preset.numberStyle);
+  const eff = effectiveLocale(locale);
+  try {
+    return new Intl.NumberFormat(eff, {
+      minimumFractionDigits: c.decimalDigits,
+      maximumFractionDigits: c.decimalDigits,
+    }).format(abs);
+  } catch {
+    return fixed;
+  }
+}
+
 /** Render a preset-formatted preview for the given numeric value
  *  and symbol — used by the Currency format picker rows. */
 export function previewWithPreset(

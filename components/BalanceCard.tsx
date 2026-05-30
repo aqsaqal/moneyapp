@@ -167,8 +167,6 @@ export function ForecastCard({
   currency = 'USD',
   onSeeBreakdown,
 }: ForecastCardProps) {
-  const [open, setOpen] = React.useState(false);
-
   // Combined absolute + relative threshold for the yellow tier — fixes
   // the case where disposable is tiny and a $4 cushion still reads as
   // 8% buffer (warning), or where disposable is huge and a $50 cushion
@@ -193,32 +191,15 @@ export function ForecastCard({
         : t('forecast.onTrack');
 
   return (
-    <Pressable
-      onPress={() => setOpen((v) => !v)}
-      style={styles.forecastCard}
-      accessibilityRole="button"
-      accessibilityState={{ expanded: open }}
-      accessibilityLabel={headline}
-    >
+    <View style={styles.forecastCard} accessibilityLabel={headline}>
       <View style={styles.forecastRow}>
         <View style={[styles.forecastDot, { backgroundColor: toneColor }]} />
         {/* Edge #2: only the dot carries the tone color now. The
             headline stays neutral so the dot + headline aren't two
             duplicate signals of the same thing. */}
         <Text style={styles.forecastHead}>{headline}</Text>
-        <MaterialCommunityIcons
-          name={open ? 'chevron-up' : 'chevron-down'}
-          size={18}
-          color={theme.text2}
-        />
       </View>
-      {open && (
-        <View
-          style={styles.forecastBody}
-          accessible
-          // Edge #8: announce the projected number when the body unfolds.
-          accessibilityLiveRegion="polite"
-        >
+      <View style={styles.forecastBody}>
           {/* Edge #9: split prefix and amount into two siblings so RTL
               composition keeps the symbol on the correct side of the
               colon. The label hugs the number visually but doesn't
@@ -268,9 +249,8 @@ export function ForecastCard({
               <MaterialCommunityIcons name="chevron-right" size={14} color={theme.accent} />
             </Pressable>
           )}
-        </View>
-      )}
-    </Pressable>
+      </View>
+    </View>
   );
 }
 

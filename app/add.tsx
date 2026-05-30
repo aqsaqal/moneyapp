@@ -44,7 +44,7 @@ import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { convert } from '@/utils/fx';
-import { CURRENCIES } from '@/constants/currency';
+import { CURRENCIES, formatMoney } from '@/constants/currency';
 // Lazy-imported so a binary that predates the native module shows a
 // graceful fallback instead of crashing.
 type DateTimePickerModule = typeof import('@react-native-community/datetimepicker').default;
@@ -220,8 +220,11 @@ export default function AddScreen() {
   }, [accounts, prefill?.accountId, prefill?.toAccountId]);
 
   // Phase 10z: calc mode appends operators to the amount string. The
-  // amount field doubles as an expression display. Submit evaluates it.
-  const [calcOpen, setCalcOpen] = useState(false);
+  // amount field doubles as an expression display.
+  // Phase 10ae: the operators column is always visible, % is now a
+  // numpad key (applied immediately, doesn't enter evaluate mode), and
+  // the primary action key flips between ✓ (submit) and = (evaluate)
+  // based on whether an unevaluated op is in the buffer.
   const onKey = (k: string) => {
     if (k === 'C') return setAmount('0');
     if (k === 'del') return setAmount((a) => (a.length <= 1 ? '0' : a.slice(0, -1)));
@@ -231,6 +234,53 @@ export default function AddScreen() {
         const lastOp = Math.max(a.lastIndexOf('+'), a.lastIndexOf('-'), a.lastIndexOf('*'), a.lastIndexOf('/'));
         const tail = a.slice(lastOp + 1);
         return tail.includes('.') ? a : a + '.';
+      });
+    }
+    if (k === '%') {
+      // iOS-calculator percent. Resolves the active op against the
+      // preceding operand and collapses the expression to the result.
+      //   500 × 60%  → 300   (60% of 500)
+      //   500 + 30%  → 650   (500 + 30% of 500)
+      //   500 − 20%  → 400   (500 − 20% of 500)
+      //   500 ÷ 50%  → 1000  (500 ÷ 0.5)
+      //   200%       → 2     (no op queued — plain divide by 100)
+      // Always commits a numeric result, never leaves an expression
+      // in the buffer, so the primary key returns to ✓.
+      return setAmount((a) => {
+        if (/[+\-*/]$/.test(a)) return a; // ignore right after an op
+
+        // Find the last binary op (skip a leading sign at index 0).
+        let lastOp = -1;
+        for (let i = a.length - 1; i > 0; i--) {
+          const c = a[i];
+          if (c === '+' || c === '-' || c === '*' || c === '/') {
+            lastOp = i;
+            break;
+          }
+        }
+
+        const fmt = (n: number) => {
+          if (!Number.isFinite(n)) return a;
+          // Trim FP noise + trailing zeros: 0.30000001 → 0.3, 5 → "5".
+          const r = Math.round(n * 1e9) / 1e9;
+          return Number.isInteger(r) ? String(r) : String(r);
+        };
+
+        if (lastOp === -1) {
+          const n = parseFloat(a);
+          return fmt(n / 100);
+        }
+
+        const head = a.slice(0, lastOp);
+        const op = a[lastOp];
+        const tailN = parseFloat(a.slice(lastOp + 1));
+        const headV = evalAmount(head);
+        if (!Number.isFinite(headV) || !Number.isFinite(tailN)) return a;
+
+        if (op === '+') return fmt(headV + headV * (tailN / 100));
+        if (op === '-') return fmt(headV - headV * (tailN / 100));
+        if (op === '*') return fmt(headV * (tailN / 100));
+        return fmt(headV / (tailN / 100)); // '/'
       });
     }
     setAmount((a) => (a === '0' ? k : a + k));
@@ -782,9 +832,9 @@ export default function AddScreen() {
                 <Text style={styles.budgetBarLabel}>
                   {cat.name}:{' '}
                   {enteredInCcy > 0
-                    ? `${spentInCcy.toFixed(0)} → ${projected.toFixed(0)}`
-                    : spentInCcy.toFixed(0)}
-                  {' '}/ {cat.monthlyBudget.toFixed(0)} {ccy} {t('budget.thisMonth')}
+                    ? `${formatMoney(spentInCcy, ccy)} → ${formatMoney(projected, ccy)}`
+                    : formatMoney(spentInCcy, ccy)}
+                  {' '}/ {formatMoney(cat.monthlyBudget, ccy)} {t('budget.thisMonth')}
                 </Text>
                 <View style={styles.budgetBarBg}>
                   <View style={[styles.budgetBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
@@ -792,8 +842,7 @@ export default function AddScreen() {
                 {over && enteredInCcy > 0 && (
                   <Text style={styles.budgetWarn}>
                     {t('budget.over', {
-                      over: (projected - cat.monthlyBudget).toFixed(0),
-                      ccy,
+                      over: formatMoney(projected - cat.monthlyBudget, ccy),
                       name: cat.name,
                     })}
                   </Text>
@@ -806,7 +855,10 @@ export default function AddScreen() {
           if (spentInCcy === 0 && enteredInCcy === 0) {
             return (
               <Text style={styles.budgetNeutralLine}>
-                {t('budget.firstThisMonth', { name: cat.name, ccy })}
+                {t('budget.firstThisMonth', {
+                  name: cat.name,
+                  zero: formatMoney(0, ccy),
+                })}
               </Text>
             );
           }
@@ -814,9 +866,9 @@ export default function AddScreen() {
             <Text style={styles.budgetNeutralLine}>
               {cat.name}:{' '}
               {enteredInCcy > 0
-                ? `${spentInCcy.toFixed(0)} → ${projected.toFixed(0)}`
-                : spentInCcy.toFixed(0)}
-              {' '}{ccy} {t('budget.thisMonth')}
+                ? `${formatMoney(spentInCcy, ccy)} → ${formatMoney(projected, ccy)}`
+                : formatMoney(spentInCcy, ccy)}
+              {' '}{t('budget.thisMonth')}
             </Text>
           );
         })()}
@@ -829,16 +881,26 @@ export default function AddScreen() {
           onChange={(p) => setDraft({ ...draft, ...p })}
         />
 
-        {/* Numpad's right column owns the function keys: delete, date,
-            calc toggle, and submit (✓). The standalone Add expense /
-            Save CTA below the keypad is gone — ✓ is the only submit. */}
+        {/* Numpad's right column owns ⌫, 📅, and a tall ✓/= key. The
+            standalone Add-expense / Save CTA below the keypad is gone
+            — ✓ is the only submit. When the amount expression contains
+            an unevaluated op the ✓ flips to = and resolves the
+            expression in-place; the next render restores ✓. */}
         <Numpad
           onPress={onKey}
           onDate={() => setDatePickerOpen(true)}
           onSubmit={submit}
-          onCalcToggle={() => setCalcOpen((v) => !v)}
+          onEvaluate={() => {
+            const v = evalAmount(amount);
+            if (Number.isFinite(v)) {
+              // Trim a trailing zero on integers so the buffer reads
+              // "150" not "150.0" after an evaluation.
+              const s = Number.isInteger(v) ? String(v) : String(v);
+              setAmount(s);
+            }
+          }}
           onCalcOp={onCalcOp}
-          calcOpen={calcOpen}
+          awaitingEval={/[+\-*/]/.test(amount)}
           submitLabel={isEditing ? t('common.save') : t(`add.cta.${mode}`)}
         />
 

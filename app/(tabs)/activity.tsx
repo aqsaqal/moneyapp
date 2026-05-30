@@ -6,7 +6,7 @@
 // "what already happened."
 
 import React, { useMemo, useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
@@ -15,7 +15,6 @@ import { SearchBar } from '@/components/SearchBar';
 import { StatCard, sectionStyles } from '@/components/Sections';
 import { MonthlyRecap } from '@/components/MonthlyRecap';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
-import { InsightsStrip } from '@/components/InsightsStrip';
 import { NetWorthChart } from '@/components/NetWorthChart';
 import { FeatureSlots } from '@/features';
 import { useT } from '@/hooks/useT';
@@ -25,12 +24,15 @@ import {
   useTransactions,
   useDailySpend,
   useMonthTotalsByCategory,
+  useAccounts,
 } from '@/hooks/useAppData';
+import { convert as fxConvert } from '@/utils/fx';
 import { catInfo } from '@/constants/categories';
 import { useCategoriesWithMeta } from '@/hooks/useAppData';
 import { CategoryPicker } from '@/components/CategoryPicker';
 import { dayStr, monthKey, formatMoney } from '@/utils/format';
 import { kv } from '@/utils/kv';
+import { onTabReselect } from '@/utils/tabReselect';
 import type { CurrencyCode } from '@/constants/currency';
 import { CategoriesAnalytics } from '@/components/CategoriesAnalytics';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
@@ -87,14 +89,24 @@ export default function Activity() {
     if (filterCat || search.length > 0 || halalFilter) setFiltersOpen(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterCat, halalFilter]);
-  const [analyticsOpen, setAnalyticsOpen] = useState(false);
+  // chartOpen drives the "Month at a glance" popup (was inline AnalyticsHeader).
+  const [chartOpen, setChartOpen] = useState(false);
   const [recapOpen, setRecapOpen] = useState(false);
   const [pageLimit, setPageLimit] = useState(200);
 
-  // End-of-today as the boundary between Upcoming and history.
+  // End-of-today as the boundary between Upcoming and history. Only
+  // relevant when the user is browsing the current month — past months
+  // can't have future-dated rows still classed as "upcoming."
   const endOfToday = useMemo(() => {
     const d = new Date(); d.setHours(23, 59, 59, 999); return d.getTime();
   }, []);
+  const isCurrentMonth = useMemo(() => {
+    const now = new Date();
+    return (
+      analyticsMonth.getFullYear() === now.getFullYear() &&
+      analyticsMonth.getMonth() === now.getMonth()
+    );
+  }, [analyticsMonth]);
   const upcomingTxns = useTransactions({
     category: filterCat,
     search: search || undefined,
@@ -102,7 +114,15 @@ export default function Activity() {
     dateGt: endOfToday,
     limit: 100,
   });
+  // List view now month-scoped: the carousel at the top of the tab
+  // anchors which month's transactions are shown. monthKey reads
+  // analyticsMonth so the date range mirrors the Categories view.
+  const listMonthKey = useMemo(
+    () => `${analyticsMonth.getFullYear()}-${String(analyticsMonth.getMonth() + 1).padStart(2, '0')}`,
+    [analyticsMonth],
+  );
   const txns = useTransactions({
+    monthKey: listMonthKey,
     category: filterCat,
     search: search || undefined,
     halalStatus: halalFilter,
@@ -110,6 +130,19 @@ export default function Activity() {
     limit: pageLimit,
   });
   const reachedLimit = txns.length >= pageLimit;
+
+  // Accounts map keyed by id — used to resolve each txn's source currency
+  // when computing the per-day net sum below. Missing/null currency on
+  // an account falls back to the user's display currency (same rule the
+  // rest of the app uses).
+  const accounts = useAccounts();
+  const accountCcy = useMemo(() => {
+    const m = new Map<string, CurrencyCode>();
+    accounts.forEach((a) => {
+      m.set(a.id, ((a.currency ?? currency) as CurrencyCode));
+    });
+    return m;
+  }, [accounts, currency]);
 
   const grouped = useMemo(() => {
     const g = new Map<string, typeof txns>();
@@ -119,8 +152,21 @@ export default function Activity() {
       arr.push(t);
       g.set(k, arr);
     });
-    return Array.from(g.entries());
-  }, [txns]);
+    // Net for the day = income − expense, transfers excluded (they net
+    // to zero across the user's own accounts). Each leg is converted
+    // from its account currency to the display currency via the cached
+    // FX rates; missing rates fall back to a 1:1 no-op upstream.
+    return Array.from(g.entries()).map(([day, ts]) => {
+      let net = 0;
+      ts.forEach((t) => {
+        if (t.type === 'transfer') return;
+        const from = (accountCcy.get(t.accountId ?? '') ?? currency) as string;
+        const v = fxConvert(t.amount, from, currency);
+        net += t.type === 'income' ? v : -v;
+      });
+      return [day, ts, net] as const;
+    });
+  }, [txns, accountCcy, currency]);
 
   // ─── Categories analytics period range ────────────────────────────
   // For Month view: [first of month, first of next month).
@@ -142,6 +188,19 @@ export default function Activity() {
     setView(v);
     kv.set('activityView', v);
   };
+
+  // Tapping the Activity tab while it's already focused flips the
+  // segmented view — quick way to peek between Transactions and
+  // Categories without aiming at the segmented control.
+  React.useEffect(() => {
+    return onTabReselect('activity', () => {
+      setView((v) => {
+        const next = v === 'list' ? 'categories' : 'list';
+        kv.set('activityView', next);
+        return next;
+      });
+    });
+  }, []);
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -170,25 +229,36 @@ export default function Activity() {
               </Pressable>
             ))}
           </View>
-          {view === 'list' && (
+          <View style={styles.iconBtnRow}>
+            {view === 'list' && (
+              <Pressable
+                onPress={() => setFiltersOpen((v) => !v)}
+                style={[styles.filterToggle, filtersOpen && styles.filterToggleActive]}
+                accessibilityRole="button"
+                accessibilityLabel={t('activity.filterToggle')}
+                accessibilityState={{ expanded: filtersOpen }}
+                hitSlop={6}
+              >
+                <MaterialCommunityIcons
+                  name={filtersOpen ? 'filter' : 'filter-outline'}
+                  size={18}
+                  color={filtersOpen ? theme.bg : theme.text2}
+                />
+                {(Boolean(filterCat) || search.length > 0 || Boolean(halalFilter)) && !filtersOpen && (
+                  <View style={styles.filterToggleBadge} />
+                )}
+              </Pressable>
+            )}
             <Pressable
-              onPress={() => setFiltersOpen((v) => !v)}
-              style={[styles.filterToggle, filtersOpen && styles.filterToggleActive]}
+              onPress={() => setChartOpen(true)}
+              style={styles.filterToggle}
               accessibilityRole="button"
-              accessibilityLabel={t('activity.filterToggle')}
-              accessibilityState={{ expanded: filtersOpen }}
+              accessibilityLabel={t('activity.glance')}
               hitSlop={6}
             >
-              <MaterialCommunityIcons
-                name={filtersOpen ? 'filter' : 'filter-outline'}
-                size={18}
-                color={filtersOpen ? theme.bg : theme.text2}
-              />
-              {(Boolean(filterCat) || search.length > 0 || Boolean(halalFilter)) && !filtersOpen && (
-                <View style={styles.filterToggleBadge} />
-              )}
+              <MaterialCommunityIcons name="chart-line" size={18} color={theme.text2} />
             </Pressable>
-          )}
+          </View>
         </View>
         {view === 'list' && filtersOpen && (
           <>
@@ -244,13 +314,37 @@ export default function Activity() {
         />
       ) : (
       <ScrollView contentContainerStyle={styles.scroll}>
-        <InsightsStrip />
-        <AnalyticsHeader
-          currency={currency}
-          open={analyticsOpen}
-          onToggle={() => setAnalyticsOpen((x) => !x)}
-          onShareRecap={() => setRecapOpen(true)}
-        />
+        {/* Month carousel — mirrors the one in the Categories view so
+            switching segments keeps the user's mental anchor. Tap the
+            label to open the month picker; arrows step ±1. */}
+        <View style={styles.periodRow}>
+          <Pressable
+            onPress={() =>
+              setAnalyticsMonth((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))
+            }
+            hitSlop={8}
+            style={styles.periodArrow}
+          >
+            <MaterialCommunityIcons name="chevron-left" size={22} color={theme.text2} />
+          </Pressable>
+          <Pressable
+            onPress={() => setMonthPickerOpen(true)}
+            style={styles.periodLabel}
+            accessibilityRole="button"
+          >
+            <Text style={styles.periodLabelText}>{analyticsLabel}</Text>
+            <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text2} />
+          </Pressable>
+          <Pressable
+            onPress={() =>
+              setAnalyticsMonth((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))
+            }
+            hitSlop={8}
+            style={styles.periodArrow}
+          >
+            <MaterialCommunityIcons name="chevron-right" size={22} color={theme.text2} />
+          </Pressable>
+        </View>
         <FeatureSlots.ActivityHeaderExtras />
         {grouped.length === 0 && (
           <View style={styles.emptyWrap}>
@@ -266,11 +360,10 @@ export default function Activity() {
             </Text>
           </View>
         )}
-        {/* Upcoming — future-dated transactions. Scheduled but not yet
-            executed. Amber tone, slightly dimmed so they read as "not
-            yet real" without looking broken. Stays tappable so the
-            user can edit / cancel the scheduled item. */}
-        {upcomingTxns.length > 0 && (
+        {/* Upcoming — future-dated transactions. Only shown when the
+            user is viewing the current month; past months can't have
+            scheduled-but-not-yet-executed rows by definition. */}
+        {isCurrentMonth && upcomingTxns.length > 0 && (
           <View style={styles.group}>
             <Text style={[styles.dayLabel, styles.upcomingLabel]}>UPCOMING</Text>
             <View style={{ gap: 2, opacity: 0.85 }}>
@@ -291,9 +384,22 @@ export default function Activity() {
             </View>
           </View>
         )}
-        {grouped.map(([day, ts]) => (
+        {grouped.map(([day, ts, net]) => (
           <View key={day} style={styles.group}>
-            <Text style={styles.dayLabel}>{day}</Text>
+            <View style={styles.dayHeader}>
+              <Text style={styles.dayLabel}>{day}</Text>
+              {net !== 0 && (
+                <Text
+                  style={[
+                    styles.dayTotal,
+                    { color: net > 0 ? theme.accent : theme.text2 },
+                  ]}
+                >
+                  {net > 0 ? '+' : '−'}
+                  {formatMoney(Math.abs(net), currency)}
+                </Text>
+              )}
+            </View>
             <View style={{ gap: 2 }}>
               {ts.map((tx) => (
                 <TransactionRow
@@ -325,6 +431,15 @@ export default function Activity() {
       </ScrollView>
       )}
       <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
+      <ChartModal
+        visible={chartOpen}
+        currency={currency}
+        onClose={() => setChartOpen(false)}
+        onShareRecap={() => {
+          setChartOpen(false);
+          setRecapOpen(true);
+        }}
+      />
       {/* Month picker for Categories view — 24 entries (this month +
           previous 23) is a usable window without dragging in a real
           date picker dependency. Wider ranges can land alongside the
@@ -362,17 +477,23 @@ export default function Activity() {
   );
 }
 
-// ---- Collapsible analytics header (formerly More → Analytics sub-tab) ----
+// ---- Chart modal (formerly inline "Month at a glance" header) ----
+//
+// Same numbers as before — avg/day, projected, total, category count,
+// net-worth chart, share-recap — but now lives in a chart-icon popup
+// instead of an always-visible collapsible at the top of List view.
+// The popup is reachable from BOTH segmented modes (List + Categories)
+// via the chart button next to the filter toggle.
 
-function AnalyticsHeader({
+function ChartModal({
+  visible,
   currency,
-  open,
-  onToggle,
+  onClose,
   onShareRecap,
 }: {
+  visible: boolean;
   currency: CurrencyCode;
-  open: boolean;
-  onToggle: () => void;
+  onClose: () => void;
   onShareRecap: () => void;
 }) {
   const t = useT();
@@ -385,44 +506,35 @@ function AnalyticsHeader({
   const totalSpend = expenses.reduce((s, t) => s + t.amount, 0);
   const today = new Date();
   const dim = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-  // Avg/Day reads as "what I spend on a typical calendar day this month."
-  // Use elapsed calendar days, not days-with-spending — otherwise a user
-  // who only spent on 6 of the past 12 days sees a 2× inflated daily
-  // average, and "Avg/Day × days-in-month ≠ Total" trust breaks.
+  // Avg/Day = total spend ÷ elapsed calendar days. Using elapsed days
+  // (not days-with-spending) keeps Avg × DaysInMonth ≈ projected, so
+  // the three numbers reconcile against each other.
   const elapsedDays = Math.max(1, today.getDate());
   const avgDaily = totalSpend / elapsedDays;
   const projected = avgDaily * dim;
-  void daily; // strip the now-unused dependency
-
+  void daily;
 
   return (
-    <View style={styles.analytics}>
-      <Pressable
-        onPress={onToggle}
-        style={styles.analyticsHead}
-        accessibilityRole="button"
-        accessibilityState={{ expanded: open }}
-      >
-        <Text style={styles.analyticsTitle}>{t('activity.glance')}</Text>
-        <MaterialCommunityIcons
-          name={open ? 'chevron-up' : 'chevron-down'}
-          size={20}
-          color={theme.text2}
-        />
-      </Pressable>
-      {open && (
-        <>
+    <Modal
+      visible={visible}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={onClose}
+    >
+      <SafeAreaView style={styles.safe} edges={['top']}>
+        <View style={styles.modalHead}>
+          <Text style={styles.modalTitle}>{t('activity.glance')}</Text>
+          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
+            <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
+          </Pressable>
+        </View>
+        <ScrollView contentContainerStyle={styles.modalBody}>
           <View style={sectionStyles.statGrid}>
             <StatCard label={t('activity.stat.avgDay')} value={formatMoney(avgDaily, currency)} />
             <StatCard label={t('activity.stat.projected')} value={formatMoney(projected, currency)} />
             <StatCard label={t('activity.stat.total')} value={formatMoney(totalSpend, currency)} />
             <StatCard label={t('activity.stat.categories')} value={String(totals.length)} />
           </View>
-          {/* Per-category breakdown lived here in v1. Removed — the
-              dedicated Categories view in the segmented control above
-              owns this surface now (with month nav + Expense/Income
-              toggle + tap-to-filter), and duplicating it inside the
-              List view was confusing readers. */}
           <NetWorthChart />
           <Pressable
             onPress={onShareRecap}
@@ -433,9 +545,9 @@ function AnalyticsHeader({
             <MaterialCommunityIcons name="share-variant" size={16} color={theme.accent} />
             <Text style={styles.recapText}>{t('activity.shareMonth')}</Text>
           </Pressable>
-        </>
-      )}
-    </View>
+        </ScrollView>
+      </SafeAreaView>
+    </Modal>
   );
 }
 
@@ -510,6 +622,45 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: theme.bg,
   },
+  iconBtnRow: { flexDirection: 'row', gap: 8 },
+  periodRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    // The List view's ScrollView already pads spacing.lg horizontally;
+    // cancel that here so the carousel hits the same screen-edge inset
+    // as the Categories view (which renders without an outer pad).
+    marginHorizontal: -spacing.lg,
+  },
+  periodArrow: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.bg2,
+  },
+  periodLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 8,
+    borderRadius: radii.md,
+    backgroundColor: theme.bg2,
+  },
+  periodLabelText: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi },
+  modalHead: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.md,
+  },
+  modalTitle: { color: theme.text1, fontSize: sizes.xl, fontFamily: font.displayBold },
+  modalBody: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
   segmentedBtn: {
     paddingHorizontal: spacing.md,
     paddingVertical: 6,
@@ -531,18 +682,10 @@ const styles = StyleSheet.create({
   chipText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body },
   upcomingLabel: { color: '#F59E0B' },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
-  analytics: {
-    padding: spacing.md,
-    borderRadius: radii.lg,
-    backgroundColor: theme.bg2,
-    borderWidth: 1,
-    borderColor: theme.border,
-    gap: spacing.md,
-  },
-  analyticsHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  analyticsTitle: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi },
   group: { gap: spacing.sm },
+  dayHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   dayLabel: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body, textTransform: 'uppercase' },
+  dayTotal: { fontSize: sizes.sm, fontFamily: font.bodySemi },
   empty: { color: theme.text3, textAlign: 'center', marginTop: spacing.xxl },
   emptyWrap: {
     alignItems: 'center',

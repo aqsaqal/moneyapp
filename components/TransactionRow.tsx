@@ -27,32 +27,36 @@ export interface TransactionRowProps {
 export function TransactionRow({ t, currency = 'USD', onPressMore, tag }: TransactionRowProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
 
+  // Title = category (or "Transfer"); subtitle = user-typed note when set.
+  // Previous behavior collapsed both into one line, which made it
+  // impossible to tell what a "Coffee" entry actually was categorized as.
   let icon = 'MoreHorizontal';
   let color: string = theme.text2;
-  let name = t.note ?? '';
+  let name = '';
   let sign = '';
   let amountColor: string = theme.text1;
 
   if (t.type === 'transfer') {
     icon = 'ArrowRightLeft';
     color = theme.transfer;
-    name = t.note ?? 'Transfer';
+    name = 'Transfer';
     amountColor = theme.transfer;
   } else if (t.type === 'income') {
     const cat = catInfo(t.category, 'income');
     icon = cat.icon;
     color = cat.color;
-    name = t.note || cat.name;
+    name = cat.name;
     sign = '+';
     amountColor = theme.accent;
   } else {
     const cat = catInfo(t.category);
     icon = cat.icon;
     color = cat.color;
-    name = t.note || cat.name;
+    name = cat.name;
     sign = '-';
     amountColor = theme.text1;
   }
+  const note = t.note?.trim() || null;
 
   const renderRightActions = () => (
     <Pressable
@@ -99,6 +103,9 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag }: Transa
                 </Text>
               )}
             </View>
+            {note && (
+              <Text style={styles.note} numberOfLines={1}>{note}</Text>
+            )}
             {/* Halal badge only rendered in islamic builds — string literals
                 ('halal'/'haram'/'mushbooh') get DCE'd from generic via babel
                 process.env inlining. */}
@@ -178,6 +185,12 @@ const styles = StyleSheet.create({
     color: theme.text1,
     fontSize: sizes.md,
     fontFamily: font.body,
+  },
+  note: {
+    color: theme.text3,
+    fontSize: sizes.xs,
+    fontFamily: font.body,
+    marginTop: 2,
   },
   halal: {
     fontSize: sizes.xs,

@@ -25,6 +25,7 @@ import { theme } from '@/constants/theme';
 import { PRIMARY_COLOR } from '@/constants/flavor';
 import { FabButton } from '@/components/FabButton';
 import { useT } from '@/hooks/useT';
+import { emitTabReselect } from '@/utils/tabReselect';
 
 const TAB_BAR_HEIGHT = 64;
 const TAB_BAR_PAD_BOTTOM = 8;
@@ -81,6 +82,11 @@ function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarPr
           });
           if (!focused && !event.defaultPrevented) {
             navigation.navigate(route.name as never);
+          } else if (focused && !event.defaultPrevented) {
+            // Re-pressing the focused tab fires a tab-specific reselect
+            // event. Screens subscribe via onTabReselect() — Activity
+            // uses it to flip between Transactions ↔ Categories.
+            emitTabReselect(route.name);
           }
         };
         const color = focused ? PRIMARY_COLOR : theme.text3;

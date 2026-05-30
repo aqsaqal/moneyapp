@@ -119,7 +119,7 @@ export default function RootLayout() {
               {/* Smart Add — quadruple-speed slide (175 → 44 ms) so the
                   FAB-tap-to-input loop feels instant. Other modals keep
                   the 175 ms cadence for a calmer feel. */}
-              <Stack.Screen name="add" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 44 }} />
+              <Stack.Screen name="add" options={{ presentation: 'modal', animation: 'fade', animationDuration: 1 }} />
               <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
               <Stack.Screen name="category-grid" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
               <Stack.Screen name="categories-manage" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
