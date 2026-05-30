@@ -1,12 +1,12 @@
 ---
-title: Privacy Policy
+title: Flow — Privacy Policy
 ---
 
-# Privacy Policy
+# Flow — Privacy Policy
 
 **Effective: 2026-05-30**
 
-This Privacy Policy applies to the **Flow** and **Amanah** mobile applications (collectively, "the App"). The App is provided by the developer ("we", "us"). It is designed to track personal expenses on the user's device.
+This Privacy Policy applies to the **Flow** mobile application ("the App"). The App is provided by the developer ("we", "us"). It is designed to track personal expenses on the user's device.
 
 ## 1. Summary
 
@@ -24,11 +24,9 @@ The App does not include Sentry, Firebase Analytics, Crashlytics, Google Analyti
 
 ## 3. Optional features that touch the network
 
-The following features may make a network request **if you opt in**. Each is **off by default** and toggled in Settings. Disabling them eliminates all outbound network activity.
+The following feature may make a network request **if you opt in**. It is **off by default** and toggled in Settings. Disabling it eliminates all outbound network activity.
 
-- **FX rates** (Flow + Amanah). When the App holds accounts in more than one currency, it fetches USD-anchored exchange rates once per day to convert balances into your display currency. It tries three providers in fallback order: `open.er-api.com`, `api.fxratesapi.com`, `api.frankfurter.app`. Only the request URL leaves the device; no user data, account names, or balances are included. The response is a list of currency rates, cached locally and overwritten on next refresh.
-- **Nisab refresh** (Amanah only — gold and silver prices). When enabled, the App fetches the current spot price of gold and silver per gram from `api.gold-api.com`. Only the request URL leaves the device; no user data is included. The response is a single number per metal, stored locally.
-- **Prayer-time calendar** (Amanah). Times are computed on-device using the `adhan` library; no network call is made.
+- **FX rates.** When the App holds accounts in more than one currency, it fetches USD-anchored exchange rates once per day to convert balances into your display currency. It tries three providers in fallback order: `open.er-api.com`, `api.fxratesapi.com`, `api.frankfurter.app`. Only the request URL leaves the device; no user data, account names, or balances are included. The response is a list of currency rates, cached locally and overwritten on next refresh.
 
 ## 4. Crash reporting
 

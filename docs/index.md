@@ -1,12 +1,25 @@
 ---
-title: MoneyFlow — Legal
+title: Flow & Amanah — Legal
 ---
 
-# MoneyFlow
+# Flow & Amanah
 
-Legal documents for the **Flow** and **Amanah** apps.
+Legal documents for our two finance apps.
 
-- [Privacy Policy](legal/privacy.md)
-- [Terms of Service](legal/terms.md)
+## Flow
+
+A clean personal-expense tracker.
+
+- [Flow Privacy Policy](flow/privacy.html)
+- [Flow Terms of Service](flow/terms.html)
+
+## Amanah
+
+A finance app for Muslim users, with zakat calculator, halal-status tagging, prayer times, and Hijri date.
+
+- [Amanah Privacy Policy](amanah/privacy.html)
+- [Amanah Terms of Service](amanah/terms.html)
+
+---
 
 Questions? Email **ak.saken@gmail.com**.
