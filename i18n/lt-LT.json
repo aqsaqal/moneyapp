@@ -393,5 +393,15 @@
   "account.delete.title": "Ištrinti ar archyvuoti?",
   "account.delete.body": "\"{name}\" — likutis {balance} {currency}\n{directCount} tiesioginių, {transferCount} pavedimų.",
   "account.deleteConfirm.title": "Tikrai ištrinti?",
-  "account.deleteConfirm.body": "\"{name}\" ir {directCount} operacijų bus ištrinta. Negrįžtama."
+  "account.deleteConfirm.body": "\"{name}\" ir {directCount} operacijų bus ištrinta. Negrįžtama.",
+  "me.import.json": "Atkurti iš atsarginės kopijos (JSON)",
+  "me.import.json.hint": "Pakeičia visus aktyvaus profilio duomenis",
+  "me.import.confirm.title": "Atkurti iš atsarginės kopijos?",
+  "me.import.confirm.body": "Tai PAKEIS visus aktyvaus profilio duomenis failo turiniu ({rows} eilučių).\n\nKiti jūsų profiliai nepaliesti. Šio veiksmo atšaukti negalima.",
+  "me.import.confirm.replace": "Pakeisti",
+  "me.import.failed.title": "Importavimas nepavyko",
+  "me.import.error.invalidJson": "Tas failas nėra galiojantis JSON.",
+  "me.import.error.notAnExport": "Tas failas neatrodo kaip MoneyFlow eksportas.",
+  "me.import.error.tooNew": "Atsarginė kopija iš naujesnės programos versijos (schema v{v}). Atnaujinkite programą ir bandykite dar kartą.",
+  "me.import.error.noTables": "Šiame faile nėra atpažįstamų duomenų lentelių."
 }

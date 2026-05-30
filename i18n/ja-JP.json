@@ -393,5 +393,15 @@
   "account.delete.title": "削除またはアーカイブ？",
   "account.delete.body": "\"{name}\" — 残高 {balance} {currency}\n直接取引 {directCount} 件、振替 {transferCount} 件。\n\nアーカイブ（推奨）は口座を隠しつつ全てを保持。削除は口座と直接取引を消しますが、振替は相手口座に残ります。",
   "account.deleteConfirm.title": "本当に削除？",
-  "account.deleteConfirm.body": "\"{name}\" を削除し、{directCount} 件の直接取引も削除されます。{transferCount} 件の振替は相手側に保持。元に戻せません。"
+  "account.deleteConfirm.body": "\"{name}\" を削除し、{directCount} 件の直接取引も削除されます。{transferCount} 件の振替は相手側に保持。元に戻せません。",
+  "me.import.json": "バックアップから復元 (JSON)",
+  "me.import.json.hint": "アクティブなプロファイルのすべてのデータを置き換えます",
+  "me.import.confirm.title": "バックアップから復元しますか？",
+  "me.import.confirm.body": "これにより、アクティブなプロファイルのすべてのデータがファイルの内容に置き換えられます ({rows} 行)。\n\n他のプロファイルは影響を受けません。この操作は元に戻せません。",
+  "me.import.confirm.replace": "置き換え",
+  "me.import.failed.title": "インポートに失敗しました",
+  "me.import.error.invalidJson": "そのファイルは有効なJSONではありません。",
+  "me.import.error.notAnExport": "そのファイルはMoneyFlowのエクスポートではないようです。",
+  "me.import.error.tooNew": "バックアップは新しいアプリバージョンのものです (スキーマ v{v})。アプリを更新して再試行してください。",
+  "me.import.error.noTables": "このファイルには認識可能なデータテーブルがありません。"
 }

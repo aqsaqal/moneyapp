@@ -393,5 +393,15 @@
   "account.delete.title": "Διαγραφή ή αρχειοθέτηση;",
   "account.delete.body": "\"{name}\" — υπόλοιπο {balance} {currency}\n{directCount} άμεσες, {transferCount} μεταφορές.",
   "account.deleteConfirm.title": "Σίγουρα διαγραφή;",
-  "account.deleteConfirm.body": "\"{name}\" και {directCount} συναλλαγές θα διαγραφούν. Μη αναστρέψιμο."
+  "account.deleteConfirm.body": "\"{name}\" και {directCount} συναλλαγές θα διαγραφούν. Μη αναστρέψιμο.",
+  "me.import.json": "Επαναφορά από αντίγραφο ασφαλείας (JSON)",
+  "me.import.json.hint": "Αντικαθιστά όλα τα δεδομένα στο ενεργό προφίλ",
+  "me.import.confirm.title": "Επαναφορά από αντίγραφο ασφαλείας;",
+  "me.import.confirm.body": "Αυτό θα ΑΝΤΙΚΑΤΑΣΤΗΣΕΙ όλα τα δεδομένα στο ενεργό προφίλ με τα περιεχόμενα του αρχείου ({rows} γραμμές).\n\nΤα υπόλοιπα προφίλ σας παραμένουν ανέγγιχτα. Αυτό δεν μπορεί να αναιρεθεί.",
+  "me.import.confirm.replace": "Αντικατάσταση",
+  "me.import.failed.title": "Η εισαγωγή απέτυχε",
+  "me.import.error.invalidJson": "Αυτό το αρχείο δεν είναι έγκυρο JSON.",
+  "me.import.error.notAnExport": "Αυτό το αρχείο δεν μοιάζει με εξαγωγή MoneyFlow.",
+  "me.import.error.tooNew": "Το αντίγραφο ασφαλείας είναι από νεότερη έκδοση εφαρμογής (σχήμα v{v}). Ενημερώστε την εφαρμογή και δοκιμάστε ξανά.",
+  "me.import.error.noTables": "Δεν υπάρχουν αναγνωρίσιμοι πίνακες δεδομένων σε αυτό το αρχείο."
 }

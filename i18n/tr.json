@@ -392,5 +392,15 @@
   "account.delete.title": "Sil ya da arşivle?",
   "account.delete.body": "\"{name}\" — bakiye {balance} {currency}\n{directCount} doğrudan işlem, {transferCount} transfer.\n\nArşivlemek (önerilen) hesabı gizler ama her şeyi korur. Silmek hesabı ve doğrudan işlemleri kaldırır; transferler diğer hesapta korunur.",
   "account.deleteConfirm.title": "Gerçekten silinsin mi?",
-  "account.deleteConfirm.body": "\"{name}\" kaldırılacak ve {directCount} doğrudan işlem SİLİNECEK. {transferCount} transfer diğer tarafta korunur. Geri alınamaz."
+  "account.deleteConfirm.body": "\"{name}\" kaldırılacak ve {directCount} doğrudan işlem SİLİNECEK. {transferCount} transfer diğer tarafta korunur. Geri alınamaz.",
+  "me.import.json": "Yedekten geri yükle (JSON)",
+  "me.import.json.hint": "Aktif profildeki tüm verileri değiştirir",
+  "me.import.confirm.title": "Yedekten geri yüklensin mi?",
+  "me.import.confirm.body": "Bu, aktif profildeki tüm verileri dosyanın içeriğiyle DEĞİŞTİRECEKTİR ({rows} satır).\n\nDiğer profilleriniz etkilenmez. Bu işlem geri alınamaz.",
+  "me.import.confirm.replace": "Değiştir",
+  "me.import.failed.title": "İçe aktarma başarısız oldu",
+  "me.import.error.invalidJson": "O dosya geçerli bir JSON değil.",
+  "me.import.error.notAnExport": "O dosya bir MoneyFlow dışa aktarımı gibi görünmüyor.",
+  "me.import.error.tooNew": "Yedek daha yeni bir uygulama sürümünden (şema v{v}). Uygulamayı güncelleyin ve tekrar deneyin.",
+  "me.import.error.noTables": "Bu dosyada tanınabilir veri tabloları yok."
 }

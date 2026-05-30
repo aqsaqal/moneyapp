@@ -393,5 +393,15 @@
   "account.delete.title": "Dzēst vai arhivēt?",
   "account.delete.body": "\"{name}\" — atlikums {balance} {currency}\n{directCount} tiešie, {transferCount} pārskaitījumi.",
   "account.deleteConfirm.title": "Tiešām dzēst?",
-  "account.deleteConfirm.body": "\"{name}\" un {directCount} darījumi tiks dzēsti. Neatgriezeniski."
+  "account.deleteConfirm.body": "\"{name}\" un {directCount} darījumi tiks dzēsti. Neatgriezeniski.",
+  "me.import.json": "Atjaunot no dublējuma (JSON)",
+  "me.import.json.hint": "Aizstāj visus aktīvā profila datus",
+  "me.import.confirm.title": "Atjaunot no dublējuma?",
+  "me.import.confirm.body": "Tas AIZSTĀS visus aktīvā profila datus ar faila saturu ({rows} rindas).\n\nPārējie jūsu profili netiek ietekmēti. Šo darbību nevar atsaukt.",
+  "me.import.confirm.replace": "Aizstāt",
+  "me.import.failed.title": "Importēšana neizdevās",
+  "me.import.error.invalidJson": "Šis fails nav derīgs JSON.",
+  "me.import.error.notAnExport": "Šis fails neizskatās pēc MoneyFlow eksporta.",
+  "me.import.error.tooNew": "Dublējums ir no jaunākas lietotnes versijas (shēma v{v}). Atjauniniet lietotni un mēģiniet vēlreiz.",
+  "me.import.error.noTables": "Šajā failā nav atpazīstamu datu tabulu."
 }

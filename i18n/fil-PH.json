@@ -393,5 +393,15 @@
   "account.delete.title": "Tanggalin o i-archive?",
   "account.delete.body": "\"{name}\" — balanse {balance} {currency}\n{directCount} direkta, {transferCount} transfer.",
   "account.deleteConfirm.title": "Talagang tanggalin?",
-  "account.deleteConfirm.body": "\"{name}\" at {directCount} transaksyon ay matatanggal. Hindi maibabalik."
+  "account.deleteConfirm.body": "\"{name}\" at {directCount} transaksyon ay matatanggal. Hindi maibabalik.",
+  "me.import.json": "I-restore mula sa backup (JSON)",
+  "me.import.json.hint": "Papalitan ang lahat ng data sa aktibong profile",
+  "me.import.confirm.title": "I-restore mula sa backup?",
+  "me.import.confirm.body": "Papalitan nito ang LAHAT ng data sa aktibong profile gamit ang nilalaman ng file ({rows} mga row).\n\nHindi maaapektuhan ang ibang mga profile mo. Hindi ito mababawi.",
+  "me.import.confirm.replace": "Palitan",
+  "me.import.failed.title": "Bigo ang pag-import",
+  "me.import.error.invalidJson": "Hindi valid na JSON ang file na iyon.",
+  "me.import.error.notAnExport": "Hindi mukhang export ng MoneyFlow ang file na iyon.",
+  "me.import.error.tooNew": "Galing sa mas bagong bersyon ng app ang backup (schema v{v}). I-update ang app at subukang muli.",
+  "me.import.error.noTables": "Walang nakikilalang data tables sa file na ito."
 }

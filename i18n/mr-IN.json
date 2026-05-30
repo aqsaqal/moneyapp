@@ -393,5 +393,15 @@
   "account.delete.title": "हटवा की संग्रहित?",
   "account.delete.body": "\"{name}\" — शिल्लक {balance} {currency}\n{directCount} थेट, {transferCount} हस्तांतरण.",
   "account.deleteConfirm.title": "खरोखर हटवायचे?",
-  "account.deleteConfirm.body": "\"{name}\" आणि {directCount} व्यवहार हटवले जातील. परत मिळवता येणार नाहीत."
+  "account.deleteConfirm.body": "\"{name}\" आणि {directCount} व्यवहार हटवले जातील. परत मिळवता येणार नाहीत.",
+  "me.import.json": "बॅकअपवरून पुनर्संचयित करा (JSON)",
+  "me.import.json.hint": "सक्रिय प्रोफाइलमधील सर्व डेटा बदलते",
+  "me.import.confirm.title": "बॅकअपवरून पुनर्संचयित करायचे?",
+  "me.import.confirm.body": "हे सक्रिय प्रोफाइलमधील सर्व डेटा फाइलच्या सामग्रीसह बदलेल ({rows} ओळी).\n\nतुमचे इतर प्रोफाइल अप्रभावित राहतील. हे पूर्ववत करता येणार नाही.",
+  "me.import.confirm.replace": "बदला",
+  "me.import.failed.title": "आयात अयशस्वी",
+  "me.import.error.invalidJson": "ती फाइल वैध JSON नाही.",
+  "me.import.error.notAnExport": "ती फाइल MoneyFlow निर्यातीसारखी दिसत नाही.",
+  "me.import.error.tooNew": "बॅकअप अॅपच्या नवीन आवृत्तीमधून आहे (स्कीमा v{v}). अॅप अपडेट करा आणि पुन्हा प्रयत्न करा.",
+  "me.import.error.noTables": "या फाइलमध्ये कोणतीही ओळखण्यायोग्य डेटा सारणी नाही."
 }

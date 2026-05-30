@@ -393,5 +393,15 @@
   "account.delete.title": "ลบหรือเก็บ?",
   "account.delete.body": "\"{name}\" — ยอด {balance} {currency}\n{directCount} รายการตรง, {transferCount} โอน",
   "account.deleteConfirm.title": "ลบจริง?",
-  "account.deleteConfirm.body": "จะลบ \"{name}\" และ {directCount} รายการ ไม่สามารถยกเลิกได้"
+  "account.deleteConfirm.body": "จะลบ \"{name}\" และ {directCount} รายการ ไม่สามารถยกเลิกได้",
+  "me.import.json": "กู้คืนจากข้อมูลสำรอง (JSON)",
+  "me.import.json.hint": "แทนที่ข้อมูลทั้งหมดในโปรไฟล์ที่ใช้งานอยู่",
+  "me.import.confirm.title": "กู้คืนจากข้อมูลสำรอง?",
+  "me.import.confirm.body": "การกระทำนี้จะแทนที่ข้อมูลทั้งหมดในโปรไฟล์ที่ใช้งานอยู่ด้วยเนื้อหาของไฟล์ ({rows} แถว)\n\nโปรไฟล์อื่นของคุณจะไม่ได้รับผลกระทบ การกระทำนี้ไม่สามารถยกเลิกได้",
+  "me.import.confirm.replace": "แทนที่",
+  "me.import.failed.title": "การนำเข้าล้มเหลว",
+  "me.import.error.invalidJson": "ไฟล์นั้นไม่ใช่ JSON ที่ถูกต้อง",
+  "me.import.error.notAnExport": "ไฟล์นั้นไม่ดูเหมือนการส่งออก MoneyFlow",
+  "me.import.error.tooNew": "ข้อมูลสำรองมาจากแอปเวอร์ชันใหม่กว่า (สคีมา v{v}) อัปเดตแอปและลองอีกครั้ง",
+  "me.import.error.noTables": "ไม่มีตารางข้อมูลที่จดจำได้ในไฟล์นี้"
 }

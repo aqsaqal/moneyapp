@@ -393,5 +393,15 @@
   "account.delete.title": "Löschen oder archivieren?",
   "account.delete.body": "\"{name}\" — Saldo {balance} {currency}\n{directCount} direkte Transaktionen, {transferCount} Überweisungen.\n\nArchivieren (empfohlen) blendet das Konto aus, behält aber alles. Löschen entfernt das Konto und direkte Transaktionen; Überweisungen bleiben auf dem anderen Konto.",
   "account.deleteConfirm.title": "Wirklich löschen?",
-  "account.deleteConfirm.body": "Dies entfernt \"{name}\" und LÖSCHT {directCount} direkte Transaktionen. {transferCount} Überweisungen bleiben auf der anderen Seite erhalten. Nicht rückgängig."
+  "account.deleteConfirm.body": "Dies entfernt \"{name}\" und LÖSCHT {directCount} direkte Transaktionen. {transferCount} Überweisungen bleiben auf der anderen Seite erhalten. Nicht rückgängig.",
+  "me.import.json": "Aus Backup wiederherstellen (JSON)",
+  "me.import.json.hint": "Ersetzt alle Daten im aktiven Profil",
+  "me.import.confirm.title": "Aus Backup wiederherstellen?",
+  "me.import.confirm.body": "Dadurch werden ALLE Daten im aktiven Profil durch den Inhalt der Datei ERSETZT ({rows} Zeilen).\n\nDeine anderen Profile bleiben unberührt. Dies kann nicht rückgängig gemacht werden.",
+  "me.import.confirm.replace": "Ersetzen",
+  "me.import.failed.title": "Import fehlgeschlagen",
+  "me.import.error.invalidJson": "Diese Datei ist kein gültiges JSON.",
+  "me.import.error.notAnExport": "Diese Datei sieht nicht wie ein MoneyFlow-Export aus.",
+  "me.import.error.tooNew": "Backup stammt aus einer neueren App-Version (Schema v{v}). Aktualisiere die App und versuche es erneut.",
+  "me.import.error.noTables": "Keine erkennbaren Datentabellen in dieser Datei."
 }

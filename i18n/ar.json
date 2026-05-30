@@ -392,5 +392,15 @@
   "account.delete.title": "حذف أم أرشفة؟",
   "account.delete.body": "\"{name}\" — الرصيد {balance} {currency}\n{directCount} معاملة مباشرة، {transferCount} تحويلات.\n\nالأرشفة (موصى بها) تخفي الحساب لكن تحتفظ بكل شيء. الحذف يزيل الحساب ومعاملاته المباشرة؛ التحويلات تبقى على الحساب الآخر.",
   "account.deleteConfirm.title": "تأكيد الحذف؟",
-  "account.deleteConfirm.body": "سيُزال \"{name}\" وتُحذف {directCount} معاملة. {transferCount} تحويلات ستبقى على الطرف الآخر. لا يمكن التراجع."
+  "account.deleteConfirm.body": "سيُزال \"{name}\" وتُحذف {directCount} معاملة. {transferCount} تحويلات ستبقى على الطرف الآخر. لا يمكن التراجع.",
+  "me.import.json": "استعادة من نسخة احتياطية (JSON)",
+  "me.import.json.hint": "يستبدل كل البيانات في الملف الشخصي النشط",
+  "me.import.confirm.title": "الاستعادة من النسخة الاحتياطية؟",
+  "me.import.confirm.body": "سيؤدي هذا إلى استبدال كل البيانات في الملف الشخصي النشط بمحتويات الملف ({rows} صفوف).\n\nباقي ملفاتك الشخصية لن تتأثر. لا يمكن التراجع عن هذا.",
+  "me.import.confirm.replace": "استبدال",
+  "me.import.failed.title": "فشل الاستيراد",
+  "me.import.error.invalidJson": "هذا الملف ليس JSON صالحًا.",
+  "me.import.error.notAnExport": "لا يبدو هذا الملف كملف تصدير MoneyFlow.",
+  "me.import.error.tooNew": "النسخة الاحتياطية من إصدار أحدث من التطبيق (الإصدار v{v} من المخطط). قم بتحديث التطبيق وحاول مرة أخرى.",
+  "me.import.error.noTables": "لا توجد جداول بيانات معروفة في هذا الملف."
 }

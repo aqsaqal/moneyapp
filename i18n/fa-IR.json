@@ -393,5 +393,15 @@
   "account.delete.title": "حذف یا بایگانی؟",
   "account.delete.body": "\"{name}\" — موجودی {balance} {currency}\n{directCount} تراکنش مستقیم، {transferCount} انتقال",
   "account.deleteConfirm.title": "واقعاً حذف؟",
-  "account.deleteConfirm.body": "\"{name}\" و {directCount} تراکنش حذف می‌شوند. غیرقابل بازگشت."
+  "account.deleteConfirm.body": "\"{name}\" و {directCount} تراکنش حذف می‌شوند. غیرقابل بازگشت.",
+  "me.import.json": "بازیابی از پشتیبان (JSON)",
+  "me.import.json.hint": "تمام داده‌های پروفایل فعال را جایگزین می‌کند",
+  "me.import.confirm.title": "بازیابی از پشتیبان؟",
+  "me.import.confirm.body": "این کار همه داده‌های پروفایل فعال را با محتوای فایل جایگزین خواهد کرد ({rows} ردیف).\n\nبقیه پروفایل‌های شما دست نخورده باقی می‌مانند. این عملیات قابل بازگشت نیست.",
+  "me.import.confirm.replace": "جایگزینی",
+  "me.import.failed.title": "وارد کردن ناموفق بود",
+  "me.import.error.invalidJson": "این فایل JSON معتبری نیست.",
+  "me.import.error.notAnExport": "این فایل شبیه به یک خروجی MoneyFlow نیست.",
+  "me.import.error.tooNew": "پشتیبان از نسخه جدیدتری از برنامه است (طرحواره v{v}). برنامه را به‌روزرسانی کنید و دوباره امتحان کنید.",
+  "me.import.error.noTables": "هیچ جدول داده شناخته‌شده‌ای در این فایل نیست."
 }

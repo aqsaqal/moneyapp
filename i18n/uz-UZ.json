@@ -393,5 +393,15 @@
   "account.delete.title": "Oʻchirish yoki arxiv?",
   "account.delete.body": "\"{name}\" — balans {balance} {currency}\n{directCount} toʻgʻridan-toʻgʻri, {transferCount} oʻtkazma.",
   "account.deleteConfirm.title": "Rostdan ham oʻchirish?",
-  "account.deleteConfirm.body": "\"{name}\" va {directCount} tranzaksiya oʻchiriladi. Bekor qilib boʻlmaydi."
+  "account.deleteConfirm.body": "\"{name}\" va {directCount} tranzaksiya oʻchiriladi. Bekor qilib boʻlmaydi.",
+  "me.import.json": "Zaxiradan tiklash (JSON)",
+  "me.import.json.hint": "Faol profildagi barcha maʼlumotlarni almashtiradi",
+  "me.import.confirm.title": "Zaxiradan tiklansinmi?",
+  "me.import.confirm.body": "Bu faol profildagi barcha maʼlumotlarni fayl mazmuni bilan ALMASHTIRADI ({rows} qator).\n\nQolgan profillaringiz daxlsiz qoladi. Bu amalni bekor qilib boʻlmaydi.",
+  "me.import.confirm.replace": "Almashtirish",
+  "me.import.failed.title": "Import muvaffaqiyatsiz",
+  "me.import.error.invalidJson": "Bu fayl yaroqli JSON emas.",
+  "me.import.error.notAnExport": "Bu fayl MoneyFlow eksportiga oʻxshamaydi.",
+  "me.import.error.tooNew": "Zaxira ilovaning yangiroq versiyasidan (sxema v{v}). Ilovani yangilang va qayta urinib koʻring.",
+  "me.import.error.noTables": "Ushbu faylda tanib olinadigan maʼlumotlar jadvallari yoʻq."
 }

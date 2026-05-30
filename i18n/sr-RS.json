@@ -393,5 +393,15 @@
   "account.delete.title": "Обриши или архивирај?",
   "account.delete.body": "\"{name}\" — стање {balance} {currency}\n{directCount} директних, {transferCount} преноса.",
   "account.deleteConfirm.title": "Стварно обрисати?",
-  "account.deleteConfirm.body": "\"{name}\" и {directCount} трансакција биће обрисане. Неповратно."
+  "account.deleteConfirm.body": "\"{name}\" и {directCount} трансакција биће обрисане. Неповратно.",
+  "me.import.json": "Врати из резервне копије (JSON)",
+  "me.import.json.hint": "Замењује све податке у активном профилу",
+  "me.import.confirm.title": "Врати из резервне копије?",
+  "me.import.confirm.body": "Ово ће ЗАМЕНИТИ све податке у активном профилу садржајем датотеке ({rows} редова).\n\nОстали ваши профили остају нетакнути. Ова радња се не може поништити.",
+  "me.import.confirm.replace": "Замени",
+  "me.import.failed.title": "Увоз није успео",
+  "me.import.error.invalidJson": "Та датотека није важећи JSON.",
+  "me.import.error.notAnExport": "Та датотека не изгледа као MoneyFlow извоз.",
+  "me.import.error.tooNew": "Резервна копија је из новије верзије апликације (шема v{v}). Ажурирајте апликацију и покушајте поново.",
+  "me.import.error.noTables": "У овој датотеци нема препознатљивих табела података."
 }

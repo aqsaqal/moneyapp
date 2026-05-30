@@ -393,5 +393,15 @@
   "account.delete.title": "Șterge sau arhivează?",
   "account.delete.body": "\"{name}\" — sold {balance} {currency}\n{directCount} directe, {transferCount} transferuri.",
   "account.deleteConfirm.title": "Chiar ștergi?",
-  "account.deleteConfirm.body": "\"{name}\" și {directCount} tranzacții vor fi șterse. Ireversibil."
+  "account.deleteConfirm.body": "\"{name}\" și {directCount} tranzacții vor fi șterse. Ireversibil.",
+  "me.import.json": "Restaurare din copie de rezervă (JSON)",
+  "me.import.json.hint": "Înlocuiește toate datele din profilul activ",
+  "me.import.confirm.title": "Restaurați din copia de rezervă?",
+  "me.import.confirm.body": "Aceasta va ÎNLOCUI toate datele din profilul activ cu conținutul fișierului ({rows} rânduri).\n\nCelelalte profiluri rămân neatinse. Această acțiune nu poate fi anulată.",
+  "me.import.confirm.replace": "Înlocuiește",
+  "me.import.failed.title": "Import eșuat",
+  "me.import.error.invalidJson": "Acel fișier nu este JSON valid.",
+  "me.import.error.notAnExport": "Acel fișier nu pare a fi un export MoneyFlow.",
+  "me.import.error.tooNew": "Copia de rezervă provine dintr-o versiune mai nouă a aplicației (schemă v{v}). Actualizați aplicația și încercați din nou.",
+  "me.import.error.noTables": "Nu există tabele de date recunoscute în acest fișier."
 }

@@ -393,5 +393,15 @@
   "account.delete.title": "Vymazať alebo archivovať?",
   "account.delete.body": "\"{name}\" — zostatok {balance} {currency}\n{directCount} priamych, {transferCount} prevodov.",
   "account.deleteConfirm.title": "Naozaj vymazať?",
-  "account.deleteConfirm.body": "\"{name}\" a {directCount} transakcií bude vymazaných. Nezvratné."
+  "account.deleteConfirm.body": "\"{name}\" a {directCount} transakcií bude vymazaných. Nezvratné.",
+  "me.import.json": "Obnoviť zo zálohy (JSON)",
+  "me.import.json.hint": "Nahradí všetky údaje v aktívnom profile",
+  "me.import.confirm.title": "Obnoviť zo zálohy?",
+  "me.import.confirm.body": "Toto NAHRADÍ všetky údaje v aktívnom profile obsahom súboru ({rows} riadkov).\n\nVaše ostatné profily zostanú nedotknuté. Túto akciu nie je možné vrátiť späť.",
+  "me.import.confirm.replace": "Nahradiť",
+  "me.import.failed.title": "Import zlyhal",
+  "me.import.error.invalidJson": "Tento súbor nie je platný JSON.",
+  "me.import.error.notAnExport": "Tento súbor nevyzerá ako export MoneyFlow.",
+  "me.import.error.tooNew": "Záloha pochádza z novšej verzie aplikácie (schéma v{v}). Aktualizujte aplikáciu a skúste znova.",
+  "me.import.error.noTables": "V tomto súbore nie sú žiadne rozpoznateľné dátové tabuľky."
 }

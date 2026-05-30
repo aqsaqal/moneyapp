@@ -393,5 +393,15 @@
   "account.delete.title": "למחוק או לארכב?",
   "account.delete.body": "\"{name}\" — יתרה {balance} {currency}\n{directCount} ישירות, {transferCount} העברות.",
   "account.deleteConfirm.title": "באמת למחוק?",
-  "account.deleteConfirm.body": "\"{name}\" ו-{directCount} עסקאות יימחקו. אין חזרה."
+  "account.deleteConfirm.body": "\"{name}\" ו-{directCount} עסקאות יימחקו. אין חזרה.",
+  "me.import.json": "שחזור מגיבוי (JSON)",
+  "me.import.json.hint": "מחליף את כל הנתונים בפרופיל הפעיל",
+  "me.import.confirm.title": "שחזור מגיבוי?",
+  "me.import.confirm.body": "פעולה זו תחליף את כל הנתונים בפרופיל הפעיל בתוכן הקובץ ({rows} שורות).\n\nשאר הפרופילים שלך לא יושפעו. לא ניתן לבטל פעולה זו.",
+  "me.import.confirm.replace": "החלפה",
+  "me.import.failed.title": "הייבוא נכשל",
+  "me.import.error.invalidJson": "הקובץ אינו JSON תקין.",
+  "me.import.error.notAnExport": "הקובץ אינו נראה כייצוא של MoneyFlow.",
+  "me.import.error.tooNew": "הגיבוי מגרסה חדשה יותר של האפליקציה (סכמה v{v}). עדכן את האפליקציה ונסה שוב.",
+  "me.import.error.noTables": "אין טבלאות נתונים מזוהות בקובץ זה."
 }

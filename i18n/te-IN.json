@@ -393,5 +393,15 @@
   "account.delete.title": "తొలగించు లేదా ఆర్కైవ్?",
   "account.delete.body": "\"{name}\" — బ్యాలెన్స్ {balance} {currency}\n{directCount} ప్రత్యక్ష, {transferCount} బదిలీలు.",
   "account.deleteConfirm.title": "నిజంగా తొలగించాలా?",
-  "account.deleteConfirm.body": "\"{name}\" మరియు {directCount} లావాదేవీలు తొలగించబడతాయి. తిరిగి తీసుకోలేరు."
+  "account.deleteConfirm.body": "\"{name}\" మరియు {directCount} లావాదేవీలు తొలగించబడతాయి. తిరిగి తీసుకోలేరు.",
+  "me.import.json": "బ్యాకప్ నుండి పునరుద్ధరించండి (JSON)",
+  "me.import.json.hint": "క్రియాశీల ప్రొఫైల్‌లోని మొత్తం డేటాను భర్తీ చేస్తుంది",
+  "me.import.confirm.title": "బ్యాకప్ నుండి పునరుద్ధరించాలా?",
+  "me.import.confirm.body": "ఇది క్రియాశీల ప్రొఫైల్‌లోని మొత్తం డేటాను ఫైల్ కంటెంట్‌తో భర్తీ చేస్తుంది ({rows} వరుసలు).\n\nమీ ఇతర ప్రొఫైల్‌లు ప్రభావితం కావు. దీన్ని రద్దు చేయలేరు.",
+  "me.import.confirm.replace": "భర్తీ చేయండి",
+  "me.import.failed.title": "దిగుమతి విఫలమైంది",
+  "me.import.error.invalidJson": "ఆ ఫైల్ చెల్లుబాటు అయ్యే JSON కాదు.",
+  "me.import.error.notAnExport": "ఆ ఫైల్ MoneyFlow ఎగుమతిలా కనిపించడం లేదు.",
+  "me.import.error.tooNew": "బ్యాకప్ యాప్ యొక్క క్రొత్త వెర్షన్ నుండి (స్కీమా v{v}). యాప్‌ను నవీకరించి మళ్లీ ప్రయత్నించండి.",
+  "me.import.error.noTables": "ఈ ఫైల్‌లో గుర్తింపజేయగల డేటా పట్టికలు లేవు."
 }

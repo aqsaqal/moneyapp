@@ -393,5 +393,15 @@
   "account.delete.title": "删除还是归档？",
   "account.delete.body": "\"{name}\" — 余额 {balance} {currency}\n{directCount} 笔直接交易，{transferCount} 笔转账。\n\n归档（推荐）隐藏账户但保留全部。删除会移除账户及其直接交易；转账会保留在另一账户。",
   "account.deleteConfirm.title": "确认删除？",
-  "account.deleteConfirm.body": "这将删除 \"{name}\" 并删除 {directCount} 笔直接交易。{transferCount} 笔转账会保留。无法撤销。"
+  "account.deleteConfirm.body": "这将删除 \"{name}\" 并删除 {directCount} 笔直接交易。{transferCount} 笔转账会保留。无法撤销。",
+  "me.import.json": "从备份恢复 (JSON)",
+  "me.import.json.hint": "替换当前活动配置文件中的所有数据",
+  "me.import.confirm.title": "从备份恢复？",
+  "me.import.confirm.body": "这将用文件内容替换当前活动配置文件中的所有数据（{rows} 行）。\n\n您的其他配置文件不受影响。此操作无法撤销。",
+  "me.import.confirm.replace": "替换",
+  "me.import.failed.title": "导入失败",
+  "me.import.error.invalidJson": "该文件不是有效的 JSON。",
+  "me.import.error.notAnExport": "该文件看起来不像 MoneyFlow 导出。",
+  "me.import.error.tooNew": "备份来自较新版本的应用（模式 v{v}）。请更新应用并重试。",
+  "me.import.error.noTables": "此文件中没有可识别的数据表。"
 }

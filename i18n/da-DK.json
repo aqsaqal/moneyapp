@@ -393,5 +393,15 @@
   "account.delete.title": "Slet eller arkivér?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} direkte, {transferCount} overførsler.",
   "account.deleteConfirm.title": "Virkelig slette?",
-  "account.deleteConfirm.body": "\"{name}\" og {directCount} transaktioner slettes. Kan ikke fortrydes."
+  "account.deleteConfirm.body": "\"{name}\" og {directCount} transaktioner slettes. Kan ikke fortrydes.",
+  "me.import.json": "Gendan fra backup (JSON)",
+  "me.import.json.hint": "Erstatter alle data i den aktive profil",
+  "me.import.confirm.title": "Gendan fra backup?",
+  "me.import.confirm.body": "Dette vil ERSTATTE alle data i den aktive profil med indholdet af filen ({rows} rækker).\n\nDine andre profiler er uberørte. Dette kan ikke fortrydes.",
+  "me.import.confirm.replace": "Erstat",
+  "me.import.failed.title": "Import mislykkedes",
+  "me.import.error.invalidJson": "Den fil er ikke gyldig JSON.",
+  "me.import.error.notAnExport": "Den fil ligner ikke en MoneyFlow-eksport.",
+  "me.import.error.tooNew": "Backup er fra en nyere appversion (skema v{v}). Opdater appen og prøv igen.",
+  "me.import.error.noTables": "Ingen genkendelige datatabeller i denne fil."
 }

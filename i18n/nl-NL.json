@@ -393,5 +393,15 @@
   "account.delete.title": "Verwijderen of archiveren?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} directe transacties, {transferCount} overboekingen.",
   "account.deleteConfirm.title": "Echt verwijderen?",
-  "account.deleteConfirm.body": "\"{name}\" en {directCount} transacties worden verwijderd. Niet herstelbaar."
+  "account.deleteConfirm.body": "\"{name}\" en {directCount} transacties worden verwijderd. Niet herstelbaar.",
+  "me.import.json": "Herstellen vanuit back-up (JSON)",
+  "me.import.json.hint": "Vervangt alle gegevens in het actieve profiel",
+  "me.import.confirm.title": "Herstellen vanuit back-up?",
+  "me.import.confirm.body": "Dit VERVANGT alle gegevens in het actieve profiel door de inhoud van het bestand ({rows} rijen).\n\nJe andere profielen blijven onaangetast. Dit kan niet ongedaan worden gemaakt.",
+  "me.import.confirm.replace": "Vervangen",
+  "me.import.failed.title": "Importeren mislukt",
+  "me.import.error.invalidJson": "Dat bestand is geen geldige JSON.",
+  "me.import.error.notAnExport": "Dat bestand lijkt geen MoneyFlow-export.",
+  "me.import.error.tooNew": "Back-up is van een nieuwere app-versie (schema v{v}). Werk de app bij en probeer opnieuw.",
+  "me.import.error.noTables": "Geen herkenbare gegevenstabellen in dit bestand."
 }

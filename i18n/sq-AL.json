@@ -393,5 +393,15 @@
   "account.delete.title": "Fshi apo arkivo?",
   "account.delete.body": "\"{name}\" — gjendja {balance} {currency}\n{directCount} direkte, {transferCount} transferta.",
   "account.deleteConfirm.title": "Të fshihet vërtet?",
-  "account.deleteConfirm.body": "\"{name}\" dhe {directCount} transaksione do të fshihen. E pakthyeshme."
+  "account.deleteConfirm.body": "\"{name}\" dhe {directCount} transaksione do të fshihen. E pakthyeshme.",
+  "me.import.json": "Rikthe nga rezerva (JSON)",
+  "me.import.json.hint": "Zëvendëson të gjitha të dhënat në profilin aktiv",
+  "me.import.confirm.title": "Rikthe nga rezerva?",
+  "me.import.confirm.body": "Kjo do të ZËVENDËSOJË të gjitha të dhënat në profilin aktiv me përmbajtjen e skedarit ({rows} rreshta).\n\nProfilet e tjera tuajat nuk preken. Ky veprim nuk mund të zhbëhet.",
+  "me.import.confirm.replace": "Zëvendëso",
+  "me.import.failed.title": "Importimi dështoi",
+  "me.import.error.invalidJson": "Ai skedar nuk është JSON i vlefshëm.",
+  "me.import.error.notAnExport": "Ai skedar nuk duket si një eksport i MoneyFlow.",
+  "me.import.error.tooNew": "Rezerva është nga një version më i ri i aplikacionit (skema v{v}). Përditësoni aplikacionin dhe provoni përsëri.",
+  "me.import.error.noTables": "Asnjë tabelë e dhënash e njohur në këtë skedar."
 }

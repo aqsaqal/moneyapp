@@ -393,5 +393,15 @@
   "account.delete.title": "Poistetaanko vai arkistoidaan?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} suoraa, {transferCount} siirtoa.",
   "account.deleteConfirm.title": "Poistetaanko todella?",
-  "account.deleteConfirm.body": "\"{name}\" ja {directCount} tapahtumaa poistetaan. Ei voi peruuttaa."
+  "account.deleteConfirm.body": "\"{name}\" ja {directCount} tapahtumaa poistetaan. Ei voi peruuttaa.",
+  "me.import.json": "Palauta varmuuskopiosta (JSON)",
+  "me.import.json.hint": "Korvaa kaikki aktiivisen profiilin tiedot",
+  "me.import.confirm.title": "Palauta varmuuskopiosta?",
+  "me.import.confirm.body": "Tämä KORVAA kaikki aktiivisen profiilin tiedot tiedoston sisällöllä ({rows} riviä).\n\nMuut profiilisi pysyvät koskemattomina. Tätä ei voi peruuttaa.",
+  "me.import.confirm.replace": "Korvaa",
+  "me.import.failed.title": "Tuonti epäonnistui",
+  "me.import.error.invalidJson": "Tiedosto ei ole kelvollista JSON-muotoa.",
+  "me.import.error.notAnExport": "Tiedosto ei näytä MoneyFlow-vientiltä.",
+  "me.import.error.tooNew": "Varmuuskopio on uudemmasta sovellusversiosta (skeema v{v}). Päivitä sovellus ja yritä uudelleen.",
+  "me.import.error.noTables": "Tiedostossa ei ole tunnistettavia tietotaulukoita."
 }

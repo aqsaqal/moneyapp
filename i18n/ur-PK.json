@@ -393,5 +393,15 @@
   "account.delete.title": "حذف یا آرکائیو؟",
   "account.delete.body": "\"{name}\" — بیلنس {balance} {currency}\n{directCount} براہ راست، {transferCount} منتقلیاں۔",
   "account.deleteConfirm.title": "واقعی حذف؟",
-  "account.deleteConfirm.body": "\"{name}\" اور {directCount} ٹرانزیکشنز حذف ہوں گی۔ واپس نہیں ہوگا۔"
+  "account.deleteConfirm.body": "\"{name}\" اور {directCount} ٹرانزیکشنز حذف ہوں گی۔ واپس نہیں ہوگا۔",
+  "me.import.json": "بیک اپ سے بحال کریں (JSON)",
+  "me.import.json.hint": "فعال پروفائل کا تمام ڈیٹا تبدیل کرتا ہے",
+  "me.import.confirm.title": "بیک اپ سے بحال کریں؟",
+  "me.import.confirm.body": "یہ فعال پروفائل کے تمام ڈیٹا کو فائل کے مواد سے تبدیل کر دے گا ({rows} قطاریں)۔\n\nآپ کے دیگر پروفائلز متاثر نہیں ہوں گے۔ یہ عمل واپس نہیں لیا جا سکتا۔",
+  "me.import.confirm.replace": "تبدیل کریں",
+  "me.import.failed.title": "درآمد ناکام",
+  "me.import.error.invalidJson": "یہ فائل درست JSON نہیں ہے۔",
+  "me.import.error.notAnExport": "یہ فائل MoneyFlow ایکسپورٹ کی طرح نہیں لگتی۔",
+  "me.import.error.tooNew": "بیک اپ ایپ کے نئے ورژن سے ہے (سکیما v{v})۔ ایپ کو اپ ڈیٹ کریں اور دوبارہ کوشش کریں۔",
+  "me.import.error.noTables": "اس فائل میں کوئی قابل شناخت ڈیٹا ٹیبل نہیں ہے۔"
 }

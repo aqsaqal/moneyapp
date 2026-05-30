@@ -393,5 +393,15 @@
   "account.delete.title": "Slett eller arkiver?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} direkte, {transferCount} overføringer.",
   "account.deleteConfirm.title": "Virkelig slette?",
-  "account.deleteConfirm.body": "\"{name}\" og {directCount} transaksjoner slettes. Kan ikke angres."
+  "account.deleteConfirm.body": "\"{name}\" og {directCount} transaksjoner slettes. Kan ikke angres.",
+  "me.import.json": "Gjenopprett fra sikkerhetskopi (JSON)",
+  "me.import.json.hint": "Erstatter alle data i den aktive profilen",
+  "me.import.confirm.title": "Gjenopprette fra sikkerhetskopi?",
+  "me.import.confirm.body": "Dette vil ERSTATTE alle data i den aktive profilen med innholdet i filen ({rows} rader).\n\nDe andre profilene dine berøres ikke. Dette kan ikke angres.",
+  "me.import.confirm.replace": "Erstatt",
+  "me.import.failed.title": "Importen mislyktes",
+  "me.import.error.invalidJson": "Den filen er ikke gyldig JSON.",
+  "me.import.error.notAnExport": "Den filen ligner ikke en MoneyFlow-eksport.",
+  "me.import.error.tooNew": "Sikkerhetskopien er fra en nyere app-versjon (skjema v{v}). Oppdater appen og prøv igjen.",
+  "me.import.error.noTables": "Ingen gjenkjennelige datatabeller i denne filen."
 }

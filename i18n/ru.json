@@ -392,5 +392,15 @@
   "account.delete.title": "Удалить или в архив?",
   "account.delete.body": "\"{name}\" — баланс {balance} {currency}\n{directCount} прямых операций, {transferCount} переводов.\n\nАрхив (рекомендуется) скрывает счёт, но сохраняет всё. Удаление убирает счёт и его прямые операции; переводы остаются на другом счёте.",
   "account.deleteConfirm.title": "Точно удалить?",
-  "account.deleteConfirm.body": "\"{name}\" будет удалён, и {directCount} прямых операций УДАЛЯТСЯ. {transferCount} переводов сохранятся на другом счёте. Действие необратимо."
+  "account.deleteConfirm.body": "\"{name}\" будет удалён, и {directCount} прямых операций УДАЛЯТСЯ. {transferCount} переводов сохранятся на другом счёте. Действие необратимо.",
+  "me.import.json": "Восстановить из резервной копии (JSON)",
+  "me.import.json.hint": "Заменяет все данные в активном профиле",
+  "me.import.confirm.title": "Восстановить из резервной копии?",
+  "me.import.confirm.body": "Это ЗАМЕНИТ все данные в активном профиле содержимым файла ({rows} строк).\n\nОстальные ваши профили не затронуты. Это действие нельзя отменить.",
+  "me.import.confirm.replace": "Заменить",
+  "me.import.failed.title": "Импорт не удался",
+  "me.import.error.invalidJson": "Этот файл не является корректным JSON.",
+  "me.import.error.notAnExport": "Этот файл не похож на экспорт MoneyFlow.",
+  "me.import.error.tooNew": "Резервная копия из более новой версии приложения (схема v{v}). Обновите приложение и попробуйте снова.",
+  "me.import.error.noTables": "В этом файле нет распознаваемых таблиц данных."
 }

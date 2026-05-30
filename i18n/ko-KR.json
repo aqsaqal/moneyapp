@@ -393,5 +393,15 @@
   "account.delete.title": "삭제 또는 보관?",
   "account.delete.body": "\"{name}\" — 잔액 {balance} {currency}\n직접 거래 {directCount}건, 이체 {transferCount}건.\n\n보관(권장)은 계좌를 숨기지만 모두 유지. 삭제는 계좌와 직접 거래를 제거; 이체는 상대 계좌에 보존.",
   "account.deleteConfirm.title": "정말 삭제?",
-  "account.deleteConfirm.body": "\"{name}\" 및 직접 거래 {directCount}건이 삭제됩니다. 이체 {transferCount}건은 상대측에 보존. 되돌릴 수 없습니다."
+  "account.deleteConfirm.body": "\"{name}\" 및 직접 거래 {directCount}건이 삭제됩니다. 이체 {transferCount}건은 상대측에 보존. 되돌릴 수 없습니다.",
+  "me.import.json": "백업에서 복원 (JSON)",
+  "me.import.json.hint": "활성 프로필의 모든 데이터를 교체합니다",
+  "me.import.confirm.title": "백업에서 복원하시겠습니까?",
+  "me.import.confirm.body": "활성 프로필의 모든 데이터가 파일 내용으로 교체됩니다 ({rows} 행).\n\n다른 프로필은 영향을 받지 않습니다. 이 작업은 취소할 수 없습니다.",
+  "me.import.confirm.replace": "교체",
+  "me.import.failed.title": "가져오기 실패",
+  "me.import.error.invalidJson": "해당 파일은 유효한 JSON이 아닙니다.",
+  "me.import.error.notAnExport": "해당 파일은 MoneyFlow 내보내기로 보이지 않습니다.",
+  "me.import.error.tooNew": "백업이 최신 앱 버전에서 만들어졌습니다 (스키마 v{v}). 앱을 업데이트한 후 다시 시도하세요.",
+  "me.import.error.noTables": "이 파일에는 인식 가능한 데이터 테이블이 없습니다."
 }

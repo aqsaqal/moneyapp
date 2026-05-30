@@ -48,7 +48,7 @@ import {
   previewWithPreset,
 } from '@/constants/currency';
 import { kv } from '@/utils/kv';
-import { exportData } from '@/utils/dataExport';
+import { exportData, importData } from '@/utils/dataExport';
 import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
 import { monthKey as monthKeyOf } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
@@ -761,6 +761,19 @@ function DataSection() {
         icon="file-document-multiple-outline"
         onPress={() => {
           void exportYearlyPdf(now.getFullYear(), currency);
+        }}
+      />
+      <SettingRow
+        label={t('me.import.json')}
+        hint={t('me.import.json.hint')}
+        icon="import"
+        onPress={() => {
+          void importData().catch((e: unknown) => {
+            Alert.alert(
+              t('me.import.failed.title'),
+              e instanceof Error ? e.message : String(e),
+            );
+          });
         }}
       />
     </View>

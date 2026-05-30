@@ -393,5 +393,15 @@
   "account.delete.title": "Silmək ya da arxivləmək?",
   "account.delete.body": "\"{name}\" — balans {balance} {currency}\n{directCount} birbaşa, {transferCount} köçürmə.",
   "account.deleteConfirm.title": "Həqiqətən silmək?",
-  "account.deleteConfirm.body": "\"{name}\" və {directCount} əməliyyat siləcək. Geri qaytarmaq olmaz."
+  "account.deleteConfirm.body": "\"{name}\" və {directCount} əməliyyat siləcək. Geri qaytarmaq olmaz.",
+  "me.import.json": "Yedəkdən bərpa et (JSON)",
+  "me.import.json.hint": "Aktiv profildəki bütün məlumatları əvəz edir",
+  "me.import.confirm.title": "Yedəkdən bərpa edilsin?",
+  "me.import.confirm.body": "Bu, aktiv profildəki bütün məlumatları faylın məzmunu ilə əvəz edəcək ({rows} sətir).\n\nDigər profilləriniz toxunulmazdır. Bu geri qaytarıla bilməz.",
+  "me.import.confirm.replace": "Əvəz et",
+  "me.import.failed.title": "İdxal uğursuz oldu",
+  "me.import.error.invalidJson": "Bu fayl etibarlı JSON deyil.",
+  "me.import.error.notAnExport": "Bu fayl MoneyFlow eksporta bənzəmir.",
+  "me.import.error.tooNew": "Yedək tətbiqin daha yeni versiyasındandır (sxem v{v}). Tətbiqi yeniləyin və yenidən cəhd edin.",
+  "me.import.error.noTables": "Bu faylda tanınan məlumat cədvəlləri yoxdur."
 }

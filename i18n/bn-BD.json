@@ -393,5 +393,15 @@
   "account.delete.title": "মুছবেন না সংরক্ষণ?",
   "account.delete.body": "\"{name}\" — ব্যালেন্স {balance} {currency}\n{directCount} সরাসরি, {transferCount} স্থানান্তর।",
   "account.deleteConfirm.title": "সত্যিই মুছবেন?",
-  "account.deleteConfirm.body": "\"{name}\" এবং {directCount} লেনদেন মুছে যাবে। ফেরানো যাবে না।"
+  "account.deleteConfirm.body": "\"{name}\" এবং {directCount} লেনদেন মুছে যাবে। ফেরানো যাবে না।",
+  "me.import.json": "ব্যাকআপ থেকে পুনরুদ্ধার (JSON)",
+  "me.import.json.hint": "সক্রিয় প্রোফাইলের সব ডেটা প্রতিস্থাপন করে",
+  "me.import.confirm.title": "ব্যাকআপ থেকে পুনরুদ্ধার?",
+  "me.import.confirm.body": "এটি সক্রিয় প্রোফাইলের সব ডেটা ফাইলের বিষয়বস্তু দিয়ে প্রতিস্থাপন করবে ({rows} সারি)।\n\nআপনার অন্যান্য প্রোফাইল অক্ষত থাকবে। এটি বাতিল করা যাবে না।",
+  "me.import.confirm.replace": "প্রতিস্থাপন",
+  "me.import.failed.title": "আমদানি ব্যর্থ",
+  "me.import.error.invalidJson": "সেই ফাইলটি বৈধ JSON নয়।",
+  "me.import.error.notAnExport": "সেই ফাইলটি MoneyFlow এক্সপোর্টের মতো দেখাচ্ছে না।",
+  "me.import.error.tooNew": "ব্যাকআপটি অ্যাপের নতুন সংস্করণ থেকে (স্কিমা v{v})। অ্যাপ আপডেট করুন এবং আবার চেষ্টা করুন।",
+  "me.import.error.noTables": "এই ফাইলে কোনো স্বীকৃত ডেটা টেবিল নেই।"
 }

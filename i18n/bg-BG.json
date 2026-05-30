@@ -393,5 +393,15 @@
   "account.delete.title": "Изтрий или архивирай?",
   "account.delete.body": "\"{name}\" — салдо {balance} {currency}\n{directCount} директни, {transferCount} преводи.",
   "account.deleteConfirm.title": "Наистина изтрий?",
-  "account.deleteConfirm.body": "\"{name}\" и {directCount} транзакции ще се изтрият. Необратимо."
+  "account.deleteConfirm.body": "\"{name}\" и {directCount} транзакции ще се изтрият. Необратимо.",
+  "me.import.json": "Възстановяване от резервно копие (JSON)",
+  "me.import.json.hint": "Заменя всички данни в активния профил",
+  "me.import.confirm.title": "Възстановяване от резервно копие?",
+  "me.import.confirm.body": "Това ще ЗАМЕНИ всички данни в активния профил със съдържанието на файла ({rows} реда).\n\nОсталите ви профили остават непокътнати. Това не може да бъде отменено.",
+  "me.import.confirm.replace": "Замяна",
+  "me.import.failed.title": "Импортирането се провали",
+  "me.import.error.invalidJson": "Този файл не е валиден JSON.",
+  "me.import.error.notAnExport": "Този файл не изглежда като експорт на MoneyFlow.",
+  "me.import.error.tooNew": "Резервното копие е от по-нова версия на приложението (схема v{v}). Актуализирайте приложението и опитайте отново.",
+  "me.import.error.noTables": "Няма разпознаваеми таблици с данни в този файл."
 }

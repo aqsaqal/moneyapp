@@ -393,5 +393,15 @@
   "account.delete.title": "¿Eliminar o archivar?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} transacciones directas, {transferCount} transferencias.\n\nArchivar (recomendado) oculta la cuenta pero conserva todo. Eliminar quita la cuenta y sus transacciones directas; las transferencias se conservan en la otra cuenta.",
   "account.deleteConfirm.title": "¿Eliminar de verdad?",
-  "account.deleteConfirm.body": "Esto eliminará \"{name}\" y BORRARÁ {directCount} transacciones directas. {transferCount} transferencias se conservarán en el otro lado. No se puede deshacer."
+  "account.deleteConfirm.body": "Esto eliminará \"{name}\" y BORRARÁ {directCount} transacciones directas. {transferCount} transferencias se conservarán en el otro lado. No se puede deshacer.",
+  "me.import.json": "Restaurar desde copia de seguridad (JSON)",
+  "me.import.json.hint": "Reemplaza todos los datos en el perfil activo",
+  "me.import.confirm.title": "¿Restaurar desde copia de seguridad?",
+  "me.import.confirm.body": "Esto REEMPLAZARÁ todos los datos en el perfil activo con el contenido del archivo ({rows} filas).\n\nTus otros perfiles no se ven afectados. Esto no se puede deshacer.",
+  "me.import.confirm.replace": "Reemplazar",
+  "me.import.failed.title": "Importación fallida",
+  "me.import.error.invalidJson": "Ese archivo no es un JSON válido.",
+  "me.import.error.notAnExport": "Ese archivo no parece una exportación de MoneyFlow.",
+  "me.import.error.tooNew": "La copia de seguridad es de una versión más reciente de la app (esquema v{v}). Actualiza la app e inténtalo de nuevo.",
+  "me.import.error.noTables": "No hay tablas de datos reconocibles en este archivo."
 }

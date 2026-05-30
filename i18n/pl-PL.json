@@ -393,5 +393,15 @@
   "account.delete.title": "Usuń czy archiwizuj?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} bezpośrednich, {transferCount} przelewów.",
   "account.deleteConfirm.title": "Naprawdę usunąć?",
-  "account.deleteConfirm.body": "\"{name}\" i {directCount} transakcji zostaną usunięte. Nieodwracalne."
+  "account.deleteConfirm.body": "\"{name}\" i {directCount} transakcji zostaną usunięte. Nieodwracalne.",
+  "me.import.json": "Przywróć z kopii zapasowej (JSON)",
+  "me.import.json.hint": "Zastępuje wszystkie dane w aktywnym profilu",
+  "me.import.confirm.title": "Przywrócić z kopii zapasowej?",
+  "me.import.confirm.body": "Spowoduje to ZASTĄPIENIE wszystkich danych w aktywnym profilu zawartością pliku ({rows} wierszy).\n\nPozostałe profile pozostają nietknięte. Tej operacji nie można cofnąć.",
+  "me.import.confirm.replace": "Zastąp",
+  "me.import.failed.title": "Import nieudany",
+  "me.import.error.invalidJson": "Ten plik nie jest prawidłowym JSON.",
+  "me.import.error.notAnExport": "Ten plik nie wygląda na eksport MoneyFlow.",
+  "me.import.error.tooNew": "Kopia zapasowa pochodzi z nowszej wersji aplikacji (schemat v{v}). Zaktualizuj aplikację i spróbuj ponownie.",
+  "me.import.error.noTables": "Brak rozpoznawalnych tabel danych w tym pliku."
 }

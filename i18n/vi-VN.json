@@ -393,5 +393,15 @@
   "account.delete.title": "Xoá hay lưu trữ?",
   "account.delete.body": "\"{name}\" — số dư {balance} {currency}\n{directCount} giao dịch trực tiếp, {transferCount} chuyển.",
   "account.deleteConfirm.title": "Thực sự xoá?",
-  "account.deleteConfirm.body": "Sẽ xoá \"{name}\" và {directCount} giao dịch. Không thể hoàn tác."
+  "account.deleteConfirm.body": "Sẽ xoá \"{name}\" và {directCount} giao dịch. Không thể hoàn tác.",
+  "me.import.json": "Khôi phục từ bản sao lưu (JSON)",
+  "me.import.json.hint": "Thay thế toàn bộ dữ liệu trong hồ sơ đang hoạt động",
+  "me.import.confirm.title": "Khôi phục từ bản sao lưu?",
+  "me.import.confirm.body": "Việc này sẽ THAY THẾ toàn bộ dữ liệu trong hồ sơ đang hoạt động bằng nội dung của tệp ({rows} hàng).\n\nCác hồ sơ khác của bạn không bị ảnh hưởng. Hành động này không thể hoàn tác.",
+  "me.import.confirm.replace": "Thay thế",
+  "me.import.failed.title": "Nhập không thành công",
+  "me.import.error.invalidJson": "Tệp đó không phải là JSON hợp lệ.",
+  "me.import.error.notAnExport": "Tệp đó không giống bản xuất MoneyFlow.",
+  "me.import.error.tooNew": "Bản sao lưu từ phiên bản ứng dụng mới hơn (lược đồ v{v}). Cập nhật ứng dụng và thử lại.",
+  "me.import.error.noTables": "Không có bảng dữ liệu nào nhận diện được trong tệp này."
 }

@@ -393,5 +393,15 @@
   "account.delete.title": "Supprimer ou archiver ?",
   "account.delete.body": "\"{name}\" — solde {balance} {currency}\n{directCount} transactions directes, {transferCount} virements.\n\nArchiver (recommandé) masque le compte mais conserve tout. Supprimer enlève le compte et ses transactions ; les virements restent sur l'autre compte.",
   "account.deleteConfirm.title": "Vraiment supprimer ?",
-  "account.deleteConfirm.body": "Cela supprimera \"{name}\" et {directCount} transactions directes. {transferCount} virements seront conservés de l'autre côté. Irréversible."
+  "account.deleteConfirm.body": "Cela supprimera \"{name}\" et {directCount} transactions directes. {transferCount} virements seront conservés de l'autre côté. Irréversible.",
+  "me.import.json": "Restaurer depuis une sauvegarde (JSON)",
+  "me.import.json.hint": "Remplace toutes les données du profil actif",
+  "me.import.confirm.title": "Restaurer depuis la sauvegarde ?",
+  "me.import.confirm.body": "Cela REMPLACERA toutes les données du profil actif par le contenu du fichier ({rows} lignes).\n\nVos autres profils ne seront pas affectés. Cette action est irréversible.",
+  "me.import.confirm.replace": "Remplacer",
+  "me.import.failed.title": "Échec de l'importation",
+  "me.import.error.invalidJson": "Ce fichier n'est pas un JSON valide.",
+  "me.import.error.notAnExport": "Ce fichier ne ressemble pas à un export MoneyFlow.",
+  "me.import.error.tooNew": "La sauvegarde provient d'une version plus récente de l'application (schéma v{v}). Mettez à jour l'application et réessayez.",
+  "me.import.error.noTables": "Aucune table de données reconnue dans ce fichier."
 }

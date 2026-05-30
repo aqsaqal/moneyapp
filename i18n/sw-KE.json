@@ -393,5 +393,15 @@
   "account.delete.title": "Futa au hifadhi?",
   "account.delete.body": "\"{name}\" — salio {balance} {currency}\n{directCount} ya moja kwa moja, {transferCount} uhamishaji.",
   "account.deleteConfirm.title": "Kweli kufuta?",
-  "account.deleteConfirm.body": "\"{name}\" na miamala {directCount} itafutwa. Haiwezi kurudishwa."
+  "account.deleteConfirm.body": "\"{name}\" na miamala {directCount} itafutwa. Haiwezi kurudishwa.",
+  "me.import.json": "Rejesha kutoka nakala rudufu (JSON)",
+  "me.import.json.hint": "Inabadilisha data yote katika wasifu hai",
+  "me.import.confirm.title": "Rejesha kutoka nakala rudufu?",
+  "me.import.confirm.body": "Hii ITABADILISHA data yote katika wasifu hai na yaliyomo katika faili ({rows} safu).\n\nWasifu wako mwingine hauguswi. Kitendo hiki hakiwezi kutenduliwa.",
+  "me.import.confirm.replace": "Badilisha",
+  "me.import.failed.title": "Uagizaji umeshindwa",
+  "me.import.error.invalidJson": "Faili hiyo si JSON halali.",
+  "me.import.error.notAnExport": "Faili hiyo haionekani kama usafirishaji wa MoneyFlow.",
+  "me.import.error.tooNew": "Nakala rudufu inatoka kwenye toleo jipya zaidi la programu (schema v{v}). Sasisha programu na ujaribu tena.",
+  "me.import.error.noTables": "Hakuna majedwali ya data yanayotambulika katika faili hii."
 }

@@ -393,5 +393,15 @@
   "account.delete.title": "Obriši ili arhiviraj?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} izravnih, {transferCount} prijenosa.",
   "account.deleteConfirm.title": "Stvarno obrisati?",
-  "account.deleteConfirm.body": "\"{name}\" i {directCount} transakcija bit će obrisane. Nepovratno."
+  "account.deleteConfirm.body": "\"{name}\" i {directCount} transakcija bit će obrisane. Nepovratno.",
+  "me.import.json": "Vrati iz sigurnosne kopije (JSON)",
+  "me.import.json.hint": "Zamjenjuje sve podatke u aktivnom profilu",
+  "me.import.confirm.title": "Vrati iz sigurnosne kopije?",
+  "me.import.confirm.body": "Ovo će ZAMIJENITI sve podatke u aktivnom profilu sadržajem datoteke ({rows} redaka).\n\nOstali profili ostaju netaknuti. Ova radnja se ne može poništiti.",
+  "me.import.confirm.replace": "Zamijeni",
+  "me.import.failed.title": "Uvoz nije uspio",
+  "me.import.error.invalidJson": "Ta datoteka nije valjani JSON.",
+  "me.import.error.notAnExport": "Ta datoteka ne izgleda kao MoneyFlow izvoz.",
+  "me.import.error.tooNew": "Sigurnosna kopija je iz novije verzije aplikacije (shema v{v}). Ažurirajte aplikaciju i pokušajte ponovo.",
+  "me.import.error.noTables": "Nema prepoznatljivih tablica podataka u ovoj datoteci."
 }

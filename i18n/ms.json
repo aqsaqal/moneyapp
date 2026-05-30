@@ -392,5 +392,15 @@
   "account.delete.title": "Padam atau arkib?",
   "account.delete.body": "\"{name}\" — baki {balance} {currency}\n{directCount} transaksi langsung, {transferCount} pemindahan.\n\nArkib (disyorkan) sembunyikan akaun tapi simpan semua. Padam keluarkan akaun dan transaksinya; pemindahan kekal di akaun lain.",
   "account.deleteConfirm.title": "Padam sungguh?",
-  "account.deleteConfirm.body": "Ini akan keluarkan \"{name}\" dan padam {directCount} transaksi langsung. {transferCount} pemindahan kekal di sisi lain. Tidak boleh dibatalkan."
+  "account.deleteConfirm.body": "Ini akan keluarkan \"{name}\" dan padam {directCount} transaksi langsung. {transferCount} pemindahan kekal di sisi lain. Tidak boleh dibatalkan.",
+  "me.import.json": "Pulihkan daripada sandaran (JSON)",
+  "me.import.json.hint": "Menggantikan semua data dalam profil aktif",
+  "me.import.confirm.title": "Pulihkan daripada sandaran?",
+  "me.import.confirm.body": "Ini akan MENGGANTIKAN semua data dalam profil aktif dengan kandungan fail ({rows} baris).\n\nProfil anda yang lain tidak terjejas. Tindakan ini tidak boleh diundur.",
+  "me.import.confirm.replace": "Gantikan",
+  "me.import.failed.title": "Import gagal",
+  "me.import.error.invalidJson": "Fail itu bukan JSON yang sah.",
+  "me.import.error.notAnExport": "Fail itu tidak kelihatan seperti eksport MoneyFlow.",
+  "me.import.error.tooNew": "Sandaran daripada versi aplikasi yang lebih baharu (skema v{v}). Kemas kini aplikasi dan cuba lagi.",
+  "me.import.error.noTables": "Tiada jadual data yang dikenali dalam fail ini."
 }

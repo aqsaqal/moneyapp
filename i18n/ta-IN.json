@@ -393,5 +393,15 @@
   "account.delete.title": "அழி அல்லது காப்பகப்படுத்து?",
   "account.delete.body": "\"{name}\" — இருப்பு {balance} {currency}\n{directCount} நேரடி, {transferCount} பரிமாற்றங்கள்.",
   "account.deleteConfirm.title": "உண்மையில் அழிக்க?",
-  "account.deleteConfirm.body": "\"{name}\" மற்றும் {directCount} பரிவர்த்தனைகள் அழிக்கப்படும். மீள இயலாது."
+  "account.deleteConfirm.body": "\"{name}\" மற்றும் {directCount} பரிவர்த்தனைகள் அழிக்கப்படும். மீள இயலாது.",
+  "me.import.json": "காப்புப் பிரதியிலிருந்து மீட்டெடு (JSON)",
+  "me.import.json.hint": "செயலில் உள்ள சுயவிவரத்தில் உள்ள அனைத்து தரவையும் மாற்றுகிறது",
+  "me.import.confirm.title": "காப்புப் பிரதியிலிருந்து மீட்டெடுக்கவா?",
+  "me.import.confirm.body": "இது செயலில் உள்ள சுயவிவரத்தில் உள்ள அனைத்து தரவையும் கோப்பின் உள்ளடக்கத்துடன் மாற்றும் ({rows} வரிசைகள்).\n\nஉங்கள் மற்ற சுயவிவரங்கள் பாதிக்கப்படாது. இதை திரும்பப் பெற முடியாது.",
+  "me.import.confirm.replace": "மாற்று",
+  "me.import.failed.title": "இறக்குமதி தோல்வியடைந்தது",
+  "me.import.error.invalidJson": "அந்த கோப்பு செல்லுபடியான JSON அல்ல.",
+  "me.import.error.notAnExport": "அந்த கோப்பு MoneyFlow ஏற்றுமதி போல் தெரியவில்லை.",
+  "me.import.error.tooNew": "காப்புப் பிரதி பயன்பாட்டின் புதிய பதிப்பிலிருந்து (திட்டம் v{v}). பயன்பாட்டைப் புதுப்பித்து மீண்டும் முயற்சிக்கவும்.",
+  "me.import.error.noTables": "இந்த கோப்பில் அடையாளம் காணக்கூடிய தரவு அட்டவணைகள் இல்லை."
 }

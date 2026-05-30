@@ -393,5 +393,15 @@
   "account.delete.title": "刪除或封存？",
   "account.delete.body": "\"{name}\" — 餘額 {balance} {currency}\n{directCount} 筆直接交易，{transferCount} 筆轉帳。",
   "account.deleteConfirm.title": "確認刪除？",
-  "account.deleteConfirm.body": "\"{name}\" 與 {directCount} 筆交易將被刪除。無法復原。"
+  "account.deleteConfirm.body": "\"{name}\" 與 {directCount} 筆交易將被刪除。無法復原。",
+  "me.import.json": "從備份還原 (JSON)",
+  "me.import.json.hint": "取代當前作用中設定檔的所有資料",
+  "me.import.confirm.title": "從備份還原？",
+  "me.import.confirm.body": "此操作將以檔案內容取代當前作用中設定檔的所有資料（{rows} 列）。\n\n您的其他設定檔不受影響。此操作無法復原。",
+  "me.import.confirm.replace": "取代",
+  "me.import.failed.title": "匯入失敗",
+  "me.import.error.invalidJson": "該檔案不是有效的 JSON。",
+  "me.import.error.notAnExport": "該檔案看起來不像 MoneyFlow 匯出檔。",
+  "me.import.error.tooNew": "備份來自較新版本的應用程式（綱要 v{v}）。請更新應用程式並重試。",
+  "me.import.error.noTables": "此檔案中沒有可辨識的資料表。"
 }

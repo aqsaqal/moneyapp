@@ -393,5 +393,15 @@
   "account.delete.title": "हटाएँ या संग्रहित?",
   "account.delete.body": "\"{name}\" — शेष {balance} {currency}\n{directCount} सीधे लेन-देन, {transferCount} स्थानांतरण।",
   "account.deleteConfirm.title": "वाकई हटाएँ?",
-  "account.deleteConfirm.body": "\"{name}\" हटेगा और {directCount} सीधे लेन-देन भी। पूर्ववत नहीं।"
+  "account.deleteConfirm.body": "\"{name}\" हटेगा और {directCount} सीधे लेन-देन भी। पूर्ववत नहीं।",
+  "me.import.json": "बैकअप से पुनर्स्थापित करें (JSON)",
+  "me.import.json.hint": "सक्रिय प्रोफ़ाइल के सभी डेटा को बदल देता है",
+  "me.import.confirm.title": "बैकअप से पुनर्स्थापित करें?",
+  "me.import.confirm.body": "यह सक्रिय प्रोफ़ाइल के सभी डेटा को फ़ाइल की सामग्री से बदल देगा ({rows} पंक्तियाँ)।\n\nआपकी अन्य प्रोफ़ाइलें अप्रभावित रहेंगी। इसे पूर्ववत नहीं किया जा सकता।",
+  "me.import.confirm.replace": "बदलें",
+  "me.import.failed.title": "आयात विफल",
+  "me.import.error.invalidJson": "वह फ़ाइल मान्य JSON नहीं है।",
+  "me.import.error.notAnExport": "वह फ़ाइल MoneyFlow एक्सपोर्ट जैसी नहीं दिखती।",
+  "me.import.error.tooNew": "बैकअप ऐप के एक नए संस्करण से है (स्कीमा v{v})। ऐप को अपडेट करें और पुनः प्रयास करें।",
+  "me.import.error.noTables": "इस फ़ाइल में कोई पहचानने योग्य डेटा तालिका नहीं है।"
 }

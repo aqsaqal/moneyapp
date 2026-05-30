@@ -393,5 +393,15 @@
   "account.delete.title": "Kustuta või arhiveeri?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} otsest, {transferCount} ülekannet.",
   "account.deleteConfirm.title": "Tõesti kustutada?",
-  "account.deleteConfirm.body": "\"{name}\" ja {directCount} tehingut kustutatakse. Ei saa tagasi võtta."
+  "account.deleteConfirm.body": "\"{name}\" ja {directCount} tehingut kustutatakse. Ei saa tagasi võtta.",
+  "me.import.json": "Taasta varukoopiast (JSON)",
+  "me.import.json.hint": "Asendab kõik aktiivse profiili andmed",
+  "me.import.confirm.title": "Taasta varukoopiast?",
+  "me.import.confirm.body": "See ASENDAB kõik aktiivse profiili andmed faili sisuga ({rows} rida).\n\nTeie ülejäänud profiile ei puudutata. Seda ei saa tagasi võtta.",
+  "me.import.confirm.replace": "Asenda",
+  "me.import.failed.title": "Importimine ebaõnnestus",
+  "me.import.error.invalidJson": "See fail ei ole sobiv JSON.",
+  "me.import.error.notAnExport": "See fail ei näe välja nagu MoneyFlow eksport.",
+  "me.import.error.tooNew": "Varukoopia on rakenduse uuemast versioonist (skeem v{v}). Värskendage rakendust ja proovige uuesti.",
+  "me.import.error.noTables": "Selles failis pole tuvastatavaid andmetabeleid."
 }

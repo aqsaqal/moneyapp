@@ -393,5 +393,15 @@
   "account.delete.title": "Excluir ou arquivar?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} transações diretas, {transferCount} transferências.\n\nArquivar (recomendado) oculta mas mantém tudo. Excluir remove a conta e transações diretas; transferências ficam na outra conta.",
   "account.deleteConfirm.title": "Excluir mesmo?",
-  "account.deleteConfirm.body": "Isso removerá \"{name}\" e EXCLUIRÁ {directCount} transações diretas. {transferCount} transferências serão preservadas. Não pode desfazer."
+  "account.deleteConfirm.body": "Isso removerá \"{name}\" e EXCLUIRÁ {directCount} transações diretas. {transferCount} transferências serão preservadas. Não pode desfazer.",
+  "me.import.json": "Restaurar do backup (JSON)",
+  "me.import.json.hint": "Substitui todos os dados no perfil ativo",
+  "me.import.confirm.title": "Restaurar do backup?",
+  "me.import.confirm.body": "Isto SUBSTITUIRÁ todos os dados no perfil ativo pelo conteúdo do arquivo ({rows} linhas).\n\nSeus outros perfis não são afetados. Isto não pode ser desfeito.",
+  "me.import.confirm.replace": "Substituir",
+  "me.import.failed.title": "Falha na importação",
+  "me.import.error.invalidJson": "Esse arquivo não é JSON válido.",
+  "me.import.error.notAnExport": "Esse arquivo não parece uma exportação do MoneyFlow.",
+  "me.import.error.tooNew": "Backup é de uma versão mais recente do app (esquema v{v}). Atualize o app e tente novamente.",
+  "me.import.error.noTables": "Nenhuma tabela de dados reconhecível neste arquivo."
 }

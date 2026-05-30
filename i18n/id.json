@@ -392,5 +392,15 @@
   "account.delete.title": "Hapus atau arsip?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} transaksi langsung, {transferCount} transfer.\n\nArsip (disarankan) menyembunyikan akun tapi menyimpan semua. Hapus menghilangkan akun dan transaksinya; transfer dipertahankan di akun lain.",
   "account.deleteConfirm.title": "Benar-benar hapus?",
-  "account.deleteConfirm.body": "Ini akan menghapus \"{name}\" dan {directCount} transaksi langsung. {transferCount} transfer dipertahankan di sisi lain. Tidak dapat dibatalkan."
+  "account.deleteConfirm.body": "Ini akan menghapus \"{name}\" dan {directCount} transaksi langsung. {transferCount} transfer dipertahankan di sisi lain. Tidak dapat dibatalkan.",
+  "me.import.json": "Pulihkan dari cadangan (JSON)",
+  "me.import.json.hint": "Mengganti semua data di profil aktif",
+  "me.import.confirm.title": "Pulihkan dari cadangan?",
+  "me.import.confirm.body": "Ini akan MENGGANTI semua data di profil aktif dengan isi file ({rows} baris).\n\nProfil Anda yang lain tidak terpengaruh. Tindakan ini tidak dapat dibatalkan.",
+  "me.import.confirm.replace": "Ganti",
+  "me.import.failed.title": "Impor gagal",
+  "me.import.error.invalidJson": "File itu bukan JSON yang valid.",
+  "me.import.error.notAnExport": "File itu tidak terlihat seperti ekspor MoneyFlow.",
+  "me.import.error.tooNew": "Cadangan berasal dari versi aplikasi yang lebih baru (skema v{v}). Perbarui aplikasi dan coba lagi.",
+  "me.import.error.noTables": "Tidak ada tabel data yang dikenali di file ini."
 }

@@ -392,5 +392,15 @@
   "account.delete.title": "Жою ма, мұрағат па?",
   "account.delete.body": "\"{name}\" — баланс {balance} {currency}\n{directCount} тікелей операция, {transferCount} аударым.\n\nМұрағат (ұсынылады) шотты жасырады, бірақ бәрін сақтайды. Жою шотты және оның тікелей операцияларын алып тастайды; аударымдар басқа шотта қалады.",
   "account.deleteConfirm.title": "Шынымен жою?",
-  "account.deleteConfirm.body": "\"{name}\" жойылады және {directCount} тікелей операция ЖОЙЫЛАДЫ. {transferCount} аударым екінші жағында сақталады. Қайтаруға болмайды."
+  "account.deleteConfirm.body": "\"{name}\" жойылады және {directCount} тікелей операция ЖОЙЫЛАДЫ. {transferCount} аударым екінші жағында сақталады. Қайтаруға болмайды.",
+  "me.import.json": "Сақтық көшірмеден қалпына келтіру (JSON)",
+  "me.import.json.hint": "Белсенді профильдегі барлық деректерді ауыстырады",
+  "me.import.confirm.title": "Сақтық көшірмеден қалпына келтірілсін бе?",
+  "me.import.confirm.body": "Бұл белсенді профильдегі барлық деректерді файл мазмұнымен АЛМАСТЫРАДЫ ({rows} жол).\n\nҚалған профильдеріңіз қозғалмайды. Бұл әрекетті қайтару мүмкін емес.",
+  "me.import.confirm.replace": "Ауыстыру",
+  "me.import.failed.title": "Импорт сәтсіз аяқталды",
+  "me.import.error.invalidJson": "Бұл файл жарамды JSON емес.",
+  "me.import.error.notAnExport": "Бұл файл MoneyFlow экспортына ұқсамайды.",
+  "me.import.error.tooNew": "Сақтық көшірме қолданбаның жаңа нұсқасынан (сұлба v{v}). Қолданбаны жаңартып қайталап көріңіз.",
+  "me.import.error.noTables": "Бұл файлда танылатын дерек кестелері жоқ."
 }
