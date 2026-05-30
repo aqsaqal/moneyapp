@@ -565,7 +565,7 @@ const settingsTopStyles = StyleSheet.create({
 
 function SmartSuggestionsRow() {
   const t = useT();
-  const [on, setOn] = useState(kv.getBool('smartSuggestions', true));
+  const [on, setOn] = useState(kv.getBool('smartSuggestions', false));
   return (
     <SettingRow
       label={t('settings.smartSuggestions.label')}

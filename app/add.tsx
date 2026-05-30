@@ -634,7 +634,7 @@ export default function AddScreen() {
             chip prefills amount/note/account/category. A "More…" chip
             at the end opens the full category grid for fresh entries
             without prior exact matches. */}
-        {mode === 'expense' && kv.getBool('smartSuggestions', true) && (
+        {mode === 'expense' && kv.getBool('smartSuggestions', false) && (
           <SmartSuggestionRow
             currency={currency}
             amount={amount}

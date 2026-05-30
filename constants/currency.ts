@@ -397,31 +397,35 @@ export function previewWithPreset(
 
 /** Full-precision formatter. `$12.50`, `ر.س ١٢٫٥٠`.
  *  Always returns the absolute value formatted — callers that need a
- *  negative sign prepend it themselves (preserved from v1 contract). */
+ *  negative sign prepend it themselves (preserved from v1 contract).
+ *
+ *  Symbol placement: always **left** of the digits. The locale-aware
+ *  Intl currency formatter used to honor regional conventions (₽/€
+ *  trailing in ru-RU / fr-FR / de-DE etc.) but the product wants
+ *  symbol-on-the-left consistently across accounts, balances, and
+ *  totals. The user's explicit currency-format preset can still flip
+ *  it via the `amount-symbol` position — that's a deliberate override. */
 export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?: string): string {
   const c = CURRENCIES[code];
   const abs = Math.abs(amount);
-  // Respect the user's currency-format preset (digit grouping + symbol
-  // position) when one is set. Otherwise fall back to locale-aware
-  // Intl.NumberFormat (the original path).
   const presetId = kv.get('currencyFormat');
   const preset = getCurrencyFormatPreset(presetId);
   if (preset) {
     const digits = applyNumberStyle(abs.toFixed(c.decimalDigits), preset.numberStyle);
-    // For absolute values, symbol-amount and symbol-sign collapse to the
-    // same thing (no sign to position) — both render `₸ 1,234.90`.
     if (preset.position === 'amount-symbol') return `${digits} ${c.symbolNative}`;
     return `${c.symbolNative} ${digits}`;
   }
+  // No preset: format digits with locale-aware grouping/decimal but
+  // anchor the symbol on the left ourselves.
   const eff = effectiveLocale(locale);
   try {
-    return new Intl.NumberFormat(eff, {
-      style: 'currency',
-      currency: code,
-      currencyDisplay: 'narrowSymbol',
+    const digits = new Intl.NumberFormat(eff, {
+      minimumFractionDigits: c.decimalDigits,
+      maximumFractionDigits: c.decimalDigits,
     }).format(abs);
+    return `${c.symbolNative} ${digits}`;
   } catch {
-    return `${c.symbol}${abs.toFixed(c.decimalDigits)}`;
+    return `${c.symbolNative} ${abs.toFixed(c.decimalDigits)}`;
   }
 }
 
