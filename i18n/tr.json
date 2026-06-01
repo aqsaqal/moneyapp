@@ -402,5 +402,10 @@
   "me.import.error.invalidJson": "O dosya geçerli bir JSON değil.",
   "me.import.error.notAnExport": "O dosya bir MoneyFlow dışa aktarımı gibi görünmüyor.",
   "me.import.error.tooNew": "Yedek daha yeni bir uygulama sürümünden (şema v{v}). Uygulamayı güncelleyin ve tekrar deneyin.",
-  "me.import.error.noTables": "Bu dosyada tanınabilir veri tabloları yok."
+  "me.import.error.noTables": "Bu dosyada tanınabilir veri tabloları yok.",
+  "recurring.title.new.expense": "Yeni tekrarlanan gider",
+  "recurring.title.new.income": "Yeni tekrarlanan gelir",
+  "recurring.title.edit.expense": "Tekrarlanan gideri düzenle",
+  "recurring.title.edit.income": "Tekrarlanan geliri düzenle",
+  "category.edit": "Kategoriyi düzenle"
 }

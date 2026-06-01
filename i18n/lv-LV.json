@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Šis fails nav derīgs JSON.",
   "me.import.error.notAnExport": "Šis fails neizskatās pēc MoneyFlow eksporta.",
   "me.import.error.tooNew": "Dublējums ir no jaunākas lietotnes versijas (shēma v{v}). Atjauniniet lietotni un mēģiniet vēlreiz.",
-  "me.import.error.noTables": "Šajā failā nav atpazīstamu datu tabulu."
+  "me.import.error.noTables": "Šajā failā nav atpazīstamu datu tabulu.",
+  "recurring.title.new.expense": "Jauni atkārtoti izdevumi",
+  "recurring.title.new.income": "Jauni atkārtoti ienākumi",
+  "recurring.title.edit.expense": "Rediģēt atkārtotus izdevumus",
+  "recurring.title.edit.income": "Rediģēt atkārtotus ienākumus",
+  "category.edit": "Rediģēt kategoriju"
 }

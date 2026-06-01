@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Bu fayl yaroqli JSON emas.",
   "me.import.error.notAnExport": "Bu fayl MoneyFlow eksportiga oʻxshamaydi.",
   "me.import.error.tooNew": "Zaxira ilovaning yangiroq versiyasidan (sxema v{v}). Ilovani yangilang va qayta urinib koʻring.",
-  "me.import.error.noTables": "Ushbu faylda tanib olinadigan maʼlumotlar jadvallari yoʻq."
+  "me.import.error.noTables": "Ushbu faylda tanib olinadigan maʼlumotlar jadvallari yoʻq.",
+  "recurring.title.new.expense": "Yangi takrorlanuvchi xarajat",
+  "recurring.title.new.income": "Yangi takrorlanuvchi daromad",
+  "recurring.title.edit.expense": "Takrorlanuvchi xarajatni tahrirlash",
+  "recurring.title.edit.income": "Takrorlanuvchi daromadni tahrirlash",
+  "category.edit": "Toifani tahrirlash"
 }

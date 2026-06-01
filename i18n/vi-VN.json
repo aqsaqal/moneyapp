@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Tệp đó không phải là JSON hợp lệ.",
   "me.import.error.notAnExport": "Tệp đó không giống bản xuất MoneyFlow.",
   "me.import.error.tooNew": "Bản sao lưu từ phiên bản ứng dụng mới hơn (lược đồ v{v}). Cập nhật ứng dụng và thử lại.",
-  "me.import.error.noTables": "Không có bảng dữ liệu nào nhận diện được trong tệp này."
+  "me.import.error.noTables": "Không có bảng dữ liệu nào nhận diện được trong tệp này.",
+  "recurring.title.new.expense": "Chi phí định kỳ mới",
+  "recurring.title.new.income": "Thu nhập định kỳ mới",
+  "recurring.title.edit.expense": "Chỉnh sửa chi phí định kỳ",
+  "recurring.title.edit.income": "Chỉnh sửa thu nhập định kỳ",
+  "category.edit": "Chỉnh sửa danh mục"
 }

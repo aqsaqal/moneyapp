@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Diese Datei ist kein gültiges JSON.",
   "me.import.error.notAnExport": "Diese Datei sieht nicht wie ein MoneyFlow-Export aus.",
   "me.import.error.tooNew": "Backup stammt aus einer neueren App-Version (Schema v{v}). Aktualisiere die App und versuche es erneut.",
-  "me.import.error.noTables": "Keine erkennbaren Datentabellen in dieser Datei."
+  "me.import.error.noTables": "Keine erkennbaren Datentabellen in dieser Datei.",
+  "recurring.title.new.expense": "Neue wiederkehrende Ausgabe",
+  "recurring.title.new.income": "Neue wiederkehrende Einnahme",
+  "recurring.title.edit.expense": "Wiederkehrende Ausgabe bearbeiten",
+  "recurring.title.edit.income": "Wiederkehrende Einnahme bearbeiten",
+  "category.edit": "Kategorie bearbeiten"
 }

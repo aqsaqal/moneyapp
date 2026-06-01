@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Цей файл не є дійсним JSON.",
   "me.import.error.notAnExport": "Цей файл не схожий на експорт MoneyFlow.",
   "me.import.error.tooNew": "Резервна копія з новішої версії додатка (схема v{v}). Оновіть додаток і спробуйте знову.",
-  "me.import.error.noTables": "У цьому файлі немає розпізнаваних таблиць даних."
+  "me.import.error.noTables": "У цьому файлі немає розпізнаваних таблиць даних.",
+  "recurring.title.new.expense": "Нова регулярна витрата",
+  "recurring.title.new.income": "Новий регулярний дохід",
+  "recurring.title.edit.expense": "Редагувати регулярну витрату",
+  "recurring.title.edit.income": "Редагувати регулярний дохід",
+  "category.edit": "Редагувати категорію"
 }

@@ -101,6 +101,19 @@ function RecurringSection() {
 
   const [sheet, setSheet] = useState<RecurringSheetState>({ kind: 'closed' });
 
+  // Quick-delete from the row's trash button asks the same question
+  // RecurringSheet's askDelete does, so the two paths are consistent.
+  const confirmDeleteRecurring = (rec: { id: string; name: string }) => {
+    Alert.alert(
+      t('recurring.deleteConfirm.title'),
+      `${t('recurring.deleteConfirm.body', { name: rec.name })} ${t('common.cannotBeUndone')}`,
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        { text: t('common.delete'), style: 'destructive', onPress: () => deleteRecurring(rec.id) },
+      ],
+    );
+  };
+
   // Sort by day-of-month so the soonest-due is at the top — answers
   // "what's coming up?" at a glance.
   const byDay = (a: Recurring, b: Recurring) => a.dayOfMonth - b.dayOfMonth;
@@ -203,13 +216,17 @@ function RecurringSection() {
                       category: r.category,
                       note: r.name,
                       recurringId: r.id,
+                      // Stamp the month the user tapped from so the
+                      // paid_items link lands on the right row even
+                      // when the user picks a future-dated txn.
+                      markMonth: key,
                       originalCurrency: r.currency ?? undefined,
                     }),
                   },
                 } as never)}
                 onUnmark={() => unmarkRecurringPaid(r.id, key)}
                 onEdit={() => setSheet({ kind: 'edit', rec: r })}
-                onDelete={() => deleteRecurring(r.id)}
+                onDelete={() => confirmDeleteRecurring(r)}
                 currency={(r.currency ?? currency) as CurrencyCode}
               />
               {hint && (
@@ -270,6 +287,9 @@ function RecurringSection() {
                   category: r.category,
                   note: r.name,
                   recurringId: r.id,
+                  // Stamp the month the user tapped from — see expense
+                  // section above for rationale.
+                  markMonth: key,
                   originalCurrency: r.currency ?? undefined,
                 }),
               },

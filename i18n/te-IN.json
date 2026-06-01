@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "ఆ ఫైల్ చెల్లుబాటు అయ్యే JSON కాదు.",
   "me.import.error.notAnExport": "ఆ ఫైల్ MoneyFlow ఎగుమతిలా కనిపించడం లేదు.",
   "me.import.error.tooNew": "బ్యాకప్ యాప్ యొక్క క్రొత్త వెర్షన్ నుండి (స్కీమా v{v}). యాప్‌ను నవీకరించి మళ్లీ ప్రయత్నించండి.",
-  "me.import.error.noTables": "ఈ ఫైల్‌లో గుర్తింపజేయగల డేటా పట్టికలు లేవు."
+  "me.import.error.noTables": "ఈ ఫైల్‌లో గుర్తింపజేయగల డేటా పట్టికలు లేవు.",
+  "recurring.title.new.expense": "కొత్త పునరావృత ఖర్చు",
+  "recurring.title.new.income": "కొత్త పునరావృత ఆదాయం",
+  "recurring.title.edit.expense": "పునరావృత ఖర్చును సవరించు",
+  "recurring.title.edit.income": "పునరావృత ఆదాయాన్ని సవరించు",
+  "category.edit": "వర్గాన్ని సవరించు"
 }

@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Tiedosto ei ole kelvollista JSON-muotoa.",
   "me.import.error.notAnExport": "Tiedosto ei näytä MoneyFlow-vientiltä.",
   "me.import.error.tooNew": "Varmuuskopio on uudemmasta sovellusversiosta (skeema v{v}). Päivitä sovellus ja yritä uudelleen.",
-  "me.import.error.noTables": "Tiedostossa ei ole tunnistettavia tietotaulukoita."
+  "me.import.error.noTables": "Tiedostossa ei ole tunnistettavia tietotaulukoita.",
+  "recurring.title.new.expense": "Uusi toistuva kulu",
+  "recurring.title.new.income": "Uusi toistuva tulo",
+  "recurring.title.edit.expense": "Muokkaa toistuvaa kulua",
+  "recurring.title.edit.income": "Muokkaa toistuvaa tuloa",
+  "category.edit": "Muokkaa luokkaa"
 }

@@ -635,6 +635,10 @@ export interface AddTxnInput {
    *  preserve the original entry. */
   originalAmount?: number | null;
   originalCurrency?: string | null;
+  /** Cross-currency transfer credit amount in the TO account's currency.
+   *  When omitted on a transfer, the To side is credited with `amount`
+   *  (legacy / same-currency behavior). */
+  toAmount?: number | null;
 }
 
 /** Pre-flight checks. Throws AccountValidationError with `code='cash_negative'`
@@ -692,6 +696,7 @@ export function addTransaction(
     asnaf: input.asnaf ?? null,
     originalAmount: input.originalAmount ?? null,
     originalCurrency: input.originalCurrency ?? null,
+    toAmount: input.toAmount ?? null,
     date: txDate,
     createdAt: now,
     applied: isFuture ? 0 : 1,
@@ -706,8 +711,12 @@ export function addTransaction(
     }
     // Account balance updates (only for already-applied / past-or-now txns).
     if (input.type === 'transfer' && input.toAccountId) {
+      // Cross-currency: debit From in source currency, credit To in
+      // destination currency. Same-currency falls through to the
+      // legacy single-amount path via `toAmount ?? amount`.
+      const credit = input.toAmount ?? input.amount;
       db.update(accounts).set({ balance: sql`${accounts.balance} - ${input.amount}` }).where(eq(accounts.id, input.accountId)).run();
-      db.update(accounts).set({ balance: sql`${accounts.balance} + ${input.amount}` }).where(eq(accounts.id, input.toAccountId)).run();
+      db.update(accounts).set({ balance: sql`${accounts.balance} + ${credit}` }).where(eq(accounts.id, input.toAccountId)).run();
     } else if (input.type === 'income') {
       db.update(accounts).set({ balance: sql`${accounts.balance} + ${input.amount}` }).where(eq(accounts.id, input.accountId)).run();
     } else {
@@ -736,9 +745,10 @@ export function applyDueTransactions(): number {
   type Row = {
     id: string; type: 'expense' | 'income' | 'transfer';
     amount: number; account_id: string; to_account_id: string | null;
+    to_amount: number | null;
   };
   const rows = raw.getAllSync(
-    `SELECT id, type, amount, account_id, to_account_id
+    `SELECT id, type, amount, account_id, to_account_id, to_amount
        FROM transactions
       WHERE applied = 0 AND date <= ?`,
     [now],
@@ -747,8 +757,11 @@ export function applyDueTransactions(): number {
   raw.withTransactionSync(() => {
     for (const r of rows) {
       if (r.type === 'transfer' && r.to_account_id) {
+        // Cross-currency credit when to_amount is set; legacy fallback
+        // is the single `amount` value (same-currency or pre-fix rows).
+        const credit = r.to_amount ?? r.amount;
         db.update(accounts).set({ balance: sql`${accounts.balance} - ${r.amount}` }).where(eq(accounts.id, r.account_id)).run();
-        db.update(accounts).set({ balance: sql`${accounts.balance} + ${r.amount}` }).where(eq(accounts.id, r.to_account_id)).run();
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${credit}` }).where(eq(accounts.id, r.to_account_id)).run();
       } else if (r.type === 'income') {
         db.update(accounts).set({ balance: sql`${accounts.balance} + ${r.amount}` }).where(eq(accounts.id, r.account_id)).run();
       } else {
@@ -803,8 +816,12 @@ export function deleteTransaction(id: string): void {
   raw.withTransactionSync(() => {
     if (wasApplied) {
       if (existing.type === 'transfer' && existing.toAccountId) {
+        // Reverse with the same split that applied it: undo the To-side
+        // credit in TO currency, undo the From-side debit in FROM
+        // currency. Legacy rows (toAmount null) undo with `amount`.
+        const credit = existing.toAmount ?? existing.amount;
         db.update(accounts).set({ balance: sql`${accounts.balance} + ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
-        db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.toAccountId)).run();
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${credit}` }).where(eq(accounts.id, existing.toAccountId)).run();
       } else if (existing.type === 'income') {
         db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
       } else {
@@ -834,14 +851,16 @@ export function updateTransaction(id: string, patch: Partial<Transaction>): void
     patch.amount !== undefined && patch.amount !== existing.amount ||
     patch.type !== undefined && patch.type !== existing.type ||
     patch.accountId !== undefined && patch.accountId !== existing.accountId ||
-    patch.toAccountId !== undefined && patch.toAccountId !== existing.toAccountId;
+    patch.toAccountId !== undefined && patch.toAccountId !== existing.toAccountId ||
+    patch.toAmount !== undefined && patch.toAmount !== existing.toAmount;
 
   raw.withTransactionSync(() => {
     if (balanceTouched) {
       // 1. Reverse old balance effects.
       if (existing.type === 'transfer' && existing.toAccountId) {
+        const oldCredit = existing.toAmount ?? existing.amount;
         db.update(accounts).set({ balance: sql`${accounts.balance} + ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
-        db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.toAccountId)).run();
+        db.update(accounts).set({ balance: sql`${accounts.balance} - ${oldCredit}` }).where(eq(accounts.id, existing.toAccountId)).run();
       } else if (existing.type === 'income') {
         db.update(accounts).set({ balance: sql`${accounts.balance} - ${existing.amount}` }).where(eq(accounts.id, existing.accountId)).run();
       } else {
@@ -849,8 +868,9 @@ export function updateTransaction(id: string, patch: Partial<Transaction>): void
       }
       // 2. Apply new balance effects.
       if (next.type === 'transfer' && next.toAccountId) {
+        const newCredit = next.toAmount ?? next.amount;
         db.update(accounts).set({ balance: sql`${accounts.balance} - ${next.amount}` }).where(eq(accounts.id, next.accountId)).run();
-        db.update(accounts).set({ balance: sql`${accounts.balance} + ${next.amount}` }).where(eq(accounts.id, next.toAccountId)).run();
+        db.update(accounts).set({ balance: sql`${accounts.balance} + ${newCredit}` }).where(eq(accounts.id, next.toAccountId)).run();
       } else if (next.type === 'income') {
         db.update(accounts).set({ balance: sql`${accounts.balance} + ${next.amount}` }).where(eq(accounts.id, next.accountId)).run();
       } else {

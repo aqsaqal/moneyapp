@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Ten plik nie jest prawidłowym JSON.",
   "me.import.error.notAnExport": "Ten plik nie wygląda na eksport MoneyFlow.",
   "me.import.error.tooNew": "Kopia zapasowa pochodzi z nowszej wersji aplikacji (schemat v{v}). Zaktualizuj aplikację i spróbuj ponownie.",
-  "me.import.error.noTables": "Brak rozpoznawalnych tabel danych w tym pliku."
+  "me.import.error.noTables": "Brak rozpoznawalnych tabel danych w tym pliku.",
+  "recurring.title.new.expense": "Nowy cykliczny wydatek",
+  "recurring.title.new.income": "Nowy cykliczny przychód",
+  "recurring.title.edit.expense": "Edytuj cykliczny wydatek",
+  "recurring.title.edit.income": "Edytuj cykliczny przychód",
+  "category.edit": "Edytuj kategorię"
 }

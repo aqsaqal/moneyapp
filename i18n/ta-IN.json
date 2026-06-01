@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "அந்த கோப்பு செல்லுபடியான JSON அல்ல.",
   "me.import.error.notAnExport": "அந்த கோப்பு MoneyFlow ஏற்றுமதி போல் தெரியவில்லை.",
   "me.import.error.tooNew": "காப்புப் பிரதி பயன்பாட்டின் புதிய பதிப்பிலிருந்து (திட்டம் v{v}). பயன்பாட்டைப் புதுப்பித்து மீண்டும் முயற்சிக்கவும்.",
-  "me.import.error.noTables": "இந்த கோப்பில் அடையாளம் காணக்கூடிய தரவு அட்டவணைகள் இல்லை."
+  "me.import.error.noTables": "இந்த கோப்பில் அடையாளம் காணக்கூடிய தரவு அட்டவணைகள் இல்லை.",
+  "recurring.title.new.expense": "புதிய தொடர் செலவு",
+  "recurring.title.new.income": "புதிய தொடர் வருமானம்",
+  "recurring.title.edit.expense": "தொடர் செலவை திருத்து",
+  "recurring.title.edit.income": "தொடர் வருமானத்தை திருத்து",
+  "category.edit": "வகையை திருத்து"
 }

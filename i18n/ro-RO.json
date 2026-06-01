@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Acel fișier nu este JSON valid.",
   "me.import.error.notAnExport": "Acel fișier nu pare a fi un export MoneyFlow.",
   "me.import.error.tooNew": "Copia de rezervă provine dintr-o versiune mai nouă a aplicației (schemă v{v}). Actualizați aplicația și încercați din nou.",
-  "me.import.error.noTables": "Nu există tabele de date recunoscute în acest fișier."
+  "me.import.error.noTables": "Nu există tabele de date recunoscute în acest fișier.",
+  "recurring.title.new.expense": "Cheltuială recurentă nouă",
+  "recurring.title.new.income": "Venit recurent nou",
+  "recurring.title.edit.expense": "Editează cheltuiala recurentă",
+  "recurring.title.edit.income": "Editează venitul recurent",
+  "category.edit": "Editează categoria"
 }

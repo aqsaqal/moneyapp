@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Αυτό το αρχείο δεν είναι έγκυρο JSON.",
   "me.import.error.notAnExport": "Αυτό το αρχείο δεν μοιάζει με εξαγωγή MoneyFlow.",
   "me.import.error.tooNew": "Το αντίγραφο ασφαλείας είναι από νεότερη έκδοση εφαρμογής (σχήμα v{v}). Ενημερώστε την εφαρμογή και δοκιμάστε ξανά.",
-  "me.import.error.noTables": "Δεν υπάρχουν αναγνωρίσιμοι πίνακες δεδομένων σε αυτό το αρχείο."
+  "me.import.error.noTables": "Δεν υπάρχουν αναγνωρίσιμοι πίνακες δεδομένων σε αυτό το αρχείο.",
+  "recurring.title.new.expense": "Νέο επαναλαμβανόμενο έξοδο",
+  "recurring.title.new.income": "Νέο επαναλαμβανόμενο έσοδο",
+  "recurring.title.edit.expense": "Επεξεργασία επαναλαμβανόμενου εξόδου",
+  "recurring.title.edit.income": "Επεξεργασία επαναλαμβανόμενου εσόδου",
+  "category.edit": "Επεξεργασία κατηγορίας"
 }

@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Dat bestand is geen geldige JSON.",
   "me.import.error.notAnExport": "Dat bestand lijkt geen MoneyFlow-export.",
   "me.import.error.tooNew": "Back-up is van een nieuwere app-versie (schema v{v}). Werk de app bij en probeer opnieuw.",
-  "me.import.error.noTables": "Geen herkenbare gegevenstabellen in dit bestand."
+  "me.import.error.noTables": "Geen herkenbare gegevenstabellen in dit bestand.",
+  "recurring.title.new.expense": "Nieuwe terugkerende uitgave",
+  "recurring.title.new.income": "Nieuw terugkerend inkomen",
+  "recurring.title.edit.expense": "Terugkerende uitgave bewerken",
+  "recurring.title.edit.income": "Terugkerend inkomen bewerken",
+  "category.edit": "Categorie bewerken"
 }

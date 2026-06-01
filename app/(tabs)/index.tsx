@@ -62,6 +62,34 @@ export default function Home() {
   const streak = useStreak();
   const recurring = useRecurringList();
   const accounts = useAccounts();
+  // Include archived in the lookup map so historical recent rows still
+  // display their account name after the wallet was retired.
+  const allAccountsForLookup = useAccounts({ includeArchived: true });
+  const accountName = useMemo(() => {
+    const m = new Map<string, string>();
+    allAccountsForLookup.forEach((a) => m.set(a.id, a.name));
+    return m;
+  }, [allAccountsForLookup]);
+  const accountMeta = useMemo(() => {
+    const m = new Map<string, { icon: string; color: string }>();
+    allAccountsForLookup.forEach((a) => m.set(a.id, { icon: a.icon, color: a.color }));
+    return m;
+  }, [allAccountsForLookup]);
+  const accountCcyMap = useMemo(() => {
+    const m = new Map<string, CurrencyCode>();
+    allAccountsForLookup.forEach((a) =>
+      m.set(a.id, ((a.currency ?? currency) as CurrencyCode)),
+    );
+    return m;
+  }, [allAccountsForLookup, currency]);
+  const labelForTx = (tx: typeof recentTxns[number]): string | undefined => {
+    if (tx.type === 'transfer') {
+      const from = accountName.get(tx.accountId ?? '');
+      const to = accountName.get(tx.toAccountId ?? '');
+      return from && to ? `${from} → ${to}` : (from ?? to);
+    }
+    return accountName.get(tx.accountId ?? '');
+  };
 
   const income = useMemo(
     () => thisMoTxns.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0),
@@ -88,8 +116,11 @@ export default function Home() {
   //   - average daily *variable* spend so far × days left (forecast var)
   //   - remaining recurring expenses not yet paid (forecast bills)
   // Returns null when there's not enough data (first day of the month).
+  // On the last day `daysLeft === 0` is allowed through — the card reads
+  // as a final-state confirmation (projectedVar drops to 0, so
+  // forecast = disposable − remainingBills).
   const forecastBundle = useMemo(() => {
-    if (daysElapsed < 1 || daysLeft === 0) return null;
+    if (daysElapsed < 1) return null;
     const avgDailyVar = expense / daysElapsed;
     const projectedVar = avgDailyVar * daysLeft;
     const remainingBills = recurring
@@ -227,6 +258,11 @@ export default function Home() {
                   key={tx.id}
                   t={tx}
                   currency={currency}
+                  accountLabel={labelForTx(tx)}
+                  fromCurrency={accountCcyMap.get(tx.accountId ?? '')}
+                  toCurrency={tx.toAccountId ? accountCcyMap.get(tx.toAccountId) : undefined}
+                  accountIcon={accountMeta.get(tx.accountId ?? '')?.icon}
+                  accountColor={accountMeta.get(tx.accountId ?? '')?.color}
                   onPressMore={() =>
                     router.push({
                       pathname: '/add',

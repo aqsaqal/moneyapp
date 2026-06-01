@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "সেই ফাইলটি বৈধ JSON নয়।",
   "me.import.error.notAnExport": "সেই ফাইলটি MoneyFlow এক্সপোর্টের মতো দেখাচ্ছে না।",
   "me.import.error.tooNew": "ব্যাকআপটি অ্যাপের নতুন সংস্করণ থেকে (স্কিমা v{v})। অ্যাপ আপডেট করুন এবং আবার চেষ্টা করুন।",
-  "me.import.error.noTables": "এই ফাইলে কোনো স্বীকৃত ডেটা টেবিল নেই।"
+  "me.import.error.noTables": "এই ফাইলে কোনো স্বীকৃত ডেটা টেবিল নেই।",
+  "recurring.title.new.expense": "নতুন পুনরাবৃত্ত খরচ",
+  "recurring.title.new.income": "নতুন পুনরাবৃত্ত আয়",
+  "recurring.title.edit.expense": "পুনরাবৃত্ত খরচ সম্পাদনা",
+  "recurring.title.edit.income": "পুনরাবৃত্ত আয় সম্পাদনা",
+  "category.edit": "বিভাগ সম্পাদনা"
 }

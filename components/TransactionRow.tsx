@@ -1,7 +1,7 @@
 // TransactionRow — ports v4 TxRow (lines 276-310) with long-press action sheet.
 
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Icon } from './Icon';
@@ -22,9 +22,24 @@ export interface TransactionRowProps {
    *  in the Upcoming section. Renders as a small colored pill next to
    *  the name. */
   tag?: { text: string; color: string };
+  /** Account context for the row. Caller resolves account ids → names
+   *  (cheap once per render) so this component doesn't have to fan out
+   *  N SQLite queries from N rows. For transfers, format the label as
+   *  "From → To". */
+  accountLabel?: string;
+  /** Per-side currency, only used by cross-currency transfer rows to
+   *  render "100 USD" main + "50,000 KZT" sub. Same lookup-once policy
+   *  as accountLabel — caller passes them so the row doesn't query. */
+  fromCurrency?: CurrencyCode;
+  toCurrency?: CurrencyCode;
+  /** Small account icon shown next to accountLabel — caller passes the
+   *  account's stored MCI name + brand color. For transfers this is
+   *  the FROM-side account (the debit, the "where the money came from"). */
+  accountIcon?: string;
+  accountColor?: string;
 }
 
-export function TransactionRow({ t, currency = 'USD', onPressMore, tag }: TransactionRowProps) {
+export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountLabel, fromCurrency, toCurrency, accountIcon, accountColor }: TransactionRowProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
 
   // Title = category (or "Transfer"); subtitle = user-typed note when set.
@@ -58,10 +73,25 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag }: Transa
   }
   const note = t.note?.trim() || null;
 
+  const confirmDelete = () => {
+    Alert.alert(
+      i18nT('tx.deleteConfirm.title'),
+      i18nT('tx.deleteConfirm.body', { undone: i18nT('common.cannotBeUndone') }),
+      [
+        { text: i18nT('common.cancel'), style: 'cancel' },
+        {
+          text: i18nT('common.delete'),
+          style: 'destructive',
+          onPress: () => deleteTransaction(t.id),
+        },
+      ],
+    );
+  };
+
   const renderRightActions = () => (
     <Pressable
       style={styles.swipeAction}
-      onPress={() => deleteTransaction(t.id)}
+      onPress={confirmDelete}
       accessibilityRole="button"
       accessibilityLabel={i18nT('common.delete')}
     >
@@ -103,6 +133,18 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag }: Transa
                 </Text>
               )}
             </View>
+            {accountLabel && (
+              <View style={styles.accountRow}>
+                {accountIcon && (
+                  <Icon
+                    name={accountIcon}
+                    size={12}
+                    color={accountColor ?? theme.text3}
+                  />
+                )}
+                <Text style={styles.account} numberOfLines={1}>{accountLabel}</Text>
+              </View>
+            )}
             {note && (
               <Text style={styles.note} numberOfLines={1}>{note}</Text>
             )}
@@ -116,32 +158,82 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag }: Transa
             )}
           </View>
           <View style={styles.amountStack}>
-            {/* Multi-currency: when the user spent in a different currency
-                than the account, show the original amount LARGE and the
-                account-currency withdrawal SMALL beneath — matches the
-                1money pattern. Same-currency txns just show one number. */}
-            {t.originalAmount != null && t.originalCurrency && t.originalCurrency !== currency ? (
-              <>
+            {/* Four display modes:
+                  1. Triple-currency TRANSFER: entry currency differs
+                     from both account currencies. Large = entered
+                     amount in entry currency; sub = debit · credit on
+                     one line with a raised middle dot.
+                  2. Cross-currency TRANSFER: entry currency matches
+                     one of the account currencies. Large = From-side
+                     debit, sub = To-side credit.
+                  3. Mixed-currency expense/income (originalCurrency set
+                     and ≠ display): original entry LARGE, account-side
+                     withdrawal SMALL beneath.
+                  4. Otherwise: single amount in display currency. */}
+            {(() => {
+              const isCrossXfer =
+                t.type === 'transfer' &&
+                t.toAmount != null &&
+                fromCurrency && toCurrency &&
+                fromCurrency !== toCurrency;
+              const tripleXfer =
+                isCrossXfer &&
+                t.originalAmount != null &&
+                t.originalCurrency &&
+                t.originalCurrency !== fromCurrency &&
+                t.originalCurrency !== toCurrency;
+              if (tripleXfer) {
+                return (
+                  <>
+                    <Text style={[styles.amount, { color: amountColor }]}>
+                      {sign}
+                      {formatMoney(t.originalAmount!, t.originalCurrency as CurrencyCode)}
+                    </Text>
+                    <Text style={styles.amountSub}>
+                      {formatMoney(t.amount, fromCurrency!)} · {formatMoney(t.toAmount!, toCurrency!)}
+                    </Text>
+                  </>
+                );
+              }
+              if (isCrossXfer) {
+                return (
+                  <>
+                    <Text style={[styles.amount, { color: amountColor }]}>
+                      {sign}
+                      {formatMoney(t.amount, fromCurrency!)}
+                    </Text>
+                    <Text style={styles.amountSub}>
+                      {formatMoney(t.toAmount!, toCurrency!)}
+                    </Text>
+                  </>
+                );
+              }
+              if (t.originalAmount != null && t.originalCurrency && t.originalCurrency !== currency) {
+                return (
+                  <>
+                    <Text style={[styles.amount, { color: amountColor }]}>
+                      {sign}
+                      {formatMoney(t.originalAmount, t.originalCurrency as CurrencyCode)}
+                    </Text>
+                    <Text style={styles.amountSub}>
+                      {formatMoney(t.amount, currency)}
+                    </Text>
+                  </>
+                );
+              }
+              return (
                 <Text style={[styles.amount, { color: amountColor }]}>
                   {sign}
-                  {formatMoney(t.originalAmount, t.originalCurrency as CurrencyCode)}
-                </Text>
-                <Text style={styles.amountSub}>
                   {formatMoney(t.amount, currency)}
                 </Text>
-              </>
-            ) : (
-              <Text style={[styles.amount, { color: amountColor }]}>
-                {sign}
-                {formatMoney(t.amount, currency)}
-              </Text>
-            )}
+              );
+            })()}
           </View>
         </Pressable>
       </Swipeable>
       {sheetOpen && (
         <View style={styles.sheet}>
-          <Pressable style={styles.sheetItem} onPress={() => { deleteTransaction(t.id); setSheetOpen(false); }}>
+          <Pressable style={styles.sheetItem} onPress={() => { setSheetOpen(false); confirmDelete(); }}>
             <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.expense} />
             <Text style={[styles.sheetText, { color: theme.expense }]}>{i18nT('common.delete')}</Text>
           </Pressable>
@@ -185,6 +277,13 @@ const styles = StyleSheet.create({
     color: theme.text1,
     fontSize: sizes.md,
     fontFamily: font.body,
+  },
+  accountRow: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 2 },
+  account: {
+    color: theme.text2,
+    fontSize: sizes.xs,
+    fontFamily: font.body,
+    flexShrink: 1,
   },
   note: {
     color: theme.text3,

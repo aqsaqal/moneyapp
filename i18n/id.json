@@ -402,5 +402,10 @@
   "me.import.error.invalidJson": "File itu bukan JSON yang valid.",
   "me.import.error.notAnExport": "File itu tidak terlihat seperti ekspor MoneyFlow.",
   "me.import.error.tooNew": "Cadangan berasal dari versi aplikasi yang lebih baru (skema v{v}). Perbarui aplikasi dan coba lagi.",
-  "me.import.error.noTables": "Tidak ada tabel data yang dikenali di file ini."
+  "me.import.error.noTables": "Tidak ada tabel data yang dikenali di file ini.",
+  "recurring.title.new.expense": "Pengeluaran berulang baru",
+  "recurring.title.new.income": "Pemasukan berulang baru",
+  "recurring.title.edit.expense": "Edit pengeluaran berulang",
+  "recurring.title.edit.income": "Edit pemasukan berulang",
+  "category.edit": "Edit kategori"
 }

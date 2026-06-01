@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "הקובץ אינו JSON תקין.",
   "me.import.error.notAnExport": "הקובץ אינו נראה כייצוא של MoneyFlow.",
   "me.import.error.tooNew": "הגיבוי מגרסה חדשה יותר של האפליקציה (סכמה v{v}). עדכן את האפליקציה ונסה שוב.",
-  "me.import.error.noTables": "אין טבלאות נתונים מזוהות בקובץ זה."
+  "me.import.error.noTables": "אין טבלאות נתונים מזוהות בקובץ זה.",
+  "recurring.title.new.expense": "הוצאה חוזרת חדשה",
+  "recurring.title.new.income": "הכנסה חוזרת חדשה",
+  "recurring.title.edit.expense": "עריכת הוצאה חוזרת",
+  "recurring.title.edit.income": "עריכת הכנסה חוזרת",
+  "category.edit": "עריכת קטגוריה"
 }

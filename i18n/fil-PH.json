@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Hindi valid na JSON ang file na iyon.",
   "me.import.error.notAnExport": "Hindi mukhang export ng MoneyFlow ang file na iyon.",
   "me.import.error.tooNew": "Galing sa mas bagong bersyon ng app ang backup (schema v{v}). I-update ang app at subukang muli.",
-  "me.import.error.noTables": "Walang nakikilalang data tables sa file na ito."
+  "me.import.error.noTables": "Walang nakikilalang data tables sa file na ito.",
+  "recurring.title.new.expense": "Bagong umuulit na gastos",
+  "recurring.title.new.income": "Bagong umuulit na kita",
+  "recurring.title.edit.expense": "I-edit ang umuulit na gastos",
+  "recurring.title.edit.income": "I-edit ang umuulit na kita",
+  "category.edit": "I-edit ang kategorya"
 }

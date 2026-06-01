@@ -58,11 +58,7 @@ export function PredictedStrip({
       {cat && acct && <Text style={styles.dot}>·</Text>}
       {acct && (
         <View style={styles.tagRow}>
-          <MaterialCommunityIcons
-            name="wallet-outline"
-            size={14}
-            color={acct.color}
-          />
+          <Icon name={acct.icon} size={14} color={acct.color} />
           <Text style={[styles.tagText, { color: acct.color }]}>{acct.name}</Text>
         </View>
       )}

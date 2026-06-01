@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Tento soubor není platný JSON.",
   "me.import.error.notAnExport": "Tento soubor nevypadá jako export MoneyFlow.",
   "me.import.error.tooNew": "Záloha pochází z novější verze aplikace (schéma v{v}). Aktualizujte aplikaci a zkuste to znovu.",
-  "me.import.error.noTables": "V tomto souboru nejsou žádné rozpoznatelné datové tabulky."
+  "me.import.error.noTables": "V tomto souboru nejsou žádné rozpoznatelné datové tabulky.",
+  "recurring.title.new.expense": "Nový pravidelný výdaj",
+  "recurring.title.new.income": "Nový pravidelný příjem",
+  "recurring.title.edit.expense": "Upravit pravidelný výdaj",
+  "recurring.title.edit.income": "Upravit pravidelný příjem",
+  "category.edit": "Upravit kategorii"
 }

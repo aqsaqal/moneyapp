@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Този файл не е валиден JSON.",
   "me.import.error.notAnExport": "Този файл не изглежда като експорт на MoneyFlow.",
   "me.import.error.tooNew": "Резервното копие е от по-нова версия на приложението (схема v{v}). Актуализирайте приложението и опитайте отново.",
-  "me.import.error.noTables": "Няма разпознаваеми таблици с данни в този файл."
+  "me.import.error.noTables": "Няма разпознаваеми таблици с данни в този файл.",
+  "recurring.title.new.expense": "Нов повтарящ се разход",
+  "recurring.title.new.income": "Нов повтарящ се доход",
+  "recurring.title.edit.expense": "Редакция на повтарящ се разход",
+  "recurring.title.edit.income": "Редакция на повтарящ се доход",
+  "category.edit": "Редактиране на категория"
 }

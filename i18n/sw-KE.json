@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Faili hiyo si JSON halali.",
   "me.import.error.notAnExport": "Faili hiyo haionekani kama usafirishaji wa MoneyFlow.",
   "me.import.error.tooNew": "Nakala rudufu inatoka kwenye toleo jipya zaidi la programu (schema v{v}). Sasisha programu na ujaribu tena.",
-  "me.import.error.noTables": "Hakuna majedwali ya data yanayotambulika katika faili hii."
+  "me.import.error.noTables": "Hakuna majedwali ya data yanayotambulika katika faili hii.",
+  "recurring.title.new.expense": "Gharama mpya inayojirudia",
+  "recurring.title.new.income": "Mapato mapya yanayojirudia",
+  "recurring.title.edit.expense": "Hariri gharama inayojirudia",
+  "recurring.title.edit.income": "Hariri mapato yanayojirudia",
+  "category.edit": "Hariri kategoria"
 }

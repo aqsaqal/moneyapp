@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "该文件不是有效的 JSON。",
   "me.import.error.notAnExport": "该文件看起来不像 MoneyFlow 导出。",
   "me.import.error.tooNew": "备份来自较新版本的应用（模式 v{v}）。请更新应用并重试。",
-  "me.import.error.noTables": "此文件中没有可识别的数据表。"
+  "me.import.error.noTables": "此文件中没有可识别的数据表。",
+  "recurring.title.new.expense": "新建定期支出",
+  "recurring.title.new.income": "新建定期收入",
+  "recurring.title.edit.expense": "编辑定期支出",
+  "recurring.title.edit.income": "编辑定期收入",
+  "category.edit": "编辑分类"
 }

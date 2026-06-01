@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Ai skedar nuk është JSON i vlefshëm.",
   "me.import.error.notAnExport": "Ai skedar nuk duket si një eksport i MoneyFlow.",
   "me.import.error.tooNew": "Rezerva është nga një version më i ri i aplikacionit (skema v{v}). Përditësoni aplikacionin dhe provoni përsëri.",
-  "me.import.error.noTables": "Asnjë tabelë e dhënash e njohur në këtë skedar."
+  "me.import.error.noTables": "Asnjë tabelë e dhënash e njohur në këtë skedar.",
+  "recurring.title.new.expense": "Shpenzim i ri i përsëritur",
+  "recurring.title.new.income": "Të ardhura të reja të përsëritura",
+  "recurring.title.edit.expense": "Modifiko shpenzimin e përsëritur",
+  "recurring.title.edit.income": "Modifiko të ardhurat e përsëritura",
+  "category.edit": "Modifiko kategorinë"
 }

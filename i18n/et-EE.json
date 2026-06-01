@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "See fail ei ole sobiv JSON.",
   "me.import.error.notAnExport": "See fail ei näe välja nagu MoneyFlow eksport.",
   "me.import.error.tooNew": "Varukoopia on rakenduse uuemast versioonist (skeem v{v}). Värskendage rakendust ja proovige uuesti.",
-  "me.import.error.noTables": "Selles failis pole tuvastatavaid andmetabeleid."
+  "me.import.error.noTables": "Selles failis pole tuvastatavaid andmetabeleid.",
+  "recurring.title.new.expense": "Uus korduv kulu",
+  "recurring.title.new.income": "Uus korduv sissetulek",
+  "recurring.title.edit.expense": "Muuda korduvat kulu",
+  "recurring.title.edit.income": "Muuda korduvat sissetulekut",
+  "category.edit": "Muuda kategooriat"
 }

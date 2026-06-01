@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Ta datoteka nije valjani JSON.",
   "me.import.error.notAnExport": "Ta datoteka ne izgleda kao MoneyFlow izvoz.",
   "me.import.error.tooNew": "Sigurnosna kopija je iz novije verzije aplikacije (shema v{v}). Ažurirajte aplikaciju i pokušajte ponovo.",
-  "me.import.error.noTables": "Nema prepoznatljivih tablica podataka u ovoj datoteci."
+  "me.import.error.noTables": "Nema prepoznatljivih tablica podataka u ovoj datoteci.",
+  "recurring.title.new.expense": "Novi ponavljajući trošak",
+  "recurring.title.new.income": "Novi ponavljajući prihod",
+  "recurring.title.edit.expense": "Uredi ponavljajući trošak",
+  "recurring.title.edit.income": "Uredi ponavljajući prihod",
+  "category.edit": "Uredi kategoriju"
 }

@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Та датотека није важећи JSON.",
   "me.import.error.notAnExport": "Та датотека не изгледа као MoneyFlow извоз.",
   "me.import.error.tooNew": "Резервна копија је из новије верзије апликације (шема v{v}). Ажурирајте апликацију и покушајте поново.",
-  "me.import.error.noTables": "У овој датотеци нема препознатљивих табела података."
+  "me.import.error.noTables": "У овој датотеци нема препознатљивих табела података.",
+  "recurring.title.new.expense": "Нови понављајући трошак",
+  "recurring.title.new.income": "Нови понављајући приход",
+  "recurring.title.edit.expense": "Уреди понављајући трошак",
+  "recurring.title.edit.income": "Уреди понављајући приход",
+  "category.edit": "Уреди категорију"
 }

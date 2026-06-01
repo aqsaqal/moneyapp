@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Az a fájl nem érvényes JSON.",
   "me.import.error.notAnExport": "Az a fájl nem MoneyFlow exportnak tűnik.",
   "me.import.error.tooNew": "A biztonsági mentés újabb alkalmazás-verzióból származik (séma v{v}). Frissítse az alkalmazást és próbálja újra.",
-  "me.import.error.noTables": "Nincs felismerhető adattábla ebben a fájlban."
+  "me.import.error.noTables": "Nincs felismerhető adattábla ebben a fájlban.",
+  "recurring.title.new.expense": "Új ismétlődő kiadás",
+  "recurring.title.new.income": "Új ismétlődő bevétel",
+  "recurring.title.edit.expense": "Ismétlődő kiadás szerkesztése",
+  "recurring.title.edit.income": "Ismétlődő bevétel szerkesztése",
+  "category.edit": "Kategória szerkesztése"
 }

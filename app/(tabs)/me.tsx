@@ -15,6 +15,7 @@ import {
   sectionStyles,
 } from '@/components/Sections';
 import { AccountSheet } from '@/components/AccountSheet';
+import { Icon } from '@/components/Icon';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { useAccounts, reorderAccounts } from '@/hooks/useAppData';
 import DraggableFlatList, { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-flatlist';
@@ -227,7 +228,7 @@ function OverviewAndAccounts() {
                   accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}${isArchived ? ', archived' : isExcluded ? ', excluded from total' : ''}, long-press to reorder`}
                 >
                   <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
-                    <MaterialCommunityIcons name="wallet-outline" size={20} color={a.color} />
+                    <Icon name={a.icon} size={20} color={a.color} />
                   </View>
                   <View style={{ flex: 1 }}>
                     <View style={styles.acctNameRow}>

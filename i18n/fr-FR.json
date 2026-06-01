@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Ce fichier n'est pas un JSON valide.",
   "me.import.error.notAnExport": "Ce fichier ne ressemble pas à un export MoneyFlow.",
   "me.import.error.tooNew": "La sauvegarde provient d'une version plus récente de l'application (schéma v{v}). Mettez à jour l'application et réessayez.",
-  "me.import.error.noTables": "Aucune table de données reconnue dans ce fichier."
+  "me.import.error.noTables": "Aucune table de données reconnue dans ce fichier.",
+  "recurring.title.new.expense": "Nouvelle dépense récurrente",
+  "recurring.title.new.income": "Nouveau revenu récurrent",
+  "recurring.title.edit.expense": "Modifier la dépense récurrente",
+  "recurring.title.edit.income": "Modifier le revenu récurrent",
+  "category.edit": "Modifier la catégorie"
 }

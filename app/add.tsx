@@ -77,6 +77,11 @@ export default function AddScreen() {
   const t = useT();
   const haptics = useHaptics();
   const accounts = useAccounts();
+  // Full account set including archived. Used ONLY by the transfer
+  // pickers so an edited transfer that references a since-archived
+  // account can still display + re-select that account on its side.
+  // Active pickers (expense/income) keep using the filtered `accounts`.
+  const allAccounts = useAccounts({ includeArchived: true });
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const locale = kv.get('locale') ?? 'en-US';
 
@@ -99,6 +104,11 @@ export default function AddScreen() {
       originalCurrency?: string;
       date?: number;
       recurringId?: string;
+      /** The month the user originally tapped a recurring's checkbox
+       *  from. Set by the Plan tab; used at submit to key the
+       *  paid_items link so future-dated txns still mark THIS month
+       *  as paid. */
+      markMonth?: string;
       editId?: string;
     } | null;
   }, [params.prefill]);
@@ -135,7 +145,7 @@ export default function AddScreen() {
   // mid-market quote — we honor that instead of the auto conversion.
   // null = use auto convert(); a number string = override.
   const [accountAmountOverride, setAccountAmountOverride] = useState<string | null>(
-    prefill?.accountAmount != null ? String(prefill.accountAmount) : null,
+    prefill?.accountAmount != null ? prefill.accountAmount.toFixed(2) : null,
   );
   // Phase 10z: independent override for the destination side of a
   // transfer. From-side keeps using accountAmountOverride above so the
@@ -161,7 +171,7 @@ export default function AddScreen() {
       setEntryCurrency(prefill.originalCurrency as CurrencyCode);
     }
     if (prefill.accountAmount != null) {
-      setAccountAmountOverride(String(prefill.accountAmount));
+      setAccountAmountOverride(prefill.accountAmount.toFixed(2));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.prefill]);
@@ -352,8 +362,11 @@ export default function AddScreen() {
       : mode === 'income'
         ? acctCurrencyFor(effectiveAcct)
         : null;
-  // Default transaction currency: From for expense/transfer, To for
-  // income (the money lands there; entry naturally reads in that ccy).
+  // Default transaction currency: From for expense/transfer (debit
+  // side), To for income. For transfers this means the user types in
+  // the source account's currency and the destination is credited
+  // with the FX-converted amount. Matches the "I'm sending $100 from
+  // my dollar account" mental model.
   const primaryAccountCcy = mode === 'income' ? toAccountCcy : fromAccountCcy;
   const effectiveEntryCurrency: CurrencyCode =
     entryCurrency ?? primaryAccountCcy ?? currency;
@@ -420,6 +433,15 @@ export default function AddScreen() {
     };
     if (mode === 'transfer') {
       if (fromAcct === toAcct) return;
+      // Cross-currency: the From-side debit is `accountAmount` (in
+      // fromAccountCcy, computed above). The To-side credit is the
+      // entry amount converted into toAccountCcy. Same currency on
+      // both sides → toAmount stays null (legacy single-amount path).
+      const toCcy = toAccountCcy ?? currency;
+      const toAmount =
+        fromAccountCcy && toCcy && fromAccountCcy !== toCcy
+          ? convert(v, effectiveEntryCurrency, toCcy)
+          : null;
       if (isEditing && prefill?.editId) {
         updateTransaction(prefill.editId, {
           type: 'transfer',
@@ -431,6 +453,7 @@ export default function AddScreen() {
           date: txDate.getTime(),
           originalAmount,
           originalCurrency,
+          toAmount,
         });
       } else {
         try {
@@ -443,6 +466,7 @@ export default function AddScreen() {
             date: txDate.getTime(),
             originalAmount,
             originalCurrency,
+            toAmount,
           }, { skipCashCheck: opts.skipCashCheck });
           createdTxId = tx.id;
         } catch (e) {
@@ -494,9 +518,16 @@ export default function AddScreen() {
       }
     }
     // Phase 10v: when launched from a recurring row's checkbox, flip
-    // the row to "paid" by inserting the paid_items link.
+    // the row to "paid" by inserting the paid_items link. The Plan
+    // tab stamps the month the user tapped from in `markMonth`, so a
+    // future-dated transaction still ticks the originating month
+    // rather than the future month. Fallback to txDate's month when
+    // markMonth is missing (e.g. older callers).
     if (createdTxId && prefill?.recurringId) {
-      linkRecurringPaid(prefill.recurringId, createdTxId, txDate);
+      const markDate = prefill.markMonth
+        ? new Date(`${prefill.markMonth}-01T00:00:00`)
+        : txDate;
+      linkRecurringPaid(prefill.recurringId, createdTxId, markDate);
     }
     // Re-open the lower brace below by aliasing — restoring the
     // original else-block close.
@@ -699,23 +730,48 @@ export default function AddScreen() {
               income    →  From category · To account
               transfer  →  From account · To account
             Predicted values populate initially; tap to change. */}
-        {mode === 'transfer' ? (
-          <View style={styles.transferRow}>
-            <TransferAcctRow
-              label={t('add.transfer.from')}
-              accounts={accounts}
-              value={fromAcct}
-              onPick={setFromAcct}
-            />
-            <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
-            <TransferAcctRow
-              label={t('add.transfer.to')}
-              accounts={accounts}
-              value={toAcct}
-              onPick={setToAcct}
-            />
-          </View>
-        ) : (
+        {mode === 'transfer' ? (() => {
+          // Both pickers see the same set: active accounts plus any
+          // archived account that's currently selected on either side
+          // (so the user can swap to it when editing a transfer whose
+          // wallet was retired). Same-account collisions are resolved
+          // via swap on the onPick side, not by hiding.
+          const archivedHere = (sideValue: string) => {
+            const arc = allAccounts.find((a) => a.id === sideValue && a.archived === 1);
+            return arc ? [arc] : [];
+          };
+          const pickerList = [
+            ...accounts,
+            ...archivedHere(fromAcct),
+            ...archivedHere(toAcct).filter((a) => a.id !== fromAcct),
+          ];
+          return (
+            <View style={styles.transferRow}>
+              <TransferAcctRow
+                label={t('add.transfer.from')}
+                accounts={pickerList}
+                value={fromAcct}
+                onPick={(id) => {
+                  // Picking the account that's already on To swaps the
+                  // two sides instead of nudging To to the next active
+                  // account — natural "I'm reversing this transfer" UX.
+                  if (id === toAcct) setToAcct(fromAcct);
+                  setFromAcct(id);
+                }}
+              />
+              <MaterialCommunityIcons name="arrow-right" size={20} color={theme.text3} />
+              <TransferAcctRow
+                label={t('add.transfer.to')}
+                accounts={pickerList}
+                value={toAcct}
+                onPick={(id) => {
+                  if (id === fromAcct) setFromAcct(toAcct);
+                  setToAcct(id);
+                }}
+              />
+            </View>
+          );
+        })() : (
           (() => {
             // High-confidence prediction (>70%) = L1 keyword or L2
             // merchant memory had at least one supporting prior add.
@@ -897,8 +953,21 @@ export default function AddScreen() {
         {isEditing && prefill?.editId && (
           <Pressable
             onPress={() => {
-              deleteTransaction(prefill.editId!);
-              router.back();
+              Alert.alert(
+                t('tx.deleteConfirm.title'),
+                t('tx.deleteConfirm.body', { undone: t('common.cannotBeUndone') }),
+                [
+                  { text: t('common.cancel'), style: 'cancel' },
+                  {
+                    text: t('common.delete'),
+                    style: 'destructive',
+                    onPress: () => {
+                      deleteTransaction(prefill.editId!);
+                      router.back();
+                    },
+                  },
+                ],
+              );
             }}
             style={styles.deleteRow}
             accessibilityRole="button"
@@ -963,9 +1032,11 @@ function ConversionLine({
   onChange: (v: string | null) => void;
   showAcctName: boolean;
 }) {
-  const auto = convert(srcAmount, srcCurrency, dstCurrency).toFixed(
-    CURRENCIES[dstCurrency].decimalDigits,
-  );
+  // Always round the converted preview to 2 decimals regardless of the
+  // currency's natural minor unit (KZT has 0, KWD has 3, etc.). Keeps
+  // the conversion strip visually consistent and surfaces sub-unit
+  // precision on currencies that nominally truncate to whole units.
+  const auto = convert(srcAmount, srcCurrency, dstCurrency).toFixed(2);
   const label = direction === 'from'
     ? (showAcctName ? `deducted from ${fromAcctName}` : 'will be deducted')
     : (showAcctName ? `deposited to ${fromAcctName}` : 'will be deposited');

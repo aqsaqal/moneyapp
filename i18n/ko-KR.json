@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "해당 파일은 유효한 JSON이 아닙니다.",
   "me.import.error.notAnExport": "해당 파일은 MoneyFlow 내보내기로 보이지 않습니다.",
   "me.import.error.tooNew": "백업이 최신 앱 버전에서 만들어졌습니다 (스키마 v{v}). 앱을 업데이트한 후 다시 시도하세요.",
-  "me.import.error.noTables": "이 파일에는 인식 가능한 데이터 테이블이 없습니다."
+  "me.import.error.noTables": "이 파일에는 인식 가능한 데이터 테이블이 없습니다.",
+  "recurring.title.new.expense": "새 정기 지출",
+  "recurring.title.new.income": "새 정기 수입",
+  "recurring.title.edit.expense": "정기 지출 편집",
+  "recurring.title.edit.income": "정기 수입 편집",
+  "category.edit": "카테고리 편집"
 }

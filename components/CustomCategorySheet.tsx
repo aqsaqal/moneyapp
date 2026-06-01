@@ -165,7 +165,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
           <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
             <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
           </Pressable>
-          <Text style={styles.title}>{editing ? t('common.edit') : t('category.new')}</Text>
+          <Text style={styles.title}>{editing ? t('category.edit') : t('category.new')}</Text>
           <Pressable onPress={save} hitSlop={10} accessibilityLabel={t('common.save')}>
             <MaterialCommunityIcons name="check" size={22} color={theme.accent} />
           </Pressable>

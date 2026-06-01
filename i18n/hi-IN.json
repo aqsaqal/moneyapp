@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "वह फ़ाइल मान्य JSON नहीं है।",
   "me.import.error.notAnExport": "वह फ़ाइल MoneyFlow एक्सपोर्ट जैसी नहीं दिखती।",
   "me.import.error.tooNew": "बैकअप ऐप के एक नए संस्करण से है (स्कीमा v{v})। ऐप को अपडेट करें और पुनः प्रयास करें।",
-  "me.import.error.noTables": "इस फ़ाइल में कोई पहचानने योग्य डेटा तालिका नहीं है।"
+  "me.import.error.noTables": "इस फ़ाइल में कोई पहचानने योग्य डेटा तालिका नहीं है।",
+  "recurring.title.new.expense": "नया आवर्ती खर्च",
+  "recurring.title.new.income": "नई आवर्ती आय",
+  "recurring.title.edit.expense": "आवर्ती खर्च संपादित करें",
+  "recurring.title.edit.income": "आवर्ती आय संपादित करें",
+  "category.edit": "श्रेणी संपादित करें"
 }

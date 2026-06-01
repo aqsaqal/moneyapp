@@ -402,5 +402,10 @@
   "me.import.error.invalidJson": "هذا الملف ليس JSON صالحًا.",
   "me.import.error.notAnExport": "لا يبدو هذا الملف كملف تصدير MoneyFlow.",
   "me.import.error.tooNew": "النسخة الاحتياطية من إصدار أحدث من التطبيق (الإصدار v{v} من المخطط). قم بتحديث التطبيق وحاول مرة أخرى.",
-  "me.import.error.noTables": "لا توجد جداول بيانات معروفة في هذا الملف."
+  "me.import.error.noTables": "لا توجد جداول بيانات معروفة في هذا الملف.",
+  "recurring.title.new.expense": "مصروف متكرر جديد",
+  "recurring.title.new.income": "دخل متكرر جديد",
+  "recurring.title.edit.expense": "تعديل المصروف المتكرر",
+  "recurring.title.edit.income": "تعديل الدخل المتكرر",
+  "category.edit": "تعديل الفئة"
 }

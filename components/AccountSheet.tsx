@@ -35,6 +35,7 @@ import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { SettingRow } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
+import { Icon } from '@/components/Icon';
 import {
   upsertAccount,
   deleteAccount,
@@ -56,6 +57,17 @@ const TYPES: { value: AccountType; label: string; icon: string; defaultColor: st
   { value: 'savings', label: 'Savings', icon: 'PiggyBank', defaultColor: '#FFBE44' },
   { value: 'debt', label: 'Debt / Loan', icon: 'CreditCard', defaultColor: '#F472B6' },
   { value: 'investment', label: 'Investment', icon: 'TrendingUp', defaultColor: '#06B6D4' },
+];
+
+// Account-icon palette — Lucide-style names that resolve through
+// ICON_MAP in constants/icons.tsx. Curated to cover the common
+// account vibes (cash, bank, savings, credit, salary, gift, home,
+// travel, investment, charity). The Account type's default icon
+// stays in the list so users can revert.
+const ACCOUNT_ICON_OPTIONS: string[] = [
+  'Wallet', 'Banknote', 'PiggyBank', 'CreditCard',
+  'TrendingUp', 'Briefcase', 'Home', 'Plane',
+  'Gift', 'Heart', 'Star', 'Target',
 ];
 
 const PALETTE = [
@@ -87,6 +99,15 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const [includeInTotal, setIncludeInTotal] = useState<boolean>(account?.includeInTotal !== 0);
   const [typePicker, setTypePicker] = useState(false);
   const [currencyPicker, setCurrencyPicker] = useState(false);
+  // Icon override: null = inherit the account-type default (existing
+  // behavior), any string = the legacy-Lucide icon name picked from
+  // ACCOUNT_ICON_OPTIONS below. Initialized from the stored value when
+  // editing; null on create so changing the type still updates the icon.
+  const [iconOverride, setIconOverride] = useState<string | null>(
+    account?.icon && account.icon !== TYPES.find((t) => t.value === (account?.type ?? 'cash'))?.icon
+      ? account.icon
+      : null,
+  );
 
   // Cascade-delete confirmation needs transaction counts so the user can
   // see what they're about to remove. Pulled here (not on first render of
@@ -99,15 +120,18 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   // Reset form when the sheet opens for a different account.
   useEffect(() => {
     if (visible) {
-      setType(account?.type ?? 'cash');
+      const initialType = account?.type ?? 'cash';
+      setType(initialType);
       setName(account?.name ?? '');
       setBalance(String(account?.balance ?? ''));
       setLimit(String(account?.creditLimit ?? ''));
-      setColor(account?.color ?? TYPES.find((t) => t.value === (account?.type ?? 'cash'))!.defaultColor);
+      setColor(account?.color ?? TYPES.find((t) => t.value === initialType)!.defaultColor);
       setCurrency((account?.currency as CurrencyCode | null | undefined) ?? defaultCurrency);
       setIsRiba(account?.isRiba === 1);
       setArchived(account?.archived === 1);
       setIncludeInTotal(account?.includeInTotal !== 0);
+      const typeDefault = TYPES.find((t) => t.value === initialType)?.icon;
+      setIconOverride(account?.icon && account.icon !== typeDefault ? account.icon : null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [visible, account]);
@@ -139,7 +163,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
         // creates and unchanged edits we set directly.
         balance: balanceChanged ? account!.balance : balanceNum,
         creditLimit: type === 'credit' ? parseFloat(limit) || null : null,
-        icon: typeMeta.icon,
+        icon: iconOverride ?? typeMeta.icon,
         color,
         sortOrder: account?.sortOrder ?? Date.now(),
         currency: currency === defaultCurrency ? null : currency,
@@ -173,7 +197,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
                 type,
                 balance: balanceNum,
                 creditLimit: type === 'credit' ? parseFloat(limit) || null : null,
-                icon: typeMeta.icon,
+                icon: iconOverride ?? typeMeta.icon,
                 color,
                 sortOrder: account?.sortOrder ?? Date.now(),
                 currency: currency === defaultCurrency ? null : currency,
@@ -465,6 +489,27 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
             </View>
           </View>
 
+          <View style={styles.field}>
+            <Text style={styles.fieldLabel}>{t('account.icon')}</Text>
+            <View style={styles.palette}>
+              {ACCOUNT_ICON_OPTIONS.map((iconName) => {
+                const active = (iconOverride ?? typeMeta.icon) === iconName;
+                return (
+                  <Pressable
+                    key={iconName}
+                    onPress={() => setIconOverride(iconName === typeMeta.icon ? null : iconName)}
+                    style={[styles.iconSwatch, active && { borderColor: color }]}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: active }}
+                    accessibilityLabel={`Icon ${iconName}`}
+                  >
+                    <Icon name={iconName} size={20} color={active ? color : theme.text2} />
+                  </Pressable>
+                );
+              })}
+            </View>
+          </View>
+
           {editing && (
             <Pressable onPress={askDelete} style={styles.deleteRow} accessibilityRole="button">
               <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.expense} />
@@ -542,6 +587,16 @@ const styles = StyleSheet.create({
   adjustHint: { color: theme.text3, fontSize: sizes.xs, fontStyle: 'italic' },
   palette: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   swatch: { width: 36, height: 36, borderRadius: 18, borderWidth: 2, borderColor: 'transparent' },
+  iconSwatch: {
+    width: 40,
+    height: 40,
+    borderRadius: radii.md,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    backgroundColor: theme.bg3,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   swatchSel: { borderColor: theme.text1 },
   deleteRow: {
     flexDirection: 'row',

@@ -402,5 +402,10 @@
   "me.import.error.invalidJson": "Бұл файл жарамды JSON емес.",
   "me.import.error.notAnExport": "Бұл файл MoneyFlow экспортына ұқсамайды.",
   "me.import.error.tooNew": "Сақтық көшірме қолданбаның жаңа нұсқасынан (сұлба v{v}). Қолданбаны жаңартып қайталап көріңіз.",
-  "me.import.error.noTables": "Бұл файлда танылатын дерек кестелері жоқ."
+  "me.import.error.noTables": "Бұл файлда танылатын дерек кестелері жоқ.",
+  "recurring.title.new.expense": "Жаңа қайталанатын шығыс",
+  "recurring.title.new.income": "Жаңа қайталанатын кіріс",
+  "recurring.title.edit.expense": "Қайталанатын шығысты өңдеу",
+  "recurring.title.edit.income": "Қайталанатын кірісті өңдеу",
+  "category.edit": "Санатты өңдеу"
 }

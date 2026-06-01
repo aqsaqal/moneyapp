@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Bu fayl etibarlı JSON deyil.",
   "me.import.error.notAnExport": "Bu fayl MoneyFlow eksporta bənzəmir.",
   "me.import.error.tooNew": "Yedək tətbiqin daha yeni versiyasındandır (sxem v{v}). Tətbiqi yeniləyin və yenidən cəhd edin.",
-  "me.import.error.noTables": "Bu faylda tanınan məlumat cədvəlləri yoxdur."
+  "me.import.error.noTables": "Bu faylda tanınan məlumat cədvəlləri yoxdur.",
+  "recurring.title.new.expense": "Yeni təkrarlanan xərc",
+  "recurring.title.new.income": "Yeni təkrarlanan gəlir",
+  "recurring.title.edit.expense": "Təkrarlanan xərci redaktə et",
+  "recurring.title.edit.income": "Təkrarlanan gəliri redaktə et",
+  "category.edit": "Kateqoriyanı redaktə et"
 }

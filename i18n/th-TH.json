@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "ไฟล์นั้นไม่ใช่ JSON ที่ถูกต้อง",
   "me.import.error.notAnExport": "ไฟล์นั้นไม่ดูเหมือนการส่งออก MoneyFlow",
   "me.import.error.tooNew": "ข้อมูลสำรองมาจากแอปเวอร์ชันใหม่กว่า (สคีมา v{v}) อัปเดตแอปและลองอีกครั้ง",
-  "me.import.error.noTables": "ไม่มีตารางข้อมูลที่จดจำได้ในไฟล์นี้"
+  "me.import.error.noTables": "ไม่มีตารางข้อมูลที่จดจำได้ในไฟล์นี้",
+  "recurring.title.new.expense": "ค่าใช้จ่ายซ้ำใหม่",
+  "recurring.title.new.income": "รายได้ซ้ำใหม่",
+  "recurring.title.edit.expense": "แก้ไขค่าใช้จ่ายซ้ำ",
+  "recurring.title.edit.income": "แก้ไขรายได้ซ้ำ",
+  "category.edit": "แก้ไขหมวดหมู่"
 }

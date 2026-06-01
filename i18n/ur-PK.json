@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "یہ فائل درست JSON نہیں ہے۔",
   "me.import.error.notAnExport": "یہ فائل MoneyFlow ایکسپورٹ کی طرح نہیں لگتی۔",
   "me.import.error.tooNew": "بیک اپ ایپ کے نئے ورژن سے ہے (سکیما v{v})۔ ایپ کو اپ ڈیٹ کریں اور دوبارہ کوشش کریں۔",
-  "me.import.error.noTables": "اس فائل میں کوئی قابل شناخت ڈیٹا ٹیبل نہیں ہے۔"
+  "me.import.error.noTables": "اس فائل میں کوئی قابل شناخت ڈیٹا ٹیبل نہیں ہے۔",
+  "recurring.title.new.expense": "نیا بار بار ہونے والا اخراجات",
+  "recurring.title.new.income": "نئی بار بار ہونے والی آمدنی",
+  "recurring.title.edit.expense": "بار بار ہونے والے اخراجات میں ترمیم",
+  "recurring.title.edit.income": "بار بار ہونے والی آمدنی میں ترمیم",
+  "category.edit": "زمرہ میں ترمیم"
 }

@@ -131,11 +131,12 @@ export default function Activity() {
   });
   const reachedLimit = txns.length >= pageLimit;
 
-  // Accounts map keyed by id — used to resolve each txn's source currency
-  // when computing the per-day net sum below. Missing/null currency on
-  // an account falls back to the user's display currency (same rule the
-  // rest of the app uses).
-  const accounts = useAccounts();
+  // Accounts map keyed by id — used to resolve each txn's source
+  // currency when computing the per-day net sum below, AND to surface
+  // the account name on each row. Includes archived so historical
+  // transactions still display their account context after the user
+  // has retired the wallet.
+  const accounts = useAccounts({ includeArchived: true });
   const accountCcy = useMemo(() => {
     const m = new Map<string, CurrencyCode>();
     accounts.forEach((a) => {
@@ -143,6 +144,26 @@ export default function Activity() {
     });
     return m;
   }, [accounts, currency]);
+  const accountName = useMemo(() => {
+    const m = new Map<string, string>();
+    accounts.forEach((a) => m.set(a.id, a.name));
+    return m;
+  }, [accounts]);
+  // Icon + brand color keyed by id so rows can render a tiny chip next
+  // to the account-label line. Built once per render — rows stay dumb.
+  const accountMeta = useMemo(() => {
+    const m = new Map<string, { icon: string; color: string }>();
+    accounts.forEach((a) => m.set(a.id, { icon: a.icon, color: a.color }));
+    return m;
+  }, [accounts]);
+  const labelFor = (tx: typeof txns[number]): string | undefined => {
+    if (tx.type === 'transfer') {
+      const from = accountName.get(tx.accountId ?? '');
+      const to = accountName.get(tx.toAccountId ?? '');
+      return from && to ? `${from} → ${to}` : (from ?? to);
+    }
+    return accountName.get(tx.accountId ?? '');
+  };
 
   const grouped = useMemo(() => {
     const g = new Map<string, typeof txns>();
@@ -383,6 +404,11 @@ export default function Activity() {
                   key={tx.id}
                   t={tx}
                   currency={currency}
+                  accountLabel={labelFor(tx)}
+                  fromCurrency={accountCcy.get(tx.accountId ?? '')}
+                  toCurrency={tx.toAccountId ? accountCcy.get(tx.toAccountId) : undefined}
+                  accountIcon={accountMeta.get(tx.accountId ?? '')?.icon}
+                  accountColor={accountMeta.get(tx.accountId ?? '')?.color}
                   tag={{ text: 'scheduled', color: '#F59E0B' }}
                   onPressMore={() =>
                     router.push({
@@ -417,6 +443,11 @@ export default function Activity() {
                   key={tx.id}
                   t={tx}
                   currency={currency}
+                  accountLabel={labelFor(tx)}
+                  fromCurrency={accountCcy.get(tx.accountId ?? '')}
+                  toCurrency={tx.toAccountId ? accountCcy.get(tx.toAccountId) : undefined}
+                  accountIcon={accountMeta.get(tx.accountId ?? '')?.icon}
+                  accountColor={accountMeta.get(tx.accountId ?? '')?.color}
                   onPressMore={() =>
                     router.push({
                       pathname: '/add',

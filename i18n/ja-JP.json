@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "そのファイルは有効なJSONではありません。",
   "me.import.error.notAnExport": "そのファイルはMoneyFlowのエクスポートではないようです。",
   "me.import.error.tooNew": "バックアップは新しいアプリバージョンのものです (スキーマ v{v})。アプリを更新して再試行してください。",
-  "me.import.error.noTables": "このファイルには認識可能なデータテーブルがありません。"
+  "me.import.error.noTables": "このファイルには認識可能なデータテーブルがありません。",
+  "recurring.title.new.expense": "新しい定期支出",
+  "recurring.title.new.income": "新しい定期収入",
+  "recurring.title.edit.expense": "定期支出を編集",
+  "recurring.title.edit.income": "定期収入を編集",
+  "category.edit": "カテゴリーを編集"
 }

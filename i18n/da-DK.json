@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "Den fil er ikke gyldig JSON.",
   "me.import.error.notAnExport": "Den fil ligner ikke en MoneyFlow-eksport.",
   "me.import.error.tooNew": "Backup er fra en nyere appversion (skema v{v}). Opdater appen og prøv igen.",
-  "me.import.error.noTables": "Ingen genkendelige datatabeller i denne fil."
+  "me.import.error.noTables": "Ingen genkendelige datatabeller i denne fil.",
+  "recurring.title.new.expense": "Ny tilbagevendende udgift",
+  "recurring.title.new.income": "Ny tilbagevendende indkomst",
+  "recurring.title.edit.expense": "Rediger tilbagevendende udgift",
+  "recurring.title.edit.income": "Rediger tilbagevendende indkomst",
+  "category.edit": "Rediger kategori"
 }

@@ -403,5 +403,10 @@
   "me.import.error.invalidJson": "این فایل JSON معتبری نیست.",
   "me.import.error.notAnExport": "این فایل شبیه به یک خروجی MoneyFlow نیست.",
   "me.import.error.tooNew": "پشتیبان از نسخه جدیدتری از برنامه است (طرحواره v{v}). برنامه را به‌روزرسانی کنید و دوباره امتحان کنید.",
-  "me.import.error.noTables": "هیچ جدول داده شناخته‌شده‌ای در این فایل نیست."
+  "me.import.error.noTables": "هیچ جدول داده شناخته‌شده‌ای در این فایل نیست.",
+  "recurring.title.new.expense": "هزینه دوره‌ای جدید",
+  "recurring.title.new.income": "درآمد دوره‌ای جدید",
+  "recurring.title.edit.expense": "ویرایش هزینه دوره‌ای",
+  "recurring.title.edit.income": "ویرایش درآمد دوره‌ای",
+  "category.edit": "ویرایش دسته‌بندی"
 }

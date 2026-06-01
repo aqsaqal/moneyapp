@@ -39,6 +39,14 @@ export const transactions = sqliteTable(
     // historical rows have applied = NULL which we treat as 1 (legacy
     // = always applied) so the migration is a no-op for everyone.
     applied: integer('applied'),  // 0/1; null = legacy / always applied
+    // Cross-currency transfers: `amount` lives in the FROM account's
+    // currency (and powers the debit). `to_amount` is the credit value
+    // in the TO account's currency. Both are stored so the deposit
+    // can be reversed exactly on delete/edit without re-fetching FX
+    // (which may have drifted since the transfer was recorded).
+    // Null on non-transfer rows AND on same-currency transfers — the
+    // apply/reverse code treats null as "same as amount".
+    toAmount: real('to_amount'),
   },
   (t) => ({
     dateIdx: index('tx_date_idx').on(t.date),

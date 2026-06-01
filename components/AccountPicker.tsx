@@ -18,6 +18,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Icon } from '@/components/Icon';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import { convert } from '@/utils/fx';
@@ -56,7 +57,11 @@ export function AccountPicker({
   onClose,
 }: AccountPickerProps) {
   const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
-  const active = accounts.filter((a) => a.archived !== 1);
+  // Strip archived accounts as a defensive safety net, but keep the
+  // currently-selected one even if archived — needed when editing an
+  // old entry whose account was archived after creation. Without this
+  // clause the user can't see what's set on the row.
+  const active = accounts.filter((a) => a.archived !== 1 || a.id === value);
 
   return (
     <Modal
@@ -110,15 +115,14 @@ export function AccountPicker({
                 accessibilityLabel={`${a.name}, ${a.type}, ${formatMoney(a.balance, ac)}${isSelected ? ', selected' : ''}`}
               >
                 <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
-                  <MaterialCommunityIcons
-                    name={a.type === 'credit' ? 'credit-card-outline' : 'wallet-outline'}
-                    size={20}
-                    color={a.color}
-                  />
+                  <Icon name={a.icon} size={20} color={a.color} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <View style={styles.nameRow}>
-                    <Text style={styles.name}>{a.name}</Text>
+                    <Text style={[styles.name, a.archived === 1 && { opacity: 0.6 }]}>{a.name}</Text>
+                    {a.archived === 1 && (
+                      <Text style={styles.archivedTag}>{i18nT('accounts.archived')}</Text>
+                    )}
                     {wouldGoNegative && (
                       <Text style={styles.negTag}>may go negative</Text>
                     )}
@@ -227,6 +231,19 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
     borderColor: '#F59E0B55',
+    overflow: 'hidden',
+  },
+  archivedTag: {
+    color: theme.text3,
+    fontSize: 10,
+    fontFamily: font.bodySemi,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: theme.border,
     overflow: 'hidden',
   },
   checkBadge: {

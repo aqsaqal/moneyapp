@@ -223,6 +223,9 @@ function createTables(db: SQLite.SQLiteDatabase) {
     if (!cols.some((c) => c.name === 'applied')) {
       db.execSync(`ALTER TABLE transactions ADD COLUMN applied INTEGER;`);
     }
+    if (!cols.some((c) => c.name === 'to_amount')) {
+      db.execSync(`ALTER TABLE transactions ADD COLUMN to_amount REAL;`);
+    }
   } catch {
     /* swallow — fresh DB will already have the column from CREATE TABLE if we add it there in a future major. */
   }
