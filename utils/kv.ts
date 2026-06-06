@@ -74,6 +74,8 @@ export interface KVSchema {
   remindersEnabled: string;    // '1' = local bill-reminder notifications active (Phase 10t)
   reminderLeadDays: string;    // '0'..'7' days before dayOfMonth (Phase 10t)
   activityView: string;        // 'list' | 'categories' (Phase 10ac)
+  activityJumpToMonth: string; // YYYY-MM handoff from Insights screen → Activity carousel
+  activityJumpToView: string;  // 'list' | 'categories' — segment to land on after jump
 }
 
 export const kv = {

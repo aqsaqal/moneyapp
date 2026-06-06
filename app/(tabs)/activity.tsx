@@ -55,6 +55,22 @@ export default function Activity() {
     const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d;
   });
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
+  // Insights screen drops the user back here anchored to a chosen
+  // month via a kv handoff key. Read + clear on mount.
+  React.useEffect(() => {
+    const jump = kv.get('activityJumpToMonth');
+    if (typeof jump === 'string' && /^\d{4}-\d{2}$/.test(jump)) {
+      const [y, m] = jump.split('-').map(Number);
+      setAnalyticsMonth(new Date(y, m - 1, 1));
+      // Caller-supplied view hint. Defaults to 'list' for backward
+      // compat with the Insights chart's drill-down.
+      const v = kv.get('activityJumpToView');
+      setView(v === 'categories' ? 'categories' : 'list');
+      kv.delete('activityJumpToMonth');
+      kv.delete('activityJumpToView');
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // List-view filter drawer: collapsed by default so the top of the
   // tab is just the title + segmented control. Tap the filter icon
   // to reveal the search bar + category chip row. The auto-open-on-
@@ -130,6 +146,9 @@ export default function Activity() {
     limit: pageLimit,
   });
   const reachedLimit = txns.length >= pageLimit;
+  // Distinguish "no rows in THIS month" from "no rows at all". Cheap:
+  // single-row lifetime probe re-uses the version listener.
+  const hasAnyTxns = useTransactions({ limit: 1 }).length > 0;
 
   // Accounts map keyed by id — used to resolve each txn's source
   // currency when computing the per-day net sum below, AND to surface
@@ -271,10 +290,10 @@ export default function Activity() {
               </Pressable>
             )}
             <Pressable
-              onPress={() => setChartOpen(true)}
+              onPress={() => router.push('/insights' as never)}
               style={styles.filterToggle}
               accessibilityRole="button"
-              accessibilityLabel={t('activity.glance')}
+              accessibilityLabel={t('insights.title')}
               hitSlop={6}
             >
               <MaterialCommunityIcons name="chart-line" size={18} color={theme.text2} />
@@ -373,25 +392,31 @@ export default function Activity() {
           </Pressable>
         </View>
         <FeatureSlots.ActivityHeaderExtras />
-        {grouped.length === 0 && (
-          <View style={styles.emptyWrap}>
-            <MaterialCommunityIcons
-              name={search || filterCat || halalFilter ? 'filter-off-outline' : 'inbox-outline'}
-              size={48}
-              color={theme.text3}
-            />
-            <Text style={styles.emptyTitle}>
-              {search || filterCat || halalFilter
-                ? t('activity.empty.filtered.title')
-                : t('activity.empty.fresh.title')}
-            </Text>
-            <Text style={styles.emptyHint}>
-              {search || filterCat || halalFilter
-                ? t('activity.empty.filtered.hint')
-                : t('activity.empty.fresh.hint')}
-            </Text>
-          </View>
-        )}
+        {grouped.length === 0 && (() => {
+          // Three-way empty state:
+          //   - filtered (search / category / halal filter active)
+          //   - month-empty (user has txns in other months)
+          //   - fresh install
+          const isFiltered = !!(search || filterCat || halalFilter);
+          const variant = isFiltered
+            ? 'filtered'
+            : hasAnyTxns
+              ? 'period'
+              : 'fresh';
+          const iconName =
+            variant === 'filtered'
+              ? 'filter-off-outline'
+              : variant === 'period'
+                ? 'chart-bar'
+                : 'inbox-outline';
+          return (
+            <View style={styles.emptyWrap}>
+              <MaterialCommunityIcons name={iconName} size={48} color={theme.text3} />
+              <Text style={styles.emptyTitle}>{t(`activity.empty.${variant}.title`)}</Text>
+              <Text style={styles.emptyHint}>{t(`activity.empty.${variant}.hint`)}</Text>
+            </View>
+          );
+        })()}
         {/* Upcoming — future-dated transactions. Only shown when the
             user is viewing the current month; past months can't have
             scheduled-but-not-yet-executed rows by definition. */}

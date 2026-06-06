@@ -24,6 +24,7 @@ import { APP_NAME } from '@/constants/flavor';
 import { FeatureSlots } from '@/features';
 import { DisposableHeroCard, ForecastCard } from '@/components/BalanceCard';
 import { HomeActionCard } from '@/components/HomeActionCard';
+import { MonthGlanceCard } from '@/components/MonthGlanceCard';
 import { TransactionRow } from '@/components/TransactionRow';
 import { StreakBadge } from '@/components/StreakBadge';
 import {
@@ -110,10 +111,22 @@ export default function Home() {
   const daysElapsed = now.getDate();
   const daysLeft = Math.max(0, dim - daysElapsed);
 
+  // Variable expense = this-month expenses that AREN'T linked to a
+  // recurring item. Used as the basis for avg-daily-variable so a
+  // rent / subscription that posted on day 1 doesn't inflate the
+  // per-day rate. Recurring-linked expenses are accounted for via
+  // `fixedExp` and `remainingBills` separately.
+  const variableExpense = useMemo(
+    () => thisMoTxns
+      .filter((t) => t.type === 'expense' && !t.recurringId)
+      .reduce((s, t) => s + t.amount, 0),
+    [thisMoTxns],
+  );
+
   // Phase 10u — cashflow forecast. Project end-of-month disposable based
   // on:
   //   - what's already been spent + earned this month (committed)
-  //   - average daily *variable* spend so far × days left (forecast var)
+  //   - average daily *variable* (non-recurring) spend × days left
   //   - remaining recurring expenses not yet paid (forecast bills)
   // Returns null when there's not enough data (first day of the month).
   // On the last day `daysLeft === 0` is allowed through — the card reads
@@ -121,7 +134,7 @@ export default function Home() {
   // forecast = disposable − remainingBills).
   const forecastBundle = useMemo(() => {
     if (daysElapsed < 1) return null;
-    const avgDailyVar = expense / daysElapsed;
+    const avgDailyVar = variableExpense / daysElapsed;
     const projectedVar = avgDailyVar * daysLeft;
     const remainingBills = recurring
       .filter((r) => r.type === 'expense' && r.dayOfMonth > daysElapsed)
@@ -132,44 +145,45 @@ export default function Home() {
       remainingBills,
       daysOfData: daysElapsed,
     };
-  }, [expense, daysElapsed, daysLeft, disposable, recurring]);
+  }, [variableExpense, daysElapsed, daysLeft, disposable, recurring]);
   const forecast = forecastBundle?.forecast ?? null;
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* Brand + profile chip + streak */}
-        <View style={styles.header}>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.brand}>{APP_NAME}</Text>
-            {/* Hijri-first hero (islamic only). Generic: nothing. */}
-            <FeatureSlots.HomeHeroExtras />
-          </View>
-          {profiles.length > 1 && (
-            <Pressable
-              onPress={() => setProfileSheetOpen(true)}
-              style={[styles.profileChip, { borderColor: activeProfile.color }]}
-              accessibilityRole="button"
-              accessibilityLabel={`Profile: ${activeProfile.name}, tap to switch`}
-            >
-              <MaterialCommunityIcons name={activeProfile.icon as never} size={14} color={activeProfile.color} />
-              <Text style={[styles.profileChipText, { color: activeProfile.color }]} numberOfLines={1}>
-                {activeProfile.name}
-              </Text>
-            </Pressable>
-          )}
-          {/* StreakBadge hidden for now — we still compute the streak
-              under the hood so the recap surfaces still get it, just
-              not advertised in the home header. */}
-          {false && streak > 0 && <StreakBadge count={streak} />}
-          <HeaderSettingsButton />
+      {/* Fixed header — sits outside the ScrollView so brand + profile
+          chip + settings button stay anchored when the user scrolls
+          (matches the Plan / Activity / Me pattern). */}
+      <View style={styles.header}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.brand}>{APP_NAME}</Text>
+          {/* Hijri-first hero (islamic only). Generic: nothing. */}
+          <FeatureSlots.HomeHeroExtras />
         </View>
-        <ProfileSheet
-          visible={profileSheetOpen}
-          mode={profileSheetOpen ? { kind: 'switch', profiles, activeId: activeProfile.id } : null}
-          onClose={() => setProfileSheetOpen(false)}
-        />
-
+        {profiles.length > 1 && (
+          <Pressable
+            onPress={() => setProfileSheetOpen(true)}
+            style={[styles.profileChip, { borderColor: activeProfile.color }]}
+            accessibilityRole="button"
+            accessibilityLabel={`Profile: ${activeProfile.name}, tap to switch`}
+          >
+            <MaterialCommunityIcons name={activeProfile.icon as never} size={14} color={activeProfile.color} />
+            <Text style={[styles.profileChipText, { color: activeProfile.color }]} numberOfLines={1}>
+              {activeProfile.name}
+            </Text>
+          </Pressable>
+        )}
+        {/* StreakBadge hidden for now — we still compute the streak
+            under the hood so the recap surfaces still get it, just
+            not advertised in the home header. */}
+        {false && streak > 0 && <StreakBadge count={streak} />}
+        <HeaderSettingsButton />
+      </View>
+      <ProfileSheet
+        visible={profileSheetOpen}
+        mode={profileSheetOpen ? { kind: 'switch', profiles, activeId: activeProfile.id } : null}
+        onClose={() => setProfileSheetOpen(false)}
+      />
+      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         {/* THE one number — two-line hero with trajectory color. The
             empty-state CTA depends on what the user is missing: no
             accounts first (prerequisite for everything else), then no
@@ -235,6 +249,10 @@ export default function Home() {
         {/* Top-1 actionable insight; empty when nothing's wrong. */}
         <HomeActionCard />
 
+        {/* This-month glance: income/spending bars + net diff. Read-only,
+            no period selector, no tap target. */}
+        <MonthGlanceCard income={income} spending={expense} currency={currency} />
+
         {/* Recent — 3 rows + "View all" tail link to /activity */}
         {recentTxns.length > 0 && (
           <View style={styles.section}>
@@ -283,8 +301,15 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
-  scroll: { padding: spacing.lg, gap: spacing.lg },
-  header: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg, gap: spacing.lg },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.lg,
+    paddingBottom: spacing.md,
+  },
   brand: { color: theme.text1, fontSize: sizes.xxxl, fontFamily: font.displayBold },
   disabledNextCard: {
     backgroundColor: theme.bg2,

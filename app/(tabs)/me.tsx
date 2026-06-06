@@ -16,6 +16,7 @@ import {
 } from '@/components/Sections';
 import { AccountSheet } from '@/components/AccountSheet';
 import { Icon } from '@/components/Icon';
+import { MeNetWorthCard } from '@/components/MeNetWorthCard';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { useAccounts, reorderAccounts } from '@/hooks/useAppData';
 import DraggableFlatList, { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-flatlist';
@@ -96,41 +97,12 @@ function OverviewAndAccounts() {
 
   const ListHeader = (
     <View style={{ gap: spacing.lg, marginBottom: spacing.md }}>
-      {/* OVERVIEW — single hero card: big Net, Assets+Debt split below. */}
-      <View style={{ gap: spacing.md }}>
-        <SectionHeader title={t('me.section.overview')} />
-        <View style={styles.overviewCard}>
-          <Text style={styles.netLabel}>{t('me.netBalance')}</Text>
-          <Text
-            // Zero is neutral, not "positive". Green/red carries meaning;
-            // a 0 balance should read as black so users don't see a
-            // false healthy-state signal.
-            style={[
-              styles.netValue,
-              { color: net > 0 ? theme.accent : net < 0 ? theme.expense : theme.text1 },
-            ]}
-            numberOfLines={1}
-            adjustsFontSizeToFit
-            minimumFontScale={0.6}
-          >
-            {approx ? '≈ ' : ''}{formatMoney(net, currency)}
-          </Text>
-          <View style={[sectionStyles.summaryRow, { marginTop: spacing.md }]}>
-            <SummaryCard
-              label={t('me.assets')}
-              value={assets}
-              color={assets > 0 ? theme.accent : theme.text1}
-              currency={currency}
-            />
-            <SummaryCard
-              label={t('me.debt')}
-              value={debt}
-              color={debt > 0 ? theme.expense : theme.text1}
-              currency={currency}
-            />
-          </View>
-        </View>
-      </View>
+      {/* OVERVIEW — single card: Net Worth headline + delta + assets/
+          debt split + chart + period selector. Was previously a
+          separate "Net Balance" card stacked above; merged here to
+          drop the duplicated number and one card of vertical noise. */}
+      <SectionHeader title={t('me.section.overview')} />
+      <MeNetWorthCard />
 
       <SectionHeader
         title={t('me.section.accounts')}

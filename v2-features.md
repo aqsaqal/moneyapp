@@ -154,6 +154,17 @@ preset polish, etc.).
   surfaces the warning only when the user explicitly tags an account
   as interest-bearing; never asserts it on their behalf.
 
+### 1.13 Device matrix QA 🔴
+- Full v2 acceptance walkthrough on 6 phones: iPhone SE / iPhone 17
+  Pro Max / physical iPhone / Pixel 4a / Pixel 7 / S26 Ultra.
+- Checklist lives at `docs/device-matrix-test.md` (cold boot, each
+  tab, Smart Add, transfer fx, restore-from-backup, i18n + a11y,
+  perf, stress).
+- Phones only — iPad / foldables / tablets explicitly out of scope
+  per `app.config.ts` `supportsTablet: false` + `UIDeviceFamily: [1]`.
+- Run before each release build; record pass/fail in the table at
+  the bottom of the doc.
+
 ---
 
 ## 2. Polish / nice-to-have for v1.0
@@ -225,7 +236,133 @@ preset polish, etc.).
 
 ---
 
-## 3. Deferred to v1.1+
+## 3. Improvements after initial acceptance pass 🟢
+
+Features and fixes that shipped after the §1 / §2 status freeze.
+All landed on `master` and are in the release APK on the dogfood
+device.
+
+### 3.1 Cross-currency transfer math
+- `transactions.to_amount` column added (idempotent ALTER).
+- Apply, reverse (delete + edit), and scheduled-apply paths all use
+  `to_amount ?? amount` so a USD → KZT transfer debits USD source
+  correctly + credits KZT destination with the FX-converted amount.
+- Smart Add computes `toAmount` whenever From and To currencies
+  differ; legacy rows + same-currency transfers stay as before.
+
+### 3.2 Cross-currency / triple-currency transaction display
+- `TransactionRow` now has three display modes:
+  1. Cross-currency transfer → main = From debit, sub = To credit.
+  2. Triple-currency transfer (entry differs from both sides) →
+     LARGE entered amount + SMALL `debit · credit` line with a
+     raised middle dot.
+  3. Mixed-currency expense/income → original LARGE, account
+     SMALL (existing behavior).
+- Activity + Home recent rows pass `fromCurrency` / `toCurrency`
+  from a precomputed account-id → currency map.
+
+### 3.3 Account-label line + account icon on rows
+- Between title (category) and subtitle (note), every row now shows
+  the account name (or `From → To` for transfers) with a small
+  brand-colored icon. Caller computes the label + icon once per
+  render so 200-row lists don't fan out N SQLite queries.
+- Includes archived accounts in the lookup so historical rows still
+  show their context.
+
+### 3.4 Account icon picker
+- `AccountSheet` has a 12-option icon palette below the color
+  swatches (Wallet, Banknote, PiggyBank, CreditCard, TrendingUp,
+  Briefcase, Home, Plane, Gift, Heart, Star, Target).
+- Override stored on `accounts.icon`. Choosing the type's default
+  reverts to inherit-from-type so changing the type later still
+  updates the visual.
+- Me-tab account list, AccountPicker (Smart Add + transfer pickers),
+  PredictedStrip — all now read `a.icon` instead of a hardcoded
+  wallet/credit-card glyph.
+
+### 3.5 Restore-from-backup JSON import
+- `utils/dataExport.ts` now exports `importData()` alongside the
+  existing exporter.
+- DocumentPicker → JSON parse + validate (schemaVersion guard,
+  legacy camelCase mapping) → native confirm Alert ("This cannot be
+  undone") → single SQLite transaction (DELETE every backup table →
+  bulk INSERT) → `bumpVersion()` to refresh subscribed UI.
+- Per-active-profile; other profile DB files untouched.
+- Export now covers all 10 user-authored tables (was 6): added
+  `custom_categories`, `debts`, `goals`, `net_worth_snapshots`.
+- `schemaVersion: 2` + `exportedAt` header on the JSON.
+- New keys localized across 50 locales.
+
+### 3.6 Transfer picker UX
+- Both From and To pickers see the same set of accounts (no
+  exclusion). Picking the opposite side's account swaps the two
+  instead of nudging to "next available".
+- Archived accounts currently selected on either side stay
+  selectable on both sides (so editing an old transfer with a
+  retired wallet works); `AccountPicker` keeps `value` even when
+  archived. Visual "Archived" pill + 60% name opacity.
+
+### 3.7 Delete confirmations everywhere
+- Swipe-delete, sheet-delete, edit-screen delete on transactions
+  all open a native `Alert` with Cancel / Delete and the
+  `common.cannotBeUndone` line.
+- Plan-tab recurring quick-delete now confirms (was direct delete).
+- Existing Goal / Debt / Recurring sheets already confirmed; left
+  those.
+- Bulk-localized across 50 locales.
+
+### 3.8 Forecast / On-track card fixes
+- Always-open after the BalanceCard refactor (no chevron toggle).
+- `daysLeft === 0` short-circuit dropped — card stays visible on
+  the last day of the month.
+- 3-day warmup gate dropped to 1 — card shows from day 1.
+- Avg-daily-variable now excludes recurring-linked transactions:
+  `expense` filter checks `!t.recurringId`. Recurring bills
+  appear once via `remainingBills` and don't contaminate the
+  per-day rate.
+- One-shot DB backfill at boot: pre-fix transactions came from the
+  recurring-checkmark flow with `recurring_id = NULL` and only the
+  join in `paid_items`. The backfill sets `recurring_id` on those
+  historical rows by reading `paid_items`.
+
+### 3.9 Recurring → paid-month linking
+- Plan tab stamps `markMonth` on the prefill it builds for the
+  recurring-checkmark flow. Submit links `paid_items` to that
+  month so a future-dated transaction still ticks the originating
+  month (not the future one).
+- New transactions from the recurring flow also persist
+  `recurring_id` on the row directly (was missing).
+
+### 3.10 Smart Add converted-amount precision
+- All conversion previews under the amount entry round to 2
+  decimals regardless of the destination currency's natural minor
+  unit (KZT, KWD).
+- Edit-mode override field seeds with `.toFixed(2)` so legacy FP
+  noise like `108.50000003` doesn't leak in.
+
+### 3.11 Sheet titles
+- Category sheet: "New category" ↔ "Edit category".
+- Recurring sheet: 4-way matrix —
+  `New|Edit recurring expense|income`.
+- Both localized across 50 locales.
+
+### 3.12 Recent-tx row parity
+- Home `recentTxns` rows now use the same TransactionRow props as
+  Activity (accountLabel, accountIcon, accountColor, fromCurrency,
+  toCurrency), so cross-currency / triple-currency layouts show
+  identically on both surfaces.
+
+### 3.13 Production install workflow
+- Switched the dogfood phone (S26) from debug-variant `expo
+  run:android` (Metro-dependent, brittle reopen) to release-variant
+  builds with the debug keystore as signer. App now launches
+  standalone and survives cold-boot without `adb reverse`.
+- Workflow: `npm run android:generic -- --variant release` (~25-45s
+  per build).
+
+---
+
+## 4. Deferred to v1.1+
 
 These were intentionally cut from v1 to keep the launch scope sane.
 

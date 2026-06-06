@@ -125,6 +125,10 @@ export function CategoriesAnalytics({
 
   const total = rowsForType.reduce((s, r) => s + r.total, 0);
   const headlineColor = type === 'expense' ? theme.expense : theme.accent;
+  // The "other side" sub line gets the opposite type's color so a
+  // glance at the headline card communicates both flows. Income
+  // always reads green, expense always reads red.
+  const otherColor = type === 'expense' ? theme.accent : theme.expense;
   const empty = rowsForType.length === 0;
 
   return (
@@ -158,7 +162,7 @@ export function CategoriesAnalytics({
         <Text style={[styles.headlineAmount, { color: headlineColor }]}>
           {formatMoney(total, currency)}
         </Text>
-        <Text style={styles.headlineSub}>
+        <Text style={[styles.headlineSub, { color: otherColor }]}>
           {t(type === 'expense' ? 'analytics.income' : 'analytics.expense')}
           {' · '}
           {formatMoney(otherTotal, currency)}

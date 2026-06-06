@@ -190,14 +190,41 @@ export function ForecastCard({
         ? t('forecast.close')
         : t('forecast.onTrack');
 
+  // Whole card is the tap target — opens Plan when provided. Replaces
+  // the explicit "See breakdown" footer button (redundant when the card
+  // itself navigates).
+  const Container: React.ComponentType<{ children: React.ReactNode; style: unknown; accessibilityLabel: string }> =
+    onSeeBreakdown
+      ? ({ children, style, accessibilityLabel }) => (
+          <Pressable
+            style={style as never}
+            onPress={onSeeBreakdown}
+            accessibilityRole="button"
+            accessibilityLabel={accessibilityLabel}
+          >
+            {children}
+          </Pressable>
+        )
+      : ({ children, style, accessibilityLabel }) => (
+          <View style={style as never} accessibilityLabel={accessibilityLabel}>{children}</View>
+        );
+
   return (
-    <View style={styles.forecastCard} accessibilityLabel={headline}>
+    <Container style={styles.forecastCard} accessibilityLabel={headline}>
       <View style={styles.forecastRow}>
         <View style={[styles.forecastDot, { backgroundColor: toneColor }]} />
         {/* Edge #2: only the dot carries the tone color now. The
             headline stays neutral so the dot + headline aren't two
             duplicate signals of the same thing. */}
         <Text style={styles.forecastHead}>{headline}</Text>
+        {onSeeBreakdown && (
+          <MaterialCommunityIcons
+            name="chevron-right"
+            size={18}
+            color={theme.text3}
+            style={{ marginLeft: 'auto' }}
+          />
+        )}
       </View>
       <View style={styles.forecastBody}>
           {/* Edge #9: split prefix and amount into two siblings so RTL
@@ -235,29 +262,21 @@ export function ForecastCard({
           <Text style={styles.forecastHint}>
             {t('forecast.basedOn', { days: daysLeft })}
           </Text>
-
-          {/* Edge #5: a real next step from the explanation. */}
-          {onSeeBreakdown && (
-            <Pressable
-              onPress={onSeeBreakdown}
-              style={styles.forecastCta}
-              accessibilityRole="button"
-              accessibilityLabel={t('forecast.seeBreakdown')}
-              hitSlop={6}
-            >
-              <Text style={styles.forecastCtaText}>{t('forecast.seeBreakdown')}</Text>
-              <MaterialCommunityIcons name="chevron-right" size={14} color={theme.accent} />
-            </Pressable>
-          )}
       </View>
-    </View>
+    </Container>
   );
 }
 
 // Surface `daysOfData` outside the component so the gate at the call
 // site has one place to ask "is the card worth showing?".
+//
+// Was `>= 3` to give the avg-daily-spend projection a few samples to
+// stabilise. Dropped to 1 so the card stays visible from day 1 of
+// the month — the user prefers an always-on signal over a hidden
+// "data is still warming up" state. The numbers on day 1 read as
+// "with what you have right now" (projection = 0 if no spend yet).
 ForecastCard.shouldRender = function (daysOfData: number): boolean {
-  return daysOfData >= 3;
+  return daysOfData >= 1;
 };
 
 // =============================================================================

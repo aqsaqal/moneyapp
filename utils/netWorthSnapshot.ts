@@ -34,8 +34,14 @@ export function refreshTodaySnapshot(): void {
   const raw = getRawDB();
   const today = isoDate();
   const display = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  // Skip archived + explicitly excluded accounts. Net worth should
+  // reflect what the user considers part of their finances — retired
+  // wallets and "watch-only" / spouse accounts don't count.
   const accounts = raw.getAllSync(
-    `SELECT balance, currency FROM accounts`,
+    `SELECT balance, currency
+       FROM accounts
+      WHERE (archived IS NULL OR archived != 1)
+        AND (include_in_total IS NULL OR include_in_total != 0)`,
   ) as AccountRow[];
 
   let assets = 0;

@@ -230,6 +230,28 @@ function createTables(db: SQLite.SQLiteDatabase) {
     /* swallow — fresh DB will already have the column from CREATE TABLE if we add it there in a future major. */
   }
 
+  // Backfill: link historical transactions to their recurring source.
+  // Pre-fix, the recurring-checkmark flow inserted transactions with
+  // recurring_id = NULL and only wrote the join in paid_items. The
+  // forecast's avg-daily-variable now relies on recurring_id, so we
+  // sweep the null rows once via paid_items. Idempotent: only touches
+  // rows that haven't already been linked.
+  try {
+    db.execSync(`
+      UPDATE transactions
+         SET recurring_id = (
+           SELECT recurring_id
+             FROM paid_items
+            WHERE paid_items.transaction_id = transactions.id
+            LIMIT 1
+         )
+       WHERE recurring_id IS NULL
+         AND id IN (SELECT transaction_id FROM paid_items WHERE transaction_id IS NOT NULL);
+    `);
+  } catch {
+    /* paid_items may not exist on a totally fresh DB; create-table runs above us so this is safe to skip. */
+  }
+
   // Phase 10k — additive currency column on existing accounts table.
   // Phase 10q — additive is_riba flag; both columns are guarded so they
   // can land in any order across upgrade paths.

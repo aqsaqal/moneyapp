@@ -508,6 +508,12 @@ export default function AddScreen() {
             asnaf: (draft as { asnaf?: string | null }).asnaf ?? null,
             originalAmount,
             originalCurrency,
+            // When the user came in via a recurring row's checkmark
+            // the prefill carries recurringId — persist it on the
+            // transaction so downstream analytics (avg-daily-variable,
+            // subscription audit, edit-flow detection) can identify
+            // the row as fixed-cost rather than discretionary.
+            recurringId: prefill?.recurringId ?? null,
           }, { skipCashCheck: opts.skipCashCheck });
           createdTxId = tx.id;
           // Remember the user's account choice so L4 fallback can lock in.

@@ -114,6 +114,25 @@ function RecurringSection() {
     );
   };
 
+  // Unchecking a paid recurring also deletes the underlying transaction
+  // (and reverses its balance impact). The user might not realise that
+  // — surface a confirm Alert before the destructive op. Title adapts
+  // to the recurring's type since "paid" doesn't read right for income.
+  const confirmUnmark = (rec: { id: string; name: string; type: 'expense' | 'income' }) => {
+    Alert.alert(
+      t(`recurring.unmarkConfirm.title.${rec.type === 'income' ? 'income' : 'expense'}`),
+      `${t('recurring.unmarkConfirm.body', { name: rec.name })} ${t('common.cannotBeUndone')}`,
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => unmarkRecurringPaid(rec.id, key),
+        },
+      ],
+    );
+  };
+
   // Sort by day-of-month so the soonest-due is at the top — answers
   // "what's coming up?" at a glance.
   const byDay = (a: Recurring, b: Recurring) => a.dayOfMonth - b.dayOfMonth;
@@ -224,7 +243,7 @@ function RecurringSection() {
                     }),
                   },
                 } as never)}
-                onUnmark={() => unmarkRecurringPaid(r.id, key)}
+                onUnmark={() => confirmUnmark(r)}
                 onEdit={() => setSheet({ kind: 'edit', rec: r })}
                 onDelete={() => confirmDeleteRecurring(r)}
                 currency={(r.currency ?? currency) as CurrencyCode}
@@ -294,9 +313,9 @@ function RecurringSection() {
                 }),
               },
             } as never)}
-            onUnmark={() => unmarkRecurringPaid(r.id, key)}
+            onUnmark={() => confirmUnmark(r)}
             onEdit={() => setSheet({ kind: 'edit', rec: r })}
-            onDelete={() => deleteRecurring(r.id)}
+            onDelete={() => confirmDeleteRecurring(r)}
             currency={(r.currency ?? currency) as CurrencyCode}
           />
         ))}
