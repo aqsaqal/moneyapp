@@ -14,6 +14,7 @@ import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, font, sizes, radii, spacing } from '@/constants/theme';
 import { useT } from '@/hooks/useT';
+import { kv } from '@/utils/kv';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 
 interface Props {
@@ -31,10 +32,20 @@ export function MonthGlanceCard({ income, spending, currency }: Props) {
   const netUp = net >= 0;
   const netColor = netUp ? theme.accent : theme.expense;
 
+  // Tap → Activity → Categories view, anchored to the current month.
+  // kv handoff mirrors the Insights chart's month-bar drill-down.
+  const onPress = () => {
+    const now = new Date();
+    const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    kv.set('activityJumpToMonth', monthKey);
+    kv.set('activityJumpToView', 'categories');
+    router.push('/(tabs)/activity' as never);
+  };
+
   return (
     <Pressable
       style={styles.card}
-      onPress={() => router.push('/insights' as never)}
+      onPress={onPress}
       accessibilityRole="button"
       accessibilityLabel={t('home.glance.title')}
     >
