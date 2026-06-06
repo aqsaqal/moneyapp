@@ -439,5 +439,6 @@
   "home.glance.title": "Tháng này",
   "home.glance.income": "Thu nhập",
   "home.glance.spending": "Chi tiêu",
-  "home.glance.diff": "Chênh lệch"
+  "home.glance.diff": "Chênh lệch",
+  "hero.afterBills": "Sau {amount} hoá đơn sắp tới"
 }

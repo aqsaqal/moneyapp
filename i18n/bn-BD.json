@@ -439,5 +439,6 @@
   "home.glance.title": "এই মাস",
   "home.glance.income": "আয়",
   "home.glance.spending": "ব্যয়",
-  "home.glance.diff": "পার্থক্য"
+  "home.glance.diff": "পার্থক্য",
+  "hero.afterBills": "আসন্ন {amount} বিলের পর"
 }

@@ -439,5 +439,6 @@
   "home.glance.title": "Ngayong buwan",
   "home.glance.income": "Kita",
   "home.glance.spending": "Gastos",
-  "home.glance.diff": "Pagkakaiba"
+  "home.glance.diff": "Pagkakaiba",
+  "hero.afterBills": "Pagkatapos ng {amount} sa paparating na bayarin"
 }

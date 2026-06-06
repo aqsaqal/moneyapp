@@ -438,5 +438,6 @@
   "home.glance.title": "Этот месяц",
   "home.glance.income": "Доход",
   "home.glance.spending": "Расход",
-  "home.glance.diff": "Разница"
+  "home.glance.diff": "Разница",
+  "hero.afterBills": "После {amount} предстоящих счетов"
 }

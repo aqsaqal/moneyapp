@@ -439,5 +439,6 @@
   "home.glance.title": "این ماه",
   "home.glance.income": "درآمد",
   "home.glance.spending": "هزینه",
-  "home.glance.diff": "تفاوت"
+  "home.glance.diff": "تفاوت",
+  "hero.afterBills": "پس از {amount} از قبوض پیش‌رو"
 }

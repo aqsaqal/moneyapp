@@ -439,5 +439,6 @@
   "home.glance.title": "Tämä kuukausi",
   "home.glance.income": "Tulot",
   "home.glance.spending": "Menot",
-  "home.glance.diff": "Erotus"
+  "home.glance.diff": "Erotus",
+  "hero.afterBills": "Tulevien {amount} laskujen jälkeen"
 }

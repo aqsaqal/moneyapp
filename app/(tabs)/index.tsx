@@ -31,6 +31,7 @@ import {
   useTransactions,
   useRecurring as useRecurringList,
   useAccounts,
+  usePaidItemsForMonth,
 } from '@/hooks/useAppData';
 import { useStreak } from '@/hooks/useStreak';
 import { useT } from '@/hooks/useT';
@@ -100,9 +101,22 @@ export default function Home() {
     () => thisMoTxns.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0),
     [thisMoTxns],
   );
+  // `fixedExp` is the projection of recurring bills still on the books
+  // this month. When a recurring item is marked paid, the resulting
+  // transaction already shows up in `expense` — so including the
+  // recurring amount in `fixedExp` too would double-count it. Filter
+  // by paid_items so only UNPAID recurring contributes.
+  const paidThisMonth = usePaidItemsForMonth(thisMonth);
+  const paidRecurringIds = useMemo(
+    () => new Set(paidThisMonth.map((p) => p.recurringId)),
+    [paidThisMonth],
+  );
   const fixedExp = useMemo(
-    () => recurring.filter((r) => r.type === 'expense').reduce((s, r) => s + r.amount, 0),
-    [recurring],
+    () =>
+      recurring
+        .filter((r) => r.type === 'expense' && !paidRecurringIds.has(r.id))
+        .reduce((s, r) => s + r.amount, 0),
+    [recurring, paidRecurringIds],
   );
   const disposable = income - fixedExp - expense;
 
@@ -136,16 +150,26 @@ export default function Home() {
     if (daysElapsed < 1) return null;
     const avgDailyVar = variableExpense / daysElapsed;
     const projectedVar = avgDailyVar * daysLeft;
+    // Upcoming UNPAID bills — surfaced in the breakdown UI for the
+    // user, but NOT subtracted from the forecast number here: the
+    // disposable above already includes every unpaid recurring (the
+    // post-fix definition of fixedExp), so subtracting them again
+    // would double-count. Only future variable spend remains.
     const remainingBills = recurring
-      .filter((r) => r.type === 'expense' && r.dayOfMonth > daysElapsed)
+      .filter(
+        (r) =>
+          r.type === 'expense' &&
+          r.dayOfMonth > daysElapsed &&
+          !paidRecurringIds.has(r.id),
+      )
       .reduce((s, r) => s + r.amount, 0);
     return {
-      forecast: disposable - projectedVar - remainingBills,
+      forecast: disposable - projectedVar,
       avgDailyVariable: avgDailyVar,
       remainingBills,
       daysOfData: daysElapsed,
     };
-  }, [variableExpense, daysElapsed, daysLeft, disposable, recurring]);
+  }, [variableExpense, daysElapsed, daysLeft, disposable, recurring, paidRecurringIds]);
   const forecast = forecastBundle?.forecast ?? null;
 
   return (
@@ -202,6 +226,10 @@ export default function Home() {
             if (accounts.length === 0) router.push('/(tabs)/me' as never);
             else router.push('/(tabs)/plan' as never);
           }}
+          // fixedExp at this point already filters out paid recurring,
+          // so passing it through gives the user a clear "X already
+          // reserved for upcoming bills" footnote.
+          unpaidBills={fixedExp}
         />
 
         {/* Second-step card: only shown while accounts are still missing.

@@ -263,6 +263,7 @@
   "hero.empty.noIncome.cta": "Set up income",
   "hero.left": "left this month",
   "hero.perDay": "{amount}/day for {days} days",
+  "hero.afterBills": "After {amount} in upcoming bills",
   "hero.thenSetIncome": "Then set your income",
   "hero.thenSetIncome.hint": "Available once you have at least one account.",
   "forecast.onTrack": "On track.",

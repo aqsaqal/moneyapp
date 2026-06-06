@@ -439,5 +439,6 @@
   "home.glance.title": "Αυτόν τον μήνα",
   "home.glance.income": "Έσοδα",
   "home.glance.spending": "Δαπάνες",
-  "home.glance.diff": "Διαφορά"
+  "home.glance.diff": "Διαφορά",
+  "hero.afterBills": "Μετά από {amount} σε επερχόμενους λογαριασμούς"
 }

@@ -439,5 +439,6 @@
   "home.glance.title": "Këtë muaj",
   "home.glance.income": "Të ardhura",
   "home.glance.spending": "Shpenzime",
-  "home.glance.diff": "Diferenca"
+  "home.glance.diff": "Diferenca",
+  "hero.afterBills": "Pas {amount} në faturat e ardhshme"
 }

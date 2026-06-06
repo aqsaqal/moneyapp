@@ -439,5 +439,6 @@
   "home.glance.title": "Este mês",
   "home.glance.income": "Receitas",
   "home.glance.spending": "Gastos",
-  "home.glance.diff": "Diferença"
+  "home.glance.diff": "Diferença",
+  "hero.afterBills": "Depois de {amount} em contas próximas"
 }

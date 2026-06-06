@@ -439,5 +439,6 @@
   "home.glance.title": "Tento měsíc",
   "home.glance.income": "Příjmy",
   "home.glance.spending": "Výdaje",
-  "home.glance.diff": "Rozdíl"
+  "home.glance.diff": "Rozdíl",
+  "hero.afterBills": "Po {amount} v nadcházejících účtech"
 }

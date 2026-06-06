@@ -439,5 +439,6 @@
   "home.glance.title": "Mwezi huu",
   "home.glance.income": "Mapato",
   "home.glance.spending": "Matumizi",
-  "home.glance.diff": "Tofauti"
+  "home.glance.diff": "Tofauti",
+  "hero.afterBills": "Baada ya {amount} kwa bili zinazokuja"
 }

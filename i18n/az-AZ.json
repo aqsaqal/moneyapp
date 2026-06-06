@@ -439,5 +439,6 @@
   "home.glance.title": "Bu ay",
   "home.glance.income": "Gəlir",
   "home.glance.spending": "Xərc",
-  "home.glance.diff": "Fərq"
+  "home.glance.diff": "Fərq",
+  "hero.afterBills": "Yaxınlaşan {amount} hesablardan sonra"
 }

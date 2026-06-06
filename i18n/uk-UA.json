@@ -439,5 +439,6 @@
   "home.glance.title": "Цей місяць",
   "home.glance.income": "Дохід",
   "home.glance.spending": "Витрати",
-  "home.glance.diff": "Різниця"
+  "home.glance.diff": "Різниця",
+  "hero.afterBills": "Після {amount} майбутніх рахунків"
 }

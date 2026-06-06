@@ -439,5 +439,6 @@
   "home.glance.title": "Denna månad",
   "home.glance.income": "Inkomst",
   "home.glance.spending": "Utgifter",
-  "home.glance.diff": "Skillnad"
+  "home.glance.diff": "Skillnad",
+  "hero.afterBills": "Efter {amount} i kommande räkningar"
 }

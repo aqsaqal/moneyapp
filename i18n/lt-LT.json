@@ -439,5 +439,6 @@
   "home.glance.title": "Šis mėnuo",
   "home.glance.income": "Pajamos",
   "home.glance.spending": "Išlaidos",
-  "home.glance.diff": "Skirtumas"
+  "home.glance.diff": "Skirtumas",
+  "hero.afterBills": "Atskaičius {amount} būsimų sąskaitų"
 }

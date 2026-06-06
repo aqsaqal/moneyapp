@@ -439,5 +439,6 @@
   "home.glance.title": "इस महीने",
   "home.glance.income": "आय",
   "home.glance.spending": "खर्च",
-  "home.glance.diff": "अंतर"
+  "home.glance.diff": "अंतर",
+  "hero.afterBills": "आगामी {amount} बिलों के बाद"
 }

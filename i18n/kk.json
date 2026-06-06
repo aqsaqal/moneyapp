@@ -438,5 +438,6 @@
   "home.glance.title": "Осы ай",
   "home.glance.income": "Кіріс",
   "home.glance.spending": "Шығыс",
-  "home.glance.diff": "Айырма"
+  "home.glance.diff": "Айырма",
+  "hero.afterBills": "Алдағы {amount} шоттардан кейін"
 }

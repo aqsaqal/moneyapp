@@ -439,5 +439,6 @@
   "home.glance.title": "Sel kuul",
   "home.glance.income": "Sissetulek",
   "home.glance.spending": "Kulud",
-  "home.glance.diff": "Vahe"
+  "home.glance.diff": "Vahe",
+  "hero.afterBills": "Pärast {amount} eelseisvaid arveid"
 }

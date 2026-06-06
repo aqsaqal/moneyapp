@@ -439,5 +439,6 @@
   "home.glance.title": "اس مہینے",
   "home.glance.income": "آمدنی",
   "home.glance.spending": "اخراجات",
-  "home.glance.diff": "فرق"
+  "home.glance.diff": "فرق",
+  "hero.afterBills": "آنے والے {amount} بلوں کے بعد"
 }

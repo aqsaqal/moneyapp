@@ -439,5 +439,6 @@
   "home.glance.title": "Denne måneden",
   "home.glance.income": "Inntekt",
   "home.glance.spending": "Forbruk",
-  "home.glance.diff": "Differanse"
+  "home.glance.diff": "Differanse",
+  "hero.afterBills": "Etter {amount} i kommende regninger"
 }

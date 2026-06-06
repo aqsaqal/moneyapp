@@ -439,5 +439,6 @@
   "home.glance.title": "Овог месеца",
   "home.glance.income": "Приходи",
   "home.glance.spending": "Расходи",
-  "home.glance.diff": "Разлика"
+  "home.glance.diff": "Разлика",
+  "hero.afterBills": "После {amount} у наредним рачунима"
 }

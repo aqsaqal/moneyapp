@@ -439,5 +439,6 @@
   "home.glance.title": "เดือนนี้",
   "home.glance.income": "รายรับ",
   "home.glance.spending": "รายจ่าย",
-  "home.glance.diff": "ส่วนต่าง"
+  "home.glance.diff": "ส่วนต่าง",
+  "hero.afterBills": "หลังจาก {amount} ในบิลที่กำลังจะมาถึง"
 }

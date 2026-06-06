@@ -439,5 +439,6 @@
   "home.glance.title": "ఈ నెల",
   "home.glance.income": "ఆదాయం",
   "home.glance.spending": "ఖర్చు",
-  "home.glance.diff": "వ్యత్యాసం"
+  "home.glance.diff": "వ్యత్యాసం",
+  "hero.afterBills": "రాబోయే {amount} బిల్లుల తర్వాత"
 }

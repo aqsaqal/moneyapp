@@ -439,5 +439,6 @@
   "home.glance.title": "今月",
   "home.glance.income": "収入",
   "home.glance.spending": "支出",
-  "home.glance.diff": "差額"
+  "home.glance.diff": "差額",
+  "hero.afterBills": "今後の請求 {amount} を差し引いた残り"
 }

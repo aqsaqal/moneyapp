@@ -439,5 +439,6 @@
   "home.glance.title": "Luna aceasta",
   "home.glance.income": "Venituri",
   "home.glance.spending": "Cheltuieli",
-  "home.glance.diff": "Diferență"
+  "home.glance.diff": "Diferență",
+  "hero.afterBills": "După {amount} în facturi viitoare"
 }

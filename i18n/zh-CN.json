@@ -439,5 +439,6 @@
   "home.glance.title": "本月",
   "home.glance.income": "收入",
   "home.glance.spending": "支出",
-  "home.glance.diff": "差额"
+  "home.glance.diff": "差额",
+  "hero.afterBills": "已扣除即将到期账单 {amount}"
 }

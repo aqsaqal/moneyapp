@@ -438,5 +438,6 @@
   "home.glance.title": "Bulan ini",
   "home.glance.income": "Pemasukan",
   "home.glance.spending": "Pengeluaran",
-  "home.glance.diff": "Selisih"
+  "home.glance.diff": "Selisih",
+  "hero.afterBills": "Setelah {amount} tagihan mendatang"
 }

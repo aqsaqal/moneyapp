@@ -438,5 +438,6 @@
   "home.glance.title": "هذا الشهر",
   "home.glance.income": "الدخل",
   "home.glance.spending": "الإنفاق",
-  "home.glance.diff": "الفرق"
+  "home.glance.diff": "الفرق",
+  "hero.afterBills": "بعد {amount} من الفواتير القادمة"
 }

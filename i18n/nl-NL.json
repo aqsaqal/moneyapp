@@ -439,5 +439,6 @@
   "home.glance.title": "Deze maand",
   "home.glance.income": "Inkomsten",
   "home.glance.spending": "Uitgaven",
-  "home.glance.diff": "Verschil"
+  "home.glance.diff": "Verschil",
+  "hero.afterBills": "Na {amount} aan komende rekeningen"
 }

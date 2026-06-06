@@ -439,5 +439,6 @@
   "home.glance.title": "Ebben a hónapban",
   "home.glance.income": "Bevétel",
   "home.glance.spending": "Kiadás",
-  "home.glance.diff": "Különbség"
+  "home.glance.diff": "Különbség",
+  "hero.afterBills": "{amount} közelgő számla után"
 }

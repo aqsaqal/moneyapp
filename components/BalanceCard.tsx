@@ -37,6 +37,11 @@ export interface DisposableHeroCardProps {
   emptyKind?: 'no-accounts' | 'no-income' | null;
   /** Empty-state CTA — meaning depends on emptyKind. */
   onSetUp?: () => void;
+  /** Sum of recurring bills still UNPAID this month. Used to render a
+   *  hint line clarifying that the big number already accounts for
+   *  upcoming bills — without it users reasonably ask "before or after
+   *  rent?". Omit when zero. */
+  unpaidBills?: number;
 }
 
 /**
@@ -62,6 +67,7 @@ export function DisposableHeroCard({
   forecast,
   emptyKind,
   onSetUp,
+  unpaidBills,
 }: DisposableHeroCardProps) {
   void expense; void monthLabel; void income; // retained on the prop API for callers
 
@@ -128,6 +134,11 @@ export function DisposableHeroCard({
       <Text style={styles.heroSubline}>
         {t('hero.perDay', { amount: formatMoney(perDay, currency), days })}
       </Text>
+      {unpaidBills != null && unpaidBills > 0 && (
+        <Text style={styles.heroHint}>
+          {t('hero.afterBills', { amount: formatMoney(unpaidBills, currency) })}
+        </Text>
+      )}
     </View>
   );
 }
@@ -375,6 +386,13 @@ const styles = StyleSheet.create({
     fontSize: sizes.sm,
     fontFamily: font.body,
     marginTop: 2,
+  },
+  heroHint: {
+    color: theme.text3,
+    fontSize: sizes.xs,
+    fontFamily: font.body,
+    fontStyle: 'italic',
+    marginTop: 4,
   },
   heroForecast: {
     fontSize: sizes.sm,

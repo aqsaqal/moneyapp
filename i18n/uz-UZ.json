@@ -439,5 +439,6 @@
   "home.glance.title": "Bu oy",
   "home.glance.income": "Daromad",
   "home.glance.spending": "Xarajat",
-  "home.glance.diff": "Farq"
+  "home.glance.diff": "Farq",
+  "hero.afterBills": "Kelayotgan {amount} hisoblardan keyin"
 }
