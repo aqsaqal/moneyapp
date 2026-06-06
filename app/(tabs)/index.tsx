@@ -300,11 +300,10 @@ export default function Home() {
                 hitSlop={10}
                 accessibilityRole="link"
                 accessibilityLabel={t('home.viewAll')}
+                style={styles.viewAll}
               >
-                <View style={styles.viewAll}>
-                  <Text style={styles.viewAllText}>{t('home.viewAll')}</Text>
-                  <MaterialCommunityIcons name="chevron-right" size={16} color={theme.accent} />
-                </View>
+                <Text style={styles.viewAllText}>{t('home.viewAll')}</Text>
+                <MaterialCommunityIcons name="chevron-right" size={14} color={theme.text2} />
               </Pressable>
             </View>
             <View style={{ gap: 4 }}>
@@ -380,7 +379,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   viewAll: { flexDirection: 'row', alignItems: 'center', gap: 2 },
-  viewAllText: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.body },
+  // Match the Recent header's neutral styling so the row reads as a
+  // single section line — caps + letter-spacing + theme.text2 grey.
+  viewAllText: {
+    color: theme.text2,
+    fontSize: sizes.sm,
+    fontFamily: font.body,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    lineHeight: sizes.sm * 1.2,
+  },
   profileChip: {
     flexDirection: 'row',
     alignItems: 'center',
