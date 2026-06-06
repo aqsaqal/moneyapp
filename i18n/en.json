@@ -29,6 +29,8 @@
   "home.glance.income": "Income",
   "home.glance.spending": "Spending",
   "home.glance.diff": "Difference",
+  "home.glance.in": "in",
+  "home.glance.out": "out",
   "home.disposable": "{month} · Disposable",
   "home.daysLeft": "{n} days left",
   "home.forecast": "Projected end-of-month: {amount}",

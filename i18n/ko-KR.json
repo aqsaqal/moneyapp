@@ -440,5 +440,7 @@
   "home.glance.income": "수입",
   "home.glance.spending": "지출",
   "home.glance.diff": "차액",
-  "hero.afterBills": "예정 청구 {amount} 차감 후"
+  "hero.afterBills": "예정 청구 {amount} 차감 후",
+  "home.glance.in": "수입",
+  "home.glance.out": "지출"
 }

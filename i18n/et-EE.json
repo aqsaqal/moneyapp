@@ -440,5 +440,7 @@
   "home.glance.income": "Sissetulek",
   "home.glance.spending": "Kulud",
   "home.glance.diff": "Vahe",
-  "hero.afterBills": "Pärast {amount} eelseisvaid arveid"
+  "hero.afterBills": "Pärast {amount} eelseisvaid arveid",
+  "home.glance.in": "sisse",
+  "home.glance.out": "välja"
 }

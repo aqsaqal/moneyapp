@@ -440,5 +440,7 @@
   "home.glance.income": "Дохід",
   "home.glance.spending": "Витрати",
   "home.glance.diff": "Різниця",
-  "hero.afterBills": "Після {amount} майбутніх рахунків"
+  "hero.afterBills": "Після {amount} майбутніх рахунків",
+  "home.glance.in": "дохід",
+  "home.glance.out": "витрати"
 }

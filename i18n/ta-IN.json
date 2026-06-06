@@ -440,5 +440,7 @@
   "home.glance.income": "வருமானம்",
   "home.glance.spending": "செலவு",
   "home.glance.diff": "வேறுபாடு",
-  "hero.afterBills": "வரும் {amount} கட்டணங்களுக்குப் பிறகு"
+  "hero.afterBills": "வரும் {amount} கட்டணங்களுக்குப் பிறகு",
+  "home.glance.in": "வரவு",
+  "home.glance.out": "செலவு"
 }

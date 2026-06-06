@@ -440,5 +440,7 @@
   "home.glance.income": "Pajamos",
   "home.glance.spending": "Išlaidos",
   "home.glance.diff": "Skirtumas",
-  "hero.afterBills": "Atskaičius {amount} būsimų sąskaitų"
+  "hero.afterBills": "Atskaičius {amount} būsimų sąskaitų",
+  "home.glance.in": "pajamos",
+  "home.glance.out": "išlaidos"
 }

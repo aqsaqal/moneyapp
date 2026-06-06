@@ -440,5 +440,7 @@
   "home.glance.income": "آمدنی",
   "home.glance.spending": "اخراجات",
   "home.glance.diff": "فرق",
-  "hero.afterBills": "آنے والے {amount} بلوں کے بعد"
+  "hero.afterBills": "آنے والے {amount} بلوں کے بعد",
+  "home.glance.in": "آمد",
+  "home.glance.out": "خرچ"
 }

@@ -440,5 +440,7 @@
   "home.glance.income": "הכנסה",
   "home.glance.spending": "הוצאה",
   "home.glance.diff": "הפרש",
-  "hero.afterBills": "אחרי {amount} בחשבונות הקרובים"
+  "hero.afterBills": "אחרי {amount} בחשבונות הקרובים",
+  "home.glance.in": "נכנס",
+  "home.glance.out": "יוצא"
 }

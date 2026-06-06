@@ -440,5 +440,7 @@
   "home.glance.income": "Bevétel",
   "home.glance.spending": "Kiadás",
   "home.glance.diff": "Különbség",
-  "hero.afterBills": "{amount} közelgő számla után"
+  "hero.afterBills": "{amount} közelgő számla után",
+  "home.glance.in": "be",
+  "home.glance.out": "ki"
 }

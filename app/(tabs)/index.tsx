@@ -93,12 +93,21 @@ export default function Home() {
     return accountName.get(tx.accountId ?? '');
   };
 
+  // Income / expense for this month. Both exclude the 'adjustment'
+  // category (balance reconciliation, not real flow) so MonthGlance
+  // and Hero math don't get inflated by manual balance fixups.
   const income = useMemo(
-    () => thisMoTxns.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0),
+    () =>
+      thisMoTxns
+        .filter((t) => t.type === 'income' && t.category !== 'adjustment')
+        .reduce((s, t) => s + t.amount, 0),
     [thisMoTxns],
   );
   const expense = useMemo(
-    () => thisMoTxns.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0),
+    () =>
+      thisMoTxns
+        .filter((t) => t.type === 'expense' && t.category !== 'adjustment')
+        .reduce((s, t) => s + t.amount, 0),
     [thisMoTxns],
   );
   // `fixedExp` is the projection of recurring bills still on the books

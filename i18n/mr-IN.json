@@ -440,5 +440,7 @@
   "home.glance.income": "उत्पन्न",
   "home.glance.spending": "खर्च",
   "home.glance.diff": "फरक",
-  "hero.afterBills": "येणाऱ्या {amount} बिलांनंतर"
+  "hero.afterBills": "येणाऱ्या {amount} बिलांनंतर",
+  "home.glance.in": "मिळाले",
+  "home.glance.out": "खर्च"
 }

@@ -440,5 +440,7 @@
   "home.glance.income": "รายรับ",
   "home.glance.spending": "รายจ่าย",
   "home.glance.diff": "ส่วนต่าง",
-  "hero.afterBills": "หลังจาก {amount} ในบิลที่กำลังจะมาถึง"
+  "hero.afterBills": "หลังจาก {amount} ในบิลที่กำลังจะมาถึง",
+  "home.glance.in": "เข้า",
+  "home.glance.out": "ออก"
 }

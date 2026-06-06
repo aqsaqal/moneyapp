@@ -440,5 +440,7 @@
   "home.glance.income": "Venituri",
   "home.glance.spending": "Cheltuieli",
   "home.glance.diff": "Diferență",
-  "hero.afterBills": "După {amount} în facturi viitoare"
+  "hero.afterBills": "După {amount} în facturi viitoare",
+  "home.glance.in": "intrare",
+  "home.glance.out": "ieșire"
 }

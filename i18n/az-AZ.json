@@ -440,5 +440,7 @@
   "home.glance.income": "Gəlir",
   "home.glance.spending": "Xərc",
   "home.glance.diff": "Fərq",
-  "hero.afterBills": "Yaxınlaşan {amount} hesablardan sonra"
+  "hero.afterBills": "Yaxınlaşan {amount} hesablardan sonra",
+  "home.glance.in": "gəlir",
+  "home.glance.out": "xərc"
 }

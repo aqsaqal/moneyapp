@@ -439,5 +439,7 @@
   "home.glance.income": "Кіріс",
   "home.glance.spending": "Шығыс",
   "home.glance.diff": "Айырма",
-  "hero.afterBills": "Алдағы {amount} шоттардан кейін"
+  "hero.afterBills": "Алдағы {amount} шоттардан кейін",
+  "home.glance.in": "кіріс",
+  "home.glance.out": "шығыс"
 }

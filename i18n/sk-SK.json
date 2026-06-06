@@ -440,5 +440,7 @@
   "home.glance.income": "Príjmy",
   "home.glance.spending": "Výdavky",
   "home.glance.diff": "Rozdiel",
-  "hero.afterBills": "Po {amount} v nadchádzajúcich účtoch"
+  "hero.afterBills": "Po {amount} v nadchádzajúcich účtoch",
+  "home.glance.in": "príjem",
+  "home.glance.out": "výdavok"
 }

@@ -440,5 +440,7 @@
   "home.glance.income": "Ingresos",
   "home.glance.spending": "Gastos",
   "home.glance.diff": "Diferencia",
-  "hero.afterBills": "Después de {amount} en próximas facturas"
+  "hero.afterBills": "Después de {amount} en próximas facturas",
+  "home.glance.in": "ingreso",
+  "home.glance.out": "gasto"
 }

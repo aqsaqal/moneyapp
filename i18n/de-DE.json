@@ -440,5 +440,7 @@
   "home.glance.income": "Einnahmen",
   "home.glance.spending": "Ausgaben",
   "home.glance.diff": "Differenz",
-  "hero.afterBills": "Nach {amount} an anstehenden Rechnungen"
+  "hero.afterBills": "Nach {amount} an anstehenden Rechnungen",
+  "home.glance.in": "ein",
+  "home.glance.out": "aus"
 }

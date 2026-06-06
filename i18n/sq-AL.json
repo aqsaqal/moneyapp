@@ -440,5 +440,7 @@
   "home.glance.income": "Të ardhura",
   "home.glance.spending": "Shpenzime",
   "home.glance.diff": "Diferenca",
-  "hero.afterBills": "Pas {amount} në faturat e ardhshme"
+  "hero.afterBills": "Pas {amount} në faturat e ardhshme",
+  "home.glance.in": "hyrje",
+  "home.glance.out": "dalje"
 }

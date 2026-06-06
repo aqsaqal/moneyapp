@@ -439,5 +439,7 @@
   "home.glance.income": "الدخل",
   "home.glance.spending": "الإنفاق",
   "home.glance.diff": "الفرق",
-  "hero.afterBills": "بعد {amount} من الفواتير القادمة"
+  "hero.afterBills": "بعد {amount} من الفواتير القادمة",
+  "home.glance.in": "وارد",
+  "home.glance.out": "صادر"
 }

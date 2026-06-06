@@ -440,5 +440,7 @@
   "home.glance.income": "Prihodki",
   "home.glance.spending": "Odhodki",
   "home.glance.diff": "Razlika",
-  "hero.afterBills": "Po {amount} prihajajočih računih"
+  "hero.afterBills": "Po {amount} prihajajočih računih",
+  "home.glance.in": "prejem",
+  "home.glance.out": "izdatek"
 }

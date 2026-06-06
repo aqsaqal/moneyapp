@@ -439,5 +439,7 @@
   "home.glance.income": "Pendapatan",
   "home.glance.spending": "Perbelanjaan",
   "home.glance.diff": "Beza",
-  "hero.afterBills": "Selepas {amount} dalam bil akan datang"
+  "hero.afterBills": "Selepas {amount} dalam bil akan datang",
+  "home.glance.in": "masuk",
+  "home.glance.out": "keluar"
 }

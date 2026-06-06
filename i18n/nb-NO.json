@@ -440,5 +440,7 @@
   "home.glance.income": "Inntekt",
   "home.glance.spending": "Forbruk",
   "home.glance.diff": "Differanse",
-  "hero.afterBills": "Etter {amount} i kommende regninger"
+  "hero.afterBills": "Etter {amount} i kommende regninger",
+  "home.glance.in": "inn",
+  "home.glance.out": "ut"
 }

@@ -440,5 +440,7 @@
   "home.glance.income": "درآمد",
   "home.glance.spending": "هزینه",
   "home.glance.diff": "تفاوت",
-  "hero.afterBills": "پس از {amount} از قبوض پیش‌رو"
+  "hero.afterBills": "پس از {amount} از قبوض پیش‌رو",
+  "home.glance.in": "ورودی",
+  "home.glance.out": "خروجی"
 }

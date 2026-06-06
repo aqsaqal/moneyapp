@@ -440,5 +440,7 @@
   "home.glance.income": "收入",
   "home.glance.spending": "支出",
   "home.glance.diff": "差额",
-  "hero.afterBills": "已扣除即将到期账单 {amount}"
+  "hero.afterBills": "已扣除即将到期账单 {amount}",
+  "home.glance.in": "入",
+  "home.glance.out": "出"
 }

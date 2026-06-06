@@ -440,5 +440,7 @@
   "home.glance.income": "Mapato",
   "home.glance.spending": "Matumizi",
   "home.glance.diff": "Tofauti",
-  "hero.afterBills": "Baada ya {amount} kwa bili zinazokuja"
+  "hero.afterBills": "Baada ya {amount} kwa bili zinazokuja",
+  "home.glance.in": "ndani",
+  "home.glance.out": "nje"
 }

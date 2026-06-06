@@ -440,5 +440,7 @@
   "home.glance.income": "Daromad",
   "home.glance.spending": "Xarajat",
   "home.glance.diff": "Farq",
-  "hero.afterBills": "Kelayotgan {amount} hisoblardan keyin"
+  "hero.afterBills": "Kelayotgan {amount} hisoblardan keyin",
+  "home.glance.in": "kirim",
+  "home.glance.out": "chiqim"
 }

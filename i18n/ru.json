@@ -439,5 +439,7 @@
   "home.glance.income": "Доход",
   "home.glance.spending": "Расход",
   "home.glance.diff": "Разница",
-  "hero.afterBills": "После {amount} предстоящих счетов"
+  "hero.afterBills": "После {amount} предстоящих счетов",
+  "home.glance.in": "доход",
+  "home.glance.out": "расход"
 }

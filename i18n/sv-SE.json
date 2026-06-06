@@ -440,5 +440,7 @@
   "home.glance.income": "Inkomst",
   "home.glance.spending": "Utgifter",
   "home.glance.diff": "Skillnad",
-  "hero.afterBills": "Efter {amount} i kommande räkningar"
+  "hero.afterBills": "Efter {amount} i kommande räkningar",
+  "home.glance.in": "in",
+  "home.glance.out": "ut"
 }

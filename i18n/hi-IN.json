@@ -440,5 +440,7 @@
   "home.glance.income": "आय",
   "home.glance.spending": "खर्च",
   "home.glance.diff": "अंतर",
-  "hero.afterBills": "आगामी {amount} बिलों के बाद"
+  "hero.afterBills": "आगामी {amount} बिलों के बाद",
+  "home.glance.in": "आय",
+  "home.glance.out": "खर्च"
 }

@@ -440,5 +440,7 @@
   "home.glance.income": "Έσοδα",
   "home.glance.spending": "Δαπάνες",
   "home.glance.diff": "Διαφορά",
-  "hero.afterBills": "Μετά από {amount} σε επερχόμενους λογαριασμούς"
+  "hero.afterBills": "Μετά από {amount} σε επερχόμενους λογαριασμούς",
+  "home.glance.in": "έσοδα",
+  "home.glance.out": "έξοδα"
 }

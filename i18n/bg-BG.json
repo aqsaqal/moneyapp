@@ -440,5 +440,7 @@
   "home.glance.income": "Приходи",
   "home.glance.spending": "Разходи",
   "home.glance.diff": "Разлика",
-  "hero.afterBills": "След {amount} в предстоящи сметки"
+  "hero.afterBills": "След {amount} в предстоящи сметки",
+  "home.glance.in": "приход",
+  "home.glance.out": "разход"
 }

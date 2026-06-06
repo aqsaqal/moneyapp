@@ -440,5 +440,7 @@
   "home.glance.income": "ఆదాయం",
   "home.glance.spending": "ఖర్చు",
   "home.glance.diff": "వ్యత్యాసం",
-  "hero.afterBills": "రాబోయే {amount} బిల్లుల తర్వాత"
+  "hero.afterBills": "రాబోయే {amount} బిల్లుల తర్వాత",
+  "home.glance.in": "రాబడి",
+  "home.glance.out": "ఖర్చు"
 }

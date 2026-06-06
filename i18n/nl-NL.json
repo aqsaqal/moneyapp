@@ -440,5 +440,7 @@
   "home.glance.income": "Inkomsten",
   "home.glance.spending": "Uitgaven",
   "home.glance.diff": "Verschil",
-  "hero.afterBills": "Na {amount} aan komende rekeningen"
+  "hero.afterBills": "Na {amount} aan komende rekeningen",
+  "home.glance.in": "in",
+  "home.glance.out": "uit"
 }

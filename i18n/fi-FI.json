@@ -440,5 +440,7 @@
   "home.glance.income": "Tulot",
   "home.glance.spending": "Menot",
   "home.glance.diff": "Erotus",
-  "hero.afterBills": "Tulevien {amount} laskujen jälkeen"
+  "hero.afterBills": "Tulevien {amount} laskujen jälkeen",
+  "home.glance.in": "sisään",
+  "home.glance.out": "ulos"
 }

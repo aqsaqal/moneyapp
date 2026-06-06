@@ -440,5 +440,7 @@
   "home.glance.income": "Thu nhập",
   "home.glance.spending": "Chi tiêu",
   "home.glance.diff": "Chênh lệch",
-  "hero.afterBills": "Sau {amount} hoá đơn sắp tới"
+  "hero.afterBills": "Sau {amount} hoá đơn sắp tới",
+  "home.glance.in": "vào",
+  "home.glance.out": "ra"
 }

@@ -440,5 +440,7 @@
   "home.glance.income": "Ienākumi",
   "home.glance.spending": "Tēriņi",
   "home.glance.diff": "Starpība",
-  "hero.afterBills": "Pēc {amount} gaidāmajiem rēķiniem"
+  "hero.afterBills": "Pēc {amount} gaidāmajiem rēķiniem",
+  "home.glance.in": "ienākumi",
+  "home.glance.out": "izdevumi"
 }

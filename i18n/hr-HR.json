@@ -440,5 +440,7 @@
   "home.glance.income": "Prihodi",
   "home.glance.spending": "Potrošnja",
   "home.glance.diff": "Razlika",
-  "hero.afterBills": "Nakon {amount} u predstojećim računima"
+  "hero.afterBills": "Nakon {amount} u predstojećim računima",
+  "home.glance.in": "prihod",
+  "home.glance.out": "rashod"
 }

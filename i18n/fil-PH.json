@@ -440,5 +440,7 @@
   "home.glance.income": "Kita",
   "home.glance.spending": "Gastos",
   "home.glance.diff": "Pagkakaiba",
-  "hero.afterBills": "Pagkatapos ng {amount} sa paparating na bayarin"
+  "hero.afterBills": "Pagkatapos ng {amount} sa paparating na bayarin",
+  "home.glance.in": "kita",
+  "home.glance.out": "gastos"
 }
