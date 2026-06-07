@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Eliminare l'obiettivo?",
   "plan.goals.deleteConfirm.body": "Eliminare {name}?",
   "plan.budget.removeConfirm.title": "Rimuovere il budget?",
-  "plan.budget.removeConfirm.body": "Smettere di monitorare il budget mensile per {name}?"
+  "plan.budget.removeConfirm.body": "Smettere di monitorare il budget mensile per {name}?",
+  "settings.demo.label": "Ricrea profilo demo",
+  "settings.demo.hint": "Sostituisce il profilo Demo con due anni di dati di esempio aggiornati",
+  "settings.demo.title": "Ricreare il profilo demo?",
+  "settings.demo.body": "Questo eliminerà il profilo Demo esistente (se presente) e lo ricostruirà con dati di esempio. I tuoi profili non saranno interessati.",
+  "settings.demo.cta": "Ricrea"
 }

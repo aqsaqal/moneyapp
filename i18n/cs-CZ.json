@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Smazat cíl?",
   "plan.goals.deleteConfirm.body": "Smazat {name}?",
   "plan.budget.removeConfirm.title": "Odebrat rozpočet?",
-  "plan.budget.removeConfirm.body": "Přestat sledovat měsíční rozpočet pro {name}?"
+  "plan.budget.removeConfirm.body": "Přestat sledovat měsíční rozpočet pro {name}?",
+  "settings.demo.label": "Znovu vytvořit demo profil",
+  "settings.demo.hint": "Nahradí demo profil dvouletými novými ukázkovými daty",
+  "settings.demo.title": "Znovu vytvořit demo profil?",
+  "settings.demo.body": "Tím se odstraní existující demo profil (pokud existuje) a znovu se vytvoří s ukázkovými daty. Vaše vlastní profily nebudou ovlivněny.",
+  "settings.demo.cta": "Znovu vytvořit"
 }

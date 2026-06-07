@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "ลบเป้าหมาย?",
   "plan.goals.deleteConfirm.body": "ลบ {name}?",
   "plan.budget.removeConfirm.title": "ลบงบประมาณ?",
-  "plan.budget.removeConfirm.body": "หยุดติดตามงบประมาณรายเดือนสำหรับ {name}?"
+  "plan.budget.removeConfirm.body": "หยุดติดตามงบประมาณรายเดือนสำหรับ {name}?",
+  "settings.demo.label": "สร้างโปรไฟล์ตัวอย่างใหม่",
+  "settings.demo.hint": "แทนที่โปรไฟล์ตัวอย่างด้วยข้อมูลตัวอย่างใหม่สองปี",
+  "settings.demo.title": "สร้างโปรไฟล์ตัวอย่างใหม่?",
+  "settings.demo.body": "การดำเนินการนี้จะลบโปรไฟล์ตัวอย่างที่มีอยู่ (ถ้ามี) และสร้างใหม่ด้วยข้อมูลตัวอย่าง โปรไฟล์ของคุณจะไม่ได้รับผลกระทบ",
+  "settings.demo.cta": "สร้างใหม่"
 }

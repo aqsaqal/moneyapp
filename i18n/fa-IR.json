@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "حذف هدف؟",
   "plan.goals.deleteConfirm.body": "حذف {name}؟",
   "plan.budget.removeConfirm.title": "حذف بودجه؟",
-  "plan.budget.removeConfirm.body": "توقف پیگیری بودجهٔ ماهانهٔ {name}؟"
+  "plan.budget.removeConfirm.body": "توقف پیگیری بودجهٔ ماهانهٔ {name}؟",
+  "settings.demo.label": "بازسازی نمایه دمو",
+  "settings.demo.hint": "نمایه دمو را با دو سال داده‌های نمونهٔ تازه جایگزین می‌کند",
+  "settings.demo.title": "بازسازی نمایه دمو؟",
+  "settings.demo.body": "این کار نمایه دموی موجود (در صورت وجود) را حذف می‌کند و آن را با داده‌های نمونه بازسازی می‌کند. نمایه‌های شخصی شما تحت تأثیر قرار نمی‌گیرند.",
+  "settings.demo.cta": "بازسازی"
 }

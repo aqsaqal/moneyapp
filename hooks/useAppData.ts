@@ -111,6 +111,16 @@ export function bootAppData(): Promise<void> {
       // gated per profile by kv.netWorthBackfillDone. Runs after today's
       // snapshot so the present-day row is the authority at the cutover.
       try { backfillNetWorthHistory(); } catch { /* never block boot on this */ }
+      // Demo profile bootstrap — one-shot, gated by kv flag so that
+      // deleting Demo doesn't get auto-re-created on next launch.
+      try {
+        if (!kv.getBool('demoProfileAttempted', false)) {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
+          const { ensureDemoProfile } = require('@/utils/db/demoSeed');
+          ensureDemoProfile();
+          kv.setBool('demoProfileAttempted', true);
+        }
+      } catch { /* demo seed is best-effort; never block boot */ }
       // Profile switch is bootAppData's one-off; re-run the snapshot
       // + backfill for the newly activated profile, and bump the global
       // version so the React caches that didn't depend on the profile

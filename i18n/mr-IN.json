@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "ध्येय हटवायचे?",
   "plan.goals.deleteConfirm.body": "{name} हटवायचे?",
   "plan.budget.removeConfirm.title": "बजेट काढायचे?",
-  "plan.budget.removeConfirm.body": "{name} साठी मासिक बजेट ट्रॅकिंग थांबवायची?"
+  "plan.budget.removeConfirm.body": "{name} साठी मासिक बजेट ट्रॅकिंग थांबवायची?",
+  "settings.demo.label": "डेमो प्रोफाइल पुन्हा तयार करा",
+  "settings.demo.hint": "डेमो प्रोफाइलला दोन वर्षांच्या नवीन नमुना डेटाने बदलते",
+  "settings.demo.title": "डेमो प्रोफाइल पुन्हा तयार करायचे?",
+  "settings.demo.body": "हे अस्तित्वातील डेमो प्रोफाइल हटवेल (असल्यास) आणि नमुना डेटासह पुन्हा तयार करेल. आपले स्वतःचे प्रोफाइल प्रभावित होणार नाहीत.",
+  "settings.demo.cta": "पुन्हा तयार करा"
 }

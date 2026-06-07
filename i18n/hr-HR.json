@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Izbrisati cilj?",
   "plan.goals.deleteConfirm.body": "Izbrisati {name}?",
   "plan.budget.removeConfirm.title": "Ukloniti proračun?",
-  "plan.budget.removeConfirm.body": "Prestati pratiti mjesečni proračun za {name}?"
+  "plan.budget.removeConfirm.body": "Prestati pratiti mjesečni proračun za {name}?",
+  "settings.demo.label": "Ponovno stvori demo profil",
+  "settings.demo.hint": "Zamjenjuje demo profil sa dvije godine svježih primjera podataka",
+  "settings.demo.title": "Ponovno stvoriti demo profil?",
+  "settings.demo.body": "Ovo će izbrisati postojeći demo profil (ako postoji) i ponovno ga izgraditi s primjerima podataka. Vaši osobni profili neće biti pogođeni.",
+  "settings.demo.cta": "Ponovno stvori"
 }

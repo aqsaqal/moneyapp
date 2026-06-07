@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "இலக்கை நீக்கவா?",
   "plan.goals.deleteConfirm.body": "{name}-ஐ நீக்கவா?",
   "plan.budget.removeConfirm.title": "பட்ஜெட்டை அகற்றவா?",
-  "plan.budget.removeConfirm.body": "{name}-க்கான மாதாந்திர பட்ஜெட் கண்காணிப்பை நிறுத்தவா?"
+  "plan.budget.removeConfirm.body": "{name}-க்கான மாதாந்திர பட்ஜெட் கண்காணிப்பை நிறுத்தவா?",
+  "settings.demo.label": "டெமோ சுயவிவரத்தை மீண்டும் உருவாக்கு",
+  "settings.demo.hint": "டெமோ சுயவிவரத்தை இரண்டு ஆண்டுகளின் புதிய மாதிரி தரவுகளுடன் மாற்றுகிறது",
+  "settings.demo.title": "டெமோ சுயவிவரத்தை மீண்டும் உருவாக்கவா?",
+  "settings.demo.body": "இது தற்போதுள்ள டெமோ சுயவிவரத்தை (இருந்தால்) நீக்கி, மாதிரி தரவுகளுடன் மீண்டும் உருவாக்கும். உங்கள் சொந்த சுயவிவரங்கள் பாதிக்கப்படாது.",
+  "settings.demo.cta": "மீண்டும் உருவாக்கு"
 }

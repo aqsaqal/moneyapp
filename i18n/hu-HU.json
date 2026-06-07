@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Cél törlése?",
   "plan.goals.deleteConfirm.body": "{name} törlése?",
   "plan.budget.removeConfirm.title": "Költségvetés eltávolítása?",
-  "plan.budget.removeConfirm.body": "Leállítja a havi költségvetés követését a következőhöz: {name}?"
+  "plan.budget.removeConfirm.body": "Leállítja a havi költségvetés követését a következőhöz: {name}?",
+  "settings.demo.label": "Demo profil újralétrehozása",
+  "settings.demo.hint": "Lecseréli a Demo profilt két év friss mintaadatra",
+  "settings.demo.title": "Újralétrehozza a demo profilt?",
+  "settings.demo.body": "Ez törli a meglévő Demo profilt (ha van) és újra felépíti mintaadatokkal. A saját profiljaid nem érintettek.",
+  "settings.demo.cta": "Újralétrehozás"
 }

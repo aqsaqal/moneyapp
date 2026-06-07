@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Doel verwijderen?",
   "plan.goals.deleteConfirm.body": "{name} verwijderen?",
   "plan.budget.removeConfirm.title": "Budget verwijderen?",
-  "plan.budget.removeConfirm.body": "Stoppen met het volgen van maandbudget voor {name}?"
+  "plan.budget.removeConfirm.body": "Stoppen met het volgen van maandbudget voor {name}?",
+  "settings.demo.label": "Demoprofiel opnieuw maken",
+  "settings.demo.hint": "Vervangt het demoprofiel door twee jaar verse voorbeeldgegevens",
+  "settings.demo.title": "Demoprofiel opnieuw maken?",
+  "settings.demo.body": "Dit verwijdert het bestaande demoprofiel (indien aanwezig) en bouwt het opnieuw op met voorbeeldgegevens. Je eigen profielen worden niet beïnvloed.",
+  "settings.demo.cta": "Opnieuw maken"
 }

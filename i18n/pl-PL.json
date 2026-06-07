@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Usunąć cel?",
   "plan.goals.deleteConfirm.body": "Usunąć {name}?",
   "plan.budget.removeConfirm.title": "Usunąć budżet?",
-  "plan.budget.removeConfirm.body": "Zaprzestać śledzenia miesięcznego budżetu dla {name}?"
+  "plan.budget.removeConfirm.body": "Zaprzestać śledzenia miesięcznego budżetu dla {name}?",
+  "settings.demo.label": "Utwórz ponownie profil demo",
+  "settings.demo.hint": "Zastępuje profil Demo dwoma latami świeżych przykładowych danych",
+  "settings.demo.title": "Utworzyć ponownie profil demo?",
+  "settings.demo.body": "Spowoduje to usunięcie istniejącego profilu Demo (jeśli istnieje) i odbudowanie go z przykładowymi danymi. Twoje własne profile nie zostaną naruszone.",
+  "settings.demo.cta": "Utwórz ponownie"
 }

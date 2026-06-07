@@ -479,5 +479,10 @@
   "plan.goals.deleteConfirm.title": "Hapus tujuan?",
   "plan.goals.deleteConfirm.body": "Hapus {name}?",
   "plan.budget.removeConfirm.title": "Hapus anggaran?",
-  "plan.budget.removeConfirm.body": "Berhenti melacak anggaran bulanan untuk {name}?"
+  "plan.budget.removeConfirm.body": "Berhenti melacak anggaran bulanan untuk {name}?",
+  "settings.demo.label": "Buat ulang profil demo",
+  "settings.demo.hint": "Mengganti profil Demo dengan dua tahun data contoh segar",
+  "settings.demo.title": "Buat ulang profil demo?",
+  "settings.demo.body": "Ini akan menghapus profil Demo yang ada (jika ada) dan membangunnya kembali dengan data contoh. Profil pribadi Anda tidak akan terpengaruh.",
+  "settings.demo.cta": "Buat ulang"
 }

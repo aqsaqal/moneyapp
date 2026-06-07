@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Ziel löschen?",
   "plan.goals.deleteConfirm.body": "{name} löschen?",
   "plan.budget.removeConfirm.title": "Budget entfernen?",
-  "plan.budget.removeConfirm.body": "Monatliches Budget für {name} nicht mehr verfolgen?"
+  "plan.budget.removeConfirm.body": "Monatliches Budget für {name} nicht mehr verfolgen?",
+  "settings.demo.label": "Demoprofil neu erstellen",
+  "settings.demo.hint": "Ersetzt das Demoprofil durch zwei Jahre neue Beispieldaten",
+  "settings.demo.title": "Demoprofil neu erstellen?",
+  "settings.demo.body": "Dies löscht das vorhandene Demoprofil (falls vorhanden) und baut es mit Beispieldaten neu auf. Ihre eigenen Profile sind nicht betroffen.",
+  "settings.demo.cta": "Neu erstellen"
 }

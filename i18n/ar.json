@@ -479,5 +479,10 @@
   "plan.goals.deleteConfirm.title": "حذف الهدف؟",
   "plan.goals.deleteConfirm.body": "حذف {name}؟",
   "plan.budget.removeConfirm.title": "إزالة الميزانية؟",
-  "plan.budget.removeConfirm.body": "إيقاف تتبع الميزانية الشهرية لـ {name}؟"
+  "plan.budget.removeConfirm.body": "إيقاف تتبع الميزانية الشهرية لـ {name}؟",
+  "settings.demo.label": "إعادة إنشاء الملف التجريبي",
+  "settings.demo.hint": "يستبدل الملف التجريبي ببيانات نموذجية لمدة سنتين",
+  "settings.demo.title": "إعادة إنشاء الملف التجريبي؟",
+  "settings.demo.body": "سيؤدي هذا إلى حذف الملف التجريبي الحالي (إن وجد) وإعادة إنشائه ببيانات تجريبية. لن تتأثر ملفاتك الخاصة.",
+  "settings.demo.cta": "إعادة الإنشاء"
 }

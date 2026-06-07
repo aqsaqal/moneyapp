@@ -479,5 +479,10 @@
   "plan.goals.deleteConfirm.title": "Hedef silinsin mi?",
   "plan.goals.deleteConfirm.body": "{name} silinsin mi?",
   "plan.budget.removeConfirm.title": "Bütçe kaldırılsın mı?",
-  "plan.budget.removeConfirm.body": "{name} için aylık bütçe takibini durdurmak istiyor musunuz?"
+  "plan.budget.removeConfirm.body": "{name} için aylık bütçe takibini durdurmak istiyor musunuz?",
+  "settings.demo.label": "Demo profili yeniden oluştur",
+  "settings.demo.hint": "Demo profilini iki yıllık yeni örnek verilerle değiştirir",
+  "settings.demo.title": "Demo profili yeniden oluşturulsun mu?",
+  "settings.demo.body": "Bu, mevcut Demo profilini (varsa) silecek ve örnek verilerle yeniden oluşturacaktır. Kendi profilleriniz etkilenmez.",
+  "settings.demo.cta": "Yeniden oluştur"
 }

@@ -803,7 +803,41 @@ function DataSection() {
           });
         }}
       />
+      <DemoProfileRow />
     </View>
+  );
+}
+
+function DemoProfileRow() {
+  const t = useT();
+  const onPress = () => {
+    Alert.alert(
+      t('settings.demo.title'),
+      t('settings.demo.body'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('settings.demo.cta'),
+          onPress: () => {
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
+              const { rebuildDemoProfile } = require('@/utils/db/demoSeed');
+              rebuildDemoProfile();
+            } catch (e) {
+              Alert.alert('Demo profile', e instanceof Error ? e.message : String(e));
+            }
+          },
+        },
+      ],
+    );
+  };
+  return (
+    <SettingRow
+      label={t('settings.demo.label')}
+      hint={t('settings.demo.hint')}
+      icon="flask-outline"
+      onPress={onPress}
+    />
   );
 }
 

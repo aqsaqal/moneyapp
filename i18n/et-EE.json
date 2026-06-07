@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Kustuta eesmärk?",
   "plan.goals.deleteConfirm.body": "Kustuta {name}?",
   "plan.budget.removeConfirm.title": "Eemalda eelarve?",
-  "plan.budget.removeConfirm.body": "Lõpetada {name} kuu eelarve jälgimine?"
+  "plan.budget.removeConfirm.body": "Lõpetada {name} kuu eelarve jälgimine?",
+  "settings.demo.label": "Loo demoprofiil uuesti",
+  "settings.demo.hint": "Asendab demoprofiili kahe aasta värskete näidisandmetega",
+  "settings.demo.title": "Loo demoprofiil uuesti?",
+  "settings.demo.body": "See kustutab olemasoleva demoprofiili (kui see on olemas) ja ehitab selle uuesti näidisandmetega. Sinu enda profiilid jäävad puutumata.",
+  "settings.demo.cta": "Loo uuesti"
 }

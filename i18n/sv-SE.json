@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Ta bort mål?",
   "plan.goals.deleteConfirm.body": "Ta bort {name}?",
   "plan.budget.removeConfirm.title": "Ta bort budget?",
-  "plan.budget.removeConfirm.body": "Sluta spåra månadsbudget för {name}?"
+  "plan.budget.removeConfirm.body": "Sluta spåra månadsbudget för {name}?",
+  "settings.demo.label": "Återskapa demoprofil",
+  "settings.demo.hint": "Ersätter demoprofilen med två års färska exempeldata",
+  "settings.demo.title": "Återskapa demoprofil?",
+  "settings.demo.body": "Detta tar bort den befintliga demoprofilen (om någon) och bygger upp den igen med exempeldata. Dina egna profiler påverkas inte.",
+  "settings.demo.cta": "Återskapa"
 }

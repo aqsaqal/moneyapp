@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Slette mål?",
   "plan.goals.deleteConfirm.body": "Slette {name}?",
   "plan.budget.removeConfirm.title": "Fjerne budsjett?",
-  "plan.budget.removeConfirm.body": "Slutte å spore månedlig budsjett for {name}?"
+  "plan.budget.removeConfirm.body": "Slutte å spore månedlig budsjett for {name}?",
+  "settings.demo.label": "Gjenopprett demoprofil",
+  "settings.demo.hint": "Erstatter demoprofilen med to års friske eksempeldata",
+  "settings.demo.title": "Gjenopprette demoprofil?",
+  "settings.demo.body": "Dette vil slette den eksisterende demoprofilen (hvis noen) og bygge den opp på nytt med eksempeldata. Dine egne profiler påvirkes ikke.",
+  "settings.demo.cta": "Gjenopprett"
 }

@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "లక్ష్యం తొలగించాలా?",
   "plan.goals.deleteConfirm.body": "{name}ను తొలగించాలా?",
   "plan.budget.removeConfirm.title": "బడ్జెట్ తీసివేయాలా?",
-  "plan.budget.removeConfirm.body": "{name} కోసం నెలవారీ బడ్జెట్ ట్రాకింగ్ ఆపాలా?"
+  "plan.budget.removeConfirm.body": "{name} కోసం నెలవారీ బడ్జెట్ ట్రాకింగ్ ఆపాలా?",
+  "settings.demo.label": "డెమో ప్రొఫైల్‌ను మళ్లీ సృష్టించండి",
+  "settings.demo.hint": "డెమో ప్రొఫైల్‌ను రెండు సంవత్సరాల కొత్త నమూనా డేటాతో భర్తీ చేస్తుంది",
+  "settings.demo.title": "డెమో ప్రొఫైల్‌ను మళ్లీ సృష్టించాలా?",
+  "settings.demo.body": "ఇది ఉన్న డెమో ప్రొఫైల్‌ను (ఉంటే) తొలగించి, నమూనా డేటాతో మళ్లీ నిర్మిస్తుంది. మీ స్వంత ప్రొఫైల్‌లు ప్రభావితం కావు.",
+  "settings.demo.cta": "మళ్లీ సృష్టించండి"
 }

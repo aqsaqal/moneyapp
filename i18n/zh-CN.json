@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "删除目标？",
   "plan.goals.deleteConfirm.body": "删除 {name}？",
   "plan.budget.removeConfirm.title": "移除预算？",
-  "plan.budget.removeConfirm.body": "停止跟踪 {name} 的每月预算？"
+  "plan.budget.removeConfirm.body": "停止跟踪 {name} 的每月预算？",
+  "settings.demo.label": "重建演示档案",
+  "settings.demo.hint": "用两年的全新示例数据替换演示档案",
+  "settings.demo.title": "重建演示档案？",
+  "settings.demo.body": "这将删除现有的演示档案（如果有）并使用示例数据重新构建。您自己的档案不会受到影响。",
+  "settings.demo.cta": "重建"
 }

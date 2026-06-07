@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "למחוק יעד?",
   "plan.goals.deleteConfirm.body": "למחוק את {name}?",
   "plan.budget.removeConfirm.title": "להסיר תקציב?",
-  "plan.budget.removeConfirm.body": "להפסיק לעקוב אחר תקציב חודשי עבור {name}?"
+  "plan.budget.removeConfirm.body": "להפסיק לעקוב אחר תקציב חודשי עבור {name}?",
+  "settings.demo.label": "צור מחדש פרופיל הדגמה",
+  "settings.demo.hint": "מחליף את פרופיל ההדגמה בנתוני דוגמה טריים של שנתיים",
+  "settings.demo.title": "ליצור מחדש פרופיל הדגמה?",
+  "settings.demo.body": "פעולה זו תמחק את פרופיל ההדגמה הקיים (אם קיים) ותבנה אותו מחדש עם נתוני דוגמה. הפרופילים האישיים שלך לא יושפעו.",
+  "settings.demo.cta": "צור מחדש"
 }

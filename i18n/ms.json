@@ -479,5 +479,10 @@
   "plan.goals.deleteConfirm.title": "Padam matlamat?",
   "plan.goals.deleteConfirm.body": "Padam {name}?",
   "plan.budget.removeConfirm.title": "Buang bajet?",
-  "plan.budget.removeConfirm.body": "Berhenti menjejaki bajet bulanan untuk {name}?"
+  "plan.budget.removeConfirm.body": "Berhenti menjejaki bajet bulanan untuk {name}?",
+  "settings.demo.label": "Cipta semula profil demo",
+  "settings.demo.hint": "Menggantikan profil Demo dengan dua tahun data sampel segar",
+  "settings.demo.title": "Cipta semula profil demo?",
+  "settings.demo.body": "Ini akan memadamkan profil Demo yang sedia ada (jika ada) dan membinanya semula dengan data sampel. Profil peribadi anda tidak akan terjejas.",
+  "settings.demo.cta": "Cipta semula"
 }

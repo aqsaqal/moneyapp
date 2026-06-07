@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Ștergi obiectivul?",
   "plan.goals.deleteConfirm.body": "Ștergi {name}?",
   "plan.budget.removeConfirm.title": "Elimini bugetul?",
-  "plan.budget.removeConfirm.body": "Oprești urmărirea bugetului lunar pentru {name}?"
+  "plan.budget.removeConfirm.body": "Oprești urmărirea bugetului lunar pentru {name}?",
+  "settings.demo.label": "Recreează profilul demo",
+  "settings.demo.hint": "Înlocuiește profilul Demo cu doi ani de date exemplu noi",
+  "settings.demo.title": "Recreezi profilul demo?",
+  "settings.demo.body": "Acest lucru va șterge profilul Demo existent (dacă există) și îl va reconstrui cu date exemplu. Profilurile tale personale nu vor fi afectate.",
+  "settings.demo.cta": "Recreează"
 }

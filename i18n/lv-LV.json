@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Dzēst mērķi?",
   "plan.goals.deleteConfirm.body": "Dzēst {name}?",
   "plan.budget.removeConfirm.title": "Noņemt budžetu?",
-  "plan.budget.removeConfirm.body": "Pārtraukt sekot mēneša budžetam {name}?"
+  "plan.budget.removeConfirm.body": "Pārtraukt sekot mēneša budžetam {name}?",
+  "settings.demo.label": "Atjaunot demonstrācijas profilu",
+  "settings.demo.hint": "Aizvieto demonstrācijas profilu ar diviem gadiem svaigu paraugu datu",
+  "settings.demo.title": "Atjaunot demonstrācijas profilu?",
+  "settings.demo.body": "Tas izdzēsīs esošo demonstrācijas profilu (ja tāds ir) un izveidos to no jauna ar paraugu datiem. Jūsu personīgie profili netiks ietekmēti.",
+  "settings.demo.cta": "Atjaunot"
 }

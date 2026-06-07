@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Ištrinti tikslą?",
   "plan.goals.deleteConfirm.body": "Ištrinti {name}?",
   "plan.budget.removeConfirm.title": "Pašalinti biudžetą?",
-  "plan.budget.removeConfirm.body": "Nustoti sekti mėnesio biudžetą kategorijai {name}?"
+  "plan.budget.removeConfirm.body": "Nustoti sekti mėnesio biudžetą kategorijai {name}?",
+  "settings.demo.label": "Atkurti demonstracinį profilį",
+  "settings.demo.hint": "Pakeičia demonstracinį profilį dvejų metų naujais pavyzdiniais duomenimis",
+  "settings.demo.title": "Atkurti demonstracinį profilį?",
+  "settings.demo.body": "Tai ištrins esamą demonstracinį profilį (jei toks yra) ir vėl jį sukurs su pavyzdiniais duomenimis. Jūsų asmeniniai profiliai nebus paveikti.",
+  "settings.demo.cta": "Atkurti"
 }

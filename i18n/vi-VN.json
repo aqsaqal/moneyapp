@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Xóa mục tiêu?",
   "plan.goals.deleteConfirm.body": "Xóa {name}?",
   "plan.budget.removeConfirm.title": "Xóa ngân sách?",
-  "plan.budget.removeConfirm.body": "Dừng theo dõi ngân sách hàng tháng cho {name}?"
+  "plan.budget.removeConfirm.body": "Dừng theo dõi ngân sách hàng tháng cho {name}?",
+  "settings.demo.label": "Tạo lại hồ sơ demo",
+  "settings.demo.hint": "Thay thế hồ sơ Demo bằng hai năm dữ liệu mẫu mới",
+  "settings.demo.title": "Tạo lại hồ sơ demo?",
+  "settings.demo.body": "Thao tác này sẽ xóa hồ sơ Demo hiện có (nếu có) và xây dựng lại với dữ liệu mẫu. Hồ sơ cá nhân của bạn sẽ không bị ảnh hưởng.",
+  "settings.demo.cta": "Tạo lại"
 }

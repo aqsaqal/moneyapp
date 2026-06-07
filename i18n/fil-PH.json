@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Tanggalin ang goal?",
   "plan.goals.deleteConfirm.body": "Tanggalin ang {name}?",
   "plan.budget.removeConfirm.title": "Alisin ang budget?",
-  "plan.budget.removeConfirm.body": "Itigil ang buwanang budget para sa {name}?"
+  "plan.budget.removeConfirm.body": "Itigil ang buwanang budget para sa {name}?",
+  "settings.demo.label": "Likhain muli ang demo profile",
+  "settings.demo.hint": "Papalitan ang Demo profile ng dalawang taong sariwang sample data",
+  "settings.demo.title": "Likhain muli ang demo profile?",
+  "settings.demo.body": "Tatanggalin nito ang umiiral na Demo profile (kung mayroon) at muling itatayo gamit ang sample data. Ang sarili mong profiles ay hindi maaapektuhan.",
+  "settings.demo.cta": "Likhain muli"
 }

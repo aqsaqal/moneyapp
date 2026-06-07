@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "مقصد حذف کریں؟",
   "plan.goals.deleteConfirm.body": "{name} حذف کریں؟",
   "plan.budget.removeConfirm.title": "بجٹ ہٹائیں؟",
-  "plan.budget.removeConfirm.body": "{name} کے لیے ماہانہ بجٹ ٹریکنگ بند کریں؟"
+  "plan.budget.removeConfirm.body": "{name} کے لیے ماہانہ بجٹ ٹریکنگ بند کریں؟",
+  "settings.demo.label": "ڈیمو پروفائل دوبارہ بنائیں",
+  "settings.demo.hint": "ڈیمو پروفائل کو دو سال کے تازہ نمونے کے ڈیٹا سے بدل دیتا ہے",
+  "settings.demo.title": "ڈیمو پروفائل دوبارہ بنائیں؟",
+  "settings.demo.body": "یہ موجودہ ڈیمو پروفائل کو حذف کر دے گا (اگر کوئی ہو) اور اسے نمونے کے ڈیٹا کے ساتھ دوبارہ بنائے گا۔ آپ کے اپنے پروفائلز متاثر نہیں ہوں گے۔",
+  "settings.demo.cta": "دوبارہ بنائیں"
 }

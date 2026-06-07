@@ -479,5 +479,10 @@
   "plan.goals.deleteConfirm.title": "Удалить цель?",
   "plan.goals.deleteConfirm.body": "Удалить {name}?",
   "plan.budget.removeConfirm.title": "Удалить бюджет?",
-  "plan.budget.removeConfirm.body": "Прекратить отслеживание месячного бюджета для {name}?"
+  "plan.budget.removeConfirm.body": "Прекратить отслеживание месячного бюджета для {name}?",
+  "settings.demo.label": "Пересоздать демо-профиль",
+  "settings.demo.hint": "Заменяет демо-профиль свежими образцами данных за два года",
+  "settings.demo.title": "Пересоздать демо-профиль?",
+  "settings.demo.body": "Это удалит существующий демо-профиль (если он есть) и пересоздаст его с образцами данных. Ваши собственные профили не пострадают.",
+  "settings.demo.cta": "Пересоздать"
 }

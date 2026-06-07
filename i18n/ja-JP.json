@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "目標を削除しますか？",
   "plan.goals.deleteConfirm.body": "{name} を削除しますか？",
   "plan.budget.removeConfirm.title": "予算を削除しますか？",
-  "plan.budget.removeConfirm.body": "{name} の毎月の予算追跡を停止しますか？"
+  "plan.budget.removeConfirm.body": "{name} の毎月の予算追跡を停止しますか？",
+  "settings.demo.label": "デモプロファイルを再作成",
+  "settings.demo.hint": "デモプロファイルを2年分の新しいサンプルデータに置き換えます",
+  "settings.demo.title": "デモプロファイルを再作成しますか？",
+  "settings.demo.body": "これにより既存のデモプロファイル（あれば）が削除され、サンプルデータで再構築されます。あなた自身のプロファイルには影響しません。",
+  "settings.demo.cta": "再作成"
 }

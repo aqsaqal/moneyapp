@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Futa lengo?",
   "plan.goals.deleteConfirm.body": "Futa {name}?",
   "plan.budget.removeConfirm.title": "Ondoa bajeti?",
-  "plan.budget.removeConfirm.body": "Acha kufuatilia bajeti ya mwezi kwa {name}?"
+  "plan.budget.removeConfirm.body": "Acha kufuatilia bajeti ya mwezi kwa {name}?",
+  "settings.demo.label": "Tengeneza upya wasifu wa demo",
+  "settings.demo.hint": "Inabadilisha wasifu wa Demo na data mpya ya sampuli ya miaka miwili",
+  "settings.demo.title": "Tengeneza upya wasifu wa demo?",
+  "settings.demo.body": "Hii itafuta wasifu wa Demo uliopo (kama upo) na kuujenga upya kwa data ya sampuli. Wasifu wako mwenyewe hautaathirika.",
+  "settings.demo.cta": "Tengeneza upya"
 }

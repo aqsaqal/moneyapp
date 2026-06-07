@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Të fshihet objektivi?",
   "plan.goals.deleteConfirm.body": "Të fshihet {name}?",
   "plan.budget.removeConfirm.title": "Të hiqet buxheti?",
-  "plan.budget.removeConfirm.body": "Të ndalet ndjekja e buxhetit mujor për {name}?"
+  "plan.budget.removeConfirm.body": "Të ndalet ndjekja e buxhetit mujor për {name}?",
+  "settings.demo.label": "Rikrijo profilin demo",
+  "settings.demo.hint": "Zëvendëson profilin Demo me dy vjet të dhëna mostre të reja",
+  "settings.demo.title": "Rikrijo profilin demo?",
+  "settings.demo.body": "Kjo do të fshijë profilin Demo ekzistues (nëse ka) dhe do ta rindërtojë me të dhëna mostër. Profilet tuaja personale nuk do të preken.",
+  "settings.demo.cta": "Rikrijo"
 }

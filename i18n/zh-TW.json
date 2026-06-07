@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "刪除目標？",
   "plan.goals.deleteConfirm.body": "刪除 {name}？",
   "plan.budget.removeConfirm.title": "移除預算？",
-  "plan.budget.removeConfirm.body": "停止追蹤 {name} 的每月預算？"
+  "plan.budget.removeConfirm.body": "停止追蹤 {name} 的每月預算？",
+  "settings.demo.label": "重建示範檔案",
+  "settings.demo.hint": "以兩年的全新範例資料取代示範檔案",
+  "settings.demo.title": "重建示範檔案？",
+  "settings.demo.body": "這將刪除現有的示範檔案（如果有）並使用範例資料重新建立。您自己的檔案不會受到影響。",
+  "settings.demo.cta": "重建"
 }

@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Изтриване на цел?",
   "plan.goals.deleteConfirm.body": "Изтриване на {name}?",
   "plan.budget.removeConfirm.title": "Премахване на бюджет?",
-  "plan.budget.removeConfirm.body": "Спиране на месечен бюджет за {name}?"
+  "plan.budget.removeConfirm.body": "Спиране на месечен бюджет за {name}?",
+  "settings.demo.label": "Пресъздай демо профил",
+  "settings.demo.hint": "Замества демо профила с две години нови примерни данни",
+  "settings.demo.title": "Пресъздаване на демо профил?",
+  "settings.demo.body": "Това ще изтрие съществуващия демо профил (ако има такъв) и ще го изгради отново с примерни данни. Вашите собствени профили няма да бъдат засегнати.",
+  "settings.demo.cta": "Пресъздай"
 }

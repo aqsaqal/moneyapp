@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "লক্ষ্য মুছবেন?",
   "plan.goals.deleteConfirm.body": "{name} মুছবেন?",
   "plan.budget.removeConfirm.title": "বাজেট সরাবেন?",
-  "plan.budget.removeConfirm.body": "{name}-এর জন্য মাসিক বাজেট ট্র্যাকিং বন্ধ করবেন?"
+  "plan.budget.removeConfirm.body": "{name}-এর জন্য মাসিক বাজেট ট্র্যাকিং বন্ধ করবেন?",
+  "settings.demo.label": "ডেমো প্রোফাইল পুনরায় তৈরি করুন",
+  "settings.demo.hint": "ডেমো প্রোফাইলটিকে দুই বছরের নতুন নমুনা ডেটা দিয়ে প্রতিস্থাপন করে",
+  "settings.demo.title": "ডেমো প্রোফাইল পুনরায় তৈরি করবেন?",
+  "settings.demo.body": "এটি বিদ্যমান ডেমো প্রোফাইল মুছে ফেলবে (যদি থাকে) এবং নমুনা ডেটা দিয়ে আবার তৈরি করবে। আপনার নিজের প্রোফাইলগুলি প্রভাবিত হবে না।",
+  "settings.demo.cta": "পুনরায় তৈরি করুন"
 }

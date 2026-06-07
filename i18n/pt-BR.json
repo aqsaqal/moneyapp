@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Excluir meta?",
   "plan.goals.deleteConfirm.body": "Excluir {name}?",
   "plan.budget.removeConfirm.title": "Remover orçamento?",
-  "plan.budget.removeConfirm.body": "Parar de acompanhar o orçamento mensal de {name}?"
+  "plan.budget.removeConfirm.body": "Parar de acompanhar o orçamento mensal de {name}?",
+  "settings.demo.label": "Recriar perfil demo",
+  "settings.demo.hint": "Substitui o perfil Demo por dois anos de dados de exemplo novos",
+  "settings.demo.title": "Recriar perfil demo?",
+  "settings.demo.body": "Isso excluirá o perfil Demo existente (se houver) e o recriará com dados de exemplo. Seus próprios perfis não serão afetados.",
+  "settings.demo.cta": "Recriar"
 }

@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Məqsədi silmək?",
   "plan.goals.deleteConfirm.body": "{name} silinsin?",
   "plan.budget.removeConfirm.title": "Büdcəni silmək?",
-  "plan.budget.removeConfirm.body": "{name} üçün aylıq büdcəni izləməyi dayandır?"
+  "plan.budget.removeConfirm.body": "{name} üçün aylıq büdcəni izləməyi dayandır?",
+  "settings.demo.label": "Demo profili yenidən yarat",
+  "settings.demo.hint": "Demo profilini iki illik təzə nümunə məlumatları ilə əvəz edir",
+  "settings.demo.title": "Demo profilini yenidən yaratmaq?",
+  "settings.demo.body": "Bu, mövcud Demo profilini siləcək (əgər varsa) və nümunə məlumatları ilə yenidən yaradacaq. Sizin öz profilləriniz təsirlənməyəcək.",
+  "settings.demo.cta": "Yenidən yarat"
 }

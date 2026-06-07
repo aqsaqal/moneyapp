@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Διαγραφή στόχου;",
   "plan.goals.deleteConfirm.body": "Διαγραφή {name};",
   "plan.budget.removeConfirm.title": "Αφαίρεση προϋπολογισμού;",
-  "plan.budget.removeConfirm.body": "Διακοπή παρακολούθησης μηνιαίου προϋπολογισμού για {name};"
+  "plan.budget.removeConfirm.body": "Διακοπή παρακολούθησης μηνιαίου προϋπολογισμού για {name};",
+  "settings.demo.label": "Επαναδημιουργία προφίλ επίδειξης",
+  "settings.demo.hint": "Αντικαθιστά το προφίλ επίδειξης με νέα δείγματα δύο ετών",
+  "settings.demo.title": "Επαναδημιουργία προφίλ επίδειξης;",
+  "settings.demo.body": "Αυτό θα διαγράψει το υπάρχον προφίλ επίδειξης (αν υπάρχει) και θα το ξαναδημιουργήσει με δείγματα δεδομένων. Τα δικά σας προφίλ δεν θα επηρεαστούν.",
+  "settings.demo.cta": "Επαναδημιουργία"
 }

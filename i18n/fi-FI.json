@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Poistetaanko tavoite?",
   "plan.goals.deleteConfirm.body": "Poistetaanko {name}?",
   "plan.budget.removeConfirm.title": "Poistetaanko budjetti?",
-  "plan.budget.removeConfirm.body": "Lopetetaanko kuukausibudjetin seuranta kategorialle {name}?"
+  "plan.budget.removeConfirm.body": "Lopetetaanko kuukausibudjetin seuranta kategorialle {name}?",
+  "settings.demo.label": "Luo demoprofiili uudelleen",
+  "settings.demo.hint": "Korvaa demoprofiilin kahden vuoden uusilla esimerkkitiedoilla",
+  "settings.demo.title": "Luodaanko demoprofiili uudelleen?",
+  "settings.demo.body": "Tämä poistaa olemassa olevan demoprofiilin (jos sellainen on) ja rakentaa sen uudelleen esimerkkitiedoilla. Omat profiilisi eivät muutu.",
+  "settings.demo.cta": "Luo uudelleen"
 }

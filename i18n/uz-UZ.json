@@ -480,5 +480,10 @@
   "plan.goals.deleteConfirm.title": "Maqsadni o'chirish?",
   "plan.goals.deleteConfirm.body": "{name} o'chirilsinmi?",
   "plan.budget.removeConfirm.title": "Byudjet olib tashlansinmi?",
-  "plan.budget.removeConfirm.body": "{name} uchun oylik byudjet kuzatuvini to'xtatish?"
+  "plan.budget.removeConfirm.body": "{name} uchun oylik byudjet kuzatuvini to'xtatish?",
+  "settings.demo.label": "Demo profilni qayta yaratish",
+  "settings.demo.hint": "Demo profilni ikki yillik yangi namuna ma'lumotlari bilan almashtiradi",
+  "settings.demo.title": "Demo profilni qayta yaratasizmi?",
+  "settings.demo.body": "Bu mavjud Demo profilni o'chiradi (agar bo'lsa) va uni namuna ma'lumotlari bilan qayta quradi. Sizning shaxsiy profillaringizga ta'sir qilmaydi.",
+  "settings.demo.cta": "Qayta yaratish"
 }

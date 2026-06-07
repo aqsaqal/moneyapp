@@ -479,5 +479,10 @@
   "plan.goals.deleteConfirm.title": "Мақсатты жою?",
   "plan.goals.deleteConfirm.body": "{name} жойылсын ба?",
   "plan.budget.removeConfirm.title": "Бюджетті жою?",
-  "plan.budget.removeConfirm.body": "{name} үшін айлық бюджетті бақылауды тоқтату?"
+  "plan.budget.removeConfirm.body": "{name} үшін айлық бюджетті бақылауды тоқтату?",
+  "settings.demo.label": "Демо профильді қайта жасау",
+  "settings.demo.hint": "Демо профильді екі жылдық жаңа үлгі деректермен ауыстырады",
+  "settings.demo.title": "Демо профильді қайта жасау?",
+  "settings.demo.body": "Бұл бар Демо профильді жояды (бар болса) және оны үлгі деректермен қайта жасайды. Сіздің жеке профильдеріңізге әсер етпейді.",
+  "settings.demo.cta": "Қайта жасау"
 }
