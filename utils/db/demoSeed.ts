@@ -26,6 +26,7 @@ import {
 } from '@/utils/profiles';
 import { getDB, getRawDB } from './client';
 import { accounts, recurring, transactions, goals, debts, paidItems } from './schema';
+import { refreshTodaySnapshot, backfillNetWorthHistory } from '@/utils/netWorthSnapshot';
 
 const DEMO_NAME = 'Demo';
 
@@ -84,6 +85,19 @@ function seedAll(): void {
   seedGoalsAndDebts();
   seedBudgets();
   seedTransactions();
+  // The profile-switch boot listener ran backfill before transactions
+  // existed, so net_worth_snapshots is empty for this profile. Clear
+  // the per-profile "done" gate and force a backfill now that all
+  // accounts + 24 months of transactions are in place.
+  try {
+    const pid = getActiveProfileId();
+    const csv = kv.get('netWorthBackfillDoneV2') ?? '';
+    const set = new Set(csv.split(',').filter(Boolean));
+    set.delete(pid);
+    kv.set('netWorthBackfillDoneV2', Array.from(set).join(','));
+    refreshTodaySnapshot();
+    backfillNetWorthHistory();
+  } catch { /* best-effort */ }
 }
 
 function seedAccounts(): void {

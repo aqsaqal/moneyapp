@@ -120,21 +120,57 @@ export default function AccountDetail() {
 
   const onDelete = () => {
     setMenuOpen(false);
-    Alert.alert(
-      t('account.deleteAccount'),
-      t('account.delete.body'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.delete'),
-          style: 'destructive',
-          onPress: () => {
-            deleteAccountCascade(account.id);
-            router.back();
-          },
+    // Match AccountSheet's archive-vs-delete flow: the body string
+    // includes counts of direct expenses/incomes vs transfers so the
+    // user can weigh the destructive option.
+    const directCount = txns.filter(
+      (x) => (x.type === 'expense' || x.type === 'income') && x.accountId === account.id,
+    ).length;
+    const transferCount = txns.filter(
+      (x) => x.type === 'transfer' && (x.accountId === account.id || x.toAccountId === account.id),
+    ).length;
+    const summary = t('account.delete.body', {
+      name: account.name,
+      balance: account.balance.toFixed(2),
+      currency: ac,
+      directCount,
+      transferCount,
+    });
+    Alert.alert(t('account.delete.title'), summary, [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('account.archive'),
+        onPress: () => {
+          upsertAccount({
+            ...account,
+            archived: 1,
+            includeInTotal: 0,
+          } as typeof account);
+          router.back();
         },
-      ],
-    );
+      },
+      {
+        text: t('common.delete') + '…',
+        style: 'destructive',
+        onPress: () => {
+          Alert.alert(
+            t('account.deleteConfirm.title'),
+            t('account.deleteConfirm.body', { name: account.name, directCount, transferCount }),
+            [
+              { text: t('common.cancel'), style: 'cancel' },
+              {
+                text: t('common.delete'),
+                style: 'destructive',
+                onPress: () => {
+                  deleteAccountCascade(account.id);
+                  router.back();
+                },
+              },
+            ],
+          );
+        },
+      },
+    ]);
   };
 
   return (
