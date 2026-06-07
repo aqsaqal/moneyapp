@@ -978,6 +978,16 @@ export function reorderAccounts(orderedIds: string[]): void {
   bump();
 }
 
+/** Reorder categories. Persists the new order across both custom and
+ *  seeded categories — seeded ones get a stub row in custom_categories
+ *  on first reorder (same upsert path used for budgets and pinning).
+ *  Caller passes IDs in the new display order; sort_order = (i+1)*10. */
+export function reorderCategories(orderedIds: string[]): void {
+  orderedIds.forEach((id, i) => {
+    setCategoryMeta(id, { sortOrder: (i + 1) * 10 });
+  });
+}
+
 export function upsertAccount(a: typeof accounts.$inferInsert): void {
   const db = getDB();
   const existing = db.select().from(accounts).where(eq(accounts.id, a.id)).get();

@@ -1,22 +1,27 @@
-// Phase 10w: dedicated full-screen Categories management surface. The
-// inline Settings → Categories list got crowded once budgets/pinned/
-// archived rows were added, so we link out here from a single row.
+// Phase 10w: dedicated full-screen Categories management surface.
+// Now a DraggableFlatList — long-press a row to reorder. Both seeded
+// and custom categories participate; reorderCategories upserts a
+// custom_categories row when needed so seeded-only ids persist.
 
 import React, { useState } from 'react';
 import {
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
+import DraggableFlatList, {
+  ScaleDecorator,
+  type RenderItemParams,
+} from 'react-native-draggable-flatlist';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
-import { SectionHeader, SettingRow } from '@/components/Sections';
+import { SectionHeader } from '@/components/Sections';
 import {
   useCategoriesWithMeta,
+  reorderCategories,
   type CategoryWithMeta,
 } from '@/hooks/useAppData';
 import { CustomCategorySheet } from '@/components/CustomCategorySheet';
@@ -29,36 +34,74 @@ export default function CategoriesManageScreen() {
   const [editing, setEditing] = useState<CategoryWithMeta | null | undefined>(undefined);
   const [showArchived, setShowArchived] = useState(false);
 
-  const visible = categories.filter((c) => (showArchived ? true : !c.archived) && c.id !== 'adjustment');
-  const pinned = visible
-    .filter((c) => c.isPinned)
-    .sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
-  const unpinned = visible
-    .filter((c) => !c.isPinned)
-    .sort((a, b) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name));
-  const archivedCount = categories.filter((c) => c.archived).length;
+  // Active set — pinned first, then by sortOrder/name. Adjustment is
+  // the bookkeeping system category and never participates in either
+  // the list view or reorder.
+  const active = categories
+    .filter((c) => !c.archived && c.id !== 'adjustment')
+    .sort((a, b) => {
+      if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
+      return a.sortOrder - b.sortOrder || a.name.localeCompare(b.name);
+    });
+  const archived = categories.filter((c) => c.archived);
 
-  const renderRow = (c: CategoryWithMeta) => {
+  const hintFor = (c: CategoryWithMeta) => {
     const budgetLabel = c.monthlyBudget != null
       ? `${c.monthlyBudget.toFixed(0)} ${c.budgetCurrency ?? ''}`.trim()
       : c.type === 'income' ? t('categories.type.income')
         : c.type === 'both' ? t('categories.type.both')
         : t('categories.type.expense');
-    const hint =
-      (c.isSystem ? `🔒 ${t('categories.system')} · ` : '') +
-      (c.archived ? `${t('categories.archived')} · ` : '') +
-      budgetLabel;
-    return (
-      <SettingRow
-        key={c.id}
-        label={c.name}
-        hint={hint}
-        icon={c.icon as never}
-        iconColor={c.color}
-        onPress={() => setEditing(c)}
-      />
-    );
+    return (c.isSystem ? `🔒 ${t('categories.system')} · ` : '') + budgetLabel;
   };
+
+  const ListHeader = (
+    <View style={{ marginBottom: spacing.sm }}>
+      <SectionHeader
+        title=""
+        onAdd={() => setEditing(null)}
+        addLabel={t('common.add')}
+      />
+    </View>
+  );
+
+  const ListFooter = (
+    <View style={{ marginTop: spacing.md }}>
+      {archived.length > 0 && (
+        <Pressable
+          onPress={() => setShowArchived((v) => !v)}
+          style={styles.archiveToggle}
+          accessibilityRole="button"
+        >
+          <MaterialCommunityIcons
+            name={showArchived ? 'eye-off-outline' : 'archive-outline'}
+            size={16}
+            color={theme.text3}
+          />
+          <Text style={styles.archiveText}>
+            {showArchived
+              ? t('categories.hideArchived')
+              : t('categories.showArchived', { n: archived.length })}
+          </Text>
+        </Pressable>
+      )}
+      {showArchived && archived.map((c) => (
+        <Pressable
+          key={c.id}
+          onPress={() => setEditing(c)}
+          style={[styles.row, styles.rowDimmed]}
+        >
+          <View style={[styles.iconBox, { backgroundColor: `${c.color}22` }]}>
+            <MaterialCommunityIcons name={c.icon as never} size={20} color={c.color} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.label}>{c.name}</Text>
+            <Text style={styles.hint}>{`${t('categories.archived')} · ${hintFor(c)}`}</Text>
+          </View>
+        </Pressable>
+      ))}
+      <View style={{ height: 60 }} />
+    </View>
+  );
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -73,44 +116,45 @@ export default function CategoriesManageScreen() {
         <Text style={styles.title}>{t('settings.categories.title')}</Text>
         <View style={{ width: 24 }} />
       </View>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        <SectionHeader
-          title=""
-          onAdd={() => setEditing(null)}
-          addLabel={t('common.add')}
-        />
-        {pinned.length > 0 && (
-          <>
-            <Text style={styles.subHeading}>{t('categories.pinned')}</Text>
-            {pinned.map(renderRow)}
-          </>
+
+      <DraggableFlatList
+        data={active}
+        keyExtractor={(c) => c.id}
+        ListHeaderComponent={ListHeader}
+        ListFooterComponent={ListFooter}
+        contentContainerStyle={styles.scroll}
+        activationDistance={20}
+        onDragEnd={({ data }) => {
+          reorderCategories(data.map((c) => c.id));
+        }}
+        renderItem={({ item: c, drag, isActive }: RenderItemParams<CategoryWithMeta>) => (
+          <ScaleDecorator activeScale={1.02}>
+            <Pressable
+              onPress={() => setEditing(c)}
+              onLongPress={drag}
+              delayLongPress={300}
+              style={[styles.row, isActive && { borderColor: theme.accent }]}
+              accessibilityRole="button"
+              accessibilityLabel={`${c.name}, ${hintFor(c)}, long-press to reorder`}
+            >
+              <View style={[styles.iconBox, { backgroundColor: `${c.color}22` }]}>
+                <MaterialCommunityIcons name={c.icon as never} size={20} color={c.color} />
+              </View>
+              <View style={{ flex: 1 }}>
+                <View style={styles.nameRow}>
+                  <Text style={styles.label}>{c.name}</Text>
+                  {c.isPinned && (
+                    <MaterialCommunityIcons name="pin" size={12} color={theme.text3} />
+                  )}
+                </View>
+                <Text style={styles.hint}>{hintFor(c)}</Text>
+              </View>
+              <MaterialCommunityIcons name="drag" size={20} color={theme.text3} />
+            </Pressable>
+          </ScaleDecorator>
         )}
-        {unpinned.length > 0 && (
-          <>
-            {pinned.length > 0 && <Text style={styles.subHeading}>{t('categories.all')}</Text>}
-            {unpinned.map(renderRow)}
-          </>
-        )}
-        {archivedCount > 0 && (
-          <Pressable
-            onPress={() => setShowArchived((v) => !v)}
-            style={styles.archiveToggle}
-            accessibilityRole="button"
-          >
-            <MaterialCommunityIcons
-              name={showArchived ? 'eye-off-outline' : 'archive-outline'}
-              size={16}
-              color={theme.text3}
-            />
-            <Text style={styles.archiveText}>
-              {showArchived
-                ? t('categories.hideArchived')
-                : t('categories.showArchived', { n: archivedCount })}
-            </Text>
-          </Pressable>
-        )}
-        <View style={{ height: 60 }} />
-      </ScrollView>
+      />
+
       <CustomCategorySheet
         visible={editing !== undefined}
         category={editing ?? undefined}
@@ -131,14 +175,25 @@ const styles = StyleSheet.create({
   },
   title: { color: theme.text1, fontSize: sizes.xl, fontFamily: font.displayBold },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.sm },
-  subHeading: {
-    color: theme.text3,
-    fontSize: 10,
-    fontFamily: font.bodySemi,
-    letterSpacing: 0.5,
-    marginTop: spacing.sm,
-    marginBottom: -4,
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+    padding: spacing.md,
+    backgroundColor: theme.bg2,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    borderColor: theme.border,
+    marginBottom: spacing.sm,
   },
+  rowDimmed: { opacity: 0.6 },
+  iconBox: {
+    width: 36, height: 36, borderRadius: 18,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  nameRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  label: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi },
+  hint: { color: theme.text3, fontSize: sizes.sm, marginTop: 2 },
   archiveToggle: {
     flexDirection: 'row',
     alignItems: 'center',
