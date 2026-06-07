@@ -465,5 +465,8 @@
   "account.chart.min": "ต่ำสุด",
   "account.chart.max": "สูงสุด",
   "account.chart.change": "การเปลี่ยนแปลง",
-  "account.since": "ตั้งแต่ {date}"
+  "account.since": "ตั้งแต่ {date}",
+  "settings.fabAction.label": "สลับการแตะและกดค้างของ FAB",
+  "settings.fabAction.bodyOff": "แตะ → Smart Add · กดค้าง → ตารางหมวดหมู่",
+  "settings.fabAction.bodyOn": "แตะ → ตารางหมวดหมู่ · กดค้าง → Smart Add"
 }

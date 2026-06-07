@@ -92,6 +92,7 @@ export default function SettingsScreen() {
         <CurrencyFormatRow />
         <CategoriesSection />
         <SmartSuggestionsRow />
+        <FabActionRow />
         {/* Islamic flavor: mazhab + prayer-method rows. Generic: nothing. */}
         <FeatureSlots.MeTabExtras onNavigate={(p) => router.push(p as never)} />
 
@@ -571,6 +572,32 @@ const settingsTopStyles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
 });
+
+function FabActionRow() {
+  const t = useT();
+  const [swap, setSwap] = useState(kv.getBool('fabSwapAction', false));
+  return (
+    <SettingRow
+      label={t('settings.fabAction.label')}
+      hint={swap ? t('settings.fabAction.bodyOn') : t('settings.fabAction.bodyOff')}
+      icon="gesture-tap-hold"
+      trailing={
+        <Pressable
+          onPress={() => {
+            const next = !swap;
+            kv.setBool('fabSwapAction', next);
+            setSwap(next);
+          }}
+          style={[sectionStyles.toggle, swap && { backgroundColor: theme.accent }]}
+          accessibilityRole="switch"
+          accessibilityState={{ checked: swap }}
+        >
+          <View style={[sectionStyles.toggleKnob, swap && { transform: [{ translateX: 18 }] }]} />
+        </Pressable>
+      }
+    />
+  );
+}
 
 function SmartSuggestionsRow() {
   const t = useT();

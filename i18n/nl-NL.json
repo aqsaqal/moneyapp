@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Max",
   "account.chart.change": "Verandering",
-  "account.since": "Sinds {date}"
+  "account.since": "Sinds {date}",
+  "settings.fabAction.label": "FAB-tik en lang indrukken omwisselen",
+  "settings.fabAction.bodyOff": "Tik → Smart Add · lang indrukken → Categoriegrid",
+  "settings.fabAction.bodyOn": "Tik → Categoriegrid · lang indrukken → Smart Add"
 }

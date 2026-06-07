@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Max",
   "account.chart.change": "Veränderung",
-  "account.since": "Seit {date}"
+  "account.since": "Seit {date}",
+  "settings.fabAction.label": "FAB-Tipp und langes Drücken tauschen",
+  "settings.fabAction.bodyOff": "Tipp → Smart Add · langes Drücken → Kategorieraster",
+  "settings.fabAction.bodyOn": "Tipp → Kategorieraster · langes Drücken → Smart Add"
 }

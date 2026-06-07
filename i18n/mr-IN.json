@@ -465,5 +465,8 @@
   "account.chart.min": "किमान",
   "account.chart.max": "कमाल",
   "account.chart.change": "बदल",
-  "account.since": "{date} पासून"
+  "account.since": "{date} पासून",
+  "settings.fabAction.label": "FAB टॅप आणि दीर्घ-दाब अदलाबदल करा",
+  "settings.fabAction.bodyOff": "टॅप → स्मार्ट अॅड · दीर्घ-दाब → कॅटेगरी ग्रिड",
+  "settings.fabAction.bodyOn": "टॅप → कॅटेगरी ग्रिड · दीर्घ-दाब → स्मार्ट अॅड"
 }

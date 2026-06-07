@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Max",
   "account.chart.change": "Mabadiliko",
-  "account.since": "Tangu {date}"
+  "account.since": "Tangu {date}",
+  "settings.fabAction.label": "Badilisha mguso na kushinikiza kwa muda mrefu FAB",
+  "settings.fabAction.bodyOff": "Gusa → Smart Add · shinikiza → Gridi ya kategoria",
+  "settings.fabAction.bodyOn": "Gusa → Gridi ya kategoria · shinikiza → Smart Add"
 }

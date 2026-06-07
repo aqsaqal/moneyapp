@@ -465,5 +465,8 @@
   "account.chart.min": "最低",
   "account.chart.max": "最高",
   "account.chart.change": "変化",
-  "account.since": "{date} 以降"
+  "account.since": "{date} 以降",
+  "settings.fabAction.label": "FABのタップと長押しを入れ替える",
+  "settings.fabAction.bodyOff": "タップ → Smart Add ・ 長押し → カテゴリーグリッド",
+  "settings.fabAction.bodyOn": "タップ → カテゴリーグリッド ・ 長押し → Smart Add"
 }

@@ -160,13 +160,24 @@ export default function AccountDetail() {
           <View style={styles.iconChip}>
             <Icon name={account.icon} size={28} color={account.color} />
           </View>
-          <Text
-            style={[styles.balance, { color: account.balance >= 0 ? theme.text1 : theme.expense }]}
-            adjustsFontSizeToFit
-            numberOfLines={1}
-          >
-            {formatMoney(account.balance, ac)}
-          </Text>
+          <View style={styles.balanceRow}>
+            <Text
+              style={[styles.balance, { color: account.balance >= 0 ? theme.text1 : theme.expense }]}
+              adjustsFontSizeToFit
+              numberOfLines={1}
+            >
+              {formatMoney(account.balance, ac)}
+            </Text>
+            <Pressable
+              onPress={() => setEditOpen(true)}
+              hitSlop={10}
+              style={styles.balanceEditBtn}
+              accessibilityRole="button"
+              accessibilityLabel={t('account.adjustBalance')}
+            >
+              <MaterialCommunityIcons name="pencil-outline" size={18} color={theme.text2} />
+            </Pressable>
+          </View>
           <Text style={styles.type}>
             {t(`account.type.${account.type}`)}
             {earliestDate && (
@@ -360,6 +371,12 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center', marginBottom: spacing.sm,
   },
   balance: { color: theme.text1, fontSize: 36, fontFamily: font.displayBold },
+  balanceRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  balanceEditBtn: {
+    width: 32, height: 32, borderRadius: 16,
+    alignItems: 'center', justifyContent: 'center',
+    backgroundColor: theme.bg3,
+  },
   type: { color: theme.text3, fontSize: sizes.sm },
   typeSince: { color: theme.text3, fontSize: sizes.sm },
   chartWrap: { height: 120 },

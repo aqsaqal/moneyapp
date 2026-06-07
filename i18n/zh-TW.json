@@ -465,5 +465,8 @@
   "account.chart.min": "最低",
   "account.chart.max": "最高",
   "account.chart.change": "變化",
-  "account.since": "自 {date} 起"
+  "account.since": "自 {date} 起",
+  "settings.fabAction.label": "交換 FAB 點按與長按",
+  "settings.fabAction.bodyOff": "點按 → 智慧新增 · 長按 → 分類網格",
+  "settings.fabAction.bodyOn": "點按 → 分類網格 · 長按 → 智慧新增"
 }

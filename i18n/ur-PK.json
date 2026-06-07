@@ -465,5 +465,8 @@
   "account.chart.min": "کم سے کم",
   "account.chart.max": "زیادہ سے زیادہ",
   "account.chart.change": "تبدیلی",
-  "account.since": "{date} سے"
+  "account.since": "{date} سے",
+  "settings.fabAction.label": "FAB ٹیپ اور لانگ پریس بدلیں",
+  "settings.fabAction.bodyOff": "ٹیپ ← اسمارٹ ایڈ · لانگ پریس ← کیٹیگری گرڈ",
+  "settings.fabAction.bodyOn": "ٹیپ ← کیٹیگری گرڈ · لانگ پریس ← اسمارٹ ایڈ"
 }

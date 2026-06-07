@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Ndryshim",
-  "account.since": "Që nga {date}"
+  "account.since": "Që nga {date}",
+  "settings.fabAction.label": "Ndërro prekjen dhe shtypjen e gjatë të FAB",
+  "settings.fabAction.bodyOff": "Prekje → Smart Add · shtypje e gjatë → Rrjeta e kategorive",
+  "settings.fabAction.bodyOn": "Prekje → Rrjeta e kategorive · shtypje e gjatë → Smart Add"
 }

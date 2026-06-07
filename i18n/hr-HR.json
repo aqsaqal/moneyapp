@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Promjena",
-  "account.since": "Od {date}"
+  "account.since": "Od {date}",
+  "settings.fabAction.label": "Zamijeni dodir i dugi pritisak FAB-a",
+  "settings.fabAction.bodyOff": "Dodir → Smart Add · dugi pritisak → Mreža kategorija",
+  "settings.fabAction.bodyOn": "Dodir → Mreža kategorija · dugi pritisak → Smart Add"
 }

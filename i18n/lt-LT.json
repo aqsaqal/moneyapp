@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Pokytis",
-  "account.since": "Nuo {date}"
+  "account.since": "Nuo {date}",
+  "settings.fabAction.label": "Sukeisti FAB bakstelėjimą ir ilgą paspaudimą",
+  "settings.fabAction.bodyOff": "Bakstelėjimas → Smart Add · ilgas paspaudimas → Kategorijų tinklelis",
+  "settings.fabAction.bodyOn": "Bakstelėjimas → Kategorijų tinklelis · ilgas paspaudimas → Smart Add"
 }

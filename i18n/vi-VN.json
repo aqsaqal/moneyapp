@@ -465,5 +465,8 @@
   "account.chart.min": "Tối thiểu",
   "account.chart.max": "Tối đa",
   "account.chart.change": "Thay đổi",
-  "account.since": "Từ {date}"
+  "account.since": "Từ {date}",
+  "settings.fabAction.label": "Hoán đổi chạm và nhấn giữ trên FAB",
+  "settings.fabAction.bodyOff": "Chạm → Smart Add · nhấn giữ → Lưới danh mục",
+  "settings.fabAction.bodyOn": "Chạm → Lưới danh mục · nhấn giữ → Smart Add"
 }

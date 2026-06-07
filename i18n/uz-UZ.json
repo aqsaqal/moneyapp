@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Oʻzgarish",
-  "account.since": "{date} dan beri"
+  "account.since": "{date} dan beri",
+  "settings.fabAction.label": "FAB bosish va uzoq bosishni almashtirish",
+  "settings.fabAction.bodyOff": "Bosish → Smart Add · uzoq bosish → Toifa katakchasi",
+  "settings.fabAction.bodyOn": "Bosish → Toifa katakchasi · uzoq bosish → Smart Add"
 }

@@ -465,5 +465,8 @@
   "account.chart.min": "Мин",
   "account.chart.max": "Макс",
   "account.chart.change": "Промяна",
-  "account.since": "От {date}"
+  "account.since": "От {date}",
+  "settings.fabAction.label": "Размени натискане и задържане на FAB",
+  "settings.fabAction.bodyOff": "Натискане → Smart Add · Задържане → Решетка с категории",
+  "settings.fabAction.bodyOn": "Натискане → Решетка с категории · Задържане → Smart Add"
 }

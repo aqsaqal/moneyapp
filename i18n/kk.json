@@ -464,5 +464,8 @@
   "account.chart.min": "Мин",
   "account.chart.max": "Макс",
   "account.chart.change": "Өзгеріс",
-  "account.since": "{date} бастап"
+  "account.since": "{date} бастап",
+  "settings.fabAction.label": "FAB басу мен ұзақ басуды ауыстыру",
+  "settings.fabAction.bodyOff": "Басу → Smart Add · Ұзақ басу → Санат торы",
+  "settings.fabAction.bodyOn": "Басу → Санат торы · Ұзақ басу → Smart Add"
 }

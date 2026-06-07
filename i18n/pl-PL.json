@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Zmiana",
-  "account.since": "Od {date}"
+  "account.since": "Od {date}",
+  "settings.fabAction.label": "Zamień dotknięcie i długie naciśnięcie FAB",
+  "settings.fabAction.bodyOff": "Dotknięcie → Smart Add · długie → Siatka kategorii",
+  "settings.fabAction.bodyOn": "Dotknięcie → Siatka kategorii · długie → Smart Add"
 }

@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Ændring",
-  "account.since": "Siden {date}"
+  "account.since": "Siden {date}",
+  "settings.fabAction.label": "Byt om på tryk og langt tryk for FAB",
+  "settings.fabAction.bodyOff": "Tryk → Smart Add · langt tryk → Kategorigitter",
+  "settings.fabAction.bodyOn": "Tryk → Kategorigitter · langt tryk → Smart Add"
 }

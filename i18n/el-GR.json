@@ -465,5 +465,8 @@
   "account.chart.min": "Ελάχ.",
   "account.chart.max": "Μέγ.",
   "account.chart.change": "Μεταβολή",
-  "account.since": "Από {date}"
+  "account.since": "Από {date}",
+  "settings.fabAction.label": "Εναλλαγή πάτημα και παρατεταμένο πάτημα FAB",
+  "settings.fabAction.bodyOff": "Πάτημα → Smart Add · παρατεταμένο → Πλέγμα κατηγοριών",
+  "settings.fabAction.bodyOn": "Πάτημα → Πλέγμα κατηγοριών · παρατεταμένο → Smart Add"
 }

@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Max",
   "account.chart.change": "Variation",
-  "account.since": "Depuis le {date}"
+  "account.since": "Depuis le {date}",
+  "settings.fabAction.label": "Inverser appui et appui long du FAB",
+  "settings.fabAction.bodyOff": "Appui → Smart Add · appui long → Grille de catégories",
+  "settings.fabAction.bodyOn": "Appui → Grille de catégories · appui long → Smart Add"
 }

@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Izmaiņas",
-  "account.since": "Kopš {date}"
+  "account.since": "Kopš {date}",
+  "settings.fabAction.label": "Mainīt FAB pieskāriena un ilgā nospiediena vietas",
+  "settings.fabAction.bodyOff": "Pieskāriens → Smart Add · ilgais nospiediens → Kategoriju režģis",
+  "settings.fabAction.bodyOn": "Pieskāriens → Kategoriju režģis · ilgais nospiediens → Smart Add"
 }

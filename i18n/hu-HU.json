@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Max",
   "account.chart.change": "Változás",
-  "account.since": "{date} óta"
+  "account.since": "{date} óta",
+  "settings.fabAction.label": "FAB koppintás és hosszú nyomás cseréje",
+  "settings.fabAction.bodyOff": "Koppintás → Smart Add · hosszú nyomás → Kategória rács",
+  "settings.fabAction.bodyOn": "Koppintás → Kategória rács · hosszú nyomás → Smart Add"
 }

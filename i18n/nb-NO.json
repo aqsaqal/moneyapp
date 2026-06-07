@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Endring",
-  "account.since": "Siden {date}"
+  "account.since": "Siden {date}",
+  "settings.fabAction.label": "Bytt om trykk og langt trykk på FAB",
+  "settings.fabAction.bodyOff": "Trykk → Smart Add · langt trykk → Kategorigrid",
+  "settings.fabAction.bodyOn": "Trykk → Kategorigrid · langt trykk → Smart Add"
 }

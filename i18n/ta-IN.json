@@ -465,5 +465,8 @@
   "account.chart.min": "குறை",
   "account.chart.max": "அதிக",
   "account.chart.change": "மாற்றம்",
-  "account.since": "{date} முதல்"
+  "account.since": "{date} முதல்",
+  "settings.fabAction.label": "FAB தட்டல் மற்றும் நீண்ட அழுத்தத்தை மாற்று",
+  "settings.fabAction.bodyOff": "தட்டு → Smart Add · நீண்ட அழுத்தம் → வகை கட்டம்",
+  "settings.fabAction.bodyOn": "தட்டு → வகை கட்டம் · நீண்ட அழுத்தம் → Smart Add"
 }

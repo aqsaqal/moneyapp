@@ -464,5 +464,8 @@
   "account.chart.min": "Мин",
   "account.chart.max": "Макс",
   "account.chart.change": "Изменение",
-  "account.since": "С {date}"
+  "account.since": "С {date}",
+  "settings.fabAction.label": "Поменять местами касание и долгое нажатие FAB",
+  "settings.fabAction.bodyOff": "Касание → Smart Add · долгое нажатие → Сетка категорий",
+  "settings.fabAction.bodyOn": "Касание → Сетка категорий · долгое нажатие → Smart Add"
 }

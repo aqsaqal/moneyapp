@@ -464,5 +464,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Perubahan",
-  "account.since": "Sejak {date}"
+  "account.since": "Sejak {date}",
+  "settings.fabAction.label": "Tukar ketuk dan tahan lama pada FAB",
+  "settings.fabAction.bodyOff": "Ketuk → Smart Add · tahan → Kisi kategori",
+  "settings.fabAction.bodyOn": "Ketuk → Kisi kategori · tahan → Smart Add"
 }

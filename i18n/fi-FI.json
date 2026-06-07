@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Muutos",
-  "account.since": "Alkaen {date}"
+  "account.since": "Alkaen {date}",
+  "settings.fabAction.label": "Vaihda FAB:in napautus ja pitkä painallus",
+  "settings.fabAction.bodyOff": "Napautus → Smart Add · pitkä painallus → Kategoriaruudukko",
+  "settings.fabAction.bodyOn": "Napautus → Kategoriaruudukko · pitkä painallus → Smart Add"
 }

@@ -465,5 +465,8 @@
   "account.chart.min": "కనిష్ఠ",
   "account.chart.max": "గరిష్ఠ",
   "account.chart.change": "మార్పు",
-  "account.since": "{date} నుండి"
+  "account.since": "{date} నుండి",
+  "settings.fabAction.label": "FAB ట్యాప్ మరియు లాంగ్-ప్రెస్ మార్చండి",
+  "settings.fabAction.bodyOff": "ట్యాప్ → Smart Add · లాంగ్-ప్రెస్ → వర్గం గ్రిడ్",
+  "settings.fabAction.bodyOn": "ట్యాప్ → వర్గం గ్రిడ్ · లాంగ్-ప్రెస్ → Smart Add"
 }

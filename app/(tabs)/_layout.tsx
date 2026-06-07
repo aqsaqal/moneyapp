@@ -24,6 +24,7 @@ import type {
 import { theme } from '@/constants/theme';
 import { PRIMARY_COLOR } from '@/constants/flavor';
 import { FabButton } from '@/components/FabButton';
+import { kv } from '@/utils/kv';
 import { useT } from '@/hooks/useT';
 import { emitTabReselect } from '@/utils/tabReselect';
 
@@ -127,10 +128,14 @@ export default function TabsLayout() {
       </Tabs>
       <View style={[styles.fabWrap, { bottom: fabBottom }]} pointerEvents="box-none">
         <FabButton
-          onPress={() => router.push('/add')}
-          // Long-press → category grid hidden for now. The /category-grid
-          // route still exists for SmartSuggestionRow's "More…" chip.
-          // onLongPress={() => router.push('/category-grid')}
+          // Read the swap flag at press time so toggling the setting takes
+          // effect immediately, no re-render of the tabs layout required.
+          onPress={() => {
+            router.push(kv.getBool('fabSwapAction') ? '/category-grid' : '/add');
+          }}
+          onLongPress={() => {
+            router.push(kv.getBool('fabSwapAction') ? '/add' : '/category-grid');
+          }}
         />
       </View>
     </View>

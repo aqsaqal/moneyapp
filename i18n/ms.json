@@ -464,5 +464,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Perubahan",
-  "account.since": "Sejak {date}"
+  "account.since": "Sejak {date}",
+  "settings.fabAction.label": "Tukar ketuk dan tekan lama pada FAB",
+  "settings.fabAction.bodyOff": "Ketuk → Smart Add · tekan lama → Grid kategori",
+  "settings.fabAction.bodyOn": "Ketuk → Grid kategori · tekan lama → Smart Add"
 }

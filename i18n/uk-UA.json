@@ -465,5 +465,8 @@
   "account.chart.min": "Мін",
   "account.chart.max": "Макс",
   "account.chart.change": "Зміна",
-  "account.since": "Від {date}"
+  "account.since": "Від {date}",
+  "settings.fabAction.label": "Поміняти дотик і довге натискання FAB",
+  "settings.fabAction.bodyOff": "Дотик → Smart Add · довге натискання → Сітка категорій",
+  "settings.fabAction.bodyOn": "Дотик → Сітка категорій · довге натискання → Smart Add"
 }

@@ -465,5 +465,8 @@
   "account.chart.min": "최저",
   "account.chart.max": "최고",
   "account.chart.change": "변동",
-  "account.since": "{date} 이후"
+  "account.since": "{date} 이후",
+  "settings.fabAction.label": "FAB 탭과 길게 누르기 바꾸기",
+  "settings.fabAction.bodyOff": "탭 → Smart Add · 길게 누르기 → 카테고리 그리드",
+  "settings.fabAction.bodyOn": "탭 → 카테고리 그리드 · 길게 누르기 → Smart Add"
 }

@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Max",
   "account.chart.change": "Zmena",
-  "account.since": "Od {date}"
+  "account.since": "Od {date}",
+  "settings.fabAction.label": "Vymeniť ťuknutie a dlhé stlačenie FAB",
+  "settings.fabAction.bodyOff": "Ťuknutie → Smart Add · dlhé stlačenie → Mriežka kategórií",
+  "settings.fabAction.bodyOn": "Ťuknutie → Mriežka kategórií · dlhé stlačenie → Smart Add"
 }

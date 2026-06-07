@@ -465,5 +465,8 @@
   "account.chart.min": "न्यूनतम",
   "account.chart.max": "अधिकतम",
   "account.chart.change": "बदलाव",
-  "account.since": "{date} से"
+  "account.since": "{date} से",
+  "settings.fabAction.label": "FAB टैप और लॉन्ग-प्रेस आपस में बदलें",
+  "settings.fabAction.bodyOff": "टैप → Smart Add · लॉन्ग-प्रेस → कैटेगरी ग्रिड",
+  "settings.fabAction.bodyOn": "टैप → कैटेगरी ग्रिड · लॉन्ग-प्रेस → Smart Add"
 }

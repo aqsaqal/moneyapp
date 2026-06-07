@@ -464,5 +464,8 @@
   "account.chart.min": "الحد الأدنى",
   "account.chart.max": "الحد الأقصى",
   "account.chart.change": "التغير",
-  "account.since": "منذ {date}"
+  "account.since": "منذ {date}",
+  "settings.fabAction.label": "تبديل النقر والضغط المطوّل لزر الإضافة",
+  "settings.fabAction.bodyOff": "نقر ← إضافة ذكية · ضغط مطوّل ← شبكة الفئات",
+  "settings.fabAction.bodyOn": "نقر ← شبكة الفئات · ضغط مطوّل ← إضافة ذكية"
 }

@@ -78,6 +78,7 @@ export interface KVSchema {
   activityJumpToView: string;  // 'list' | 'categories' — segment to land on after jump
   netWorthBackfillDone: string;   // deprecated — left to suppress type errors on legacy code paths
   netWorthBackfillDoneV2: string; // CSV of profile IDs whose net-worth history has been backfilled by the v2 (active-month-only) pass
+  fabSwapAction: string;          // '1' = tap → category grid, long-press → Smart Add; default '0' (tap → Smart Add)
 }
 
 export const kv = {

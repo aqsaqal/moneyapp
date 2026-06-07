@@ -465,5 +465,8 @@
   "account.chart.min": "Mín",
   "account.chart.max": "Máx",
   "account.chart.change": "Cambio",
-  "account.since": "Desde {date}"
+  "account.since": "Desde {date}",
+  "settings.fabAction.label": "Intercambiar toque y mantener pulsado del FAB",
+  "settings.fabAction.bodyOff": "Tocar → Smart Add · mantener → Cuadrícula de categorías",
+  "settings.fabAction.bodyOn": "Tocar → Cuadrícula de categorías · mantener → Smart Add"
 }

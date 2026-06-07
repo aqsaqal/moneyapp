@@ -465,5 +465,8 @@
   "account.chart.min": "حداقل",
   "account.chart.max": "حداکثر",
   "account.chart.change": "تغییر",
-  "account.since": "از {date}"
+  "account.since": "از {date}",
+  "settings.fabAction.label": "جابه‌جایی ضربه و فشار طولانی FAB",
+  "settings.fabAction.bodyOff": "ضربه → Smart Add · فشار طولانی → شبکهٔ دسته‌ها",
+  "settings.fabAction.bodyOn": "ضربه → شبکهٔ دسته‌ها · فشار طولانی → Smart Add"
 }

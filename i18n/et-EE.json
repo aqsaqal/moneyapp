@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Muutus",
-  "account.since": "Alates {date}"
+  "account.since": "Alates {date}",
+  "settings.fabAction.label": "Vaheta FAB-i puudutus ja pikk vajutus",
+  "settings.fabAction.bodyOff": "Puudutus → Smart Add · pikk vajutus → Kategooriavõrk",
+  "settings.fabAction.bodyOn": "Puudutus → Kategooriavõrk · pikk vajutus → Smart Add"
 }

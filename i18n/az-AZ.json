@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Dəyişiklik",
-  "account.since": "{date}-dan bəri"
+  "account.since": "{date}-dan bəri",
+  "settings.fabAction.label": "FAB toxunma və uzun basma yerini dəyişdir",
+  "settings.fabAction.bodyOff": "Toxun ← Smart Add · Uzun bas ← Kateqoriya şəbəkəsi",
+  "settings.fabAction.bodyOn": "Toxun ← Kateqoriya şəbəkəsi · Uzun bas ← Smart Add"
 }

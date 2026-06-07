@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Max",
   "account.chart.change": "Schimbare",
-  "account.since": "Din {date}"
+  "account.since": "Din {date}",
+  "settings.fabAction.label": "Schimbă atingerea și apăsarea lungă a FAB",
+  "settings.fabAction.bodyOff": "Atingere → Smart Add · apăsare lungă → Grilă categorii",
+  "settings.fabAction.bodyOn": "Atingere → Grilă categorii · apăsare lungă → Smart Add"
 }

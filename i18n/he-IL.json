@@ -465,5 +465,8 @@
   "account.chart.min": "מינ׳",
   "account.chart.max": "מקס׳",
   "account.chart.change": "שינוי",
-  "account.since": "מאז {date}"
+  "account.since": "מאז {date}",
+  "settings.fabAction.label": "החלף בין הקשה ולחיצה ארוכה ב-FAB",
+  "settings.fabAction.bodyOff": "הקשה ← Smart Add · לחיצה ארוכה ← רשת קטגוריות",
+  "settings.fabAction.bodyOn": "הקשה ← רשת קטגוריות · לחיצה ארוכה ← Smart Add"
 }

@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Sprememba",
-  "account.since": "Od {date}"
+  "account.since": "Od {date}",
+  "settings.fabAction.label": "Zamenjaj dotik in dolgi pritisk FAB",
+  "settings.fabAction.bodyOff": "Dotik → Smart Add · dolgi pritisk → Mreža kategorij",
+  "settings.fabAction.bodyOn": "Dotik → Mreža kategorij · dolgi pritisk → Smart Add"
 }

@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Max",
   "account.chart.change": "Förändring",
-  "account.since": "Sedan {date}"
+  "account.since": "Sedan {date}",
+  "settings.fabAction.label": "Växla tryck och långtryck för FAB",
+  "settings.fabAction.bodyOff": "Tryck → Smart Add · långtryck → Kategorigrid",
+  "settings.fabAction.bodyOn": "Tryck → Kategorigrid · långtryck → Smart Add"
 }

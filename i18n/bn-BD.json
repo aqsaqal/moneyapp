@@ -465,5 +465,8 @@
   "account.chart.min": "সর্বনিম্ন",
   "account.chart.max": "সর্বোচ্চ",
   "account.chart.change": "পরিবর্তন",
-  "account.since": "{date} থেকে"
+  "account.since": "{date} থেকে",
+  "settings.fabAction.label": "FAB ট্যাপ ও লং-প্রেস অদলবদল করুন",
+  "settings.fabAction.bodyOff": "ট্যাপ → স্মার্ট অ্যাড · লং-প্রেস → ক্যাটাগরি গ্রিড",
+  "settings.fabAction.bodyOn": "ট্যাপ → ক্যাটাগরি গ্রিড · লং-প্রেস → স্মার্ট অ্যাড"
 }

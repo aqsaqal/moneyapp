@@ -465,5 +465,8 @@
   "account.chart.min": "Min",
   "account.chart.max": "Maks",
   "account.chart.change": "Pagbabago",
-  "account.since": "Mula {date}"
+  "account.since": "Mula {date}",
+  "settings.fabAction.label": "Palitan ang tap at long-press ng FAB",
+  "settings.fabAction.bodyOff": "Tap → Smart Add · long-press → Category grid",
+  "settings.fabAction.bodyOn": "Tap → Category grid · long-press → Smart Add"
 }
