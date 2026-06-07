@@ -72,6 +72,11 @@ import { LOCALES } from '@/constants/locales';
 export default function SettingsScreen() {
   const router = useRouter();
   const t = useT();
+  // Profile-scoped setting rows seed their local state from kv at
+  // mount. Switching the active profile changes which kv namespace
+  // they should read from — re-key them by profile id so React
+  // remounts and the seeds re-run.
+  const activeProfile = useActiveProfile();
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.header}>
@@ -89,11 +94,11 @@ export default function SettingsScreen() {
         {/* ───── PROFILE SETTINGS ───── */}
         <Text style={settingsTopStyles.groupTitle}>{t('settings.groups.profile')}</Text>
         <ActiveProfileRow />
-        <CurrencyRow />
-        <CurrencyFormatRow />
-        <CategoriesSection />
-        <SmartSuggestionsRow />
-        <FabActionRow />
+        <CurrencyRow key={`currency-${activeProfile.id}`} />
+        <CurrencyFormatRow key={`fmt-${activeProfile.id}`} />
+        <CategoriesSection key={`cats-${activeProfile.id}`} />
+        <SmartSuggestionsRow key={`smart-${activeProfile.id}`} />
+        <FabActionRow key={`fab-${activeProfile.id}`} />
         {/* Islamic flavor: mazhab + prayer-method rows. Generic: nothing. */}
         <FeatureSlots.MeTabExtras onNavigate={(p) => router.push(p as never)} />
 
