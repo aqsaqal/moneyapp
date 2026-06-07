@@ -77,15 +77,27 @@ HBC_FILES=$(find dist/generic/_expo -name "*.hbc" 2>/dev/null)
 if [ -z "$HBC_FILES" ]; then
   echo "  FAIL: no .hbc files found in dist/generic/_expo/"; exit 1
 fi
+# Known substring-collision false positives — non-islamic words that
+# contain a forbidden token as a substring. We mask them in a temp
+# copy of each .hbc before scanning so the grep doesn't count them.
+#   recognisable / recognisability — British spelling (contains "nisab")
+#   gharama                          — Swahili for "expense" (contains "haram")
+SUBSTRING_FP=(recognisable recognisability gharama Gharama)
 for hbc in $HBC_FILES; do
   echo "  scanning $(basename "$hbc") ($(ls -lh "$hbc" | awk '{print $5}'))"
+  tmpbc=$(mktemp -t hbcscan.XXXXXX)
+  cp "$hbc" "$tmpbc"
+  for fp in "${SUBSTRING_FP[@]}"; do
+    LC_ALL=C sed -i '' "s/$fp/$(printf 'X%.0s' $(seq 1 ${#fp}))/g" "$tmpbc" 2>/dev/null || true
+  done
   for tok in "${FORBIDDEN_TOKENS[@]}"; do
-    COUNT=$( { LC_ALL=C grep -ao "$tok" "$hbc" 2>/dev/null || true; } | wc -l | tr -d ' ')
+    COUNT=$( { LC_ALL=C grep -ao "$tok" "$tmpbc" 2>/dev/null || true; } | wc -l | tr -d ' ')
     if [ "$COUNT" != "0" ]; then
       echo "    FAIL: '$tok' found ($COUNT match$([ "$COUNT" != "1" ] && echo es))"
       LAYER_B_FAIL=1
     fi
   done
+  rm -f "$tmpbc"
 done
 [ "$LAYER_B_FAIL" = "0" ] && echo "  OK"
 

@@ -140,6 +140,74 @@ const DICTS: Partial<Record<LocaleCode, Dictionary>> = {
   'zh-TW': zhTW as Dictionary,
 };
 
+// Islamic-flavor i18n overlay. Each i18n/islamic/{code}.json holds the
+// keys used only by Zakat/Hawl/Nisab/Riba copy. The require() calls live
+// inside the APP_FLAVOR gate so babel-plugin-transform-inline-environment-
+// variables collapses the whole branch in generic builds, letting Metro
+// drop the islamic JSON files from the generic bundle.
+if (process.env.APP_FLAVOR === 'islamic') {
+  /* eslint-disable @typescript-eslint/no-require-imports */
+  const overlay: Partial<Record<LocaleCode, Dictionary>> = {
+    'en-US': require('@/i18n/islamic/en.json'),
+    'ar-SA': require('@/i18n/islamic/ar.json'),
+    'tr-TR': require('@/i18n/islamic/tr.json'),
+    'id-ID': require('@/i18n/islamic/id.json'),
+    'ms-MY': require('@/i18n/islamic/ms.json'),
+    'ru-RU': require('@/i18n/islamic/ru.json'),
+    'kk-KZ': require('@/i18n/islamic/kk.json'),
+    'es-ES': require('@/i18n/islamic/es-ES.json'),
+    'fr-FR': require('@/i18n/islamic/fr-FR.json'),
+    'de-DE': require('@/i18n/islamic/de-DE.json'),
+    'pt-BR': require('@/i18n/islamic/pt-BR.json'),
+    'it-IT': require('@/i18n/islamic/it-IT.json'),
+    'zh-CN': require('@/i18n/islamic/zh-CN.json'),
+    'ja-JP': require('@/i18n/islamic/ja-JP.json'),
+    'ko-KR': require('@/i18n/islamic/ko-KR.json'),
+    'hi-IN': require('@/i18n/islamic/hi-IN.json'),
+    'vi-VN': require('@/i18n/islamic/vi-VN.json'),
+    'th-TH': require('@/i18n/islamic/th-TH.json'),
+    'fa-IR': require('@/i18n/islamic/fa-IR.json'),
+    'nl-NL': require('@/i18n/islamic/nl-NL.json'),
+    'pl-PL': require('@/i18n/islamic/pl-PL.json'),
+    'uk-UA': require('@/i18n/islamic/uk-UA.json'),
+    'cs-CZ': require('@/i18n/islamic/cs-CZ.json'),
+    'hu-HU': require('@/i18n/islamic/hu-HU.json'),
+    'ro-RO': require('@/i18n/islamic/ro-RO.json'),
+    'el-GR': require('@/i18n/islamic/el-GR.json'),
+    'sv-SE': require('@/i18n/islamic/sv-SE.json'),
+    'da-DK': require('@/i18n/islamic/da-DK.json'),
+    'fi-FI': require('@/i18n/islamic/fi-FI.json'),
+    'nb-NO': require('@/i18n/islamic/nb-NO.json'),
+    'he-IL': require('@/i18n/islamic/he-IL.json'),
+    'bg-BG': require('@/i18n/islamic/bg-BG.json'),
+    'hr-HR': require('@/i18n/islamic/hr-HR.json'),
+    'sr-RS': require('@/i18n/islamic/sr-RS.json'),
+    'sk-SK': require('@/i18n/islamic/sk-SK.json'),
+    'sl-SI': require('@/i18n/islamic/sl-SI.json'),
+    'lt-LT': require('@/i18n/islamic/lt-LT.json'),
+    'lv-LV': require('@/i18n/islamic/lv-LV.json'),
+    'et-EE': require('@/i18n/islamic/et-EE.json'),
+    'sq-AL': require('@/i18n/islamic/sq-AL.json'),
+    'az-AZ': require('@/i18n/islamic/az-AZ.json'),
+    'uz-UZ': require('@/i18n/islamic/uz-UZ.json'),
+    'fil-PH': require('@/i18n/islamic/fil-PH.json'),
+    'sw-KE': require('@/i18n/islamic/sw-KE.json'),
+    'ta-IN': require('@/i18n/islamic/ta-IN.json'),
+    'te-IN': require('@/i18n/islamic/te-IN.json'),
+    'mr-IN': require('@/i18n/islamic/mr-IN.json'),
+    'bn-BD': require('@/i18n/islamic/bn-BD.json'),
+    'ur-PK': require('@/i18n/islamic/ur-PK.json'),
+    'zh-TW': require('@/i18n/islamic/zh-TW.json'),
+  };
+  /* eslint-enable @typescript-eslint/no-require-imports */
+  for (const code of Object.keys(overlay) as LocaleCode[]) {
+    const base = DICTS[code];
+    if (base) Object.assign(base, overlay[code]);
+  }
+  // English source dictionary also feeds the fallback path inside t().
+  Object.assign(SOURCE, overlay['en-US']);
+}
+
 let currentLocale: LocaleCode = (kv.get('locale') as LocaleCode) ?? 'en-US';
 
 const listeners = new Set<() => void>();

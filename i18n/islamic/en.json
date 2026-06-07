@@ -1,0 +1,11 @@
+{
+  "me.account.riba.label": "Earns interest (riba)",
+  "me.account.riba.hint": "Flagged accounts surface a footer warning in your Accounts list.",
+  "me.account.riba.footer": "One or more accounts are flagged as earning interest. Consult a scholar for the right zakat treatment.",
+  "homeAction.zakatDue.title": "Zakat due now",
+  "homeAction.zakatDue.detail": "{due} on {eligible} eligible wealth",
+  "homeAction.hawlComplete.title": "Hawl complete — review zakat",
+  "homeAction.belowNisab.detail": "Wealth below nisab — no zakat due this hawl",
+  "homeAction.hawlApproaching.title": "Hawl in {n} days",
+  "homeAction.hawlApproaching.detail": "Review zakat — projected {amount}"
+}

@@ -148,14 +148,15 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountL
             {note && (
               <Text style={styles.note} numberOfLines={1}>{note}</Text>
             )}
-            {/* Halal badge only rendered in islamic builds — string literals
-                ('halal'/'haram'/'mushbooh') get DCE'd from generic via babel
-                process.env inlining. */}
-            {process.env.APP_FLAVOR === 'islamic' && t.halalStatus && t.halalStatus !== 'unspecified' && (
-              <Text style={[styles.halal, { color: halalColor(t.halalStatus) }]}>
-                {t.halalStatus}
-              </Text>
-            )}
+            {/* Halal badge — islamic only. The require() and the file
+                it loads both live behind APP_FLAVOR so the badge's
+                literal status names ('halal'/'haram'/'mushbooh') are
+                physically absent from the generic bundle. */}
+            {process.env.APP_FLAVOR === 'islamic' && t.halalStatus && t.halalStatus !== 'unspecified' && (() => {
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
+              const { HalalBadge } = require('@/features/islamic/halal/HalalBadge');
+              return <HalalBadge status={t.halalStatus} />;
+            })()}
           </View>
           <View style={styles.amountStack}>
             {/* Four display modes:
@@ -248,15 +249,6 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountL
   );
 }
 
-function halalColor(status: string | null | undefined): string {
-  switch (status) {
-    case 'halal': return theme.accent;
-    case 'haram': return theme.expense;
-    case 'mushbooh': return theme.warning;
-    default: return theme.text2;
-  }
-}
-
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
@@ -290,11 +282,6 @@ const styles = StyleSheet.create({
     fontSize: sizes.xs,
     fontFamily: font.body,
     marginTop: 2,
-  },
-  halal: {
-    fontSize: sizes.xs,
-    marginTop: 2,
-    textTransform: 'capitalize',
   },
   tag: {
     fontSize: 10,
