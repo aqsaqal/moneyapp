@@ -22,10 +22,12 @@ export interface NetWorthMonth {
 }
 
 export function useMonthlyNetWorth(monthsBack: number): NetWorthMonth[] {
-  // Re-aggregate when anything in the data layer bumps. `useTransactions`
-  // pulls the version listener so this is cheap (1-row query keeps the
-  // bumper alive without scanning).
-  useTransactions({ limit: 1 });
+  // Re-aggregate when anything in the data layer bumps. Capture the
+  // probe's array identity into the memo deps so a `bump()` (including
+  // the one fired on profile switch) actually invalidates the cache.
+  // Previously the probe subscribed but the memo never re-ran because
+  // it depended only on `monthsBack`.
+  const bumpProbe = useTransactions({ limit: 1 });
 
   return useMemo(() => {
     const raw = getRawDB();
@@ -67,5 +69,6 @@ export function useMonthlyNetWorth(monthsBack: number): NetWorthMonth[] {
     return Array.from(byMonth.values()).sort((a, b) =>
       a.monthKey.localeCompare(b.monthKey),
     );
-  }, [monthsBack]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [monthsBack, bumpProbe]);
 }

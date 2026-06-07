@@ -7,6 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import {
@@ -47,6 +48,7 @@ export default function AccountsScreen() {
 
 function OverviewAndAccounts() {
   const t = useT();
+  const router = useRouter();
   const allAccounts = useAccounts({ includeArchived: true });
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   // Subscribe to FX bumps so balances re-convert when the cache updates.
@@ -162,10 +164,12 @@ function OverviewAndAccounts() {
         // edit; vertical swipe on the row body should scroll naturally.
         activationDistance={20}
         onDragEnd={({ data }) => {
-          // Persist the new order. Only active rows participate in
-          // drag; archived rows keep their existing sort_order so the
-          // hidden ordering is preserved when toggled back on.
-          reorderAccounts(data.filter((a) => a.archived !== 1).map((a) => a.id));
+          // Persist the merged order as-is — when showArchived is ON
+          // archived rows are draggable, and their new positions must
+          // stick after hide/show. With archived hidden, the visible
+          // active rows are still contiguous in sortOrder, so filtering
+          // them back to a list keeps the right order.
+          reorderAccounts(data.map((a) => a.id));
         }}
           renderItem={({ item: a, drag, isActive }: RenderItemParams<Account>) => {
             const ac = accountCurrency(a) as CurrencyCode;
@@ -193,11 +197,11 @@ function OverviewAndAccounts() {
                     (isExcluded || isArchived) && styles.acctCardDimmed,
                     isActive && { borderColor: theme.accent },
                   ]}
-                  onPress={() => setEditing(a)}
+                  onPress={() => router.push(`/account/${a.id}` as never)}
                   onLongPress={drag}
                   delayLongPress={300}
                   accessibilityRole="button"
-                  accessibilityLabel={`Edit ${a.name}, ${formatMoney(a.balance, ac)}${isArchived ? ', archived' : isExcluded ? ', excluded from total' : ''}, long-press to reorder`}
+                  accessibilityLabel={`Open ${a.name}, ${formatMoney(a.balance, ac)}${isArchived ? ', archived' : isExcluded ? ', excluded from total' : ''}, long-press to reorder`}
                 >
                   <View style={[styles.iconBox, { backgroundColor: `${a.color}22` }]}>
                     <Icon name={a.icon} size={20} color={a.color} />

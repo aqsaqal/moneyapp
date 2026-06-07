@@ -110,7 +110,7 @@ export function MeNetWorthCard() {
           ({trendUp ? '↑' : '↓'}{Math.abs(pct).toFixed(1)}%)
         </Text>
         <Text style={styles.subTail}>
-          {' '}{t('netWorth.subtitle.actual', { n: data.length })}
+          {' '}{t(`account.chart.subtitle.${period === 3 ? '3m' : period === 6 ? '6m' : period === 12 ? '1y' : 'all'}`)}
         </Text>
       </View>
 

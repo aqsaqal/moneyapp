@@ -28,8 +28,10 @@ export interface MonthlyFlow {
 
 export function useMonthlyIncomeSpending(monthsBack: number): MonthlyFlow[] {
   // Subscribe to bumps via useTransactions so insert/update/delete
-  // anywhere in the app re-aggregates. Limit:1 keeps it cheap.
-  useTransactions({ limit: 1 });
+  // anywhere in the app re-aggregates. Limit:1 keeps it cheap. The
+  // array identity is included in the memo deps below so profile
+  // switches (which fire bump()) actually invalidate the cache.
+  const bumpProbe = useTransactions({ limit: 1 });
   const accounts = useAccounts({ includeArchived: true });
   const displayCcy = (kv.get('currency') ?? 'USD') as CurrencyCode;
 
@@ -93,5 +95,6 @@ export function useMonthlyIncomeSpending(monthsBack: number): MonthlyFlow[] {
       result.push({ monthKey: key, income: b.income, spending: b.spending });
     }
     return result;
-  }, [monthsBack, accountCcy, displayCcy, accounts]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [monthsBack, accountCcy, displayCcy, accounts, bumpProbe]);
 }

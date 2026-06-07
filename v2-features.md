@@ -389,6 +389,28 @@ These were intentionally cut from v1 to keep the launch scope sane.
 - **Multi-currency at full coverage** — accounts already have per-
   account currency + FX cache. Outbound auto-refresh + opt-in toggle
   remain to ship.
+- **Net Worth chart + Account Detail chart polish** — the inline cards
+  (Me-tab Net Worth, Account Detail balance) and full-screen modals
+  ship functional in v1.0 but lack the full Reflect-style polish:
+  - Replace Net Worth full-screen stacked bars with **stacked area
+    chart** (assets blue/purple above zero, debts pink below, net
+    worth line on top). Bars currently work; area is the more
+    standard finance-app look.
+  - **X-axis date labels** at period-appropriate intervals (3m →
+    month abbreviations, 6m → every 1-2 months, 1y → quarters or
+    every 2 months, All → years).
+  - **Tap-to-tooltip interaction** with exact date + value following
+    finger — needs gesture-handler wiring against victory-native's
+    coordinate system (~1 day of work).
+  - **Shared chart component** so Account Balance + Net Worth use
+    one code path (Net Worth extends with a second series for
+    debts below zero). Currently two ~200-line screens with ~60
+    lines of duplicated render logic.
+  - **Remove any floating mid-chart labels** (Skia render artifacts
+    seen on certain device states).
+  - **Min / Max / Change stats block polish** — already exists in
+    Account Balance full-screen; tighten spacing + subtle row
+    separators.
 
 ---
 

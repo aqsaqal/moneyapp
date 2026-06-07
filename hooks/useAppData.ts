@@ -35,7 +35,7 @@ import {
 import { monthKey } from '@/utils/format';
 import { seedIfEmpty } from '@/utils/db/seed';
 import { onProfileChange } from '@/utils/profiles';
-import { snapshotTodayIfMissing, refreshTodaySnapshot } from '@/utils/netWorthSnapshot';
+import { snapshotTodayIfMissing, refreshTodaySnapshot, backfillNetWorthHistory } from '@/utils/netWorthSnapshot';
 import { FX_TTL_MS, oldestFetchedAt, refreshRates } from '@/utils/fx';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, localizedSeededName } from '@/constants/categories';
 import { kv } from '@/utils/kv';
@@ -106,6 +106,23 @@ export function bootAppData(): Promise<void> {
       // Phase 10p: capture today's net-worth snapshot once per app launch.
       // No-op when today's row already exists.
       try { snapshotTodayIfMissing(); } catch { /* never block boot on this */ }
+      // One-shot backfill of historical month-end snapshots so the 6m/
+      // 1y/all chart views aren't sparse 2-month strips. Idempotent —
+      // gated per profile by kv.netWorthBackfillDone. Runs after today's
+      // snapshot so the present-day row is the authority at the cutover.
+      try { backfillNetWorthHistory(); } catch { /* never block boot on this */ }
+      // Profile switch is bootAppData's one-off; re-run the snapshot
+      // + backfill for the newly activated profile, and bump the global
+      // version so the React caches that didn't depend on the profile
+      // counter (useAccounts, useMonthlyNetWorth, etc.) re-fetch.
+      const offProfile = (await import('@/utils/profiles')).onProfileChange(() => {
+        try { snapshotTodayIfMissing(); } catch { /* */ }
+        try { backfillNetWorthHistory(); } catch { /* */ }
+        bump();
+      });
+      // Keep the listener alive for the app lifetime — boot only runs
+      // once, so this binding outlives anything else here.
+      void offProfile;
       // Always-on FX refresh whenever the cache is stale or empty. Multi-
       // source fallback (open.er-api → fxratesapi → frankfurter), so a
       // single provider outage doesn't strand the user. Non-blocking;

@@ -76,6 +76,8 @@ export interface KVSchema {
   activityView: string;        // 'list' | 'categories' (Phase 10ac)
   activityJumpToMonth: string; // YYYY-MM handoff from Insights screen → Activity carousel
   activityJumpToView: string;  // 'list' | 'categories' — segment to land on after jump
+  netWorthBackfillDone: string;   // deprecated — left to suppress type errors on legacy code paths
+  netWorthBackfillDoneV2: string; // CSV of profile IDs whose net-worth history has been backfilled by the v2 (active-month-only) pass
 }
 
 export const kv = {

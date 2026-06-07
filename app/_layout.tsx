@@ -129,6 +129,8 @@ export default function RootLayout() {
               <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
               <Stack.Screen name="insights" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
               <Stack.Screen name="net-worth" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
+              <Stack.Screen name="account/[id]" options={{ animation: 'slide_from_right' }} />
+              <Stack.Screen name="account-balance" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
               <Stack.Screen name="category-grid" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
               <Stack.Screen name="categories-manage" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
               <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
