@@ -39,6 +39,10 @@ const config: ExpoConfig = {
   },
   ios: {
     bundleIdentifier: process.env.APP_BUNDLE_ID ?? 'com.moneyflow.generic',
+    // Increment monotonically per upload to App Store Connect — see the
+    // checklist in v2-features.md §1.1. version stays the marketing
+    // string ('1.0.0'); buildNumber is what Apple uniques on.
+    buildNumber: '1',
     supportsTablet: false,
     icon: ICON,
     requireFullScreen: true,
@@ -73,6 +77,10 @@ const config: ExpoConfig = {
   },
   android: {
     package: process.env.APP_BUNDLE_ID ?? 'com.moneyflow.generic',
+    // Increment monotonically per submitted APK / AAB. Once a higher
+    // versionCode lands in Play Console you can never re-upload a
+    // lower one for that track.
+    versionCode: 1,
     edgeToEdgeEnabled: true,
     adaptiveIcon: {
       foregroundImage: ADAPTIVE_ICON,

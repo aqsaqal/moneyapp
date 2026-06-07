@@ -23,7 +23,7 @@
       "env": {
         "APP_FLAVOR": "islamic",
         "APP_NAME": "Amanah",
-        "APP_BUNDLE_ID": "com.amanah.app",
+        "APP_BUNDLE_ID": "com.moneyflow.amanah",
         "APP_SCHEME": "amanah",
         "PRIMARY_COLOR": "#00C9A7",
         "FEATURES_ISLAMIC": "true"
