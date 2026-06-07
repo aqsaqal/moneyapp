@@ -43,6 +43,48 @@ echo "sdk.dir=$ANDROID_HOME" > android/local.properties
 grep -q '^android.enableJetifier=' android/gradle.properties || \
   echo 'android.enableJetifier=true' >> android/gradle.properties
 
+# Release signing — the default expo template signs release builds with
+# the debug keystore (fine for sideloading, rejected by Play Console).
+# Inject a release signingConfig that reads MONEYFLOW_RELEASE_* from
+# ~/.gradle/gradle.properties, and point the release buildType at it.
+# Both edits are idempotent against the template expo prebuild emits.
+if [ -z "${MONEYFLOW_RELEASE_STORE_FILE:-}" ] && ! grep -q "^MONEYFLOW_RELEASE_STORE_FILE" "$HOME/.gradle/gradle.properties" 2>/dev/null; then
+  echo "[build-aab] WARNING: MONEYFLOW_RELEASE_STORE_FILE not set in env or ~/.gradle/gradle.properties." >&2
+  echo "[build-aab]          AAB will be signed with the debug keystore — Play Console will reject it." >&2
+fi
+
+GRADLE_BUILD="android/app/build.gradle"
+# Add a release signingConfig sibling to the existing debug one. Use a
+# sentinel comment so re-running doesn't duplicate.
+if ! grep -q "MONEYFLOW_RELEASE_STORE_FILE" "$GRADLE_BUILD"; then
+  awk '
+    /signingConfigs \{/ && !done {
+      print
+      print "        release {"
+      print "            if (project.hasProperty(\"MONEYFLOW_RELEASE_STORE_FILE\")) {"
+      print "                storeFile file(MONEYFLOW_RELEASE_STORE_FILE)"
+      print "                storePassword MONEYFLOW_RELEASE_STORE_PASSWORD"
+      print "                keyAlias MONEYFLOW_RELEASE_KEY_ALIAS"
+      print "                keyPassword MONEYFLOW_RELEASE_KEY_PASSWORD"
+      print "            }"
+      print "        }"
+      done = 1
+      next
+    }
+    { print }
+  ' "$GRADLE_BUILD" > "$GRADLE_BUILD.tmp" && mv "$GRADLE_BUILD.tmp" "$GRADLE_BUILD"
+fi
+# Switch the release buildType from signingConfigs.debug → signingConfigs.release.
+# sed -i syntax differs between BSD (macOS) and GNU (linux); detect.
+if sed --version >/dev/null 2>&1; then
+  SED_INPLACE=(-i)
+else
+  SED_INPLACE=(-i '')
+fi
+sed "${SED_INPLACE[@]}" '/release {$/,/^        }/ {
+  s/signingConfig signingConfigs.debug/signingConfig signingConfigs.release/
+}' "$GRADLE_BUILD"
+
 echo "[build-aab] gradle bundleRelease ($FLAVOR)…"
 cd android
 APP_FLAVOR="$FLAVOR" ./gradlew app:bundleRelease
