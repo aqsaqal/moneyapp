@@ -164,11 +164,15 @@ export default function Home() {
     // disposable above already includes every unpaid recurring (the
     // post-fix definition of fixedExp), so subtracting them again
     // would double-count. Only future variable spend remains.
+    // Any unpaid recurring expense — future-dated OR past-due. The
+    // previous filter only counted bills whose dayOfMonth was strictly
+    // after today, which silently dropped any bill the user hadn't
+    // ticked off from earlier in the month. Hero-card's disposable
+    // includes them, so this subtotal needs to match.
     const remainingBills = recurring
       .filter(
         (r) =>
           r.type === 'expense' &&
-          r.dayOfMonth > daysElapsed &&
           !paidRecurringIds.has(r.id),
       )
       .reduce((s, r) => s + r.amount, 0);
