@@ -34,6 +34,7 @@ import {
   sectionStyles,
 } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import { rebuildDemoProfile } from '@/utils/db/demoSeed';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { FeatureSlots } from '@/features';
 import {
@@ -254,6 +255,16 @@ function ActiveProfileRow() {
     profiles.length === 1
       ? t('profile.active')
       : t('profile.activeAmong', { count: profiles.length });
+  // Tap → switch picker (or edit when there's only one profile to
+  // switch to). Long-press → edit current profile directly.
+  const onTap = () => {
+    if (profiles.length > 1) {
+      setSheet({ kind: 'switch', profiles, activeId: active.id });
+    } else {
+      setSheet({ kind: 'edit', profile: active });
+    }
+  };
+  const onHold = () => setSheet({ kind: 'edit', profile: active });
   return (
     <>
       <SettingRow
@@ -261,7 +272,8 @@ function ActiveProfileRow() {
         hint={hint}
         icon={(active.icon as never) || 'account-circle-outline'}
         iconColor={active.color}
-        onPress={() => setSheet({ kind: 'edit', profile: active })}
+        onPress={onTap}
+        onLongPress={onHold}
       />
       <ProfileSheet
         visible={sheet.kind !== 'closed'}
@@ -820,8 +832,6 @@ function DemoProfileRow() {
           text: t('settings.demo.cta'),
           onPress: () => {
             try {
-              // eslint-disable-next-line @typescript-eslint/no-require-imports
-              const { rebuildDemoProfile } = require('@/utils/db/demoSeed');
               rebuildDemoProfile();
             } catch (e) {
               Alert.alert('Demo profile', e instanceof Error ? e.message : String(e));

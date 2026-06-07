@@ -14,38 +14,80 @@ const storage = isWeb
   ? null
   : createMMKV({ id: 'moneyflow-kv' });
 
-function getRaw(key: string): string | undefined {
+// Keys that should be stored per-profile, not globally. These are the
+// "Profile settings" group in the Settings screen — currency, currency
+// format, FAB swap, smart-add behaviour. Everything else (language,
+// appearance, biometric, notifications) stays global because it's a
+// user-level preference that doesn't change when the user switches
+// profiles for accounting purposes.
+const PROFILE_SCOPED_KEYS = new Set<string>([
+  'currency',
+  'currencyFormat',
+  'smartSuggestions',
+  'fabSwapAction',
+  'defaultAccountId',
+]);
+
+function scopedKey(key: string): string {
+  if (!PROFILE_SCOPED_KEYS.has(key)) return key;
+  try {
+    // Lazy-required to avoid a circular import (profiles.ts → kv.ts).
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { getActiveProfileId } = require('@/utils/profiles');
+    const pid: string = getActiveProfileId();
+    return `${key}::${pid}`;
+  } catch {
+    return key;
+  }
+}
+
+function rawGet(k: string): string | undefined {
   if (isWeb) {
     if (typeof globalThis !== 'undefined' && (globalThis as any).localStorage) {
-      return (globalThis as any).localStorage.getItem(key) ?? undefined;
+      return (globalThis as any).localStorage.getItem(k) ?? undefined;
     }
-    return webStore[key];
+    return webStore[k];
   }
-  return storage?.getString(key);
+  return storage?.getString(k);
+}
+
+function getRaw(key: string): string | undefined {
+  const scoped = scopedKey(key);
+  if (scoped !== key) {
+    // Per-profile read; fall back to the legacy unscoped value so
+    // existing installs see their previous setting on first switch
+    // until the user explicitly changes it (which writes the scoped
+    // key).
+    const v = rawGet(scoped);
+    if (v !== undefined) return v;
+  }
+  return rawGet(key);
 }
 
 function setRaw(key: string, val: string) {
+  const k = scopedKey(key);
   if (isWeb) {
     if (typeof globalThis !== 'undefined' && (globalThis as any).localStorage) {
-      (globalThis as any).localStorage.setItem(key, val);
+      (globalThis as any).localStorage.setItem(k, val);
       return;
     }
-    webStore[key] = val;
+    webStore[k] = val;
     return;
   }
-  storage?.set(key, val);
+  storage?.set(k, val);
 }
 
 function delRaw(key: string) {
+  const k = scopedKey(key);
   if (isWeb) {
     if (typeof globalThis !== 'undefined' && (globalThis as any).localStorage) {
-      (globalThis as any).localStorage.removeItem(key);
+      (globalThis as any).localStorage.removeItem(k);
       return;
     }
-    delete webStore[key];
+    delete webStore[k];
     return;
   }
-  storage?.remove(key);
+  storage?.remove(k);
 }
 
 // ---- Typed API ----

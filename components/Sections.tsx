@@ -105,6 +105,7 @@ export function SettingRow({
   iconColor = theme.accent,
   trailing,
   onPress,
+  onLongPress,
 }: {
   label: string;
   hint?: string;
@@ -112,6 +113,7 @@ export function SettingRow({
   iconColor?: string;
   trailing?: React.ReactNode;
   onPress?: () => void;
+  onLongPress?: () => void;
 }) {
   const Inner = (
     <>
@@ -125,7 +127,13 @@ export function SettingRow({
   );
   if (onPress) {
     return (
-      <Pressable style={sectionStyles.settingRow} onPress={onPress} accessibilityRole="button">
+      <Pressable
+        style={sectionStyles.settingRow}
+        onPress={onPress}
+        onLongPress={onLongPress}
+        delayLongPress={300}
+        accessibilityRole="button"
+      >
         {Inner}
       </Pressable>
     );

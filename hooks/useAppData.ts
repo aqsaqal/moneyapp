@@ -36,6 +36,7 @@ import { monthKey } from '@/utils/format';
 import { seedIfEmpty } from '@/utils/db/seed';
 import { onProfileChange } from '@/utils/profiles';
 import { snapshotTodayIfMissing, refreshTodaySnapshot, backfillNetWorthHistory } from '@/utils/netWorthSnapshot';
+import { ensureDemoProfile } from '@/utils/db/demoSeed';
 import { FX_TTL_MS, oldestFetchedAt, refreshRates } from '@/utils/fx';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, localizedSeededName } from '@/constants/categories';
 import { kv } from '@/utils/kv';
@@ -115,8 +116,6 @@ export function bootAppData(): Promise<void> {
       // deleting Demo doesn't get auto-re-created on next launch.
       try {
         if (!kv.getBool('demoProfileAttempted', false)) {
-          // eslint-disable-next-line @typescript-eslint/no-require-imports
-          const { ensureDemoProfile } = require('@/utils/db/demoSeed');
           ensureDemoProfile();
           kv.setBool('demoProfileAttempted', true);
         }

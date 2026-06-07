@@ -18,7 +18,7 @@
 
 import { kv } from '@/utils/kv';
 import {
-  readProfiles,
+  listProfiles,
   createProfile,
   deleteProfile,
   switchActiveProfile,
@@ -35,7 +35,7 @@ interface SeedResult {
 }
 
 export function findDemoProfile(): { id: string } | null {
-  const p = readProfiles().find((x) => x.name.toLowerCase() === DEMO_NAME.toLowerCase());
+  const p = listProfiles().find((x) => x.name.toLowerCase() === DEMO_NAME.toLowerCase());
   return p ? { id: p.id } : null;
 }
 
@@ -54,7 +54,7 @@ export function rebuildDemoProfile(): SeedResult {
   const existing = findDemoProfile();
   if (existing) {
     if (getActiveProfileId() === existing.id) {
-      const others = readProfiles().filter((p) => p.id !== existing.id);
+      const others = listProfiles().filter((p) => p.id !== existing.id);
       if (others[0]) switchActiveProfile(others[0].id);
     }
     deleteProfile(existing.id);
@@ -93,9 +93,9 @@ function seedAccounts(): void {
     { id: 'demo-savings',  name: 'Savings',       type: 'savings', balance: 12500.0, icon: 'PiggyBank',  color: '#FFBE44', sortOrder: 2, currency: 'USD', includeInTotal: 1 },
     { id: 'demo-cc',       name: 'Credit Card',   type: 'credit',  balance: -642.30, creditLimit: 5000, icon: 'CreditCard', color: '#FF6B8A', sortOrder: 3, currency: 'USD', includeInTotal: 1 },
     { id: 'demo-cash',     name: 'Cash',          type: 'cash',    balance: 180.0,   icon: 'Wallet',     color: '#00E09E', sortOrder: 4, currency: 'USD', includeInTotal: 1 },
-    { id: 'demo-mortgage', name: 'Mortgage',      type: 'loan',    balance: -184500, icon: 'Home',       color: '#F97316', sortOrder: 5, currency: 'USD', includeInTotal: 1 },
-    { id: 'demo-carloan',  name: 'Car Loan',      type: 'loan',    balance: -8240.0, icon: 'Car',        color: '#EAB308', sortOrder: 6, currency: 'USD', includeInTotal: 1 },
-  ]);
+    { id: 'demo-mortgage', name: 'Mortgage',      type: 'debt',    balance: -184500, icon: 'Home',       color: '#F97316', sortOrder: 5, currency: 'USD', includeInTotal: 1 },
+    { id: 'demo-carloan',  name: 'Car Loan',      type: 'debt',    balance: -8240.0, icon: 'Car',        color: '#EAB308', sortOrder: 6, currency: 'USD', includeInTotal: 1 },
+  ]).run();
 }
 
 function seedRecurring(): void {
@@ -113,7 +113,7 @@ function seedRecurring(): void {
     { id: 'demo-r-carloan', name: 'Car Loan Payment', amount: 320,   type: 'expense', category: 'loan_payment',  accountId: 'demo-checking', dayOfMonth: 20, icon: 'Car',        color: '#EAB308' },
     { id: 'demo-r-salary',  name: 'Salary',           amount: 5200,  type: 'income',  category: 'salary',        accountId: 'demo-checking', dayOfMonth: 1,  icon: 'Briefcase',  color: '#00E09E' },
     { id: 'demo-r-side',    name: 'Freelance',        amount: 700,   type: 'income',  category: 'freelance',     accountId: 'demo-checking', dayOfMonth: 15, icon: 'TrendingUp', color: '#818CF8' },
-  ]);
+  ]).run();
 }
 
 function seedGoalsAndDebts(): void {
@@ -124,11 +124,11 @@ function seedGoalsAndDebts(): void {
     { id: 'demo-g-emergency', name: 'Emergency Fund',  targetAmount: 10000, targetDate: now + 180 * DAY, accountId: 'demo-savings', icon: 'shield-outline',   color: '#10B981', createdAt: now - 540 * DAY },
     { id: 'demo-g-vacation',  name: 'Vacation',         targetAmount: 3000,  targetDate: now + 120 * DAY, accountId: 'demo-savings', icon: 'beach',            color: '#F97316', createdAt: now - 200 * DAY },
     { id: 'demo-g-downpay',   name: 'House Down Payment', targetAmount: 50000, targetDate: now + 720 * DAY, accountId: 'demo-savings', icon: 'home-outline',   color: '#A78BFA', createdAt: now - 90 * DAY },
-  ]);
+  ]).run();
   db.insert(debts).values([
     { id: 'demo-d-cc',   name: 'Credit Card', balance: 642.30, apr: 22.99, minPayment: 35, accountId: 'demo-cc',      currency: 'USD', icon: 'credit-card-outline', color: '#FF6B8A', createdAt: now - 600 * DAY },
     { id: 'demo-d-car',  name: 'Car Loan',    balance: 8240,   apr: 6.5,   minPayment: 320, accountId: 'demo-carloan', currency: 'USD', icon: 'car-outline',         color: '#EAB308', createdAt: now - 400 * DAY },
-  ]);
+  ]).run();
 }
 
 function seedBudgets(): void {
