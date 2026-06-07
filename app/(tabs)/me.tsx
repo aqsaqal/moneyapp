@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
   },
   acctCardDimmed: { opacity: 0.55 },
   acctNameRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
-  acctName: { color: theme.text1, fontSize: sizes.md },
+  acctName: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.display },
   acctTag: {
     color: theme.text3,
     fontSize: 10,
