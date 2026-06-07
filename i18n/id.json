@@ -467,5 +467,17 @@
   "account.since": "Sejak {date}",
   "settings.fabAction.label": "Tukar ketuk dan tahan lama pada FAB",
   "settings.fabAction.bodyOff": "Ketuk → Smart Add · tahan → Kisi kategori",
-  "settings.fabAction.bodyOn": "Ketuk → Kisi kategori · tahan → Smart Add"
+  "settings.fabAction.bodyOn": "Ketuk → Kisi kategori · tahan → Smart Add",
+  "common.remove": "Hapus",
+  "plan.menu.pause": "Jeda",
+  "plan.menu.resume": "Lanjutkan",
+  "plan.menu.skipMonth": "Lewati bulan ini",
+  "plan.menu.archive": "Arsipkan",
+  "plan.menu.unarchive": "Batal arsip",
+  "plan.menu.editBudget": "Edit anggaran",
+  "plan.menu.removeBudget": "Hapus anggaran",
+  "plan.goals.deleteConfirm.title": "Hapus tujuan?",
+  "plan.goals.deleteConfirm.body": "Hapus {name}?",
+  "plan.budget.removeConfirm.title": "Hapus anggaran?",
+  "plan.budget.removeConfirm.body": "Berhenti melacak anggaran bulanan untuk {name}?"
 }

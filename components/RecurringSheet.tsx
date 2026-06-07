@@ -207,7 +207,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
           {editing && (
             <Pressable onPress={askDelete} style={styles.deleteRow} accessibilityRole="button">
               <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.expense} />
-              <Text style={styles.deleteText}>{t('recurring.delete')}</Text>
+              <Text style={styles.deleteText}>{t('common.delete')}</Text>
             </Pressable>
           )}
 

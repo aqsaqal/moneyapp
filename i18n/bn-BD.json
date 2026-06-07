@@ -468,5 +468,17 @@
   "account.since": "{date} থেকে",
   "settings.fabAction.label": "FAB ট্যাপ ও লং-প্রেস অদলবদল করুন",
   "settings.fabAction.bodyOff": "ট্যাপ → স্মার্ট অ্যাড · লং-প্রেস → ক্যাটাগরি গ্রিড",
-  "settings.fabAction.bodyOn": "ট্যাপ → ক্যাটাগরি গ্রিড · লং-প্রেস → স্মার্ট অ্যাড"
+  "settings.fabAction.bodyOn": "ট্যাপ → ক্যাটাগরি গ্রিড · লং-প্রেস → স্মার্ট অ্যাড",
+  "common.remove": "সরান",
+  "plan.menu.pause": "বিরতি",
+  "plan.menu.resume": "পুনরায় শুরু",
+  "plan.menu.skipMonth": "এই মাস বাদ দিন",
+  "plan.menu.archive": "আর্কাইভ",
+  "plan.menu.unarchive": "আর্কাইভ থেকে ফিরিয়ে আনুন",
+  "plan.menu.editBudget": "বাজেট সম্পাদনা",
+  "plan.menu.removeBudget": "বাজেট সরান",
+  "plan.goals.deleteConfirm.title": "লক্ষ্য মুছবেন?",
+  "plan.goals.deleteConfirm.body": "{name} মুছবেন?",
+  "plan.budget.removeConfirm.title": "বাজেট সরাবেন?",
+  "plan.budget.removeConfirm.body": "{name}-এর জন্য মাসিক বাজেট ট্র্যাকিং বন্ধ করবেন?"
 }

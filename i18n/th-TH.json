@@ -468,5 +468,17 @@
   "account.since": "ตั้งแต่ {date}",
   "settings.fabAction.label": "สลับการแตะและกดค้างของ FAB",
   "settings.fabAction.bodyOff": "แตะ → Smart Add · กดค้าง → ตารางหมวดหมู่",
-  "settings.fabAction.bodyOn": "แตะ → ตารางหมวดหมู่ · กดค้าง → Smart Add"
+  "settings.fabAction.bodyOn": "แตะ → ตารางหมวดหมู่ · กดค้าง → Smart Add",
+  "common.remove": "ลบ",
+  "plan.menu.pause": "หยุดชั่วคราว",
+  "plan.menu.resume": "ดำเนินการต่อ",
+  "plan.menu.skipMonth": "ข้ามเดือนนี้",
+  "plan.menu.archive": "จัดเก็บ",
+  "plan.menu.unarchive": "นำกลับจากที่จัดเก็บ",
+  "plan.menu.editBudget": "แก้ไขงบประมาณ",
+  "plan.menu.removeBudget": "ลบงบประมาณ",
+  "plan.goals.deleteConfirm.title": "ลบเป้าหมาย?",
+  "plan.goals.deleteConfirm.body": "ลบ {name}?",
+  "plan.budget.removeConfirm.title": "ลบงบประมาณ?",
+  "plan.budget.removeConfirm.body": "หยุดติดตามงบประมาณรายเดือนสำหรับ {name}?"
 }

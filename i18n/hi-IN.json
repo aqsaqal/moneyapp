@@ -468,5 +468,17 @@
   "account.since": "{date} से",
   "settings.fabAction.label": "FAB टैप और लॉन्ग-प्रेस आपस में बदलें",
   "settings.fabAction.bodyOff": "टैप → Smart Add · लॉन्ग-प्रेस → कैटेगरी ग्रिड",
-  "settings.fabAction.bodyOn": "टैप → कैटेगरी ग्रिड · लॉन्ग-प्रेस → Smart Add"
+  "settings.fabAction.bodyOn": "टैप → कैटेगरी ग्रिड · लॉन्ग-प्रेस → Smart Add",
+  "common.remove": "हटाएं",
+  "plan.menu.pause": "रोकें",
+  "plan.menu.resume": "जारी रखें",
+  "plan.menu.skipMonth": "इस महीने को छोड़ें",
+  "plan.menu.archive": "आर्काइव करें",
+  "plan.menu.unarchive": "आर्काइव से वापस लाएं",
+  "plan.menu.editBudget": "बजट संपादित करें",
+  "plan.menu.removeBudget": "बजट हटाएं",
+  "plan.goals.deleteConfirm.title": "लक्ष्य हटाएं?",
+  "plan.goals.deleteConfirm.body": "{name} हटाएं?",
+  "plan.budget.removeConfirm.title": "बजट हटाएं?",
+  "plan.budget.removeConfirm.body": "{name} के लिए मासिक बजट ट्रैकिंग बंद करें?"
 }

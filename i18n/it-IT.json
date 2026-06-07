@@ -468,5 +468,17 @@
   "account.since": "Dal {date}",
   "settings.fabAction.label": "Inverti tocco e pressione lunga del FAB",
   "settings.fabAction.bodyOff": "Tocco → Smart Add · pressione lunga → Griglia categorie",
-  "settings.fabAction.bodyOn": "Tocco → Griglia categorie · pressione lunga → Smart Add"
+  "settings.fabAction.bodyOn": "Tocco → Griglia categorie · pressione lunga → Smart Add",
+  "common.remove": "Rimuovi",
+  "plan.menu.pause": "Metti in pausa",
+  "plan.menu.resume": "Riprendi",
+  "plan.menu.skipMonth": "Salta questo mese",
+  "plan.menu.archive": "Archivia",
+  "plan.menu.unarchive": "Annulla archivio",
+  "plan.menu.editBudget": "Modifica budget",
+  "plan.menu.removeBudget": "Rimuovi budget",
+  "plan.goals.deleteConfirm.title": "Eliminare l'obiettivo?",
+  "plan.goals.deleteConfirm.body": "Eliminare {name}?",
+  "plan.budget.removeConfirm.title": "Rimuovere il budget?",
+  "plan.budget.removeConfirm.body": "Smettere di monitorare il budget mensile per {name}?"
 }

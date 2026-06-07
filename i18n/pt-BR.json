@@ -468,5 +468,17 @@
   "account.since": "Desde {date}",
   "settings.fabAction.label": "Inverter toque e pressionar do FAB",
   "settings.fabAction.bodyOff": "Toque → Smart Add · pressionar → Grade de categorias",
-  "settings.fabAction.bodyOn": "Toque → Grade de categorias · pressionar → Smart Add"
+  "settings.fabAction.bodyOn": "Toque → Grade de categorias · pressionar → Smart Add",
+  "common.remove": "Remover",
+  "plan.menu.pause": "Pausar",
+  "plan.menu.resume": "Retomar",
+  "plan.menu.skipMonth": "Pular este mês",
+  "plan.menu.archive": "Arquivar",
+  "plan.menu.unarchive": "Desarquivar",
+  "plan.menu.editBudget": "Editar orçamento",
+  "plan.menu.removeBudget": "Remover orçamento",
+  "plan.goals.deleteConfirm.title": "Excluir meta?",
+  "plan.goals.deleteConfirm.body": "Excluir {name}?",
+  "plan.budget.removeConfirm.title": "Remover orçamento?",
+  "plan.budget.removeConfirm.body": "Parar de acompanhar o orçamento mensal de {name}?"
 }

@@ -468,5 +468,17 @@
   "account.since": "{date} óta",
   "settings.fabAction.label": "FAB koppintás és hosszú nyomás cseréje",
   "settings.fabAction.bodyOff": "Koppintás → Smart Add · hosszú nyomás → Kategória rács",
-  "settings.fabAction.bodyOn": "Koppintás → Kategória rács · hosszú nyomás → Smart Add"
+  "settings.fabAction.bodyOn": "Koppintás → Kategória rács · hosszú nyomás → Smart Add",
+  "common.remove": "Eltávolítás",
+  "plan.menu.pause": "Szüneteltetés",
+  "plan.menu.resume": "Folytatás",
+  "plan.menu.skipMonth": "Ugorja át ezt a hónapot",
+  "plan.menu.archive": "Archiválás",
+  "plan.menu.unarchive": "Visszaállítás",
+  "plan.menu.editBudget": "Költségvetés szerkesztése",
+  "plan.menu.removeBudget": "Költségvetés eltávolítása",
+  "plan.goals.deleteConfirm.title": "Cél törlése?",
+  "plan.goals.deleteConfirm.body": "{name} törlése?",
+  "plan.budget.removeConfirm.title": "Költségvetés eltávolítása?",
+  "plan.budget.removeConfirm.body": "Leállítja a havi költségvetés követését a következőhöz: {name}?"
 }

@@ -467,5 +467,17 @@
   "account.since": "منذ {date}",
   "settings.fabAction.label": "تبديل النقر والضغط المطوّل لزر الإضافة",
   "settings.fabAction.bodyOff": "نقر ← إضافة ذكية · ضغط مطوّل ← شبكة الفئات",
-  "settings.fabAction.bodyOn": "نقر ← شبكة الفئات · ضغط مطوّل ← إضافة ذكية"
+  "settings.fabAction.bodyOn": "نقر ← شبكة الفئات · ضغط مطوّل ← إضافة ذكية",
+  "common.remove": "إزالة",
+  "plan.menu.pause": "إيقاف مؤقت",
+  "plan.menu.resume": "استئناف",
+  "plan.menu.skipMonth": "تخطّي هذا الشهر",
+  "plan.menu.archive": "أرشفة",
+  "plan.menu.unarchive": "إلغاء الأرشفة",
+  "plan.menu.editBudget": "تعديل الميزانية",
+  "plan.menu.removeBudget": "إزالة الميزانية",
+  "plan.goals.deleteConfirm.title": "حذف الهدف؟",
+  "plan.goals.deleteConfirm.body": "حذف {name}؟",
+  "plan.budget.removeConfirm.title": "إزالة الميزانية؟",
+  "plan.budget.removeConfirm.body": "إيقاف تتبع الميزانية الشهرية لـ {name}؟"
 }

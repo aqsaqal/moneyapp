@@ -18,16 +18,18 @@ import {
   useRecurring,
   usePaidItemsForMonth,
   useMonthTotalsByCategory,
-  markRecurringPaid,
   unmarkRecurringPaid,
   deleteRecurring,
-  upsertRecurring,
   useGoals,
   useAccounts,
   useDebts,
   useCategoriesWithMeta,
+  skipRecurringForMonth,
+  setCategoryMeta,
+  deleteGoal,
   type CategoryWithMeta,
 } from '@/hooks/useAppData';
+import { ActionMenu, type ActionMenuOption } from '@/components/ActionMenu';
 import { CustomCategorySheet } from '@/components/CustomCategorySheet';
 import { CategoryPicker } from '@/components/CategoryPicker';
 import { useSubscriptionAudit, type DetectedCandidate, type StaleSubscription } from '@/hooks/useSubscriptionAudit';
@@ -87,6 +89,46 @@ function buildPrefill(data: Record<string, unknown>): string {
   return encodePrefill(data);
 }
 
+// ---- Long-press menu option builders ----
+
+function buildRecurringMenuOptions(args: {
+  onEdit: () => void;
+  onSkip: () => void;
+  onDelete: () => void;
+  t: ReturnType<typeof useT>;
+}): ActionMenuOption[] {
+  const { onEdit, onSkip, onDelete, t } = args;
+  return [
+    { label: t('common.edit'), icon: 'pencil-outline', onPress: onEdit },
+    { label: t('plan.menu.skipMonth'), icon: 'calendar-end', onPress: onSkip },
+    { label: t('common.delete'), icon: 'trash-can-outline', destructive: true, onPress: onDelete },
+  ];
+}
+
+function buildGoalMenuOptions(args: {
+  onEdit: () => void;
+  onDelete: () => void;
+  t: ReturnType<typeof useT>;
+}): ActionMenuOption[] {
+  const { onEdit, onDelete, t } = args;
+  return [
+    { label: t('common.edit'), icon: 'pencil-outline', onPress: onEdit },
+    { label: t('common.delete'), icon: 'trash-can-outline', destructive: true, onPress: onDelete },
+  ];
+}
+
+function buildBudgetMenuOptions(args: {
+  onEdit: () => void;
+  onRemove: () => void;
+  t: ReturnType<typeof useT>;
+}): ActionMenuOption[] {
+  const { onEdit, onRemove, t } = args;
+  return [
+    { label: t('plan.menu.editBudget'), icon: 'pencil-outline', onPress: onEdit },
+    { label: t('plan.menu.removeBudget'), icon: 'close-circle-outline', destructive: true, onPress: onRemove },
+  ];
+}
+
 function RecurringSection() {
   const t = useT();
   const router = useRouter();
@@ -95,11 +137,19 @@ function RecurringSection() {
   const key = monthKey();
   const paid = usePaidItemsForMonth(key);
   const paidIds = useMemo(() => new Set(paid.map((p) => p.recurringId)), [paid]);
+  // Sentinel transactionId marks rows the user explicitly skipped for
+  // this month — they still count as "paid" for the checkbox state
+  // (no nag), but render with a different icon + sub-label.
+  const skippedIds = useMemo(
+    () => new Set(paid.filter((p) => p.transactionId === '__skip__').map((p) => p.recurringId)),
+    [paid],
+  );
   // Phase 10g+: audit signals now live INSIDE this section (annual burn,
   // detected, stale) — see useSubscriptionAudit.
   const audit = useSubscriptionAudit();
 
   const [sheet, setSheet] = useState<RecurringSheetState>({ kind: 'closed' });
+  const [menuFor, setMenuFor] = useState<Recurring | null>(null);
 
   // Quick-delete from the row's trash button asks the same question
   // RecurringSheet's askDelete does, so the two paths are consistent.
@@ -225,6 +275,8 @@ function RecurringSection() {
               <RecurringRow
                 rec={r}
                 paid={isPaid}
+                skipped={skippedIds.has(r.id)}
+                onUnskip={() => unmarkRecurringPaid(r.id, key)}
                 onTapCheckbox={() => router.push({
                   pathname: '/add',
                   params: {
@@ -235,9 +287,6 @@ function RecurringSection() {
                       category: r.category,
                       note: r.name,
                       recurringId: r.id,
-                      // Stamp the month the user tapped from so the
-                      // paid_items link lands on the right row even
-                      // when the user picks a future-dated txn.
                       markMonth: key,
                       originalCurrency: r.currency ?? undefined,
                     }),
@@ -245,7 +294,7 @@ function RecurringSection() {
                 } as never)}
                 onUnmark={() => confirmUnmark(r)}
                 onEdit={() => setSheet({ kind: 'edit', rec: r })}
-                onDelete={() => confirmDeleteRecurring(r)}
+                onLongPress={() => setMenuFor(r)}
                 currency={(r.currency ?? currency) as CurrencyCode}
               />
               {hint && (
@@ -296,6 +345,8 @@ function RecurringSection() {
             key={r.id}
             rec={r}
             paid={paidIds.has(r.id)}
+            skipped={skippedIds.has(r.id)}
+            onUnskip={() => unmarkRecurringPaid(r.id, key)}
             onTapCheckbox={() => router.push({
               pathname: '/add',
               params: {
@@ -306,8 +357,6 @@ function RecurringSection() {
                   category: r.category,
                   note: r.name,
                   recurringId: r.id,
-                  // Stamp the month the user tapped from — see expense
-                  // section above for rationale.
                   markMonth: key,
                   originalCurrency: r.currency ?? undefined,
                 }),
@@ -315,7 +364,7 @@ function RecurringSection() {
             } as never)}
             onUnmark={() => confirmUnmark(r)}
             onEdit={() => setSheet({ kind: 'edit', rec: r })}
-            onDelete={() => confirmDeleteRecurring(r)}
+            onLongPress={() => setMenuFor(r)}
             currency={(r.currency ?? currency) as CurrencyCode}
           />
         ))}
@@ -326,6 +375,18 @@ function RecurringSection() {
         recurring={sheet.kind === 'edit' ? sheet.rec : undefined}
         defaultType={sheet.kind === 'create' ? sheet.type : undefined}
         onClose={() => setSheet({ kind: 'closed' })}
+      />
+
+      <ActionMenu
+        visible={menuFor != null}
+        title={menuFor?.name}
+        onClose={() => setMenuFor(null)}
+        options={menuFor ? buildRecurringMenuOptions({
+          onEdit: () => setSheet({ kind: 'edit', rec: menuFor }),
+          onSkip: () => skipRecurringForMonth(menuFor.id, key),
+          onDelete: () => confirmDeleteRecurring(menuFor),
+          t,
+        }) : []}
       />
     </View>
   );
@@ -342,6 +403,22 @@ function BudgetsSection() {
   const totalsMap = useMemo(() => new Map(totals.map((t) => [t.category, t.total])), [totals]);
   const [editing, setEditing] = useState<CategoryWithMeta | null | undefined>(undefined);
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [menuFor, setMenuFor] = useState<CategoryWithMeta | null>(null);
+
+  const confirmRemoveBudget = (c: CategoryWithMeta) => {
+    Alert.alert(
+      t('plan.budget.removeConfirm.title'),
+      t('plan.budget.removeConfirm.body', { name: c.name }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.remove'),
+          style: 'destructive',
+          onPress: () => setCategoryMeta(c.id, { monthlyBudget: null, budgetCurrency: null }),
+        },
+      ],
+    );
+  };
 
   // Active budgets only: archived-out categories with paused budgets don't
   // belong in the dashboard.
@@ -387,9 +464,11 @@ function BudgetsSection() {
           <Pressable
             key={c.id}
             onPress={() => setEditing(c)}
+            onLongPress={() => setMenuFor(c)}
+            delayLongPress={300}
             style={styles.budgetCard}
             accessibilityRole="button"
-            accessibilityLabel={`${c.name} budget ${spent.toFixed(0)} of ${budget.toFixed(0)} ${ccy}, ${Math.round(pct * 100)} percent used`}
+            accessibilityLabel={`${c.name} budget ${spent.toFixed(0)} of ${budget.toFixed(0)} ${ccy}, ${Math.round(pct * 100)} percent used, long-press for more`}
           >
             <View style={styles.budgetHead}>
               <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
@@ -430,6 +509,17 @@ function BudgetsSection() {
         }}
         onClose={() => setPickerOpen(false)}
       />
+
+      <ActionMenu
+        visible={menuFor != null}
+        title={menuFor?.name}
+        onClose={() => setMenuFor(null)}
+        options={menuFor ? buildBudgetMenuOptions({
+          onEdit: () => setEditing(menuFor),
+          onRemove: () => confirmRemoveBudget(menuFor),
+          t,
+        }) : []}
+      />
     </View>
   );
 }
@@ -438,7 +528,6 @@ function BudgetsSection() {
 
 function GoalsSection() {
   const t = useT();
-  const router = useRouter();
   const goals = useGoals();
   const accounts = useAccounts();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
@@ -446,6 +535,20 @@ function GoalsSection() {
 
   // null = creating; Goal = editing; undefined = closed.
   const [editing, setEditing] = useState<Goal | null | undefined>(undefined);
+  const [menuFor, setMenuFor] = useState<Goal | null>(null);
+
+  const visible = goals;
+
+  const confirmDeleteGoal = (g: Goal) => {
+    Alert.alert(
+      t('plan.goals.deleteConfirm.title'),
+      `${t('plan.goals.deleteConfirm.body', { name: g.name })} ${t('common.cannotBeUndone')}`,
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        { text: t('common.delete'), style: 'destructive', onPress: () => deleteGoal(g.id) },
+      ],
+    );
+  };
 
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
@@ -454,10 +557,10 @@ function GoalsSection() {
         onAdd={() => setEditing(null)}
         addLabel={t('plan.goals.add')}
       />
-      {goals.length === 0 && (
+      {visible.length === 0 && (
         <Text style={styles.emptyHint}>{t('plan.goals.empty')}</Text>
       )}
-      {goals.map((g) => {
+      {visible.map((g) => {
         const acct = accountById.get(g.accountId);
         const current = Math.max(0, acct?.balance ?? 0);
         const pct = g.targetAmount > 0 ? Math.min(current / g.targetAmount, 1) : 0;
@@ -469,22 +572,12 @@ function GoalsSection() {
         return (
           <Pressable
             key={g.id}
-            onPress={() => router.push({
-              pathname: '/add',
-              params: {
-                prefill: buildPrefill({
-                  type: 'transfer',
-                  toAccountId: g.accountId,
-                  amount: remaining > 0 ? remaining : undefined,
-                  note: g.name,
-                  originalCurrency: g.currency ?? undefined,
-                }),
-              },
-            } as never)}
-            onLongPress={() => setEditing(g)}
+            onPress={() => setEditing(g)}
+            onLongPress={() => setMenuFor(g)}
+            delayLongPress={300}
             style={[styles.goalCard, { borderColor: `${g.color}55` }]}
             accessibilityRole="button"
-            accessibilityLabel={`${g.name}, ${Math.round(pct * 100)}% of target, tap to contribute, long-press to edit`}
+            accessibilityLabel={`${g.name}, ${Math.round(pct * 100)}% of target, tap to edit, long-press for more`}
           >
             <View style={styles.goalHead}>
               <View style={[styles.goalIcon, { backgroundColor: `${g.color}22` }]}>
@@ -523,6 +616,16 @@ function GoalsSection() {
         visible={editing !== undefined}
         goal={editing ?? undefined}
         onClose={() => setEditing(undefined)}
+      />
+      <ActionMenu
+        visible={menuFor != null}
+        title={menuFor?.name}
+        onClose={() => setMenuFor(null)}
+        options={menuFor ? buildGoalMenuOptions({
+          onEdit: () => setEditing(menuFor),
+          onDelete: () => confirmDeleteGoal(menuFor),
+          t,
+        }) : []}
       />
     </View>
   );

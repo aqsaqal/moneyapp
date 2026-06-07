@@ -468,5 +468,17 @@
   "account.since": "Από {date}",
   "settings.fabAction.label": "Εναλλαγή πάτημα και παρατεταμένο πάτημα FAB",
   "settings.fabAction.bodyOff": "Πάτημα → Smart Add · παρατεταμένο → Πλέγμα κατηγοριών",
-  "settings.fabAction.bodyOn": "Πάτημα → Πλέγμα κατηγοριών · παρατεταμένο → Smart Add"
+  "settings.fabAction.bodyOn": "Πάτημα → Πλέγμα κατηγοριών · παρατεταμένο → Smart Add",
+  "common.remove": "Αφαίρεση",
+  "plan.menu.pause": "Παύση",
+  "plan.menu.resume": "Συνέχεια",
+  "plan.menu.skipMonth": "Παράλειψη αυτού του μήνα",
+  "plan.menu.archive": "Αρχειοθέτηση",
+  "plan.menu.unarchive": "Επαναφορά",
+  "plan.menu.editBudget": "Επεξεργασία προϋπολογισμού",
+  "plan.menu.removeBudget": "Αφαίρεση προϋπολογισμού",
+  "plan.goals.deleteConfirm.title": "Διαγραφή στόχου;",
+  "plan.goals.deleteConfirm.body": "Διαγραφή {name};",
+  "plan.budget.removeConfirm.title": "Αφαίρεση προϋπολογισμού;",
+  "plan.budget.removeConfirm.body": "Διακοπή παρακολούθησης μηνιαίου προϋπολογισμού για {name};"
 }

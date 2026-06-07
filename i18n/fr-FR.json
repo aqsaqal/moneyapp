@@ -468,5 +468,17 @@
   "account.since": "Depuis le {date}",
   "settings.fabAction.label": "Inverser appui et appui long du FAB",
   "settings.fabAction.bodyOff": "Appui → Smart Add · appui long → Grille de catégories",
-  "settings.fabAction.bodyOn": "Appui → Grille de catégories · appui long → Smart Add"
+  "settings.fabAction.bodyOn": "Appui → Grille de catégories · appui long → Smart Add",
+  "common.remove": "Supprimer",
+  "plan.menu.pause": "Pause",
+  "plan.menu.resume": "Reprendre",
+  "plan.menu.skipMonth": "Sauter ce mois",
+  "plan.menu.archive": "Archiver",
+  "plan.menu.unarchive": "Désarchiver",
+  "plan.menu.editBudget": "Modifier le budget",
+  "plan.menu.removeBudget": "Supprimer le budget",
+  "plan.goals.deleteConfirm.title": "Supprimer l'objectif ?",
+  "plan.goals.deleteConfirm.body": "Supprimer {name} ?",
+  "plan.budget.removeConfirm.title": "Supprimer le budget ?",
+  "plan.budget.removeConfirm.body": "Arrêter le suivi du budget mensuel pour {name} ?"
 }

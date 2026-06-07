@@ -468,5 +468,17 @@
   "account.since": "Desde {date}",
   "settings.fabAction.label": "Intercambiar toque y mantener pulsado del FAB",
   "settings.fabAction.bodyOff": "Tocar → Smart Add · mantener → Cuadrícula de categorías",
-  "settings.fabAction.bodyOn": "Tocar → Cuadrícula de categorías · mantener → Smart Add"
+  "settings.fabAction.bodyOn": "Tocar → Cuadrícula de categorías · mantener → Smart Add",
+  "common.remove": "Quitar",
+  "plan.menu.pause": "Pausar",
+  "plan.menu.resume": "Reanudar",
+  "plan.menu.skipMonth": "Saltar este mes",
+  "plan.menu.archive": "Archivar",
+  "plan.menu.unarchive": "Desarchivar",
+  "plan.menu.editBudget": "Editar presupuesto",
+  "plan.menu.removeBudget": "Quitar presupuesto",
+  "plan.goals.deleteConfirm.title": "¿Eliminar objetivo?",
+  "plan.goals.deleteConfirm.body": "¿Eliminar {name}?",
+  "plan.budget.removeConfirm.title": "¿Quitar presupuesto?",
+  "plan.budget.removeConfirm.body": "¿Dejar de hacer seguimiento del presupuesto mensual de {name}?"
 }

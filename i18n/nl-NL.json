@@ -468,5 +468,17 @@
   "account.since": "Sinds {date}",
   "settings.fabAction.label": "FAB-tik en lang indrukken omwisselen",
   "settings.fabAction.bodyOff": "Tik → Smart Add · lang indrukken → Categoriegrid",
-  "settings.fabAction.bodyOn": "Tik → Categoriegrid · lang indrukken → Smart Add"
+  "settings.fabAction.bodyOn": "Tik → Categoriegrid · lang indrukken → Smart Add",
+  "common.remove": "Verwijderen",
+  "plan.menu.pause": "Pauzeren",
+  "plan.menu.resume": "Hervatten",
+  "plan.menu.skipMonth": "Deze maand overslaan",
+  "plan.menu.archive": "Archiveren",
+  "plan.menu.unarchive": "Dearchiveren",
+  "plan.menu.editBudget": "Budget bewerken",
+  "plan.menu.removeBudget": "Budget verwijderen",
+  "plan.goals.deleteConfirm.title": "Doel verwijderen?",
+  "plan.goals.deleteConfirm.body": "{name} verwijderen?",
+  "plan.budget.removeConfirm.title": "Budget verwijderen?",
+  "plan.budget.removeConfirm.body": "Stoppen met het volgen van maandbudget voor {name}?"
 }

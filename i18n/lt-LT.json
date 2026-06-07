@@ -468,5 +468,17 @@
   "account.since": "Nuo {date}",
   "settings.fabAction.label": "Sukeisti FAB bakstelėjimą ir ilgą paspaudimą",
   "settings.fabAction.bodyOff": "Bakstelėjimas → Smart Add · ilgas paspaudimas → Kategorijų tinklelis",
-  "settings.fabAction.bodyOn": "Bakstelėjimas → Kategorijų tinklelis · ilgas paspaudimas → Smart Add"
+  "settings.fabAction.bodyOn": "Bakstelėjimas → Kategorijų tinklelis · ilgas paspaudimas → Smart Add",
+  "common.remove": "Pašalinti",
+  "plan.menu.pause": "Pristabdyti",
+  "plan.menu.resume": "Tęsti",
+  "plan.menu.skipMonth": "Praleisti šį mėnesį",
+  "plan.menu.archive": "Archyvuoti",
+  "plan.menu.unarchive": "Grąžinti iš archyvo",
+  "plan.menu.editBudget": "Redaguoti biudžetą",
+  "plan.menu.removeBudget": "Pašalinti biudžetą",
+  "plan.goals.deleteConfirm.title": "Ištrinti tikslą?",
+  "plan.goals.deleteConfirm.body": "Ištrinti {name}?",
+  "plan.budget.removeConfirm.title": "Pašalinti biudžetą?",
+  "plan.budget.removeConfirm.body": "Nustoti sekti mėnesio biudžetą kategorijai {name}?"
 }

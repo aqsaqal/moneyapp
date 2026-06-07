@@ -467,5 +467,17 @@
   "account.since": "Sejak {date}",
   "settings.fabAction.label": "Tukar ketuk dan tekan lama pada FAB",
   "settings.fabAction.bodyOff": "Ketuk → Smart Add · tekan lama → Grid kategori",
-  "settings.fabAction.bodyOn": "Ketuk → Grid kategori · tekan lama → Smart Add"
+  "settings.fabAction.bodyOn": "Ketuk → Grid kategori · tekan lama → Smart Add",
+  "common.remove": "Buang",
+  "plan.menu.pause": "Jeda",
+  "plan.menu.resume": "Sambung",
+  "plan.menu.skipMonth": "Langkau bulan ini",
+  "plan.menu.archive": "Arkibkan",
+  "plan.menu.unarchive": "Nyahar­kib",
+  "plan.menu.editBudget": "Edit bajet",
+  "plan.menu.removeBudget": "Buang bajet",
+  "plan.goals.deleteConfirm.title": "Padam matlamat?",
+  "plan.goals.deleteConfirm.body": "Padam {name}?",
+  "plan.budget.removeConfirm.title": "Buang bajet?",
+  "plan.budget.removeConfirm.body": "Berhenti menjejaki bajet bulanan untuk {name}?"
 }

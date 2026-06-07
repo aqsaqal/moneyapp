@@ -468,5 +468,17 @@
   "account.since": "Od {date}",
   "settings.fabAction.label": "Prohodit ťuknutí a dlouhý stisk u FAB",
   "settings.fabAction.bodyOff": "Ťuknutí → Smart Add · dlouhý stisk → Mřížka kategorií",
-  "settings.fabAction.bodyOn": "Ťuknutí → Mřížka kategorií · dlouhý stisk → Smart Add"
+  "settings.fabAction.bodyOn": "Ťuknutí → Mřížka kategorií · dlouhý stisk → Smart Add",
+  "common.remove": "Odebrat",
+  "plan.menu.pause": "Pozastavit",
+  "plan.menu.resume": "Obnovit",
+  "plan.menu.skipMonth": "Přeskočit tento měsíc",
+  "plan.menu.archive": "Archivovat",
+  "plan.menu.unarchive": "Obnovit z archivu",
+  "plan.menu.editBudget": "Upravit rozpočet",
+  "plan.menu.removeBudget": "Odebrat rozpočet",
+  "plan.goals.deleteConfirm.title": "Smazat cíl?",
+  "plan.goals.deleteConfirm.body": "Smazat {name}?",
+  "plan.budget.removeConfirm.title": "Odebrat rozpočet?",
+  "plan.budget.removeConfirm.body": "Přestat sledovat měsíční rozpočet pro {name}?"
 }

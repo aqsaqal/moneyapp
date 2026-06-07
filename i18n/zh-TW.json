@@ -468,5 +468,17 @@
   "account.since": "自 {date} 起",
   "settings.fabAction.label": "交換 FAB 點按與長按",
   "settings.fabAction.bodyOff": "點按 → 智慧新增 · 長按 → 分類網格",
-  "settings.fabAction.bodyOn": "點按 → 分類網格 · 長按 → 智慧新增"
+  "settings.fabAction.bodyOn": "點按 → 分類網格 · 長按 → 智慧新增",
+  "common.remove": "移除",
+  "plan.menu.pause": "暫停",
+  "plan.menu.resume": "繼續",
+  "plan.menu.skipMonth": "跳過本月",
+  "plan.menu.archive": "封存",
+  "plan.menu.unarchive": "取消封存",
+  "plan.menu.editBudget": "編輯預算",
+  "plan.menu.removeBudget": "移除預算",
+  "plan.goals.deleteConfirm.title": "刪除目標？",
+  "plan.goals.deleteConfirm.body": "刪除 {name}？",
+  "plan.budget.removeConfirm.title": "移除預算？",
+  "plan.budget.removeConfirm.body": "停止追蹤 {name} 的每月預算？"
 }

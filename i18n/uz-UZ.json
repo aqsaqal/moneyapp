@@ -468,5 +468,17 @@
   "account.since": "{date} dan beri",
   "settings.fabAction.label": "FAB bosish va uzoq bosishni almashtirish",
   "settings.fabAction.bodyOff": "Bosish → Smart Add · uzoq bosish → Toifa katakchasi",
-  "settings.fabAction.bodyOn": "Bosish → Toifa katakchasi · uzoq bosish → Smart Add"
+  "settings.fabAction.bodyOn": "Bosish → Toifa katakchasi · uzoq bosish → Smart Add",
+  "common.remove": "Olib tashlash",
+  "plan.menu.pause": "Pauza",
+  "plan.menu.resume": "Davom etish",
+  "plan.menu.skipMonth": "Bu oyni o'tkazib yuborish",
+  "plan.menu.archive": "Arxivlash",
+  "plan.menu.unarchive": "Arxivdan tiklash",
+  "plan.menu.editBudget": "Byudjetni tahrirlash",
+  "plan.menu.removeBudget": "Byudjetni olib tashlash",
+  "plan.goals.deleteConfirm.title": "Maqsadni o'chirish?",
+  "plan.goals.deleteConfirm.body": "{name} o'chirilsinmi?",
+  "plan.budget.removeConfirm.title": "Byudjet olib tashlansinmi?",
+  "plan.budget.removeConfirm.body": "{name} uchun oylik byudjet kuzatuvini to'xtatish?"
 }

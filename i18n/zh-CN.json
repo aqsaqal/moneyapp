@@ -468,5 +468,17 @@
   "account.since": "自 {date} 起",
   "settings.fabAction.label": "交换 FAB 点按与长按",
   "settings.fabAction.bodyOff": "点按 → 智能添加 · 长按 → 分类网格",
-  "settings.fabAction.bodyOn": "点按 → 分类网格 · 长按 → 智能添加"
+  "settings.fabAction.bodyOn": "点按 → 分类网格 · 长按 → 智能添加",
+  "common.remove": "移除",
+  "plan.menu.pause": "暂停",
+  "plan.menu.resume": "恢复",
+  "plan.menu.skipMonth": "跳过本月",
+  "plan.menu.archive": "归档",
+  "plan.menu.unarchive": "取消归档",
+  "plan.menu.editBudget": "编辑预算",
+  "plan.menu.removeBudget": "移除预算",
+  "plan.goals.deleteConfirm.title": "删除目标？",
+  "plan.goals.deleteConfirm.body": "删除 {name}？",
+  "plan.budget.removeConfirm.title": "移除预算？",
+  "plan.budget.removeConfirm.body": "停止跟踪 {name} 的每月预算？"
 }

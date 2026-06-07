@@ -468,5 +468,17 @@
   "account.since": "Од {date}",
   "settings.fabAction.label": "Замени додир и дуго притискање FAB-а",
   "settings.fabAction.bodyOff": "Додир → Smart Add · дуго притискање → Мрежа категорија",
-  "settings.fabAction.bodyOn": "Додир → Мрежа категорија · дуго притискање → Smart Add"
+  "settings.fabAction.bodyOn": "Додир → Мрежа категорија · дуго притискање → Smart Add",
+  "common.remove": "Уклони",
+  "plan.menu.pause": "Паузирај",
+  "plan.menu.resume": "Настави",
+  "plan.menu.skipMonth": "Прескочи овај месец",
+  "plan.menu.archive": "Архивирај",
+  "plan.menu.unarchive": "Врати из архиве",
+  "plan.menu.editBudget": "Уреди буџет",
+  "plan.menu.removeBudget": "Уклони буџет",
+  "plan.goals.deleteConfirm.title": "Обриши циљ?",
+  "plan.goals.deleteConfirm.body": "Обриши {name}?",
+  "plan.budget.removeConfirm.title": "Уклони буџет?",
+  "plan.budget.removeConfirm.body": "Престати да се прати месечни буџет за {name}?"
 }

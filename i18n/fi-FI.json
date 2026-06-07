@@ -468,5 +468,17 @@
   "account.since": "Alkaen {date}",
   "settings.fabAction.label": "Vaihda FAB:in napautus ja pitkä painallus",
   "settings.fabAction.bodyOff": "Napautus → Smart Add · pitkä painallus → Kategoriaruudukko",
-  "settings.fabAction.bodyOn": "Napautus → Kategoriaruudukko · pitkä painallus → Smart Add"
+  "settings.fabAction.bodyOn": "Napautus → Kategoriaruudukko · pitkä painallus → Smart Add",
+  "common.remove": "Poista",
+  "plan.menu.pause": "Keskeytä",
+  "plan.menu.resume": "Jatka",
+  "plan.menu.skipMonth": "Ohita tämä kuukausi",
+  "plan.menu.archive": "Arkistoi",
+  "plan.menu.unarchive": "Palauta",
+  "plan.menu.editBudget": "Muokkaa budjettia",
+  "plan.menu.removeBudget": "Poista budjetti",
+  "plan.goals.deleteConfirm.title": "Poistetaanko tavoite?",
+  "plan.goals.deleteConfirm.body": "Poistetaanko {name}?",
+  "plan.budget.removeConfirm.title": "Poistetaanko budjetti?",
+  "plan.budget.removeConfirm.body": "Lopetetaanko kuukausibudjetin seuranta kategorialle {name}?"
 }

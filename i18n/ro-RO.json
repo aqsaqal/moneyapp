@@ -468,5 +468,17 @@
   "account.since": "Din {date}",
   "settings.fabAction.label": "Schimbă atingerea și apăsarea lungă a FAB",
   "settings.fabAction.bodyOff": "Atingere → Smart Add · apăsare lungă → Grilă categorii",
-  "settings.fabAction.bodyOn": "Atingere → Grilă categorii · apăsare lungă → Smart Add"
+  "settings.fabAction.bodyOn": "Atingere → Grilă categorii · apăsare lungă → Smart Add",
+  "common.remove": "Elimină",
+  "plan.menu.pause": "Întrerupe",
+  "plan.menu.resume": "Reia",
+  "plan.menu.skipMonth": "Sari peste luna aceasta",
+  "plan.menu.archive": "Arhivează",
+  "plan.menu.unarchive": "Dezarhivează",
+  "plan.menu.editBudget": "Editează bugetul",
+  "plan.menu.removeBudget": "Elimină bugetul",
+  "plan.goals.deleteConfirm.title": "Ștergi obiectivul?",
+  "plan.goals.deleteConfirm.body": "Ștergi {name}?",
+  "plan.budget.removeConfirm.title": "Elimini bugetul?",
+  "plan.budget.removeConfirm.body": "Oprești urmărirea bugetului lunar pentru {name}?"
 }

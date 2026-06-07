@@ -468,5 +468,17 @@
   "account.since": "از {date}",
   "settings.fabAction.label": "جابه‌جایی ضربه و فشار طولانی FAB",
   "settings.fabAction.bodyOff": "ضربه → Smart Add · فشار طولانی → شبکهٔ دسته‌ها",
-  "settings.fabAction.bodyOn": "ضربه → شبکهٔ دسته‌ها · فشار طولانی → Smart Add"
+  "settings.fabAction.bodyOn": "ضربه → شبکهٔ دسته‌ها · فشار طولانی → Smart Add",
+  "common.remove": "حذف",
+  "plan.menu.pause": "توقف",
+  "plan.menu.resume": "ادامه",
+  "plan.menu.skipMonth": "رد کردن این ماه",
+  "plan.menu.archive": "بایگانی",
+  "plan.menu.unarchive": "بازگردانی",
+  "plan.menu.editBudget": "ویرایش بودجه",
+  "plan.menu.removeBudget": "حذف بودجه",
+  "plan.goals.deleteConfirm.title": "حذف هدف؟",
+  "plan.goals.deleteConfirm.body": "حذف {name}؟",
+  "plan.budget.removeConfirm.title": "حذف بودجه؟",
+  "plan.budget.removeConfirm.body": "توقف پیگیری بودجهٔ ماهانهٔ {name}؟"
 }

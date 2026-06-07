@@ -468,5 +468,17 @@
   "account.since": "Từ {date}",
   "settings.fabAction.label": "Hoán đổi chạm và nhấn giữ trên FAB",
   "settings.fabAction.bodyOff": "Chạm → Smart Add · nhấn giữ → Lưới danh mục",
-  "settings.fabAction.bodyOn": "Chạm → Lưới danh mục · nhấn giữ → Smart Add"
+  "settings.fabAction.bodyOn": "Chạm → Lưới danh mục · nhấn giữ → Smart Add",
+  "common.remove": "Xóa",
+  "plan.menu.pause": "Tạm dừng",
+  "plan.menu.resume": "Tiếp tục",
+  "plan.menu.skipMonth": "Bỏ qua tháng này",
+  "plan.menu.archive": "Lưu trữ",
+  "plan.menu.unarchive": "Bỏ lưu trữ",
+  "plan.menu.editBudget": "Sửa ngân sách",
+  "plan.menu.removeBudget": "Xóa ngân sách",
+  "plan.goals.deleteConfirm.title": "Xóa mục tiêu?",
+  "plan.goals.deleteConfirm.body": "Xóa {name}?",
+  "plan.budget.removeConfirm.title": "Xóa ngân sách?",
+  "plan.budget.removeConfirm.body": "Dừng theo dõi ngân sách hàng tháng cho {name}?"
 }

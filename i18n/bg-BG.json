@@ -468,5 +468,17 @@
   "account.since": "От {date}",
   "settings.fabAction.label": "Размени натискане и задържане на FAB",
   "settings.fabAction.bodyOff": "Натискане → Smart Add · Задържане → Решетка с категории",
-  "settings.fabAction.bodyOn": "Натискане → Решетка с категории · Задържане → Smart Add"
+  "settings.fabAction.bodyOn": "Натискане → Решетка с категории · Задържане → Smart Add",
+  "common.remove": "Премахни",
+  "plan.menu.pause": "Пауза",
+  "plan.menu.resume": "Възобнови",
+  "plan.menu.skipMonth": "Пропусни този месец",
+  "plan.menu.archive": "Архивирай",
+  "plan.menu.unarchive": "Възстанови",
+  "plan.menu.editBudget": "Редактирай бюджет",
+  "plan.menu.removeBudget": "Премахни бюджет",
+  "plan.goals.deleteConfirm.title": "Изтриване на цел?",
+  "plan.goals.deleteConfirm.body": "Изтриване на {name}?",
+  "plan.budget.removeConfirm.title": "Премахване на бюджет?",
+  "plan.budget.removeConfirm.body": "Спиране на месечен бюджет за {name}?"
 }

@@ -468,5 +468,17 @@
   "account.since": "{date} سے",
   "settings.fabAction.label": "FAB ٹیپ اور لانگ پریس بدلیں",
   "settings.fabAction.bodyOff": "ٹیپ ← اسمارٹ ایڈ · لانگ پریس ← کیٹیگری گرڈ",
-  "settings.fabAction.bodyOn": "ٹیپ ← کیٹیگری گرڈ · لانگ پریس ← اسمارٹ ایڈ"
+  "settings.fabAction.bodyOn": "ٹیپ ← کیٹیگری گرڈ · لانگ پریس ← اسمارٹ ایڈ",
+  "common.remove": "ہٹائیں",
+  "plan.menu.pause": "روکیں",
+  "plan.menu.resume": "دوبارہ شروع کریں",
+  "plan.menu.skipMonth": "یہ مہینہ چھوڑیں",
+  "plan.menu.archive": "محفوظ شدہ",
+  "plan.menu.unarchive": "محفوظ شدہ سے واپس لائیں",
+  "plan.menu.editBudget": "بجٹ میں ترمیم کریں",
+  "plan.menu.removeBudget": "بجٹ ہٹائیں",
+  "plan.goals.deleteConfirm.title": "مقصد حذف کریں؟",
+  "plan.goals.deleteConfirm.body": "{name} حذف کریں؟",
+  "plan.budget.removeConfirm.title": "بجٹ ہٹائیں؟",
+  "plan.budget.removeConfirm.body": "{name} کے لیے ماہانہ بجٹ ٹریکنگ بند کریں؟"
 }

@@ -468,5 +468,17 @@
   "account.since": "Siden {date}",
   "settings.fabAction.label": "Byt om på tryk og langt tryk for FAB",
   "settings.fabAction.bodyOff": "Tryk → Smart Add · langt tryk → Kategorigitter",
-  "settings.fabAction.bodyOn": "Tryk → Kategorigitter · langt tryk → Smart Add"
+  "settings.fabAction.bodyOn": "Tryk → Kategorigitter · langt tryk → Smart Add",
+  "common.remove": "Fjern",
+  "plan.menu.pause": "Pause",
+  "plan.menu.resume": "Fortsæt",
+  "plan.menu.skipMonth": "Spring denne måned over",
+  "plan.menu.archive": "Arkivér",
+  "plan.menu.unarchive": "Fjern fra arkiv",
+  "plan.menu.editBudget": "Rediger budget",
+  "plan.menu.removeBudget": "Fjern budget",
+  "plan.goals.deleteConfirm.title": "Slet mål?",
+  "plan.goals.deleteConfirm.body": "Slet {name}?",
+  "plan.budget.removeConfirm.title": "Fjern budget?",
+  "plan.budget.removeConfirm.body": "Stop med at spore månedligt budget for {name}?"
 }

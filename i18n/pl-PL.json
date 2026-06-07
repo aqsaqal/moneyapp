@@ -468,5 +468,17 @@
   "account.since": "Od {date}",
   "settings.fabAction.label": "Zamień dotknięcie i długie naciśnięcie FAB",
   "settings.fabAction.bodyOff": "Dotknięcie → Smart Add · długie → Siatka kategorii",
-  "settings.fabAction.bodyOn": "Dotknięcie → Siatka kategorii · długie → Smart Add"
+  "settings.fabAction.bodyOn": "Dotknięcie → Siatka kategorii · długie → Smart Add",
+  "common.remove": "Usuń",
+  "plan.menu.pause": "Wstrzymaj",
+  "plan.menu.resume": "Wznów",
+  "plan.menu.skipMonth": "Pomiń ten miesiąc",
+  "plan.menu.archive": "Archiwizuj",
+  "plan.menu.unarchive": "Przywróć z archiwum",
+  "plan.menu.editBudget": "Edytuj budżet",
+  "plan.menu.removeBudget": "Usuń budżet",
+  "plan.goals.deleteConfirm.title": "Usunąć cel?",
+  "plan.goals.deleteConfirm.body": "Usunąć {name}?",
+  "plan.budget.removeConfirm.title": "Usunąć budżet?",
+  "plan.budget.removeConfirm.body": "Zaprzestać śledzenia miesięcznego budżetu dla {name}?"
 }

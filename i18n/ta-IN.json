@@ -468,5 +468,17 @@
   "account.since": "{date} முதல்",
   "settings.fabAction.label": "FAB தட்டல் மற்றும் நீண்ட அழுத்தத்தை மாற்று",
   "settings.fabAction.bodyOff": "தட்டு → Smart Add · நீண்ட அழுத்தம் → வகை கட்டம்",
-  "settings.fabAction.bodyOn": "தட்டு → வகை கட்டம் · நீண்ட அழுத்தம் → Smart Add"
+  "settings.fabAction.bodyOn": "தட்டு → வகை கட்டம் · நீண்ட அழுத்தம் → Smart Add",
+  "common.remove": "அகற்று",
+  "plan.menu.pause": "இடைநிறுத்து",
+  "plan.menu.resume": "தொடரவும்",
+  "plan.menu.skipMonth": "இந்த மாதத்தை தவிர்",
+  "plan.menu.archive": "காப்பகப்படுத்து",
+  "plan.menu.unarchive": "மீட்டெடு",
+  "plan.menu.editBudget": "பட்ஜெட்டை திருத்து",
+  "plan.menu.removeBudget": "பட்ஜெட்டை அகற்று",
+  "plan.goals.deleteConfirm.title": "இலக்கை நீக்கவா?",
+  "plan.goals.deleteConfirm.body": "{name}-ஐ நீக்கவா?",
+  "plan.budget.removeConfirm.title": "பட்ஜெட்டை அகற்றவா?",
+  "plan.budget.removeConfirm.body": "{name}-க்கான மாதாந்திர பட்ஜெட் கண்காணிப்பை நிறுத்தவா?"
 }

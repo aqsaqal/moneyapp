@@ -467,5 +467,17 @@
   "account.since": "{date} tarihinden beri",
   "settings.fabAction.label": "FAB dokunma ve uzun basma yer değiştir",
   "settings.fabAction.bodyOff": "Dokunma → Smart Add · uzun basma → Kategori ızgarası",
-  "settings.fabAction.bodyOn": "Dokunma → Kategori ızgarası · uzun basma → Smart Add"
+  "settings.fabAction.bodyOn": "Dokunma → Kategori ızgarası · uzun basma → Smart Add",
+  "common.remove": "Kaldır",
+  "plan.menu.pause": "Duraklat",
+  "plan.menu.resume": "Devam et",
+  "plan.menu.skipMonth": "Bu ayı atla",
+  "plan.menu.archive": "Arşivle",
+  "plan.menu.unarchive": "Arşivden çıkar",
+  "plan.menu.editBudget": "Bütçeyi düzenle",
+  "plan.menu.removeBudget": "Bütçeyi kaldır",
+  "plan.goals.deleteConfirm.title": "Hedef silinsin mi?",
+  "plan.goals.deleteConfirm.body": "{name} silinsin mi?",
+  "plan.budget.removeConfirm.title": "Bütçe kaldırılsın mı?",
+  "plan.budget.removeConfirm.body": "{name} için aylık bütçe takibini durdurmak istiyor musunuz?"
 }

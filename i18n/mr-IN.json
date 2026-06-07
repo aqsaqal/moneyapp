@@ -468,5 +468,17 @@
   "account.since": "{date} पासून",
   "settings.fabAction.label": "FAB टॅप आणि दीर्घ-दाब अदलाबदल करा",
   "settings.fabAction.bodyOff": "टॅप → स्मार्ट अॅड · दीर्घ-दाब → कॅटेगरी ग्रिड",
-  "settings.fabAction.bodyOn": "टॅप → कॅटेगरी ग्रिड · दीर्घ-दाब → स्मार्ट अॅड"
+  "settings.fabAction.bodyOn": "टॅप → कॅटेगरी ग्रिड · दीर्घ-दाब → स्मार्ट अॅड",
+  "common.remove": "काढून टाका",
+  "plan.menu.pause": "विराम",
+  "plan.menu.resume": "पुन्हा सुरू करा",
+  "plan.menu.skipMonth": "हा महिना वगळा",
+  "plan.menu.archive": "संग्रहित करा",
+  "plan.menu.unarchive": "संग्रहातून परत आणा",
+  "plan.menu.editBudget": "बजेट संपादित करा",
+  "plan.menu.removeBudget": "बजेट काढून टाका",
+  "plan.goals.deleteConfirm.title": "ध्येय हटवायचे?",
+  "plan.goals.deleteConfirm.body": "{name} हटवायचे?",
+  "plan.budget.removeConfirm.title": "बजेट काढायचे?",
+  "plan.budget.removeConfirm.body": "{name} साठी मासिक बजेट ट्रॅकिंग थांबवायची?"
 }

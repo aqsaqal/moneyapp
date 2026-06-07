@@ -1179,7 +1179,9 @@ export function unmarkRecurringPaid(recId: string, key: string): void {
     .where(and(eq(paidItems.recurringId, recId), eq(paidItems.monthKey, key)))
     .get();
   if (!item) return;
-  deleteTransaction(item.transactionId);
+  // Skipped rows have a sentinel txn id with no real transaction behind
+  // them — just drop the paid_items row, nothing to refund.
+  if (item.transactionId !== '__skip__') deleteTransaction(item.transactionId);
   db.delete(paidItems).where(eq(paidItems.id, item.id)).run();
   bump();
 }
@@ -1189,6 +1191,24 @@ export function unmarkRecurringPaid(recId: string, key: string): void {
  *  the user opens Smart Add prefilled from a recurring row, edits, and
  *  submits — the checkbox then becomes "paid" because a real txn now
  *  exists. */
+/** Skip a recurring's payment for one month — inserts a paid_items row
+ *  with a sentinel transactionId. Treated as paid for visibility (the
+ *  unpaid-this-month set ignores it) without creating a real expense. */
+export function skipRecurringForMonth(recId: string, key: string = monthKey()): void {
+  const db = getDB();
+  db.insert(paidItems)
+    .values({
+      id: `${recId}_${key}`,
+      recurringId: recId,
+      monthKey: key,
+      transactionId: '__skip__',
+      paidAt: Date.now(),
+    })
+    .onConflictDoNothing()
+    .run();
+  bump();
+}
+
 export function linkRecurringPaid(recId: string, transactionId: string, date: Date = new Date()): void {
   const key = monthKey(date);
   const db = getDB();

@@ -468,5 +468,17 @@
   "account.since": "Tangu {date}",
   "settings.fabAction.label": "Badilisha mguso na kushinikiza kwa muda mrefu FAB",
   "settings.fabAction.bodyOff": "Gusa → Smart Add · shinikiza → Gridi ya kategoria",
-  "settings.fabAction.bodyOn": "Gusa → Gridi ya kategoria · shinikiza → Smart Add"
+  "settings.fabAction.bodyOn": "Gusa → Gridi ya kategoria · shinikiza → Smart Add",
+  "common.remove": "Ondoa",
+  "plan.menu.pause": "Sitisha",
+  "plan.menu.resume": "Endelea",
+  "plan.menu.skipMonth": "Ruka mwezi huu",
+  "plan.menu.archive": "Hifadhi",
+  "plan.menu.unarchive": "Toa kwenye kumbukumbu",
+  "plan.menu.editBudget": "Hariri bajeti",
+  "plan.menu.removeBudget": "Ondoa bajeti",
+  "plan.goals.deleteConfirm.title": "Futa lengo?",
+  "plan.goals.deleteConfirm.body": "Futa {name}?",
+  "plan.budget.removeConfirm.title": "Ondoa bajeti?",
+  "plan.budget.removeConfirm.body": "Acha kufuatilia bajeti ya mwezi kwa {name}?"
 }

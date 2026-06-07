@@ -468,5 +468,17 @@
   "account.since": "{date}-dan bəri",
   "settings.fabAction.label": "FAB toxunma və uzun basma yerini dəyişdir",
   "settings.fabAction.bodyOff": "Toxun ← Smart Add · Uzun bas ← Kateqoriya şəbəkəsi",
-  "settings.fabAction.bodyOn": "Toxun ← Kateqoriya şəbəkəsi · Uzun bas ← Smart Add"
+  "settings.fabAction.bodyOn": "Toxun ← Kateqoriya şəbəkəsi · Uzun bas ← Smart Add",
+  "common.remove": "Sil",
+  "plan.menu.pause": "Fasilə",
+  "plan.menu.resume": "Davam et",
+  "plan.menu.skipMonth": "Bu ayı keç",
+  "plan.menu.archive": "Arxivlə",
+  "plan.menu.unarchive": "Arxivdən çıxar",
+  "plan.menu.editBudget": "Büdcəni redaktə et",
+  "plan.menu.removeBudget": "Büdcəni sil",
+  "plan.goals.deleteConfirm.title": "Məqsədi silmək?",
+  "plan.goals.deleteConfirm.body": "{name} silinsin?",
+  "plan.budget.removeConfirm.title": "Büdcəni silmək?",
+  "plan.budget.removeConfirm.body": "{name} üçün aylıq büdcəni izləməyi dayandır?"
 }

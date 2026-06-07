@@ -468,5 +468,17 @@
   "account.since": "Mula {date}",
   "settings.fabAction.label": "Palitan ang tap at long-press ng FAB",
   "settings.fabAction.bodyOff": "Tap → Smart Add · long-press → Category grid",
-  "settings.fabAction.bodyOn": "Tap → Category grid · long-press → Smart Add"
+  "settings.fabAction.bodyOn": "Tap → Category grid · long-press → Smart Add",
+  "common.remove": "Alisin",
+  "plan.menu.pause": "I-pause",
+  "plan.menu.resume": "Ipagpatuloy",
+  "plan.menu.skipMonth": "Laktawan ang buwang ito",
+  "plan.menu.archive": "I-archive",
+  "plan.menu.unarchive": "Ibalik mula sa archive",
+  "plan.menu.editBudget": "I-edit ang budget",
+  "plan.menu.removeBudget": "Alisin ang budget",
+  "plan.goals.deleteConfirm.title": "Tanggalin ang goal?",
+  "plan.goals.deleteConfirm.body": "Tanggalin ang {name}?",
+  "plan.budget.removeConfirm.title": "Alisin ang budget?",
+  "plan.budget.removeConfirm.body": "Itigil ang buwanang budget para sa {name}?"
 }

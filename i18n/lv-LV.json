@@ -468,5 +468,17 @@
   "account.since": "Kopš {date}",
   "settings.fabAction.label": "Mainīt FAB pieskāriena un ilgā nospiediena vietas",
   "settings.fabAction.bodyOff": "Pieskāriens → Smart Add · ilgais nospiediens → Kategoriju režģis",
-  "settings.fabAction.bodyOn": "Pieskāriens → Kategoriju režģis · ilgais nospiediens → Smart Add"
+  "settings.fabAction.bodyOn": "Pieskāriens → Kategoriju režģis · ilgais nospiediens → Smart Add",
+  "common.remove": "Noņemt",
+  "plan.menu.pause": "Apturēt",
+  "plan.menu.resume": "Turpināt",
+  "plan.menu.skipMonth": "Izlaist šo mēnesi",
+  "plan.menu.archive": "Arhivēt",
+  "plan.menu.unarchive": "Atjaunot no arhīva",
+  "plan.menu.editBudget": "Rediģēt budžetu",
+  "plan.menu.removeBudget": "Noņemt budžetu",
+  "plan.goals.deleteConfirm.title": "Dzēst mērķi?",
+  "plan.goals.deleteConfirm.body": "Dzēst {name}?",
+  "plan.budget.removeConfirm.title": "Noņemt budžetu?",
+  "plan.budget.removeConfirm.body": "Pārtraukt sekot mēneša budžetam {name}?"
 }

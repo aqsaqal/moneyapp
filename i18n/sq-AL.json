@@ -468,5 +468,17 @@
   "account.since": "Që nga {date}",
   "settings.fabAction.label": "Ndërro prekjen dhe shtypjen e gjatë të FAB",
   "settings.fabAction.bodyOff": "Prekje → Smart Add · shtypje e gjatë → Rrjeta e kategorive",
-  "settings.fabAction.bodyOn": "Prekje → Rrjeta e kategorive · shtypje e gjatë → Smart Add"
+  "settings.fabAction.bodyOn": "Prekje → Rrjeta e kategorive · shtypje e gjatë → Smart Add",
+  "common.remove": "Hiq",
+  "plan.menu.pause": "Pauzë",
+  "plan.menu.resume": "Vazhdo",
+  "plan.menu.skipMonth": "Anashkalo këtë muaj",
+  "plan.menu.archive": "Arkivo",
+  "plan.menu.unarchive": "Çarkivo",
+  "plan.menu.editBudget": "Redakto buxhetin",
+  "plan.menu.removeBudget": "Hiq buxhetin",
+  "plan.goals.deleteConfirm.title": "Të fshihet objektivi?",
+  "plan.goals.deleteConfirm.body": "Të fshihet {name}?",
+  "plan.budget.removeConfirm.title": "Të hiqet buxheti?",
+  "plan.budget.removeConfirm.body": "Të ndalet ndjekja e buxhetit mujor për {name}?"
 }

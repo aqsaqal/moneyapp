@@ -467,5 +467,17 @@
   "account.since": "{date} бастап",
   "settings.fabAction.label": "FAB басу мен ұзақ басуды ауыстыру",
   "settings.fabAction.bodyOff": "Басу → Smart Add · Ұзақ басу → Санат торы",
-  "settings.fabAction.bodyOn": "Басу → Санат торы · Ұзақ басу → Smart Add"
+  "settings.fabAction.bodyOn": "Басу → Санат торы · Ұзақ басу → Smart Add",
+  "common.remove": "Жою",
+  "plan.menu.pause": "Тоқтату",
+  "plan.menu.resume": "Жалғастыру",
+  "plan.menu.skipMonth": "Осы айды өткізіп жіберу",
+  "plan.menu.archive": "Мұрағаттау",
+  "plan.menu.unarchive": "Мұрағаттан қайтару",
+  "plan.menu.editBudget": "Бюджетті өңдеу",
+  "plan.menu.removeBudget": "Бюджетті жою",
+  "plan.goals.deleteConfirm.title": "Мақсатты жою?",
+  "plan.goals.deleteConfirm.body": "{name} жойылсын ба?",
+  "plan.budget.removeConfirm.title": "Бюджетті жою?",
+  "plan.budget.removeConfirm.body": "{name} үшін айлық бюджетті бақылауды тоқтату?"
 }

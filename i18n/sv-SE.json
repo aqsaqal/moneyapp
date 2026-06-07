@@ -468,5 +468,17 @@
   "account.since": "Sedan {date}",
   "settings.fabAction.label": "Växla tryck och långtryck för FAB",
   "settings.fabAction.bodyOff": "Tryck → Smart Add · långtryck → Kategorigrid",
-  "settings.fabAction.bodyOn": "Tryck → Kategorigrid · långtryck → Smart Add"
+  "settings.fabAction.bodyOn": "Tryck → Kategorigrid · långtryck → Smart Add",
+  "common.remove": "Ta bort",
+  "plan.menu.pause": "Pausa",
+  "plan.menu.resume": "Återuppta",
+  "plan.menu.skipMonth": "Hoppa över den här månaden",
+  "plan.menu.archive": "Arkivera",
+  "plan.menu.unarchive": "Återställ från arkiv",
+  "plan.menu.editBudget": "Redigera budget",
+  "plan.menu.removeBudget": "Ta bort budget",
+  "plan.goals.deleteConfirm.title": "Ta bort mål?",
+  "plan.goals.deleteConfirm.body": "Ta bort {name}?",
+  "plan.budget.removeConfirm.title": "Ta bort budget?",
+  "plan.budget.removeConfirm.body": "Sluta spåra månadsbudget för {name}?"
 }

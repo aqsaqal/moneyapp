@@ -468,5 +468,17 @@
   "account.since": "Od {date}",
   "settings.fabAction.label": "Zamenjaj dotik in dolgi pritisk FAB",
   "settings.fabAction.bodyOff": "Dotik → Smart Add · dolgi pritisk → Mreža kategorij",
-  "settings.fabAction.bodyOn": "Dotik → Mreža kategorij · dolgi pritisk → Smart Add"
+  "settings.fabAction.bodyOn": "Dotik → Mreža kategorij · dolgi pritisk → Smart Add",
+  "common.remove": "Odstrani",
+  "plan.menu.pause": "Začasno ustavi",
+  "plan.menu.resume": "Nadaljuj",
+  "plan.menu.skipMonth": "Preskoči ta mesec",
+  "plan.menu.archive": "Arhiviraj",
+  "plan.menu.unarchive": "Razarhiviraj",
+  "plan.menu.editBudget": "Uredi proračun",
+  "plan.menu.removeBudget": "Odstrani proračun",
+  "plan.goals.deleteConfirm.title": "Izbrišem cilj?",
+  "plan.goals.deleteConfirm.body": "Izbrišem {name}?",
+  "plan.budget.removeConfirm.title": "Odstranim proračun?",
+  "plan.budget.removeConfirm.body": "Prenehaj spremljati mesečni proračun za {name}?"
 }

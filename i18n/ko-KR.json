@@ -468,5 +468,17 @@
   "account.since": "{date} 이후",
   "settings.fabAction.label": "FAB 탭과 길게 누르기 바꾸기",
   "settings.fabAction.bodyOff": "탭 → Smart Add · 길게 누르기 → 카테고리 그리드",
-  "settings.fabAction.bodyOn": "탭 → 카테고리 그리드 · 길게 누르기 → Smart Add"
+  "settings.fabAction.bodyOn": "탭 → 카테고리 그리드 · 길게 누르기 → Smart Add",
+  "common.remove": "제거",
+  "plan.menu.pause": "일시 중지",
+  "plan.menu.resume": "재개",
+  "plan.menu.skipMonth": "이번 달 건너뛰기",
+  "plan.menu.archive": "보관",
+  "plan.menu.unarchive": "보관 해제",
+  "plan.menu.editBudget": "예산 편집",
+  "plan.menu.removeBudget": "예산 제거",
+  "plan.goals.deleteConfirm.title": "목표를 삭제하시겠어요?",
+  "plan.goals.deleteConfirm.body": "{name}을(를) 삭제하시겠어요?",
+  "plan.budget.removeConfirm.title": "예산을 제거하시겠어요?",
+  "plan.budget.removeConfirm.body": "{name}의 월별 예산 추적을 중지하시겠어요?"
 }

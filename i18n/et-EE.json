@@ -468,5 +468,17 @@
   "account.since": "Alates {date}",
   "settings.fabAction.label": "Vaheta FAB-i puudutus ja pikk vajutus",
   "settings.fabAction.bodyOff": "Puudutus → Smart Add · pikk vajutus → Kategooriavõrk",
-  "settings.fabAction.bodyOn": "Puudutus → Kategooriavõrk · pikk vajutus → Smart Add"
+  "settings.fabAction.bodyOn": "Puudutus → Kategooriavõrk · pikk vajutus → Smart Add",
+  "common.remove": "Eemalda",
+  "plan.menu.pause": "Peata",
+  "plan.menu.resume": "Jätka",
+  "plan.menu.skipMonth": "Jäta see kuu vahele",
+  "plan.menu.archive": "Arhiveeri",
+  "plan.menu.unarchive": "Taasta",
+  "plan.menu.editBudget": "Muuda eelarvet",
+  "plan.menu.removeBudget": "Eemalda eelarve",
+  "plan.goals.deleteConfirm.title": "Kustuta eesmärk?",
+  "plan.goals.deleteConfirm.body": "Kustuta {name}?",
+  "plan.budget.removeConfirm.title": "Eemalda eelarve?",
+  "plan.budget.removeConfirm.body": "Lõpetada {name} kuu eelarve jälgimine?"
 }

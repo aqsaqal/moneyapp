@@ -468,5 +468,17 @@
   "account.since": "Seit {date}",
   "settings.fabAction.label": "FAB-Tipp und langes Drücken tauschen",
   "settings.fabAction.bodyOff": "Tipp → Smart Add · langes Drücken → Kategorieraster",
-  "settings.fabAction.bodyOn": "Tipp → Kategorieraster · langes Drücken → Smart Add"
+  "settings.fabAction.bodyOn": "Tipp → Kategorieraster · langes Drücken → Smart Add",
+  "common.remove": "Entfernen",
+  "plan.menu.pause": "Pausieren",
+  "plan.menu.resume": "Fortsetzen",
+  "plan.menu.skipMonth": "Diesen Monat überspringen",
+  "plan.menu.archive": "Archivieren",
+  "plan.menu.unarchive": "Wiederherstellen",
+  "plan.menu.editBudget": "Budget bearbeiten",
+  "plan.menu.removeBudget": "Budget entfernen",
+  "plan.goals.deleteConfirm.title": "Ziel löschen?",
+  "plan.goals.deleteConfirm.body": "{name} löschen?",
+  "plan.budget.removeConfirm.title": "Budget entfernen?",
+  "plan.budget.removeConfirm.body": "Monatliches Budget für {name} nicht mehr verfolgen?"
 }

@@ -468,5 +468,17 @@
   "account.since": "מאז {date}",
   "settings.fabAction.label": "החלף בין הקשה ולחיצה ארוכה ב-FAB",
   "settings.fabAction.bodyOff": "הקשה ← Smart Add · לחיצה ארוכה ← רשת קטגוריות",
-  "settings.fabAction.bodyOn": "הקשה ← רשת קטגוריות · לחיצה ארוכה ← Smart Add"
+  "settings.fabAction.bodyOn": "הקשה ← רשת קטגוריות · לחיצה ארוכה ← Smart Add",
+  "common.remove": "הסר",
+  "plan.menu.pause": "השהה",
+  "plan.menu.resume": "המשך",
+  "plan.menu.skipMonth": "דלג על החודש הזה",
+  "plan.menu.archive": "העבר לארכיון",
+  "plan.menu.unarchive": "הוצא מהארכיון",
+  "plan.menu.editBudget": "ערוך תקציב",
+  "plan.menu.removeBudget": "הסר תקציב",
+  "plan.goals.deleteConfirm.title": "למחוק יעד?",
+  "plan.goals.deleteConfirm.body": "למחוק את {name}?",
+  "plan.budget.removeConfirm.title": "להסיר תקציב?",
+  "plan.budget.removeConfirm.body": "להפסיק לעקוב אחר תקציב חודשי עבור {name}?"
 }
