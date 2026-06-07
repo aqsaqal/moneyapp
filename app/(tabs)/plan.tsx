@@ -20,6 +20,7 @@ import {
   useMonthTotalsByCategory,
   unmarkRecurringPaid,
   deleteRecurring,
+  upsertRecurring,
   useGoals,
   useAccounts,
   useDebts,
