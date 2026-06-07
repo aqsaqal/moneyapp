@@ -259,7 +259,7 @@
   "recurring.category": "Kategoria",
   "recurring.account": "Akaunti",
   "recurring.currency": "Sarafu",
-  "recurring.dayOfMonth": "Siku ya mwezi",
+  "recurring.dayOfMonth": "Siku ya {n}",
   "recurring.type.expense": "Matumizi (bili / usajili)",
   "recurring.type.income": "Mapato (mshahara / malipo)",
   "recurring.delete": "Futa inayojirudia",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Inabadilisha wasifu wa Demo na data mpya ya sampuli ya miaka miwili",
   "settings.demo.title": "Tengeneza upya wasifu wa demo?",
   "settings.demo.body": "Hii itafuta wasifu wa Demo uliopo (kama upo) na kuujenga upya kwa data ya sampuli. Wasifu wako mwenyewe hautaathirika.",
-  "settings.demo.cta": "Tengeneza upya"
+  "settings.demo.cta": "Tengeneza upya",
+  "recurring.skipped": "Imerukwa"
 }

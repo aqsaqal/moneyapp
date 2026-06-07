@@ -259,7 +259,7 @@
   "recurring.category": "Kategorija",
   "recurring.account": "Sąskaita",
   "recurring.currency": "Valiuta",
-  "recurring.dayOfMonth": "Mėnesio diena",
+  "recurring.dayOfMonth": "{n} d.",
   "recurring.type.expense": "Išlaida (sąskaita / prenumerata)",
   "recurring.type.income": "Pajamos (atlyginimas / mokėjimas)",
   "recurring.delete": "Ištrinti pasikartojantį",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Pakeičia demonstracinį profilį dvejų metų naujais pavyzdiniais duomenimis",
   "settings.demo.title": "Atkurti demonstracinį profilį?",
   "settings.demo.body": "Tai ištrins esamą demonstracinį profilį (jei toks yra) ir vėl jį sukurs su pavyzdiniais duomenimis. Jūsų asmeniniai profiliai nebus paveikti.",
-  "settings.demo.cta": "Atkurti"
+  "settings.demo.cta": "Atkurti",
+  "recurring.skipped": "Praleista"
 }

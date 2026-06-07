@@ -259,7 +259,7 @@
   "recurring.category": "類別",
   "recurring.account": "帳戶",
   "recurring.currency": "貨幣",
-  "recurring.dayOfMonth": "每月日期",
+  "recurring.dayOfMonth": "{n} 日",
   "recurring.type.expense": "支出（帳單／訂閱）",
   "recurring.type.income": "收入（薪資／付款）",
   "recurring.delete": "刪除重複",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "以兩年的全新範例資料取代示範檔案",
   "settings.demo.title": "重建示範檔案？",
   "settings.demo.body": "這將刪除現有的示範檔案（如果有）並使用範例資料重新建立。您自己的檔案不會受到影響。",
-  "settings.demo.cta": "重建"
+  "settings.demo.cta": "重建",
+  "recurring.skipped": "已略過"
 }

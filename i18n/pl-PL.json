@@ -259,7 +259,7 @@
   "recurring.category": "Kategoria",
   "recurring.account": "Konto",
   "recurring.currency": "Waluta",
-  "recurring.dayOfMonth": "Dzień miesiąca",
+  "recurring.dayOfMonth": "Dzień {n}",
   "recurring.type.expense": "Wydatek (rachunek / subskrypcja)",
   "recurring.type.income": "Przychód (pensja / wypłata)",
   "recurring.delete": "Usuń powtarzający",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Zastępuje profil Demo dwoma latami świeżych przykładowych danych",
   "settings.demo.title": "Utworzyć ponownie profil demo?",
   "settings.demo.body": "Spowoduje to usunięcie istniejącego profilu Demo (jeśli istnieje) i odbudowanie go z przykładowymi danymi. Twoje własne profile nie zostaną naruszone.",
-  "settings.demo.cta": "Utwórz ponownie"
+  "settings.demo.cta": "Utwórz ponownie",
+  "recurring.skipped": "Pominięto"
 }

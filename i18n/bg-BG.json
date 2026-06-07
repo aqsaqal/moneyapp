@@ -259,7 +259,7 @@
   "recurring.category": "Категория",
   "recurring.account": "Сметка",
   "recurring.currency": "Валута",
-  "recurring.dayOfMonth": "Ден от месеца",
+  "recurring.dayOfMonth": "Ден {n}",
   "recurring.type.expense": "Разход (сметка / абонамент)",
   "recurring.type.income": "Доход (заплата / плащане)",
   "recurring.delete": "Изтрий повтарящ",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Замества демо профила с две години нови примерни данни",
   "settings.demo.title": "Пресъздаване на демо профил?",
   "settings.demo.body": "Това ще изтрие съществуващия демо профил (ако има такъв) и ще го изгради отново с примерни данни. Вашите собствени профили няма да бъдат засегнати.",
-  "settings.demo.cta": "Пресъздай"
+  "settings.demo.cta": "Пресъздай",
+  "recurring.skipped": "Пропуснат"
 }

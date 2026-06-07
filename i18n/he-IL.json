@@ -259,7 +259,7 @@
   "recurring.category": "קטגוריה",
   "recurring.account": "חשבון",
   "recurring.currency": "מטבע",
-  "recurring.dayOfMonth": "יום בחודש",
+  "recurring.dayOfMonth": "יום {n}",
   "recurring.type.expense": "הוצאה (חשבונית / מנוי)",
   "recurring.type.income": "הכנסה (משכורת / תשלום)",
   "recurring.delete": "מחק חוזר",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "מחליף את פרופיל ההדגמה בנתוני דוגמה טריים של שנתיים",
   "settings.demo.title": "ליצור מחדש פרופיל הדגמה?",
   "settings.demo.body": "פעולה זו תמחק את פרופיל ההדגמה הקיים (אם קיים) ותבנה אותו מחדש עם נתוני דוגמה. הפרופילים האישיים שלך לא יושפעו.",
-  "settings.demo.cta": "צור מחדש"
+  "settings.demo.cta": "צור מחדש",
+  "recurring.skipped": "דולג"
 }

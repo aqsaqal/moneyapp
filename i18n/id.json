@@ -258,7 +258,7 @@
   "recurring.category": "Kategori",
   "recurring.account": "Akun",
   "recurring.currency": "Mata uang",
-  "recurring.dayOfMonth": "Hari dalam bulan",
+  "recurring.dayOfMonth": "Hari {n}",
   "recurring.type.expense": "Pengeluaran (tagihan / langganan)",
   "recurring.type.income": "Pemasukan (gaji / pembayaran)",
   "recurring.delete": "Hapus berulang",
@@ -484,5 +484,6 @@
   "settings.demo.hint": "Mengganti profil Demo dengan dua tahun data contoh segar",
   "settings.demo.title": "Buat ulang profil demo?",
   "settings.demo.body": "Ini akan menghapus profil Demo yang ada (jika ada) dan membangunnya kembali dengan data contoh. Profil pribadi Anda tidak akan terpengaruh.",
-  "settings.demo.cta": "Buat ulang"
+  "settings.demo.cta": "Buat ulang",
+  "recurring.skipped": "Dilewati"
 }

@@ -259,7 +259,7 @@
   "recurring.category": "Categorie",
   "recurring.account": "Cont",
   "recurring.currency": "Monedă",
-  "recurring.dayOfMonth": "Ziua lunii",
+  "recurring.dayOfMonth": "Ziua {n}",
   "recurring.type.expense": "Cheltuială (factură / abonament)",
   "recurring.type.income": "Venit (salariu / plată)",
   "recurring.delete": "Șterge recurent",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Înlocuiește profilul Demo cu doi ani de date exemplu noi",
   "settings.demo.title": "Recreezi profilul demo?",
   "settings.demo.body": "Acest lucru va șterge profilul Demo existent (dacă există) și îl va reconstrui cu date exemplu. Profilurile tale personale nu vor fi afectate.",
-  "settings.demo.cta": "Recreează"
+  "settings.demo.cta": "Recreează",
+  "recurring.skipped": "Sărit"
 }

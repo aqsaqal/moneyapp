@@ -259,7 +259,7 @@
   "recurring.category": "دسته",
   "recurring.account": "حساب",
   "recurring.currency": "ارز",
-  "recurring.dayOfMonth": "روز ماه",
+  "recurring.dayOfMonth": "روز {n}",
   "recurring.type.expense": "هزینه (قبض / اشتراک)",
   "recurring.type.income": "درآمد (حقوق / پرداخت)",
   "recurring.delete": "حذف تکراری",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "نمایه دمو را با دو سال داده‌های نمونهٔ تازه جایگزین می‌کند",
   "settings.demo.title": "بازسازی نمایه دمو؟",
   "settings.demo.body": "این کار نمایه دموی موجود (در صورت وجود) را حذف می‌کند و آن را با داده‌های نمونه بازسازی می‌کند. نمایه‌های شخصی شما تحت تأثیر قرار نمی‌گیرند.",
-  "settings.demo.cta": "بازسازی"
+  "settings.demo.cta": "بازسازی",
+  "recurring.skipped": "رد شد"
 }

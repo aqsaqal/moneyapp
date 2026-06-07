@@ -259,7 +259,7 @@
   "recurring.category": "বিভাগ",
   "recurring.account": "অ্যাকাউন্ট",
   "recurring.currency": "মুদ্রা",
-  "recurring.dayOfMonth": "মাসের দিন",
+  "recurring.dayOfMonth": "দিন {n}",
   "recurring.type.expense": "খরচ (বিল / সাবস্ক্রিপশন)",
   "recurring.type.income": "আয় (বেতন / পেমেন্ট)",
   "recurring.delete": "পুনরাবৃত্ত মুছুন",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "ডেমো প্রোফাইলটিকে দুই বছরের নতুন নমুনা ডেটা দিয়ে প্রতিস্থাপন করে",
   "settings.demo.title": "ডেমো প্রোফাইল পুনরায় তৈরি করবেন?",
   "settings.demo.body": "এটি বিদ্যমান ডেমো প্রোফাইল মুছে ফেলবে (যদি থাকে) এবং নমুনা ডেটা দিয়ে আবার তৈরি করবে। আপনার নিজের প্রোফাইলগুলি প্রভাবিত হবে না।",
-  "settings.demo.cta": "পুনরায় তৈরি করুন"
+  "settings.demo.cta": "পুনরায় তৈরি করুন",
+  "recurring.skipped": "বাদ দেওয়া হয়েছে"
 }

@@ -259,7 +259,7 @@
   "recurring.category": "카테고리",
   "recurring.account": "계좌",
   "recurring.currency": "통화",
-  "recurring.dayOfMonth": "매월 일",
+  "recurring.dayOfMonth": "{n}일",
   "recurring.type.expense": "지출 (청구서 / 구독)",
   "recurring.type.income": "수입 (급여 / 지급)",
   "recurring.delete": "반복 삭제",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "데모 프로필을 2년치 새로운 샘플 데이터로 교체합니다",
   "settings.demo.title": "데모 프로필을 다시 만드시겠어요?",
   "settings.demo.body": "기존 데모 프로필(있는 경우)을 삭제하고 샘플 데이터로 다시 만듭니다. 본인의 프로필에는 영향이 없습니다.",
-  "settings.demo.cta": "다시 만들기"
+  "settings.demo.cta": "다시 만들기",
+  "recurring.skipped": "건너뜀"
 }

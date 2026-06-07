@@ -259,7 +259,7 @@
   "recurring.category": "Kategoriya",
   "recurring.account": "Hisob",
   "recurring.currency": "Valyuta",
-  "recurring.dayOfMonth": "Oyning kuni",
+  "recurring.dayOfMonth": "{n}-kun",
   "recurring.type.expense": "Xarajat (hisob / obuna)",
   "recurring.type.income": "Daromad (maosh / toʻlov)",
   "recurring.delete": "Takrorlanuvchini oʻchirish",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Demo profilni ikki yillik yangi namuna ma'lumotlari bilan almashtiradi",
   "settings.demo.title": "Demo profilni qayta yaratasizmi?",
   "settings.demo.body": "Bu mavjud Demo profilni o'chiradi (agar bo'lsa) va uni namuna ma'lumotlari bilan qayta quradi. Sizning shaxsiy profillaringizga ta'sir qilmaydi.",
-  "settings.demo.cta": "Qayta yaratish"
+  "settings.demo.cta": "Qayta yaratish",
+  "recurring.skipped": "O'tkazib yuborildi"
 }

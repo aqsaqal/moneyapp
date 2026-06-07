@@ -259,7 +259,7 @@
   "recurring.category": "Категорія",
   "recurring.account": "Рахунок",
   "recurring.currency": "Валюта",
-  "recurring.dayOfMonth": "День місяця",
+  "recurring.dayOfMonth": "День {n}",
   "recurring.type.expense": "Витрата (рахунок / підписка)",
   "recurring.type.income": "Дохід (зарплата / виплата)",
   "recurring.delete": "Видалити повторюване",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Замінює демо-профіль свіжими зразковими даними за два роки",
   "settings.demo.title": "Перестворити демо-профіль?",
   "settings.demo.body": "Це видалить наявний демо-профіль (якщо є) і відтворить його зі зразковими даними. Ваші власні профілі не постраждають.",
-  "settings.demo.cta": "Перестворити"
+  "settings.demo.cta": "Перестворити",
+  "recurring.skipped": "Пропущено"
 }

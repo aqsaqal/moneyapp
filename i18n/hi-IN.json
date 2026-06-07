@@ -259,7 +259,7 @@
   "recurring.category": "श्रेणी",
   "recurring.account": "खाता",
   "recurring.currency": "मुद्रा",
-  "recurring.dayOfMonth": "महीने का दिन",
+  "recurring.dayOfMonth": "दिन {n}",
   "recurring.type.expense": "व्यय (बिल / सब्सक्रिप्शन)",
   "recurring.type.income": "आय (वेतन / भुगतान)",
   "recurring.delete": "आवर्ती हटाएँ",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "डेमो प्रोफ़ाइल को दो साल के नए नमूना डेटा से बदलता है",
   "settings.demo.title": "डेमो प्रोफ़ाइल फिर से बनाएं?",
   "settings.demo.body": "यह मौजूदा डेमो प्रोफ़ाइल को हटा देगा (यदि कोई है) और इसे नमूना डेटा के साथ फिर से बनाएगा। आपके अपने प्रोफ़ाइल प्रभावित नहीं होंगे।",
-  "settings.demo.cta": "फिर से बनाएं"
+  "settings.demo.cta": "फिर से बनाएं",
+  "recurring.skipped": "छोड़ा गया"
 }

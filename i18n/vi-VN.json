@@ -259,7 +259,7 @@
   "recurring.category": "Danh mục",
   "recurring.account": "Tài khoản",
   "recurring.currency": "Tiền tệ",
-  "recurring.dayOfMonth": "Ngày trong tháng",
+  "recurring.dayOfMonth": "Ngày {n}",
   "recurring.type.expense": "Chi (hoá đơn / đăng ký)",
   "recurring.type.income": "Thu (lương / thanh toán)",
   "recurring.delete": "Xoá lặp lại",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Thay thế hồ sơ Demo bằng hai năm dữ liệu mẫu mới",
   "settings.demo.title": "Tạo lại hồ sơ demo?",
   "settings.demo.body": "Thao tác này sẽ xóa hồ sơ Demo hiện có (nếu có) và xây dựng lại với dữ liệu mẫu. Hồ sơ cá nhân của bạn sẽ không bị ảnh hưởng.",
-  "settings.demo.cta": "Tạo lại"
+  "settings.demo.cta": "Tạo lại",
+  "recurring.skipped": "Đã bỏ qua"
 }

@@ -259,7 +259,7 @@
   "recurring.category": "Kategorya",
   "recurring.account": "Account",
   "recurring.currency": "Currency",
-  "recurring.dayOfMonth": "Araw ng buwan",
+  "recurring.dayOfMonth": "Araw {n}",
   "recurring.type.expense": "Gastos (bill / subscription)",
   "recurring.type.income": "Kita (sahod / bayad)",
   "recurring.delete": "Tanggalin ang recurring",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Papalitan ang Demo profile ng dalawang taong sariwang sample data",
   "settings.demo.title": "Likhain muli ang demo profile?",
   "settings.demo.body": "Tatanggalin nito ang umiiral na Demo profile (kung mayroon) at muling itatayo gamit ang sample data. Ang sarili mong profiles ay hindi maaapektuhan.",
-  "settings.demo.cta": "Likhain muli"
+  "settings.demo.cta": "Likhain muli",
+  "recurring.skipped": "Nilaktawan"
 }

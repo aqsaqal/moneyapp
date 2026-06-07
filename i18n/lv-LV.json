@@ -259,7 +259,7 @@
   "recurring.category": "Kategorija",
   "recurring.account": "Konts",
   "recurring.currency": "Valūta",
-  "recurring.dayOfMonth": "Mēneša diena",
+  "recurring.dayOfMonth": "{n}. diena",
   "recurring.type.expense": "Izdevums (rēķins / abonements)",
   "recurring.type.income": "Ienākumi (alga / izmaksa)",
   "recurring.delete": "Dzēst atkārtotu",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Aizvieto demonstrācijas profilu ar diviem gadiem svaigu paraugu datu",
   "settings.demo.title": "Atjaunot demonstrācijas profilu?",
   "settings.demo.body": "Tas izdzēsīs esošo demonstrācijas profilu (ja tāds ir) un izveidos to no jauna ar paraugu datiem. Jūsu personīgie profili netiks ietekmēti.",
-  "settings.demo.cta": "Atjaunot"
+  "settings.demo.cta": "Atjaunot",
+  "recurring.skipped": "Izlaists"
 }

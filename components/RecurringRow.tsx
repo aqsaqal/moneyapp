@@ -7,6 +7,7 @@ import { Icon } from './Icon';
 import { theme, radii, font, sizes } from '@/constants/theme';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import type { Recurring } from '@/utils/db/schema';
+import { useT } from '@/hooks/useT';
 
 export interface RecurringRowProps {
   rec: Recurring;
@@ -35,9 +36,11 @@ export interface RecurringRowProps {
 }
 
 export function RecurringRow({ rec, paid, onTapCheckbox, onUnmark, onUnskip, onEdit, onLongPress, skipped, currency = 'USD' }: RecurringRowProps) {
+  const t = useT();
   const checkIcon = skipped ? 'minus-circle-outline' : paid ? 'check-circle' : 'circle-outline';
   const checkColor = skipped ? theme.text2 : paid ? theme.accent : theme.text3;
-  const subText = `Day ${rec.dayOfMonth}${skipped ? ' · Skipped' : ''}`;
+  const subText = t('recurring.dayOfMonth', { n: rec.dayOfMonth }) +
+    (skipped ? ` · ${t('recurring.skipped')}` : '');
   return (
     <View style={styles.row}>
       <Pressable

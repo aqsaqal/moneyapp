@@ -259,7 +259,7 @@
   "recurring.category": "Kateqoriya",
   "recurring.account": "Hesab",
   "recurring.currency": "Valyuta",
-  "recurring.dayOfMonth": "Ayın günü",
+  "recurring.dayOfMonth": "{n}-ci gün",
   "recurring.type.expense": "Xərc (faktura / abunəlik)",
   "recurring.type.income": "Gəlir (maaş / ödəniş)",
   "recurring.delete": "Təkrarlananı sil",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Demo profilini iki illik təzə nümunə məlumatları ilə əvəz edir",
   "settings.demo.title": "Demo profilini yenidən yaratmaq?",
   "settings.demo.body": "Bu, mövcud Demo profilini siləcək (əgər varsa) və nümunə məlumatları ilə yenidən yaradacaq. Sizin öz profilləriniz təsirlənməyəcək.",
-  "settings.demo.cta": "Yenidən yarat"
+  "settings.demo.cta": "Yenidən yarat",
+  "recurring.skipped": "Atlandı"
 }

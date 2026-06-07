@@ -259,7 +259,7 @@
   "recurring.category": "Categoria",
   "recurring.account": "Conto",
   "recurring.currency": "Valuta",
-  "recurring.dayOfMonth": "Giorno del mese",
+  "recurring.dayOfMonth": "Giorno {n}",
   "recurring.type.expense": "Spesa (bolletta / abbonamento)",
   "recurring.type.income": "Entrata (stipendio / pagamento)",
   "recurring.delete": "Elimina ricorrente",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Sostituisce il profilo Demo con due anni di dati di esempio aggiornati",
   "settings.demo.title": "Ricreare il profilo demo?",
   "settings.demo.body": "Questo eliminerà il profilo Demo esistente (se presente) e lo ricostruirà con dati di esempio. I tuoi profili non saranno interessati.",
-  "settings.demo.cta": "Ricrea"
+  "settings.demo.cta": "Ricrea",
+  "recurring.skipped": "Saltato"
 }

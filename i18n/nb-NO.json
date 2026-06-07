@@ -259,7 +259,7 @@
   "recurring.category": "Kategori",
   "recurring.account": "Konto",
   "recurring.currency": "Valuta",
-  "recurring.dayOfMonth": "Dag i måneden",
+  "recurring.dayOfMonth": "Dag {n}",
   "recurring.type.expense": "Utgift (regning / abonnement)",
   "recurring.type.income": "Inntekt (lønn / utbetaling)",
   "recurring.delete": "Slett gjentakende",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Erstatter demoprofilen med to års friske eksempeldata",
   "settings.demo.title": "Gjenopprette demoprofil?",
   "settings.demo.body": "Dette vil slette den eksisterende demoprofilen (hvis noen) og bygge den opp på nytt med eksempeldata. Dine egne profiler påvirkes ikke.",
-  "settings.demo.cta": "Gjenopprett"
+  "settings.demo.cta": "Gjenopprett",
+  "recurring.skipped": "Hoppet over"
 }

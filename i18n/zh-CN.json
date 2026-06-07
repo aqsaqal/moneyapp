@@ -259,7 +259,7 @@
   "recurring.category": "类别",
   "recurring.account": "账户",
   "recurring.currency": "货币",
-  "recurring.dayOfMonth": "每月日期",
+  "recurring.dayOfMonth": "{n} 日",
   "recurring.type.expense": "支出（账单/订阅）",
   "recurring.type.income": "收入（工资/付款）",
   "recurring.delete": "删除循环",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "用两年的全新示例数据替换演示档案",
   "settings.demo.title": "重建演示档案？",
   "settings.demo.body": "这将删除现有的演示档案（如果有）并使用示例数据重新构建。您自己的档案不会受到影响。",
-  "settings.demo.cta": "重建"
+  "settings.demo.cta": "重建",
+  "recurring.skipped": "已跳过"
 }

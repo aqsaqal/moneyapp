@@ -259,7 +259,7 @@
   "recurring.category": "หมวดหมู่",
   "recurring.account": "บัญชี",
   "recurring.currency": "สกุลเงิน",
-  "recurring.dayOfMonth": "วันที่ในเดือน",
+  "recurring.dayOfMonth": "วันที่ {n}",
   "recurring.type.expense": "รายจ่าย (บิล / สมัครสมาชิก)",
   "recurring.type.income": "รายรับ (เงินเดือน / จ่าย)",
   "recurring.delete": "ลบประจำ",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "แทนที่โปรไฟล์ตัวอย่างด้วยข้อมูลตัวอย่างใหม่สองปี",
   "settings.demo.title": "สร้างโปรไฟล์ตัวอย่างใหม่?",
   "settings.demo.body": "การดำเนินการนี้จะลบโปรไฟล์ตัวอย่างที่มีอยู่ (ถ้ามี) และสร้างใหม่ด้วยข้อมูลตัวอย่าง โปรไฟล์ของคุณจะไม่ได้รับผลกระทบ",
-  "settings.demo.cta": "สร้างใหม่"
+  "settings.demo.cta": "สร้างใหม่",
+  "recurring.skipped": "ข้ามแล้ว"
 }

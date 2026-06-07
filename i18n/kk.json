@@ -258,7 +258,7 @@
   "recurring.category": "Санат",
   "recurring.account": "Шот",
   "recurring.currency": "Валюта",
-  "recurring.dayOfMonth": "Айдың күні",
+  "recurring.dayOfMonth": "{n}-күн",
   "recurring.type.expense": "Шығын (төлем / жазылым)",
   "recurring.type.income": "Кіріс (жалақы / төлем)",
   "recurring.delete": "Қайталанатынды жою",
@@ -484,5 +484,6 @@
   "settings.demo.hint": "Демо профильді екі жылдық жаңа үлгі деректермен ауыстырады",
   "settings.demo.title": "Демо профильді қайта жасау?",
   "settings.demo.body": "Бұл бар Демо профильді жояды (бар болса) және оны үлгі деректермен қайта жасайды. Сіздің жеке профильдеріңізге әсер етпейді.",
-  "settings.demo.cta": "Қайта жасау"
+  "settings.demo.cta": "Қайта жасау",
+  "recurring.skipped": "Өткізілді"
 }

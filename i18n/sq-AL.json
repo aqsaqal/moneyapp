@@ -259,7 +259,7 @@
   "recurring.category": "Kategoria",
   "recurring.account": "Llogaria",
   "recurring.currency": "Monedha",
-  "recurring.dayOfMonth": "Dita e muajit",
+  "recurring.dayOfMonth": "Dita {n}",
   "recurring.type.expense": "Shpenzim (faturë / abonim)",
   "recurring.type.income": "Të ardhura (pagë / pagesë)",
   "recurring.delete": "Fshi të përsëritur",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Zëvendëson profilin Demo me dy vjet të dhëna mostre të reja",
   "settings.demo.title": "Rikrijo profilin demo?",
   "settings.demo.body": "Kjo do të fshijë profilin Demo ekzistues (nëse ka) dhe do ta rindërtojë me të dhëna mostër. Profilet tuaja personale nuk do të preken.",
-  "settings.demo.cta": "Rikrijo"
+  "settings.demo.cta": "Rikrijo",
+  "recurring.skipped": "Anashkaluar"
 }

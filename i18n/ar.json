@@ -258,7 +258,7 @@
   "recurring.category": "الفئة",
   "recurring.account": "الحساب",
   "recurring.currency": "العملة",
-  "recurring.dayOfMonth": "يوم الشهر",
+  "recurring.dayOfMonth": "يوم {n}",
   "recurring.type.expense": "مصروف (فاتورة / اشتراك)",
   "recurring.type.income": "دخل (راتب / دفع)",
   "recurring.delete": "حذف المتكرر",
@@ -484,5 +484,6 @@
   "settings.demo.hint": "يستبدل الملف التجريبي ببيانات نموذجية لمدة سنتين",
   "settings.demo.title": "إعادة إنشاء الملف التجريبي؟",
   "settings.demo.body": "سيؤدي هذا إلى حذف الملف التجريبي الحالي (إن وجد) وإعادة إنشائه ببيانات تجريبية. لن تتأثر ملفاتك الخاصة.",
-  "settings.demo.cta": "إعادة الإنشاء"
+  "settings.demo.cta": "إعادة الإنشاء",
+  "recurring.skipped": "تخطّى"
 }

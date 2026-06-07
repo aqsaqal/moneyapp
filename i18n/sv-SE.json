@@ -259,7 +259,7 @@
   "recurring.category": "Kategori",
   "recurring.account": "Konto",
   "recurring.currency": "Valuta",
-  "recurring.dayOfMonth": "Dag i månaden",
+  "recurring.dayOfMonth": "Dag {n}",
   "recurring.type.expense": "Utgift (räkning / prenumeration)",
   "recurring.type.income": "Inkomst (lön / utbetalning)",
   "recurring.delete": "Ta bort återkommande",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Ersätter demoprofilen med två års färska exempeldata",
   "settings.demo.title": "Återskapa demoprofil?",
   "settings.demo.body": "Detta tar bort den befintliga demoprofilen (om någon) och bygger upp den igen med exempeldata. Dina egna profiler påverkas inte.",
-  "settings.demo.cta": "Återskapa"
+  "settings.demo.cta": "Återskapa",
+  "recurring.skipped": "Hoppade över"
 }

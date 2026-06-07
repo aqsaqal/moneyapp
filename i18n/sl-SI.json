@@ -259,7 +259,7 @@
   "recurring.category": "Kategorija",
   "recurring.account": "Račun",
   "recurring.currency": "Valuta",
-  "recurring.dayOfMonth": "Dan v mesecu",
+  "recurring.dayOfMonth": "{n}. dan",
   "recurring.type.expense": "Strošek (račun / naročnina)",
   "recurring.type.income": "Prihodek (plača / izplačilo)",
   "recurring.delete": "Izbriši ponavljanje",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Zamenja demo profil z dvema letoma novih vzorčnih podatkov",
   "settings.demo.title": "Znova ustvarim demo profil?",
   "settings.demo.body": "S tem boste izbrisali obstoječi demo profil (če obstaja) in ga znova zgradili z vzorčnimi podatki. Vaši lastni profili ne bodo prizadeti.",
-  "settings.demo.cta": "Znova ustvari"
+  "settings.demo.cta": "Znova ustvari",
+  "recurring.skipped": "Preskočeno"
 }

@@ -259,7 +259,7 @@
   "recurring.category": "வகை",
   "recurring.account": "கணக்கு",
   "recurring.currency": "நாணயம்",
-  "recurring.dayOfMonth": "மாதத்தின் நாள்",
+  "recurring.dayOfMonth": "நாள் {n}",
   "recurring.type.expense": "செலவு (பில் / சந்தா)",
   "recurring.type.income": "வருமானம் (சம்பளம் / கட்டணம்)",
   "recurring.delete": "தொடரும் நீக்கு",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "டெமோ சுயவிவரத்தை இரண்டு ஆண்டுகளின் புதிய மாதிரி தரவுகளுடன் மாற்றுகிறது",
   "settings.demo.title": "டெமோ சுயவிவரத்தை மீண்டும் உருவாக்கவா?",
   "settings.demo.body": "இது தற்போதுள்ள டெமோ சுயவிவரத்தை (இருந்தால்) நீக்கி, மாதிரி தரவுகளுடன் மீண்டும் உருவாக்கும். உங்கள் சொந்த சுயவிவரங்கள் பாதிக்கப்படாது.",
-  "settings.demo.cta": "மீண்டும் உருவாக்கு"
+  "settings.demo.cta": "மீண்டும் உருவாக்கு",
+  "recurring.skipped": "தவிர்க்கப்பட்டது"
 }

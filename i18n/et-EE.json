@@ -259,7 +259,7 @@
   "recurring.category": "Kategooria",
   "recurring.account": "Konto",
   "recurring.currency": "Valuuta",
-  "recurring.dayOfMonth": "Kuupäev kuus",
+  "recurring.dayOfMonth": "{n}. päev",
   "recurring.type.expense": "Kulu (arve / tellimus)",
   "recurring.type.income": "Tulu (palk / makse)",
   "recurring.delete": "Kustuta korduv",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Asendab demoprofiili kahe aasta värskete näidisandmetega",
   "settings.demo.title": "Loo demoprofiil uuesti?",
   "settings.demo.body": "See kustutab olemasoleva demoprofiili (kui see on olemas) ja ehitab selle uuesti näidisandmetega. Sinu enda profiilid jäävad puutumata.",
-  "settings.demo.cta": "Loo uuesti"
+  "settings.demo.cta": "Loo uuesti",
+  "recurring.skipped": "Vahele jäetud"
 }

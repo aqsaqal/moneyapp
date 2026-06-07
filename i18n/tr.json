@@ -258,7 +258,7 @@
   "recurring.category": "Kategori",
   "recurring.account": "Hesap",
   "recurring.currency": "Para birimi",
-  "recurring.dayOfMonth": "Ayın günü",
+  "recurring.dayOfMonth": "{n}. gün",
   "recurring.type.expense": "Gider (fatura / abonelik)",
   "recurring.type.income": "Gelir (maaş / ödeme)",
   "recurring.delete": "Tekrarlayanı sil",
@@ -484,5 +484,6 @@
   "settings.demo.hint": "Demo profilini iki yıllık yeni örnek verilerle değiştirir",
   "settings.demo.title": "Demo profili yeniden oluşturulsun mu?",
   "settings.demo.body": "Bu, mevcut Demo profilini (varsa) silecek ve örnek verilerle yeniden oluşturacaktır. Kendi profilleriniz etkilenmez.",
-  "settings.demo.cta": "Yeniden oluştur"
+  "settings.demo.cta": "Yeniden oluştur",
+  "recurring.skipped": "Atlandı"
 }

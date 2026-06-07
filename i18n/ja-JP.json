@@ -259,7 +259,7 @@
   "recurring.category": "カテゴリ",
   "recurring.account": "口座",
   "recurring.currency": "通貨",
-  "recurring.dayOfMonth": "毎月の日",
+  "recurring.dayOfMonth": "{n}日",
   "recurring.type.expense": "支出（請求 / サブスク）",
   "recurring.type.income": "収入（給与 / 支払）",
   "recurring.delete": "定期を削除",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "デモプロファイルを2年分の新しいサンプルデータに置き換えます",
   "settings.demo.title": "デモプロファイルを再作成しますか？",
   "settings.demo.body": "これにより既存のデモプロファイル（あれば）が削除され、サンプルデータで再構築されます。あなた自身のプロファイルには影響しません。",
-  "settings.demo.cta": "再作成"
+  "settings.demo.cta": "再作成",
+  "recurring.skipped": "スキップ済み"
 }

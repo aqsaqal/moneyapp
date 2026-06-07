@@ -471,6 +471,8 @@
   "account.chart.subtitle.all": "over all time",
   "account.chart.empty": "Add more transactions to see your balance trend.",
   "account.since": "Since {date}",
+  "recurring.dayOfMonth": "Day {n}",
+  "recurring.skipped": "Skipped",
   "common.remove": "Remove",
   "plan.menu.pause": "Pause",
   "plan.menu.resume": "Resume",

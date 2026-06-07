@@ -259,7 +259,7 @@
   "recurring.category": "Catégorie",
   "recurring.account": "Compte",
   "recurring.currency": "Devise",
-  "recurring.dayOfMonth": "Jour du mois",
+  "recurring.dayOfMonth": "Jour {n}",
   "recurring.type.expense": "Dépense (facture / abonnement)",
   "recurring.type.income": "Revenu (salaire / versement)",
   "recurring.delete": "Supprimer récurrent",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Remplace le profil démo par deux ans de données d'exemple fraîches",
   "settings.demo.title": "Recréer le profil démo ?",
   "settings.demo.body": "Cela supprimera le profil démo existant (le cas échéant) et le reconstruira avec des données d'exemple. Vos propres profils ne sont pas affectés.",
-  "settings.demo.cta": "Recréer"
+  "settings.demo.cta": "Recréer",
+  "recurring.skipped": "Sauté"
 }

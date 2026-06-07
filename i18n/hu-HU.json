@@ -259,7 +259,7 @@
   "recurring.category": "Kategória",
   "recurring.account": "Számla",
   "recurring.currency": "Pénznem",
-  "recurring.dayOfMonth": "Hónap napja",
+  "recurring.dayOfMonth": "{n}. nap",
   "recurring.type.expense": "Kiadás (számla / előfizetés)",
   "recurring.type.income": "Bevétel (fizetés / kifizetés)",
   "recurring.delete": "Ismétlődő törlése",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Lecseréli a Demo profilt két év friss mintaadatra",
   "settings.demo.title": "Újralétrehozza a demo profilt?",
   "settings.demo.body": "Ez törli a meglévő Demo profilt (ha van) és újra felépíti mintaadatokkal. A saját profiljaid nem érintettek.",
-  "settings.demo.cta": "Újralétrehozás"
+  "settings.demo.cta": "Újralétrehozás",
+  "recurring.skipped": "Kihagyva"
 }

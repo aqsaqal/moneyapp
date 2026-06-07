@@ -259,7 +259,7 @@
   "recurring.category": "Kategória",
   "recurring.account": "Účet",
   "recurring.currency": "Mena",
-  "recurring.dayOfMonth": "Deň v mesiaci",
+  "recurring.dayOfMonth": "{n}. deň",
   "recurring.type.expense": "Výdavok (faktúra / predplatné)",
   "recurring.type.income": "Príjem (mzda / výplata)",
   "recurring.delete": "Vymazať opakovaný",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Nahradí demo profil dvojročnými novými ukážkovými údajmi",
   "settings.demo.title": "Znova vytvoriť demo profil?",
   "settings.demo.body": "Tým sa odstráni existujúci demo profil (ak existuje) a znova sa vytvorí s ukážkovými údajmi. Vaše vlastné profily nebudú ovplyvnené.",
-  "settings.demo.cta": "Znova vytvoriť"
+  "settings.demo.cta": "Znova vytvoriť",
+  "recurring.skipped": "Preskočené"
 }

@@ -259,7 +259,7 @@
   "recurring.category": "Kategoria",
   "recurring.account": "Tili",
   "recurring.currency": "Valuutta",
-  "recurring.dayOfMonth": "Kuukauden päivä",
+  "recurring.dayOfMonth": "Päivä {n}",
   "recurring.type.expense": "Meno (lasku / tilaus)",
   "recurring.type.income": "Tulo (palkka / maksu)",
   "recurring.delete": "Poista toistuva",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Korvaa demoprofiilin kahden vuoden uusilla esimerkkitiedoilla",
   "settings.demo.title": "Luodaanko demoprofiili uudelleen?",
   "settings.demo.body": "Tämä poistaa olemassa olevan demoprofiilin (jos sellainen on) ja rakentaa sen uudelleen esimerkkitiedoilla. Omat profiilisi eivät muutu.",
-  "settings.demo.cta": "Luo uudelleen"
+  "settings.demo.cta": "Luo uudelleen",
+  "recurring.skipped": "Ohitettu"
 }

@@ -259,7 +259,7 @@
   "recurring.category": "Κατηγορία",
   "recurring.account": "Λογαριασμός",
   "recurring.currency": "Νόμισμα",
-  "recurring.dayOfMonth": "Ημέρα του μήνα",
+  "recurring.dayOfMonth": "Ημέρα {n}",
   "recurring.type.expense": "Έξοδο (λογαριασμός / συνδρομή)",
   "recurring.type.income": "Έσοδο (μισθός / πληρωμή)",
   "recurring.delete": "Διαγραφή επανάληψης",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "Αντικαθιστά το προφίλ επίδειξης με νέα δείγματα δύο ετών",
   "settings.demo.title": "Επαναδημιουργία προφίλ επίδειξης;",
   "settings.demo.body": "Αυτό θα διαγράψει το υπάρχον προφίλ επίδειξης (αν υπάρχει) και θα το ξαναδημιουργήσει με δείγματα δεδομένων. Τα δικά σας προφίλ δεν θα επηρεαστούν.",
-  "settings.demo.cta": "Επαναδημιουργία"
+  "settings.demo.cta": "Επαναδημιουργία",
+  "recurring.skipped": "Παραλείφθηκε"
 }

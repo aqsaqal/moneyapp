@@ -259,7 +259,7 @@
   "recurring.category": "زمرہ",
   "recurring.account": "اکاؤنٹ",
   "recurring.currency": "کرنسی",
-  "recurring.dayOfMonth": "مہینے کا دن",
+  "recurring.dayOfMonth": "دن {n}",
   "recurring.type.expense": "خرچ (بل / سبسکرپشن)",
   "recurring.type.income": "آمدنی (تنخواہ / ادائیگی)",
   "recurring.delete": "بار بار ڈیلیٹ کریں",
@@ -485,5 +485,6 @@
   "settings.demo.hint": "ڈیمو پروفائل کو دو سال کے تازہ نمونے کے ڈیٹا سے بدل دیتا ہے",
   "settings.demo.title": "ڈیمو پروفائل دوبارہ بنائیں؟",
   "settings.demo.body": "یہ موجودہ ڈیمو پروفائل کو حذف کر دے گا (اگر کوئی ہو) اور اسے نمونے کے ڈیٹا کے ساتھ دوبارہ بنائے گا۔ آپ کے اپنے پروفائلز متاثر نہیں ہوں گے۔",
-  "settings.demo.cta": "دوبارہ بنائیں"
+  "settings.demo.cta": "دوبارہ بنائیں",
+  "recurring.skipped": "چھوڑا گیا"
 }

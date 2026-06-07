@@ -258,7 +258,7 @@
   "recurring.category": "Категория",
   "recurring.account": "Счёт",
   "recurring.currency": "Валюта",
-  "recurring.dayOfMonth": "День месяца",
+  "recurring.dayOfMonth": "День {n}",
   "recurring.type.expense": "Расход (счёт / подписка)",
   "recurring.type.income": "Доход (зарплата / выплата)",
   "recurring.delete": "Удалить постоянный",
@@ -484,5 +484,6 @@
   "settings.demo.hint": "Заменяет демо-профиль свежими образцами данных за два года",
   "settings.demo.title": "Пересоздать демо-профиль?",
   "settings.demo.body": "Это удалит существующий демо-профиль (если он есть) и пересоздаст его с образцами данных. Ваши собственные профили не пострадают.",
-  "settings.demo.cta": "Пересоздать"
+  "settings.demo.cta": "Пересоздать",
+  "recurring.skipped": "Пропущено"
 }
