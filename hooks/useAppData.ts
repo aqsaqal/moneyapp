@@ -1041,6 +1041,7 @@ export function deleteAccountCascade(id: string): { txnsDeleted: number; transfe
     }).where(eq(accounts.id, id)).run();
   }
 
+  try { refreshTodaySnapshot(); } catch { /* never block delete path */ }
   bump();
   return { txnsDeleted: direct.length, transfersPreserved: transfers.length };
 }
