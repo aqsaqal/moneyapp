@@ -122,17 +122,18 @@ export default function RootLayout() {
               }}
             >
               <Stack.Screen name="(tabs)" />
-              {/* Smart Add — quadruple-speed slide (175 → 44 ms) so the
-                  FAB-tap-to-input loop feels instant. Other modals keep
-                  the 175 ms cadence for a calmer feel. */}
+              {/* Smart Add stays at 1 ms fade so the FAB-tap-to-input
+                  loop feels instant. Other modals share a 75 ms
+                  slide_from_bottom — snappy enough to read as a popup
+                  rather than a separate screen. */}
               <Stack.Screen name="add" options={{ presentation: 'modal', animation: 'fade', animationDuration: 1 }} />
-              <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
-              <Stack.Screen name="insights" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
-              <Stack.Screen name="net-worth" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
-              <Stack.Screen name="account/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
-              <Stack.Screen name="account-balance" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
-              <Stack.Screen name="category-grid" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
-              <Stack.Screen name="categories-manage" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 175 }} />
+              <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
+              <Stack.Screen name="insights" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
+              <Stack.Screen name="net-worth" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
+              <Stack.Screen name="account/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
+              <Stack.Screen name="account-balance" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
+              <Stack.Screen name="category-grid" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
+              <Stack.Screen name="categories-manage" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
             </Stack>
           </LockGate>
