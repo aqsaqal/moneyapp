@@ -11,6 +11,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   View,
   useWindowDimensions,
 } from 'react-native';
@@ -41,13 +42,21 @@ export default function CategoriesManageScreen() {
   const [editing, setEditing] = useState<CategoryWithMeta | null | undefined>(undefined);
   const [showArchived, setShowArchived] = useState(false);
   const [tab, setTab] = useState<Tab>('expense');
+  // Search filters the active tab only. Drag-reorder is disabled while
+  // the query is non-empty: writing a new sort_order across a filtered
+  // subset would silently corrupt the global order of hidden items.
+  const [search, setSearch] = useState('');
+  const searching = search.trim().length > 0;
 
   // Active set partitioned by type. 'both' (e.g. adjustment, gift)
   // shows up in BOTH tabs so the user can pin / reorder it relative
   // to either side. Adjustment is the bookkeeping system row and is
   // hidden from this management surface entirely.
   const partition = useMemo(() => {
-    const visible = categories.filter((c) => !c.archived && c.id !== 'adjustment');
+    const q = search.trim().toLowerCase();
+    const visible = categories
+      .filter((c) => !c.archived && c.id !== 'adjustment')
+      .filter((c) => q === '' || c.name.toLowerCase().includes(q));
     const sorter = (a: CategoryWithMeta, b: CategoryWithMeta) => {
       if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
       return a.sortOrder - b.sortOrder || a.name.localeCompare(b.name);
@@ -56,7 +65,7 @@ export default function CategoriesManageScreen() {
       expense: visible.filter((c) => c.type === 'expense' || c.type === 'both').sort(sorter),
       income: visible.filter((c) => c.type === 'income' || c.type === 'both').sort(sorter),
     };
-  }, [categories]);
+  }, [categories, search]);
 
   const archived = categories.filter((c) => c.archived);
 
@@ -123,7 +132,7 @@ export default function CategoriesManageScreen() {
     <ScaleDecorator activeScale={1.02}>
       <Pressable
         onPress={() => setEditing(c)}
-        onLongPress={drag}
+        onLongPress={searching ? undefined : drag}
         delayLongPress={300}
         style={[styles.row, isActive && { borderColor: theme.accent }]}
         accessibilityRole="button"
@@ -179,6 +188,24 @@ export default function CategoriesManageScreen() {
           active={tab === 'income'}
           onPress={() => switchTab('income')}
         />
+      </View>
+
+      <View style={styles.searchWrap}>
+        <MaterialCommunityIcons name="magnify" size={18} color={theme.text3} />
+        <TextInput
+          value={search}
+          onChangeText={setSearch}
+          placeholder={t('picker.search')}
+          placeholderTextColor={theme.text3}
+          style={styles.searchInput}
+          autoCorrect={false}
+          autoCapitalize="none"
+        />
+        {searching && (
+          <Pressable onPress={() => setSearch('')} hitSlop={8} accessibilityLabel={t('common.close')}>
+            <MaterialCommunityIcons name="close-circle" size={18} color={theme.text3} />
+          </Pressable>
+        )}
       </View>
 
       <ScrollView
@@ -273,6 +300,20 @@ const styles = StyleSheet.create({
   tabBtnActive: { backgroundColor: theme.accent, borderColor: theme.accent },
   tabText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.bodySemi },
   tabTextActive: { color: theme.bg },
+  searchWrap: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginHorizontal: spacing.lg,
+    marginBottom: spacing.sm,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: radii.md,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+  },
+  searchInput: { flex: 1, color: theme.text1, fontSize: sizes.sm, padding: 0 },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.sm },
   row: {
     flexDirection: 'row',

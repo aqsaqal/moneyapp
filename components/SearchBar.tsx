@@ -1,7 +1,7 @@
 // SearchBar — debounced text input for History screen (§6 item 4).
 
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Pressable, StyleSheet, TextInput, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, radii, font, sizes } from '@/constants/theme';
 
@@ -33,6 +33,11 @@ export function SearchBar({
         autoCapitalize="none"
         returnKeyType="search"
       />
+      {local.length > 0 && (
+        <Pressable onPress={() => setLocal('')} hitSlop={8} accessibilityLabel="Clear">
+          <MaterialCommunityIcons name="close-circle" size={16} color={theme.text3} />
+        </Pressable>
+      )}
     </View>
   );
 }

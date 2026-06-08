@@ -156,6 +156,11 @@ export function CategoryPicker({
             autoCorrect={false}
             autoCapitalize="none"
           />
+          {search.length > 0 && (
+            <Pressable onPress={() => setSearch('')} hitSlop={8} accessibilityLabel={t('common.close')}>
+              <MaterialCommunityIcons name="close-circle" size={18} color={theme.text3} />
+            </Pressable>
+          )}
         </View>
 
         <ScrollView
