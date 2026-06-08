@@ -233,7 +233,6 @@ export default function CategoriesManageScreen() {
           <DraggableFlatList
             data={partition.income}
             keyExtractor={(c) => c.id}
-            ListHeaderComponent={Header}
             ListFooterComponent={tab === 'income' ? Footer : undefined}
             contentContainerStyle={styles.scroll}
             activationDistance={20}

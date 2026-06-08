@@ -236,6 +236,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    // Fixed-ish height so a filtered list with only 2-3 matches doesn't
+    // collapse the sheet to a narrow strip mid-screen. minHeight gives
+    // the floor; maxHeight caps growth when the unfiltered list is long.
+    minHeight: '78%',
     maxHeight: '92%',
     backgroundColor: theme.bg1,
     borderTopLeftRadius: 20,
