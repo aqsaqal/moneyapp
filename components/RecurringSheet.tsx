@@ -23,6 +23,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { SettingRow } from '@/components/Sections';
+import { NumpadInputSheet } from '@/components/NumpadInputSheet';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { upsertRecurring, deleteRecurring, useAccounts } from '@/hooks/useAppData';
 import { allExpenseCategories, allIncomeCategories, catInfo } from '@/constants/categories';
@@ -49,6 +50,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
   const [type, setType] = useState<Mode>(recurring?.type ?? defaultType ?? 'expense');
   const [name, setName] = useState(recurring?.name ?? '');
   const [amount, setAmount] = useState(String(recurring?.amount ?? ''));
+  const [amountNumpadOpen, setAmountNumpadOpen] = useState(false);
   const [category, setCategory] = useState<string>(recurring?.category ?? 'subs');
   const [accountId, setAccountId] = useState<string>(
     recurring?.accountId ?? accounts[0]?.id ?? 'cash',
@@ -158,14 +160,16 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>{t('recurring.amount')}</Text>
-            <TextInput
-              value={amount}
-              onChangeText={setAmount}
-              keyboardType="numbers-and-punctuation"
-              placeholder="0"
-              placeholderTextColor={theme.text3}
+            <Pressable
+              onPress={() => setAmountNumpadOpen(true)}
               style={styles.input}
-            />
+              accessibilityRole="button"
+              accessibilityLabel={t('recurring.amount')}
+            >
+              <Text style={[styles.inputText, !amount && styles.inputPlaceholder]} numberOfLines={1}>
+                {amount || '0'}
+              </Text>
+            </Pressable>
           </View>
 
           <SettingRow
@@ -257,6 +261,15 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
             onClose={() => setCurrencyPickerOpen(false)}
           />
         </ScrollView>
+
+        <NumpadInputSheet
+          visible={amountNumpadOpen}
+          title={t('recurring.amount')}
+          initial={parseFloat(amount) || null}
+          currency={currency as CurrencyCode}
+          onSubmit={(v) => { setAmount(String(v)); setAmountNumpadOpen(false); }}
+          onClose={() => setAmountNumpadOpen(false)}
+        />
       </SafeAreaView>
     </Modal>
   );
@@ -305,6 +318,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.border,
   },
+  inputText: { color: theme.text1, fontFamily: font.body, fontSize: sizes.md },
+  inputPlaceholder: { color: theme.text3 },
   deleteRow: {
     flexDirection: 'row',
     alignItems: 'center',

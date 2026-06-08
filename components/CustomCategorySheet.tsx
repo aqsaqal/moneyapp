@@ -26,6 +26,7 @@ import {
 } from '@/hooks/useAppData';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
+import { NumpadInputSheet } from '@/components/NumpadInputSheet';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
 
@@ -69,6 +70,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
   const [budget, setBudget] = useState<string>(
     category?.monthlyBudget != null ? String(category.monthlyBudget) : '',
   );
+  const [budgetNumpadOpen, setBudgetNumpadOpen] = useState(false);
   const [budgetCurrency, setBudgetCurrency] = useState<CurrencyCode>(
     (category?.budgetCurrency as CurrencyCode | undefined) ?? defaultCurrency,
   );
@@ -206,14 +208,16 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>{t('category.field.budget')}</Text>
             <View style={{ flexDirection: 'row', gap: 8 }}>
-              <TextInput
-                value={budget}
-                onChangeText={setBudget}
-                keyboardType="numbers-and-punctuation"
-                placeholder="0"
-                placeholderTextColor={theme.text3}
+              <Pressable
+                onPress={() => setBudgetNumpadOpen(true)}
                 style={[styles.input, { flex: 1 }]}
-              />
+                accessibilityRole="button"
+                accessibilityLabel={t('category.field.budget')}
+              >
+                <Text style={[styles.inputText, !budget && styles.inputPlaceholder]} numberOfLines={1}>
+                  {budget || '0'}
+                </Text>
+              </Pressable>
               <Pressable
                 onPress={() => setCurrencyPicker(true)}
                 style={styles.currencyChip}
@@ -351,6 +355,15 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
             onClose={() => setCurrencyPicker(false)}
           />
         </ScrollView>
+
+        <NumpadInputSheet
+          visible={budgetNumpadOpen}
+          title={t('category.field.budget')}
+          initial={parseFloat(budget) || null}
+          currency={budgetCurrency}
+          onSubmit={(v) => { setBudget(String(v)); setBudgetNumpadOpen(false); }}
+          onClose={() => setBudgetNumpadOpen(false)}
+        />
       </SafeAreaView>
     </Modal>
   );
@@ -400,6 +413,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.border,
   },
+  inputText: { color: theme.text1, fontFamily: font.body, fontSize: sizes.md },
+  inputPlaceholder: { color: theme.text3 },
   currencyChip: {
     flexDirection: 'row',
     alignItems: 'center',

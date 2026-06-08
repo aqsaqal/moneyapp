@@ -33,6 +33,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { SettingRow } from '@/components/Sections';
+import { NumpadInputSheet } from '@/components/NumpadInputSheet';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { Icon } from '@/components/Icon';
@@ -90,6 +91,10 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const [name, setName] = useState(account?.name ?? '');
   const [balance, setBalance] = useState(String(account?.balance ?? ''));
   const [limit, setLimit] = useState(String(account?.creditLimit ?? ''));
+  // Open-state for the shared NumpadInputSheet. Each field that takes
+  // an amount routes through here so the user gets the same numpad
+  // UX as Smart Add (compact variant, ✓ spans 3 rows).
+  const [numpadField, setNumpadField] = useState<'balance' | 'limit' | null>(null);
   const [color, setColor] = useState(account?.color ?? '#00E09E');
   const [currency, setCurrency] = useState<CurrencyCode>(
     (account?.currency as CurrencyCode | null | undefined) ?? defaultCurrency,
@@ -338,14 +343,16 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
             <Text style={styles.fieldLabel}>
               {type === 'debt' ? t('account.field.amountOwed') : t('account.field.balance')}
             </Text>
-            <TextInput
-              value={balance}
-              onChangeText={setBalance}
-              keyboardType="numbers-and-punctuation"
-              placeholder="0"
-              placeholderTextColor={theme.text3}
+            <Pressable
+              onPress={() => setNumpadField('balance')}
               style={styles.input}
-            />
+              accessibilityRole="button"
+              accessibilityLabel={t('account.field.balance')}
+            >
+              <Text style={[styles.inputText, !balance && styles.inputPlaceholder]} numberOfLines={1}>
+                {balance || '0'}
+              </Text>
+            </Pressable>
             {editing && account && parseFloat(balance) !== account.balance && Number.isFinite(parseFloat(balance)) && (
               <Text style={styles.adjustHint}>
                 {t('account.adjustHint', {
@@ -360,14 +367,16 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
           {type === 'credit' && (
             <View style={styles.field}>
               <Text style={styles.fieldLabel}>{t('account.field.creditLimit')}</Text>
-              <TextInput
-                value={limit}
-                onChangeText={setLimit}
-                keyboardType="numbers-and-punctuation"
-                placeholder="0"
-                placeholderTextColor={theme.text3}
+              <Pressable
+                onPress={() => setNumpadField('limit')}
                 style={styles.input}
-              />
+                accessibilityRole="button"
+                accessibilityLabel={t('account.field.creditLimit')}
+              >
+                <Text style={[styles.inputText, !limit && styles.inputPlaceholder]} numberOfLines={1}>
+                  {limit || '0'}
+                </Text>
+              </Pressable>
             </View>
           )}
 
@@ -536,6 +545,30 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
             onClose={() => setTypePicker(false)}
           />
         </ScrollView>
+
+        <NumpadInputSheet
+          visible={numpadField != null}
+          title={
+            numpadField === 'limit'
+              ? t('account.field.creditLimit')
+              : type === 'debt'
+                ? t('account.field.amountOwed')
+                : t('account.field.balance')
+          }
+          initial={
+            numpadField === 'limit'
+              ? parseFloat(limit) || null
+              : parseFloat(balance) || null
+          }
+          currency={currency as CurrencyCode}
+          allowZero={numpadField === 'balance'}
+          onSubmit={(v) => {
+            if (numpadField === 'limit') setLimit(String(v));
+            else setBalance(String(v));
+            setNumpadField(null);
+          }}
+          onClose={() => setNumpadField(null)}
+        />
       </SafeAreaView>
     </Modal>
   );
@@ -584,6 +617,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.border,
   },
+  // Tappable Pressable styled like the TextInputs — shown when the
+  // field's value comes from NumpadInputSheet (balance, credit limit).
+  inputText: { color: theme.text1, fontFamily: font.body, fontSize: sizes.md },
+  inputPlaceholder: { color: theme.text3 },
   adjustHint: { color: theme.text3, fontSize: sizes.xs, fontStyle: 'italic' },
   palette: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
   swatch: { width: 36, height: 36, borderRadius: 18, borderWidth: 2, borderColor: 'transparent' },

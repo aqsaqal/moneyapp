@@ -29,8 +29,10 @@ export type CalcOp = '+' | '-' | '*' | '/';
 export interface NumpadProps {
   /** Digit / dot / percent / delete taps. Sends '0'-'9', '.', '%', 'del'. */
   onPress: (key: string) => void;
-  /** Tap on the calendar icon — open the date picker. */
-  onDate: () => void;
+  /** Tap on the calendar icon — open the date picker. Omit + pass compact
+   *  for sheets that don't need a date (account balance adjust, budget
+   *  edit, goal target). */
+  onDate?: () => void;
   /** Tap on the green primary key when in submit mode. */
   onSubmit: () => void;
   /** Tap on the primary key when in evaluate mode (math op queued). */
@@ -41,6 +43,10 @@ export interface NumpadProps {
   awaitingEval: boolean;
   /** Accessibility label for the submit key. Defaults to "Submit". */
   submitLabel?: string;
+  /** Compact mode — drops the calendar slot and lets the primary key
+   *  span rows 2-4 of its column. Used by every amount-input sheet
+   *  outside Smart Add. Default false preserves Smart Add's layout. */
+  compact?: boolean;
 }
 
 const OPS: { op: CalcOp; glyph: string; label: string }[] = [
@@ -58,6 +64,7 @@ export function Numpad({
   onCalcOp,
   awaitingEval,
   submitLabel = 'Submit',
+  compact = false,
 }: NumpadProps) {
   const haptics = useHaptics();
   const rtl = I18nManager.isRTL;
@@ -106,13 +113,14 @@ export function Numpad({
     </Pressable>
   );
 
-  const PrimaryAction = () => (
+  const PrimaryAction = ({ compact: c = false }: { compact?: boolean }) => (
     <Pressable
       onPressIn={haptics.tap}
       onPress={awaitingEval ? onEvaluate : onSubmit}
       style={({ pressed }) => [
         styles.key,
         styles.primaryKey,
+        c && styles.primaryKeyCompact,
         pressed && styles.keyPressed,
       ]}
       accessibilityRole="button"
@@ -144,8 +152,10 @@ export function Numpad({
       </View>
       <View style={styles.col}>
         <FnIcon icon="backspace-outline" onPress={() => onPress('del')} label="Delete" />
-        <FnIcon icon="calendar-outline" onPress={onDate} label="Pick date" />
-        <PrimaryAction />
+        {!compact && onDate && (
+          <FnIcon icon="calendar-outline" onPress={onDate} label="Pick date" />
+        )}
+        <PrimaryAction compact={compact} />
       </View>
     </View>
   );
@@ -180,6 +190,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.accent,
     borderColor: 'transparent',
   },
+  // Compact mode swallows the calendar slot — primary now spans
+  // rows 2-4 (three cells worth of height) instead of just two.
+  primaryKeyCompact: { flex: 3 },
   keyPressed: {
     backgroundColor: theme.bg4,
     transform: [{ scale: 0.94 }],

@@ -21,6 +21,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { SettingRow } from '@/components/Sections';
+import { NumpadInputSheet } from '@/components/NumpadInputSheet';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { upsertGoal, deleteGoal, useAccounts } from '@/hooks/useAppData';
 import { useT } from '@/hooks/useT';
@@ -58,6 +59,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
 
   const [name, setName] = useState(goal?.name ?? '');
   const [target, setTarget] = useState(String(goal?.targetAmount ?? ''));
+  const [numpadOpen, setNumpadOpen] = useState(false);
   const [accountId, setAccountId] = useState<string>(
     goal?.accountId ?? accounts.find((a) => a.type === 'savings')?.id ?? accounts[0]?.id ?? '',
   );
@@ -173,14 +175,16 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>{t('goal.targetAmount')}</Text>
-            <TextInput
-              value={target}
-              onChangeText={setTarget}
-              keyboardType="numbers-and-punctuation"
-              placeholder="0"
-              placeholderTextColor={theme.text3}
+            <Pressable
+              onPress={() => setNumpadOpen(true)}
               style={styles.input}
-            />
+              accessibilityRole="button"
+              accessibilityLabel={t('goal.targetAmount')}
+            >
+              <Text style={[styles.inputText, !target && styles.inputPlaceholder]} numberOfLines={1}>
+                {target || '0'}
+              </Text>
+            </Pressable>
           </View>
 
           <SettingRow
@@ -274,6 +278,15 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
             onClose={() => setCurrencyPickerOpen(false)}
           />
         </ScrollView>
+
+        <NumpadInputSheet
+          visible={numpadOpen}
+          title={t('goal.targetAmount')}
+          initial={parseFloat(target) || null}
+          currency={currency as CurrencyCode}
+          onSubmit={(v) => { setTarget(String(v)); setNumpadOpen(false); }}
+          onClose={() => setNumpadOpen(false)}
+        />
       </SafeAreaView>
     </Modal>
   );
@@ -322,6 +335,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.border,
   },
+  inputText: { color: theme.text1, fontFamily: font.body, fontSize: sizes.md },
+  inputPlaceholder: { color: theme.text3 },
   swatchRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   swatch: {
     width: 36,
