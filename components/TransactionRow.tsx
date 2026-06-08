@@ -5,6 +5,7 @@ import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Icon } from './Icon';
+import { useOncePress } from '@/hooks/useOncePress';
 import { theme, radii, font, sizes } from '@/constants/theme';
 import { catInfo } from '@/constants/categories';
 import { FeatureSlots } from '@/features';
@@ -114,7 +115,9 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountL
       <Swipeable renderRightActions={renderRightActions}>
         <Pressable
           onLongPress={() => setSheetOpen(true)}
-          onPress={onPressMore}
+          // Wrap the caller's onPress so a double-tap can't trigger
+          // two of whatever it does (open two edit modals, etc.).
+          onPress={useOncePress(() => onPressMore?.())}
           style={({ pressed }) => [styles.row, pressed && { backgroundColor: theme.bg3 }]}
           accessible
           accessibilityRole="button"

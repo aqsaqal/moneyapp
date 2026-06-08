@@ -22,6 +22,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { CartesianChart, Line, Area } from 'victory-native';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { useT } from '@/hooks/useT';
+import { useOncePress } from '@/hooks/useOncePress';
 import { kv } from '@/utils/kv';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import {
@@ -230,9 +231,9 @@ export default function AccountDetail() {
         {series.length >= 2 && (
           <Pressable
             style={styles.chartCard}
-            onPress={() =>
-              router.push({ pathname: '/account-balance', params: { id } } as never)
-            }
+            onPress={useOncePress(() =>
+              router.push({ pathname: '/account-balance', params: { id } } as never),
+            )}
             accessibilityRole="button"
             accessibilityLabel={t('account.chart.title')}
           >

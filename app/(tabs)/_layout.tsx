@@ -25,6 +25,7 @@ import { theme } from '@/constants/theme';
 import { PRIMARY_COLOR } from '@/constants/flavor';
 import { FabButton } from '@/components/FabButton';
 import { kv } from '@/utils/kv';
+import { useOncePress } from '@/hooks/useOncePress';
 import { useT } from '@/hooks/useT';
 import { emitTabReselect } from '@/utils/tabReselect';
 
@@ -129,13 +130,14 @@ export default function TabsLayout() {
       <View style={[styles.fabWrap, { bottom: fabBottom }]} pointerEvents="box-none">
         <FabButton
           // Read the swap flag at press time so toggling the setting takes
-          // effect immediately, no re-render of the tabs layout required.
-          onPress={() => {
+          // effect immediately. useOncePress swallows the second press
+          // inside 600 ms so a double-tap can't open two Smart Add modals.
+          onPress={useOncePress(() => {
             router.push(kv.getBool('fabSwapAction') ? '/category-grid' : '/add');
-          }}
-          onLongPress={() => {
+          })}
+          onLongPress={useOncePress(() => {
             router.push(kv.getBool('fabSwapAction') ? '/add' : '/category-grid');
-          }}
+          })}
         />
       </View>
     </View>

@@ -8,6 +8,7 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { useOncePress } from '@/hooks/useOncePress';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import {
@@ -49,6 +50,11 @@ export default function AccountsScreen() {
 function OverviewAndAccounts() {
   const t = useT();
   const router = useRouter();
+  // Debounced row open — without this a quick double-tap pushes two
+  // account-detail modals onto the stack.
+  const openAccount = useOncePress((id: string) =>
+    router.push(`/account/${id}` as never),
+  );
   const allAccounts = useAccounts({ includeArchived: true });
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   // Subscribe to FX bumps so balances re-convert when the cache updates.
@@ -197,7 +203,7 @@ function OverviewAndAccounts() {
                     (isExcluded || isArchived) && styles.acctCardDimmed,
                     isActive && { borderColor: theme.accent },
                   ]}
-                  onPress={() => router.push(`/account/${a.id}` as never)}
+                  onPress={() => openAccount(a.id)}
                   onLongPress={drag}
                   delayLongPress={300}
                   accessibilityRole="button"

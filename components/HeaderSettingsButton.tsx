@@ -10,13 +10,15 @@ import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme } from '@/constants/theme';
 import { useT } from '@/hooks/useT';
+import { useOncePress } from '@/hooks/useOncePress';
 
 export function HeaderSettingsButton() {
   const router = useRouter();
   const t = useT();
+  const openSettings = useOncePress(() => router.push('/settings' as never));
   return (
     <Pressable
-      onPress={() => router.push('/settings' as never)}
+      onPress={openSettings}
       style={({ pressed }) => [styles.btn, pressed && { opacity: 0.6 }]}
       hitSlop={10}
       accessibilityRole="button"

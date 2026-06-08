@@ -389,7 +389,16 @@ export default function AddScreen() {
     submitInner(opts);
   };
 
-  const submit = () => doSubmit();
+  // Guard against the user mashing ✓ — without this, a fast double-tap
+  // could insert the same transaction twice (the modal stays mounted
+  // long enough for the second tap to land before router.dismiss runs).
+  const submittingRef = React.useRef(false);
+  const submit = () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
+    setTimeout(() => { submittingRef.current = false; }, 1000);
+    doSubmit();
+  };
 
   const submitInner = (opts: { skipCashCheck?: boolean }) => {
     // Amount may be a tiny expression like "100+50*2" when calc mode

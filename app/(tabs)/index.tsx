@@ -18,6 +18,7 @@ import React, { useMemo, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Redirect, useRouter } from 'expo-router';
+import { useOncePress } from '@/hooks/useOncePress';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { APP_NAME } from '@/constants/flavor';
@@ -48,6 +49,7 @@ export default function Home() {
     return <Redirect href="/onboarding" />;
   }
   const router = useRouter();
+  const goActivity = useOncePress(() => router.push('/activity'));
   const t = useT();
   const activeProfile = useActiveProfile();
   const profiles = useProfiles();
@@ -300,7 +302,7 @@ export default function Home() {
             <View style={styles.recentHead}>
               <Text style={styles.sectionTitle}>{t('home.recent')}</Text>
               <Pressable
-                onPress={() => router.push('/activity')}
+                onPress={goActivity}
                 hitSlop={10}
                 accessibilityRole="link"
                 accessibilityLabel={t('home.viewAll')}

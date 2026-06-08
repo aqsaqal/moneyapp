@@ -5,7 +5,9 @@
 // in as a collapsible header. Plan owns "what's coming"; Activity owns
 // "what already happened."
 
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useOncePress } from '@/hooks/useOncePress';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -55,22 +57,25 @@ export default function Activity() {
     const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d;
   });
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
-  // Insights screen drops the user back here anchored to a chosen
-  // month via a kv handoff key. Read + clear on mount.
-  React.useEffect(() => {
+  // Insights / Home drop the user back here anchored to a chosen
+  // month + view via kv handoff keys. Use useFocusEffect (not a
+  // mount-only useEffect) because Activity is a tab screen: the
+  // first mount handles the cold-launch case, but every subsequent
+  // tap from Home / Insights re-focuses the same instance and the
+  // handoff would otherwise be silently dropped.
+  useFocusEffect(useCallback(() => {
     const jump = kv.get('activityJumpToMonth');
+    const v = kv.get('activityJumpToView');
     if (typeof jump === 'string' && /^\d{4}-\d{2}$/.test(jump)) {
       const [y, m] = jump.split('-').map(Number);
       setAnalyticsMonth(new Date(y, m - 1, 1));
-      // Caller-supplied view hint. Defaults to 'list' for backward
-      // compat with the Insights chart's drill-down.
-      const v = kv.get('activityJumpToView');
-      setView(v === 'categories' ? 'categories' : 'list');
       kv.delete('activityJumpToMonth');
+    }
+    if (v === 'categories' || v === 'list') {
+      setView(v);
       kv.delete('activityJumpToView');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, []));
   // List-view filter drawer: collapsed by default so the top of the
   // tab is just the title + segmented control. Tap the filter icon
   // to reveal the search bar + category chip row. The auto-open-on-
@@ -290,7 +295,7 @@ export default function Activity() {
               </Pressable>
             )}
             <Pressable
-              onPress={() => router.push('/insights' as never)}
+              onPress={useOncePress(() => router.push('/insights' as never))}
               style={styles.filterToggle}
               accessibilityRole="button"
               accessibilityLabel={t('insights.title')}
