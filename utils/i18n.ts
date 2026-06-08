@@ -230,6 +230,16 @@ export function onLocaleChange(listener: () => void): () => void {
 /** Translate a key. Variables: t('greet', { name: 'Sara' }) where the value
  *  is "Hi {name}". Falls back to English if the active locale doesn't have
  *  the key, then to the key itself if English doesn't either. */
+/** Read a key from a specific locale's dictionary without flipping the
+ *  active locale. Used by code paths that need to build per-locale
+ *  strings up-front (e.g. flood-filling custom_categories.name_translations
+ *  when stubbing a row for sort-order only). Falls back to English then
+ *  to the key itself, same as t(). */
+export function tForLocale(locale: LocaleCode, key: string): string {
+  const dict = DICTS[locale] ?? SOURCE;
+  return dict[key] ?? SOURCE[key] ?? key;
+}
+
 export function t(key: string, vars?: Record<string, string | number>): string {
   const dict = DICTS[currentLocale] ?? SOURCE;
   let raw = dict[key];

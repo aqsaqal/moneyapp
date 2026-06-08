@@ -500,6 +500,7 @@ function BudgetsSection() {
       <CategoryPicker
         visible={pickerOpen}
         mode="select"
+        transactionType="expense"
         excludeWithBudget
         showAddNew
         headerText={t('picker.pickCategoryToBudget')}

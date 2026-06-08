@@ -40,7 +40,7 @@ import { ensureDemoProfile } from '@/utils/db/demoSeed';
 import { FX_TTL_MS, oldestFetchedAt, refreshRates } from '@/utils/fx';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, localizedSeededName } from '@/constants/categories';
 import { kv } from '@/utils/kv';
-import { getLocale } from '@/utils/i18n';
+import { getLocale, tForLocale } from '@/utils/i18n';
 import { LOCALES } from '@/constants/locales';
 
 // Single process-wide version counter that all hooks watch. Bumped on every
@@ -401,11 +401,25 @@ export function setCategoryMeta(
     [id],
   ) as { id: string } | undefined;
   if (!existing) {
-    // Create: flood-fill the user's typed name across all 50 locales so
-    // it shows up uniformly until they re-edit in a specific language.
+    // Create: build a per-locale name map.
+    //   - If the caller supplied a name (user-typed), flood-fill it across
+    //     all 50 locales so the new custom category reads consistently
+    //     until they re-edit in a specific language.
+    //   - If no name was supplied (e.g. reorder of a seeded category that
+    //     never had a custom row before), populate each locale with the
+    //     seeded translation from i18n via tForLocale so we don't clobber
+    //     the user's localized display with the English seeded label.
     const initialName = patch.name ?? seeded?.name ?? id;
     const floodFilled: Record<string, string> = {};
-    for (const l of LOCALES) floodFilled[l.code] = initialName;
+    if (patch.name != null) {
+      for (const l of LOCALES) floodFilled[l.code] = initialName;
+    } else if (seeded) {
+      for (const l of LOCALES) {
+        floodFilled[l.code] = tForLocale(l.code, `cat.${id}`) || seeded.name;
+      }
+    } else {
+      for (const l of LOCALES) floodFilled[l.code] = initialName;
+    }
     raw.runSync(
       `INSERT INTO custom_categories
          (id, name, icon, color, type, created_at, is_pinned, archived,

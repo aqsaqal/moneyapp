@@ -35,7 +35,7 @@ import { useAccountBalanceHistory } from '@/hooks/useAccountBalanceHistory';
 import { TransactionRow } from '@/components/TransactionRow';
 import { AccountSheet } from '@/components/AccountSheet';
 import { Icon } from '@/components/Icon';
-import { buildEditPrefill, buildPrefill } from '@/utils/prefill';
+import { buildEditPrefill, encodePrefill } from '@/utils/prefill';
 
 const PAGE = 50;
 
@@ -306,7 +306,7 @@ export default function AccountDetail() {
             onPress={() =>
               router.push({
                 pathname: '/add',
-                params: { prefill: buildPrefill({ accountId: account.id }) },
+                params: { prefill: encodePrefill({ accountId: account.id }) },
               } as never)
             }
             hitSlop={6}
