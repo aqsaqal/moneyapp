@@ -144,7 +144,11 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const typeMeta = useMemo(() => TYPES.find((t) => t.value === type)!, [type]);
 
   const commitSave = (opts: { skipBalanceCheck?: boolean } = {}) => {
-    const balanceNum = parseFloat(balance.replace(',', '.'));
+    // Empty balance → 0. Letting the user save a new account with just
+    // a name (no typed 0) avoids a friction point on every first add.
+    const balanceNum = balance.trim() === ''
+      ? 0
+      : parseFloat(balance.replace(',', '.'));
     if (!name.trim() || !Number.isFinite(balanceNum)) {
       Alert.alert(t('common.required'), t('account.nameBalanceRequired'));
       return;
