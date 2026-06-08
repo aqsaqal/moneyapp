@@ -125,7 +125,7 @@
   "me.appearance.dark": "다크",
   "me.appearance.light": "라이트",
   "settings.title": "설정",
-  "settings.categories.title": "사용자 카테고리",
+  "settings.categories.title": "카테고리",
   "settings.categories.empty": "이름, 아이콘, 색으로 나만의 카테고리 만들기.",
   "settings.smartSuggestions.label": "자주 사용하는 가맹점 칩",
   "settings.smartSuggestions.bodyOn": "스마트 추가에서 최근 3개 거래를 빠른 입력 칩으로 표시.",

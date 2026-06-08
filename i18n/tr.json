@@ -117,7 +117,7 @@
   "me.appearance.dark": "Koyu",
   "me.appearance.light": "Açık",
   "settings.title": "Ayarlar",
-  "settings.categories.title": "Özel kategoriler",
+  "settings.categories.title": "Kategoriler",
   "settings.categories.empty": "Kendi kategorilerini ad, ikon ve renkle oluştur.",
   "settings.smartSuggestions.label": "Sık satıcı önerileri",
   "settings.smartSuggestions.bodyOn": "Son 3 işlem Smart Add'de tek-dokunuş ön doldurma çipleri olarak gösterilir.",

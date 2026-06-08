@@ -125,7 +125,7 @@
   "me.appearance.dark": "Тамно",
   "me.appearance.light": "Светло",
   "settings.title": "Подешавања",
-  "settings.categories.title": "Прилагођене категорије",
+  "settings.categories.title": "Категорије",
   "settings.categories.empty": "Креирај сопствене категорије са именом, иконом и бојом.",
   "settings.smartSuggestions.label": "Chips за честе трговце",
   "settings.smartSuggestions.bodyOn": "Прикажи 3 скорашње трансакције као брзе chips у Smart Add.",

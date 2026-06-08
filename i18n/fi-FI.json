@@ -125,7 +125,7 @@
   "me.appearance.dark": "Tumma",
   "me.appearance.light": "Vaalea",
   "settings.title": "Asetukset",
-  "settings.categories.title": "Mukautetut kategoriat",
+  "settings.categories.title": "Kategoriat",
   "settings.categories.empty": "Luo omat kategoriasi nimellä, kuvakkeella ja värillä.",
   "settings.smartSuggestions.label": "Usein käytetyt kauppiaat -palaset",
   "settings.smartSuggestions.bodyOn": "Näytä 3 viimeisintä tapahtumaa pikapalasina Smart Add -näkymässä.",

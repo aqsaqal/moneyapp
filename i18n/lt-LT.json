@@ -125,7 +125,7 @@
   "me.appearance.dark": "Tamsi",
   "me.appearance.light": "Šviesi",
   "settings.title": "Nustatymai",
-  "settings.categories.title": "Tinkintos kategorijos",
+  "settings.categories.title": "Kategorijos",
   "settings.categories.empty": "Sukurk savo kategorijas su pavadinimu, ikona ir spalva.",
   "settings.smartSuggestions.label": "Dažnų pirklių lustai",
   "settings.smartSuggestions.bodyOn": "Rodyti 3 naujausias operacijas kaip greitus lustus Smart Add.",

@@ -125,7 +125,7 @@
   "me.appearance.dark": "Тъмен",
   "me.appearance.light": "Светъл",
   "settings.title": "Настройки",
-  "settings.categories.title": "Персонализирани категории",
+  "settings.categories.title": "Категории",
   "settings.categories.empty": "Създайте свои категории с име, икона и цвят.",
   "settings.smartSuggestions.label": "Чипове за чести търговци",
   "settings.smartSuggestions.bodyOn": "Показвайте 3 скорошни транзакции като бързи чипове в Smart Add.",

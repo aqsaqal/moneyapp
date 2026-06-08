@@ -117,7 +117,7 @@
   "me.appearance.dark": "Тёмное",
   "me.appearance.light": "Светлое",
   "settings.title": "Настройки",
-  "settings.categories.title": "Свои категории",
+  "settings.categories.title": "Категории",
   "settings.categories.empty": "Создайте свои категории с именем, иконкой и цветом.",
   "settings.smartSuggestions.label": "Чипы частых операций",
   "settings.smartSuggestions.bodyOn": "Показывать топ-3 недавних транзакции как чипы быстрой подсказки в Smart Add.",

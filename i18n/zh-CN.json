@@ -125,7 +125,7 @@
   "me.appearance.dark": "深色",
   "me.appearance.light": "浅色",
   "settings.title": "设置",
-  "settings.categories.title": "自定义分类",
+  "settings.categories.title": "分类",
   "settings.categories.empty": "创建自己的分类，含名称、图标和颜色。",
   "settings.smartSuggestions.label": "常用商家芯片",
   "settings.smartSuggestions.bodyOn": "在智能添加中显示最近 3 笔交易作为快速填充芯片。",

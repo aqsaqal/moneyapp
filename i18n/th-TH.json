@@ -125,7 +125,7 @@
   "me.appearance.dark": "มืด",
   "me.appearance.light": "สว่าง",
   "settings.title": "การตั้งค่า",
-  "settings.categories.title": "หมวดที่กำหนดเอง",
+  "settings.categories.title": "หมวดหมู่",
   "settings.categories.empty": "สร้างหมวดของคุณพร้อมชื่อ ไอคอน และสี",
   "settings.smartSuggestions.label": "ชิปร้านค้าที่ใช้บ่อย",
   "settings.smartSuggestions.bodyOn": "แสดง 3 ธุรกรรมล่าสุดเป็นชิปเติมเต็มใน Smart Add",

@@ -125,7 +125,7 @@
   "me.appearance.dark": "Sombre",
   "me.appearance.light": "Clair",
   "settings.title": "Paramètres",
-  "settings.categories.title": "Catégories personnalisées",
+  "settings.categories.title": "Catégories",
   "settings.categories.empty": "Crée tes catégories avec nom, icône et couleur.",
   "settings.smartSuggestions.label": "Puces de marchands fréquents",
   "settings.smartSuggestions.bodyOn": "Afficher les 3 dernières transactions comme puces de pré-remplissage dans Smart Add.",

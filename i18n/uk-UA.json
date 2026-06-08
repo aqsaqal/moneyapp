@@ -125,7 +125,7 @@
   "me.appearance.dark": "Темний",
   "me.appearance.light": "Світлий",
   "settings.title": "Налаштування",
-  "settings.categories.title": "Власні категорії",
+  "settings.categories.title": "Категорії",
   "settings.categories.empty": "Створи власні категорії з назвою, іконкою та кольором.",
   "settings.smartSuggestions.label": "Чіпи частих продавців",
   "settings.smartSuggestions.bodyOn": "Показати 3 останні операції як чіпи швидкого заповнення в Smart Add.",

@@ -125,7 +125,7 @@
   "me.appearance.dark": "Sötét",
   "me.appearance.light": "Világos",
   "settings.title": "Beállítások",
-  "settings.categories.title": "Egyéni kategóriák",
+  "settings.categories.title": "Kategóriák",
   "settings.categories.empty": "Hozz létre saját kategóriákat névvel, ikonnal és színnel.",
   "settings.smartSuggestions.label": "Gyakori kereskedők chipek",
   "settings.smartSuggestions.bodyOn": "3 legutóbbi tranzakció gyors chipként az Okos hozzáadásban.",

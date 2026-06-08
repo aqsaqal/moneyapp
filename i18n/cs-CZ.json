@@ -125,7 +125,7 @@
   "me.appearance.dark": "Tmavý",
   "me.appearance.light": "Světlý",
   "settings.title": "Nastavení",
-  "settings.categories.title": "Vlastní kategorie",
+  "settings.categories.title": "Kategorie",
   "settings.categories.empty": "Vytvoř si vlastní kategorie se jménem, ikonou a barvou.",
   "settings.smartSuggestions.label": "Chipy častých obchodníků",
   "settings.smartSuggestions.bodyOn": "Zobraz 3 poslední transakce jako rychlé chipy v Smart Add.",

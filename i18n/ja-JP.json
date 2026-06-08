@@ -125,7 +125,7 @@
   "me.appearance.dark": "ダーク",
   "me.appearance.light": "ライト",
   "settings.title": "設定",
-  "settings.categories.title": "カスタムカテゴリ",
+  "settings.categories.title": "カテゴリー",
   "settings.categories.empty": "名前・アイコン・色を指定して独自のカテゴリを作成。",
   "settings.smartSuggestions.label": "頻出店舗チップ",
   "settings.smartSuggestions.bodyOn": "Smart Add で最近 3 件の取引を入力補助チップとして表示。",

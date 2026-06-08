@@ -125,7 +125,7 @@
   "me.appearance.dark": "Ciemny",
   "me.appearance.light": "Jasny",
   "settings.title": "Ustawienia",
-  "settings.categories.title": "Własne kategorie",
+  "settings.categories.title": "Kategorie",
   "settings.categories.empty": "Utwórz kategorie z własną nazwą, ikoną i kolorem.",
   "settings.smartSuggestions.label": "Chipsy częstych sprzedawców",
   "settings.smartSuggestions.bodyOn": "Pokazuj 3 ostatnie transakcje jako chipsy szybkiego wypełnienia w Smart Add.",

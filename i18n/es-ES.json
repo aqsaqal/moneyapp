@@ -125,7 +125,7 @@
   "me.appearance.dark": "Oscuro",
   "me.appearance.light": "Claro",
   "settings.title": "Ajustes",
-  "settings.categories.title": "Categorías personalizadas",
+  "settings.categories.title": "Categorías",
   "settings.categories.empty": "Crea tus propias categorías con nombre, icono y color.",
   "settings.smartSuggestions.label": "Chips de comercios frecuentes",
   "settings.smartSuggestions.bodyOn": "Mostrar las 3 transacciones recientes como chips de relleno rápido en Smart Add.",

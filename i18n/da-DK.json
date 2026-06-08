@@ -125,7 +125,7 @@
   "me.appearance.dark": "Mørk",
   "me.appearance.light": "Lys",
   "settings.title": "Indstillinger",
-  "settings.categories.title": "Brugerdefinerede kategorier",
+  "settings.categories.title": "Kategorier",
   "settings.categories.empty": "Opret dine egne kategorier med navn, ikon og farve.",
   "settings.smartSuggestions.label": "Chips til hyppige købmænd",
   "settings.smartSuggestions.bodyOn": "Vis 3 seneste transaktioner som hurtige chips i Smart Add.",

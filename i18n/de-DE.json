@@ -125,7 +125,7 @@
   "me.appearance.dark": "Dunkel",
   "me.appearance.light": "Hell",
   "settings.title": "Einstellungen",
-  "settings.categories.title": "Eigene Kategorien",
+  "settings.categories.title": "Kategorien",
   "settings.categories.empty": "Erstelle eigene Kategorien mit Name, Symbol und Farbe.",
   "settings.smartSuggestions.label": "Häufige-Händler-Chips",
   "settings.smartSuggestions.bodyOn": "Die 3 letzten Buchungen als Schnellbefüllung in Smart Add anzeigen.",

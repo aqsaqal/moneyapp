@@ -152,7 +152,7 @@
   "me.appearance.dark": "Dark",
   "me.appearance.light": "Light",
   "settings.title": "Settings",
-  "settings.categories.title": "Custom categories",
+  "settings.categories.title": "Categories",
   "settings.categories.empty": "Create your own categories with custom name, icon, and color.",
   "settings.smartSuggestions.label": "Frequent merchant chips",
   "settings.smartSuggestions.bodyOn": "Show top-3 recent transactions as one-tap prefill chips in Smart Add.",

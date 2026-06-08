@@ -125,7 +125,7 @@
   "me.appearance.dark": "Σκούρο",
   "me.appearance.light": "Φωτεινό",
   "settings.title": "Ρυθμίσεις",
-  "settings.categories.title": "Προσαρμοσμένες κατηγορίες",
+  "settings.categories.title": "Κατηγορίες",
   "settings.categories.empty": "Δημιούργησε δικές σου κατηγορίες με όνομα, εικονίδιο και χρώμα.",
   "settings.smartSuggestions.label": "Chips για συχνούς εμπόρους",
   "settings.smartSuggestions.bodyOn": "Εμφάνιση 3 πρόσφατων συναλλαγών ως γρήγορα chips στο Smart Add.",

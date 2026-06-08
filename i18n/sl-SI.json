@@ -125,7 +125,7 @@
   "me.appearance.dark": "Temno",
   "me.appearance.light": "Svetlo",
   "settings.title": "Nastavitve",
-  "settings.categories.title": "Prilagojene kategorije",
+  "settings.categories.title": "Kategorije",
   "settings.categories.empty": "Ustvari svoje kategorije z imenom, ikono in barvo.",
   "settings.smartSuggestions.label": "Chips pogostih trgovcev",
   "settings.smartSuggestions.bodyOn": "Prikaži 3 nedavne transakcije kot hitre chips v Smart Add.",

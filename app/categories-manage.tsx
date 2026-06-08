@@ -22,7 +22,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
-import { SectionHeader } from '@/components/Sections';
 import {
   useCategoriesWithMeta,
   reorderCategories,
@@ -80,16 +79,6 @@ export default function CategoriesManageScreen() {
     const next: Tab = i === 0 ? 'expense' : 'income';
     if (next !== tab) setTab(next);
   };
-
-  const Header = (
-    <View style={{ marginBottom: spacing.sm }}>
-      <SectionHeader
-        title=""
-        onAdd={() => setEditing(null)}
-        addLabel={t('common.add')}
-      />
-    </View>
-  );
 
   const Footer = (
     <View style={{ marginTop: spacing.md }}>
@@ -168,7 +157,15 @@ export default function CategoriesManageScreen() {
           <MaterialCommunityIcons name="close" size={24} color={theme.text1} />
         </Pressable>
         <Text style={styles.title}>{t('settings.categories.title')}</Text>
-        <View style={{ width: 24 }} />
+        <Pressable
+          onPress={() => setEditing(null)}
+          hitSlop={10}
+          style={styles.headerAdd}
+          accessibilityRole="button"
+          accessibilityLabel={t('common.add')}
+        >
+          <MaterialCommunityIcons name="plus" size={20} color={theme.bg} />
+        </Pressable>
       </View>
 
       <View style={styles.tabs}>
@@ -196,7 +193,6 @@ export default function CategoriesManageScreen() {
           <DraggableFlatList
             data={partition.expense}
             keyExtractor={(c) => c.id}
-            ListHeaderComponent={Header}
             ListFooterComponent={tab === 'expense' ? Footer : undefined}
             contentContainerStyle={styles.scroll}
             activationDistance={20}
@@ -254,6 +250,11 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   title: { color: theme.text1, fontSize: sizes.xl, fontFamily: font.displayBold },
+  headerAdd: {
+    width: 32, height: 32, borderRadius: 16,
+    backgroundColor: theme.accent,
+    alignItems: 'center', justifyContent: 'center',
+  },
   tabs: {
     flexDirection: 'row',
     gap: spacing.sm,
