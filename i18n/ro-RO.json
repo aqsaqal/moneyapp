@@ -483,5 +483,6 @@
   "settings.demo.title": "Recreezi profilul demo?",
   "settings.demo.body": "Acest lucru va șterge profilul Demo existent (dacă există) și îl va reconstrui cu date exemplu. Profilurile tale personale nu vor fi afectate.",
   "settings.demo.cta": "Recreează",
-  "recurring.skipped": "Sărit"
+  "recurring.skipped": "Sărit",
+  "account.archivedOn": "Arhivat pe {date}"
 }

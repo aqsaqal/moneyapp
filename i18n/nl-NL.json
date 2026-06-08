@@ -483,5 +483,6 @@
   "settings.demo.title": "Demoprofiel opnieuw maken?",
   "settings.demo.body": "Dit verwijdert het bestaande demoprofiel (indien aanwezig) en bouwt het opnieuw op met voorbeeldgegevens. Je eigen profielen worden niet beïnvloed.",
   "settings.demo.cta": "Opnieuw maken",
-  "recurring.skipped": "Overgeslagen"
+  "recurring.skipped": "Overgeslagen",
+  "account.archivedOn": "Gearchiveerd op {date}"
 }

@@ -483,5 +483,6 @@
   "settings.demo.title": "Ponovno stvoriti demo profil?",
   "settings.demo.body": "Ovo će izbrisati postojeći demo profil (ako postoji) i ponovno ga izgraditi s primjerima podataka. Vaši osobni profili neće biti pogođeni.",
   "settings.demo.cta": "Ponovno stvori",
-  "recurring.skipped": "Preskočeno"
+  "recurring.skipped": "Preskočeno",
+  "account.archivedOn": "Arhivirano {date}"
 }

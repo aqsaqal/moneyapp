@@ -483,5 +483,6 @@
   "settings.demo.title": "Újralétrehozza a demo profilt?",
   "settings.demo.body": "Ez törli a meglévő Demo profilt (ha van) és újra felépíti mintaadatokkal. A saját profiljaid nem érintettek.",
   "settings.demo.cta": "Újralétrehozás",
-  "recurring.skipped": "Kihagyva"
+  "recurring.skipped": "Kihagyva",
+  "account.archivedOn": "Archiválva: {date}"
 }

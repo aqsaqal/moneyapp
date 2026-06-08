@@ -483,5 +483,6 @@
   "settings.demo.title": "重建演示档案？",
   "settings.demo.body": "这将删除现有的演示档案（如果有）并使用示例数据重新构建。您自己的档案不会受到影响。",
   "settings.demo.cta": "重建",
-  "recurring.skipped": "已跳过"
+  "recurring.skipped": "已跳过",
+  "account.archivedOn": "于 {date} 归档"
 }

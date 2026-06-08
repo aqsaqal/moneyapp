@@ -482,5 +482,6 @@
   "settings.demo.title": "Demo profili yeniden oluşturulsun mu?",
   "settings.demo.body": "Bu, mevcut Demo profilini (varsa) silecek ve örnek verilerle yeniden oluşturacaktır. Kendi profilleriniz etkilenmez.",
   "settings.demo.cta": "Yeniden oluştur",
-  "recurring.skipped": "Atlandı"
+  "recurring.skipped": "Atlandı",
+  "account.archivedOn": "{date} tarihinde arşivlendi"
 }

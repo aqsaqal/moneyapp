@@ -483,5 +483,6 @@
   "settings.demo.title": "Tengeneza upya wasifu wa demo?",
   "settings.demo.body": "Hii itafuta wasifu wa Demo uliopo (kama upo) na kuujenga upya kwa data ya sampuli. Wasifu wako mwenyewe hautaathirika.",
   "settings.demo.cta": "Tengeneza upya",
-  "recurring.skipped": "Imerukwa"
+  "recurring.skipped": "Imerukwa",
+  "account.archivedOn": "Iliyohifadhiwa {date}"
 }

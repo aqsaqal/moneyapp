@@ -483,5 +483,6 @@
   "settings.demo.title": "Gjenopprette demoprofil?",
   "settings.demo.body": "Dette vil slette den eksisterende demoprofilen (hvis noen) og bygge den opp på nytt med eksempeldata. Dine egne profiler påvirkes ikke.",
   "settings.demo.cta": "Gjenopprett",
-  "recurring.skipped": "Hoppet over"
+  "recurring.skipped": "Hoppet over",
+  "account.archivedOn": "Arkivert {date}"
 }

@@ -1014,8 +1014,17 @@ export function reorderCategories(orderedIds: string[]): void {
 export function upsertAccount(a: typeof accounts.$inferInsert): void {
   const db = getDB();
   const existing = db.select().from(accounts).where(eq(accounts.id, a.id)).get();
-  if (existing) db.update(accounts).set(a).where(eq(accounts.id, a.id)).run();
-  else db.insert(accounts).values(a).run();
+  // Stamp archived_at when the flag transitions 0 → 1; clear it on
+  // unarchive so re-archiving later writes a fresh timestamp.
+  const willArchive = a.archived === 1 && existing?.archived !== 1;
+  const willUnarchive = a.archived !== 1 && existing?.archived === 1;
+  const next = willArchive
+    ? { ...a, archivedAt: Date.now() }
+    : willUnarchive
+      ? { ...a, archivedAt: null }
+      : a;
+  if (existing) db.update(accounts).set(next).where(eq(accounts.id, a.id)).run();
+  else db.insert(accounts).values(next).run();
   try { refreshTodaySnapshot(); } catch { /* never block account write */ }
   bump();
 }

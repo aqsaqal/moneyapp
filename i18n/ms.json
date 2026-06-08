@@ -482,5 +482,6 @@
   "settings.demo.title": "Cipta semula profil demo?",
   "settings.demo.body": "Ini akan memadamkan profil Demo yang sedia ada (jika ada) dan membinanya semula dengan data sampel. Profil peribadi anda tidak akan terjejas.",
   "settings.demo.cta": "Cipta semula",
-  "recurring.skipped": "Dilangkau"
+  "recurring.skipped": "Dilangkau",
+  "account.archivedOn": "Diarkibkan pada {date}"
 }

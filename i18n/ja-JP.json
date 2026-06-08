@@ -483,5 +483,6 @@
   "settings.demo.title": "デモプロファイルを再作成しますか？",
   "settings.demo.body": "これにより既存のデモプロファイル（あれば）が削除され、サンプルデータで再構築されます。あなた自身のプロファイルには影響しません。",
   "settings.demo.cta": "再作成",
-  "recurring.skipped": "スキップ済み"
+  "recurring.skipped": "スキップ済み",
+  "account.archivedOn": "{date} にアーカイブ"
 }

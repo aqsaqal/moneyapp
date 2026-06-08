@@ -243,6 +243,16 @@ export default function AccountDetail() {
               </Text>
             )}
           </Text>
+          {account.archived === 1 && (
+            <View style={styles.archivedRow}>
+              <MaterialCommunityIcons name="archive-outline" size={14} color={theme.warning} />
+              <Text style={styles.archivedText}>
+                {account.archivedAt
+                  ? t('account.archivedOn', { date: new Date(account.archivedAt).toLocaleDateString() })
+                  : t('categories.archived')}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* Balance chart with period selector + subtitle. Whole block
@@ -435,6 +445,17 @@ const styles = StyleSheet.create({
   },
   type: { color: theme.text3, fontSize: sizes.sm },
   typeSince: { color: theme.text3, fontSize: sizes.sm },
+  archivedRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 6,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    backgroundColor: `${theme.warning}22`,
+    borderRadius: radii.md,
+  },
+  archivedText: { color: theme.warning, fontSize: sizes.xs, fontFamily: font.bodySemi },
   chartWrap: { height: 120 },
   chartCard: {
     padding: spacing.md,

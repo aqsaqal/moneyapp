@@ -483,5 +483,6 @@
   "settings.demo.title": "Demo profilni qayta yaratasizmi?",
   "settings.demo.body": "Bu mavjud Demo profilni o'chiradi (agar bo'lsa) va uni namuna ma'lumotlari bilan qayta quradi. Sizning shaxsiy profillaringizga ta'sir qilmaydi.",
   "settings.demo.cta": "Qayta yaratish",
-  "recurring.skipped": "O'tkazib yuborildi"
+  "recurring.skipped": "O'tkazib yuborildi",
+  "account.archivedOn": "{date} sanasida arxivlandi"
 }

@@ -483,5 +483,6 @@
   "settings.demo.title": "Utworzyć ponownie profil demo?",
   "settings.demo.body": "Spowoduje to usunięcie istniejącego profilu Demo (jeśli istnieje) i odbudowanie go z przykładowymi danymi. Twoje własne profile nie zostaną naruszone.",
   "settings.demo.cta": "Utwórz ponownie",
-  "recurring.skipped": "Pominięto"
+  "recurring.skipped": "Pominięto",
+  "account.archivedOn": "Zarchiwizowano {date}"
 }

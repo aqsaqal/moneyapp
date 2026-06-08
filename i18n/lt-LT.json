@@ -483,5 +483,6 @@
   "settings.demo.title": "Atkurti demonstracinį profilį?",
   "settings.demo.body": "Tai ištrins esamą demonstracinį profilį (jei toks yra) ir vėl jį sukurs su pavyzdiniais duomenimis. Jūsų asmeniniai profiliai nebus paveikti.",
   "settings.demo.cta": "Atkurti",
-  "recurring.skipped": "Praleista"
+  "recurring.skipped": "Praleista",
+  "account.archivedOn": "Archyvuota {date}"
 }

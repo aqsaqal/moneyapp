@@ -87,6 +87,10 @@ export const accounts = sqliteTable('accounts', {
   // historical transactions still resolve to it. Default 0.
   includeInTotal: integer('include_in_total'),   // 0 / 1; null = 1
   archived: integer('archived'),                 // 0 / 1; null = 0
+  // Unix-ms stamp set when upsertAccount sees archived flip 0 → 1.
+  // Null for accounts that were never archived; surfaced in the
+  // detail screen as "Archived on {date}".
+  archivedAt: integer('archived_at'),
 });
 
 // Phase 10k: cached daily exchange rates from frankfurter.app. Rows are

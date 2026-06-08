@@ -482,5 +482,6 @@
   "settings.demo.title": "إعادة إنشاء الملف التجريبي؟",
   "settings.demo.body": "سيؤدي هذا إلى حذف الملف التجريبي الحالي (إن وجد) وإعادة إنشائه ببيانات تجريبية. لن تتأثر ملفاتك الخاصة.",
   "settings.demo.cta": "إعادة الإنشاء",
-  "recurring.skipped": "تخطّى"
+  "recurring.skipped": "تخطّى",
+  "account.archivedOn": "مؤرشف في {date}"
 }

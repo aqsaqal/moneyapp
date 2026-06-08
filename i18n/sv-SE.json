@@ -483,5 +483,6 @@
   "settings.demo.title": "Återskapa demoprofil?",
   "settings.demo.body": "Detta tar bort den befintliga demoprofilen (om någon) och bygger upp den igen med exempeldata. Dina egna profiler påverkas inte.",
   "settings.demo.cta": "Återskapa",
-  "recurring.skipped": "Hoppade över"
+  "recurring.skipped": "Hoppade över",
+  "account.archivedOn": "Arkiverat {date}"
 }

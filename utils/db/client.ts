@@ -269,6 +269,13 @@ function createTables(db: SQLite.SQLiteDatabase) {
     if (!cols.some((c) => c.name === 'archived')) {
       db.execSync(`ALTER TABLE accounts ADD COLUMN archived INTEGER;`);
     }
+    // Timestamp set on the transition archived=0 → 1 so the account
+    // detail screen can show "Archived on {date}". Null for accounts
+    // that have never been archived; the column is filled by
+    // upsertAccount when it sees the flag flip.
+    if (!cols.some((c) => c.name === 'archived_at')) {
+      db.execSync(`ALTER TABLE accounts ADD COLUMN archived_at INTEGER;`);
+    }
   } catch {
     /* swallow */
   }

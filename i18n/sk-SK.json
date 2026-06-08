@@ -483,5 +483,6 @@
   "settings.demo.title": "Znova vytvoriť demo profil?",
   "settings.demo.body": "Tým sa odstráni existujúci demo profil (ak existuje) a znova sa vytvorí s ukážkovými údajmi. Vaše vlastné profily nebudú ovplyvnené.",
   "settings.demo.cta": "Znova vytvoriť",
-  "recurring.skipped": "Preskočené"
+  "recurring.skipped": "Preskočené",
+  "account.archivedOn": "Archivované {date}"
 }

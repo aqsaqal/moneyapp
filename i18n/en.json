@@ -462,6 +462,7 @@
   "account.chart.subtitle.all": "over all time",
   "account.chart.empty": "Add more transactions to see your balance trend.",
   "account.since": "Since {date}",
+  "account.archivedOn": "Archived on {date}",
   "recurring.skipped": "Skipped",
   "common.remove": "Remove",
   "plan.menu.pause": "Pause",

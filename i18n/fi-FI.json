@@ -483,5 +483,6 @@
   "settings.demo.title": "Luodaanko demoprofiili uudelleen?",
   "settings.demo.body": "Tämä poistaa olemassa olevan demoprofiilin (jos sellainen on) ja rakentaa sen uudelleen esimerkkitiedoilla. Omat profiilisi eivät muutu.",
   "settings.demo.cta": "Luo uudelleen",
-  "recurring.skipped": "Ohitettu"
+  "recurring.skipped": "Ohitettu",
+  "account.archivedOn": "Arkistoitu {date}"
 }

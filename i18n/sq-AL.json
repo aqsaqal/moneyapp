@@ -483,5 +483,6 @@
   "settings.demo.title": "Rikrijo profilin demo?",
   "settings.demo.body": "Kjo do të fshijë profilin Demo ekzistues (nëse ka) dhe do ta rindërtojë me të dhëna mostër. Profilet tuaja personale nuk do të preken.",
   "settings.demo.cta": "Rikrijo",
-  "recurring.skipped": "Anashkaluar"
+  "recurring.skipped": "Anashkaluar",
+  "account.archivedOn": "Arkivuar më {date}"
 }

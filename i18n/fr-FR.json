@@ -483,5 +483,6 @@
   "settings.demo.title": "Recréer le profil démo ?",
   "settings.demo.body": "Cela supprimera le profil démo existant (le cas échéant) et le reconstruira avec des données d'exemple. Vos propres profils ne sont pas affectés.",
   "settings.demo.cta": "Recréer",
-  "recurring.skipped": "Sauté"
+  "recurring.skipped": "Sauté",
+  "account.archivedOn": "Archivé le {date}"
 }

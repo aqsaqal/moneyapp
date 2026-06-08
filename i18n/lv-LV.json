@@ -483,5 +483,6 @@
   "settings.demo.title": "Atjaunot demonstrācijas profilu?",
   "settings.demo.body": "Tas izdzēsīs esošo demonstrācijas profilu (ja tāds ir) un izveidos to no jauna ar paraugu datiem. Jūsu personīgie profili netiks ietekmēti.",
   "settings.demo.cta": "Atjaunot",
-  "recurring.skipped": "Izlaists"
+  "recurring.skipped": "Izlaists",
+  "account.archivedOn": "Arhivēts {date}"
 }

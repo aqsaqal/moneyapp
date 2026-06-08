@@ -483,5 +483,6 @@
   "settings.demo.title": "Demoprofil neu erstellen?",
   "settings.demo.body": "Dies löscht das vorhandene Demoprofil (falls vorhanden) und baut es mit Beispieldaten neu auf. Ihre eigenen Profile sind nicht betroffen.",
   "settings.demo.cta": "Neu erstellen",
-  "recurring.skipped": "Übersprungen"
+  "recurring.skipped": "Übersprungen",
+  "account.archivedOn": "Archiviert am {date}"
 }

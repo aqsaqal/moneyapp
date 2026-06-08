@@ -483,5 +483,6 @@
   "settings.demo.title": "Likhain muli ang demo profile?",
   "settings.demo.body": "Tatanggalin nito ang umiiral na Demo profile (kung mayroon) at muling itatayo gamit ang sample data. Ang sarili mong profiles ay hindi maaapektuhan.",
   "settings.demo.cta": "Likhain muli",
-  "recurring.skipped": "Nilaktawan"
+  "recurring.skipped": "Nilaktawan",
+  "account.archivedOn": "Na-archive noong {date}"
 }

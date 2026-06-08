@@ -483,5 +483,6 @@
   "settings.demo.title": "Tạo lại hồ sơ demo?",
   "settings.demo.body": "Thao tác này sẽ xóa hồ sơ Demo hiện có (nếu có) và xây dựng lại với dữ liệu mẫu. Hồ sơ cá nhân của bạn sẽ không bị ảnh hưởng.",
   "settings.demo.cta": "Tạo lại",
-  "recurring.skipped": "Đã bỏ qua"
+  "recurring.skipped": "Đã bỏ qua",
+  "account.archivedOn": "Đã lưu trữ vào {date}"
 }

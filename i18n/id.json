@@ -482,5 +482,6 @@
   "settings.demo.title": "Buat ulang profil demo?",
   "settings.demo.body": "Ini akan menghapus profil Demo yang ada (jika ada) dan membangunnya kembali dengan data contoh. Profil pribadi Anda tidak akan terpengaruh.",
   "settings.demo.cta": "Buat ulang",
-  "recurring.skipped": "Dilewati"
+  "recurring.skipped": "Dilewati",
+  "account.archivedOn": "Diarsipkan pada {date}"
 }
