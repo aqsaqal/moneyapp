@@ -49,7 +49,16 @@ export default function Home() {
     return <Redirect href="/onboarding" />;
   }
   const router = useRouter();
-  const goActivity = useOncePress(() => router.push('/activity'));
+  // Recent → "View all" — drop the user into Activity's LIST view
+  // anchored to the current month (mirrors MonthGlance's handoff but
+  // with view='list' since that section is the chronological feed).
+  const goActivity = useOncePress(() => {
+    const now = new Date();
+    const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+    kv.set('activityJumpToMonth', monthKey);
+    kv.set('activityJumpToView', 'list');
+    router.push('/activity');
+  });
   const t = useT();
   const activeProfile = useActiveProfile();
   const profiles = useProfiles();
