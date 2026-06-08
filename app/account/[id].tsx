@@ -121,18 +121,44 @@ export default function AccountDetail() {
 
   const onDelete = () => {
     setMenuOpen(false);
-    // Match AccountSheet's archive-vs-delete flow: the body string
-    // includes counts of direct expenses/incomes vs transfers so the
-    // user can weigh the destructive option.
-    const directCount = txns.filter(
-      (x) => (x.type === 'expense' || x.type === 'income') && x.accountId === account.id,
-    ).length;
-    const transferCount = txns.filter(
-      (x) => x.type === 'transfer' && (x.accountId === account.id || x.toAccountId === account.id),
-    ).length;
+    // useTransactions(accountId: id) already scopes to this account, so
+    // the filter is just a partition by type.
+    const directCount = txns.filter((x) => x.type === 'expense' || x.type === 'income').length;
+    const transferCount = txns.filter((x) => x.type === 'transfer').length;
+
+    // Pop the screen FIRST, then delete on the next tick. The detail
+    // screen reads `account` from useAccounts; after deletion that read
+    // returns undefined and any render-in-flight would dereference a
+    // missing row. Unmounting first sidesteps the race entirely.
+    const acctId = account.id;
+    const acctRef = account;
+    const doDelete = () => {
+      router.back();
+      setTimeout(() => deleteAccountCascade(acctId), 0);
+    };
+
+    // Clean account (no operations, no transfers) — skip the
+    // archive-vs-delete dance. A single "Delete <name>?" confirm is
+    // less confusing than reading "0 ops will be deleted, 0 transfers
+    // preserved."
+    if (directCount === 0 && transferCount === 0) {
+      Alert.alert(
+        t('account.deleteConfirm.title'),
+        `${acctRef.name} — ${t('common.cannotBeUndone')}`,
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          { text: t('common.delete'), style: 'destructive', onPress: doDelete },
+        ],
+      );
+      return;
+    }
+
+    // Has data: archive is the safer default; delete walks through a
+    // second confirmation so the "..." button still surfaces the
+    // destructive option but doesn't fire it accidentally.
     const summary = t('account.delete.body', {
-      name: account.name,
-      balance: account.balance.toFixed(2),
+      name: acctRef.name,
+      balance: acctRef.balance.toFixed(2),
       currency: ac,
       directCount,
       transferCount,
@@ -143,10 +169,10 @@ export default function AccountDetail() {
         text: t('account.archive'),
         onPress: () => {
           upsertAccount({
-            ...account,
+            ...acctRef,
             archived: 1,
             includeInTotal: 0,
-          } as typeof account);
+          } as typeof acctRef);
           router.back();
         },
       },
@@ -156,17 +182,10 @@ export default function AccountDetail() {
         onPress: () => {
           Alert.alert(
             t('account.deleteConfirm.title'),
-            t('account.deleteConfirm.body', { name: account.name, directCount, transferCount }),
+            t('account.deleteConfirm.body', { name: acctRef.name, directCount, transferCount }),
             [
               { text: t('common.cancel'), style: 'cancel' },
-              {
-                text: t('common.delete'),
-                style: 'destructive',
-                onPress: () => {
-                  deleteAccountCascade(account.id);
-                  router.back();
-                },
-              },
+              { text: t('common.delete'), style: 'destructive', onPress: doDelete },
             ],
           );
         },
