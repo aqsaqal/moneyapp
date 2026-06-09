@@ -12,7 +12,9 @@ import React, { useState } from 'react';
 import {
   Alert,
   FlatList,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -104,6 +106,11 @@ export function ProfileSheet({ visible, mode, onClose }: ProfileSheetProps) {
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={styles.backdrop} onPress={onClose} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.kav}
+        pointerEvents="box-none"
+      >
       <SafeAreaView style={styles.sheet} edges={['bottom']}>
         <View style={styles.handle} />
         {mode?.kind === 'switch' ? (
@@ -124,6 +131,7 @@ export function ProfileSheet({ visible, mode, onClose }: ProfileSheetProps) {
           />
         )}
       </SafeAreaView>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
@@ -256,11 +264,8 @@ function EditForm({
 
 const styles = StyleSheet.create({
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.55)' },
+  kav: { ...StyleSheet.absoluteFillObject, justifyContent: 'flex-end' },
   sheet: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
     maxHeight: '88%',
     backgroundColor: theme.bg1,
     borderTopLeftRadius: 20,

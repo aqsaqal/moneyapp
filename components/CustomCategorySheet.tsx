@@ -8,7 +8,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -161,6 +163,11 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
       <Pressable style={styles.backdrop} onPress={onClose} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.kav}
+        pointerEvents="box-none"
+      >
       <SafeAreaView style={styles.sheet} edges={['bottom']}>
         <View style={styles.handle} />
         <View style={styles.header}>
@@ -365,17 +372,15 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
           onClose={() => setBudgetNumpadOpen(false)}
         />
       </SafeAreaView>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
   backdrop: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0,0,0,0.55)' },
+  kav: { ...StyleSheet.absoluteFillObject, justifyContent: 'flex-end' },
   sheet: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
     maxHeight: '92%',
     backgroundColor: theme.bg1,
     borderTopLeftRadius: 20,
