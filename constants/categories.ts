@@ -15,31 +15,28 @@ export interface CategoryDef {
 // name={…}/>, so the names here must resolve in mcc's icon set or the
 // glyph falls back to question marks. Verified against:
 // https://pictogrammers.com/library/mdi/
+// Canonical seeded order — drives the picker's default sort_order
+// (set by useCategoriesWithMeta as (index + 1) × 10). User reorders in
+// Settings → Categories override these via custom_categories.sort_order.
 export const EXPENSE_CATEGORIES: CategoryDef[] = [
   { id: 'food', name: 'Food', icon: 'silverware-fork-knife', color: '#FF6B8A' },
   { id: 'transport', name: 'Transport', icon: 'car', color: '#818CF8' },
   { id: 'shopping', name: 'Shopping', icon: 'cart-outline', color: '#FFBE44' },
-  { id: 'coffee', name: 'Coffee', icon: 'coffee', color: '#C084FC' },
-  { id: 'bills', name: 'Bills', icon: 'flash', color: '#F97316' },
   { id: 'health', name: 'Health', icon: 'heart-outline', color: '#34D399' },
+  { id: 'gifts', name: 'Gifts', icon: 'gift-outline', color: '#E879F9' },
+  { id: 'rent', name: 'Rent', icon: 'home-variant', color: '#FB923C' },
+  { id: 'subs', name: 'Subs', icon: 'file-document-outline', color: '#38BDF8' },
+  { id: 'bills', name: 'Bills', icon: 'flash', color: '#F97316' },
   { id: 'entertainment', name: 'Fun', icon: 'star', color: '#FB7185' },
   { id: 'education', name: 'Education', icon: 'book-open-variant', color: '#60A5FA' },
   { id: 'travel', name: 'Travel', icon: 'airplane', color: '#2DD4BF' },
-  { id: 'gifts', name: 'Gifts', icon: 'gift-outline', color: '#E879F9' },
-  { id: 'fuel', name: 'Fuel', icon: 'gas-station', color: '#FBBF24' },
-  { id: 'internet', name: 'Internet', icon: 'wifi', color: '#38BDF8' },
-  { id: 'phone', name: 'Phone', icon: 'cellphone', color: '#A78BFA' },
-  { id: 'rent', name: 'Rent', icon: 'home-variant', color: '#FB923C' },
-  { id: 'clothing', name: 'Clothing', icon: 'tshirt-crew-outline', color: '#F472B6' },
-  { id: 'fitness', name: 'Fitness', icon: 'run', color: '#4ADE80' },
-  { id: 'subs', name: 'Subs', icon: 'file-document-outline', color: '#38BDF8' },
   { id: 'other', name: 'Other', icon: 'dots-horizontal', color: '#8888AA' },
 ];
 
 export const INCOME_CATEGORIES: CategoryDef[] = [
   { id: 'salary', name: 'Salary', icon: 'briefcase-outline', color: '#00E09E' },
-  { id: 'freelance', name: 'Freelance', icon: 'pencil', color: '#60A5FA' },
   { id: 'investment', name: 'Investment', icon: 'trending-up', color: '#818CF8' },
+  { id: 'freelance', name: 'Freelance', icon: 'pencil', color: '#60A5FA' },
   { id: 'gift_in', name: 'Gift', icon: 'gift-outline', color: '#E879F9' },
   { id: 'refund', name: 'Refund', icon: 'swap-horizontal', color: '#FFBE44' },
   { id: 'other_in', name: 'Other', icon: 'dots-horizontal', color: '#8888AA' },

@@ -114,19 +114,23 @@ function seedAccounts(): void {
 
 function seedRecurring(): void {
   const db = getDB();
+  // Categories restricted to the seeded set (constants/categories.ts).
+  // 'utilities', 'internet', 'phone', 'insurance', 'loan_payment',
+  // 'fitness' don't exist anymore — they all fold into 'bills', the
+  // catch-all for fixed-utility expenses ('rent' stays for shelter).
   db.insert(recurring).values([
-    { id: 'demo-r-rent',    name: 'Mortgage Payment', amount: 1650,  type: 'expense', category: 'rent',          accountId: 'demo-checking', dayOfMonth: 1,  icon: 'Home',       color: '#FB923C' },
-    { id: 'demo-r-elec',    name: 'Electric',         amount: 92.5,  type: 'expense', category: 'utilities',     accountId: 'demo-checking', dayOfMonth: 5,  icon: 'Zap',        color: '#EAB308' },
-    { id: 'demo-r-water',   name: 'Water',            amount: 38,    type: 'expense', category: 'utilities',     accountId: 'demo-checking', dayOfMonth: 6,  icon: 'Droplet',    color: '#38BDF8' },
-    { id: 'demo-r-int',     name: 'Internet',         amount: 65,    type: 'expense', category: 'internet',      accountId: 'demo-checking', dayOfMonth: 7,  icon: 'Wifi',       color: '#38BDF8' },
-    { id: 'demo-r-phone',   name: 'Phone Plan',       amount: 42,    type: 'expense', category: 'phone',         accountId: 'demo-checking', dayOfMonth: 12, icon: 'Smartphone', color: '#A78BFA' },
-    { id: 'demo-r-netflix', name: 'Netflix',          amount: 15.49, type: 'expense', category: 'subs',          accountId: 'demo-cc',       dayOfMonth: 10, icon: 'Star',       color: '#E50914' },
-    { id: 'demo-r-spotify', name: 'Spotify',          amount: 11.99, type: 'expense', category: 'subs',          accountId: 'demo-cc',       dayOfMonth: 14, icon: 'Star',       color: '#1DB954' },
-    { id: 'demo-r-gym',     name: 'Gym',              amount: 39.99, type: 'expense', category: 'fitness',       accountId: 'demo-checking', dayOfMonth: 18, icon: 'Activity',   color: '#4ADE80' },
-    { id: 'demo-r-ins',     name: 'Auto Insurance',   amount: 125,   type: 'expense', category: 'insurance',     accountId: 'demo-checking', dayOfMonth: 25, icon: 'Shield',     color: '#A3A3A3' },
-    { id: 'demo-r-carloan', name: 'Car Loan Payment', amount: 320,   type: 'expense', category: 'loan_payment',  accountId: 'demo-checking', dayOfMonth: 20, icon: 'Car',        color: '#EAB308' },
-    { id: 'demo-r-salary',  name: 'Salary',           amount: 5200,  type: 'income',  category: 'salary',        accountId: 'demo-checking', dayOfMonth: 1,  icon: 'Briefcase',  color: '#00E09E' },
-    { id: 'demo-r-side',    name: 'Freelance',        amount: 700,   type: 'income',  category: 'freelance',     accountId: 'demo-checking', dayOfMonth: 15, icon: 'TrendingUp', color: '#818CF8' },
+    { id: 'demo-r-rent',    name: 'Mortgage Payment', amount: 1650,  type: 'expense', category: 'rent',     accountId: 'demo-checking', dayOfMonth: 1,  icon: 'Home',       color: '#FB923C' },
+    { id: 'demo-r-elec',    name: 'Electric',         amount: 92.5,  type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 5,  icon: 'Zap',        color: '#EAB308' },
+    { id: 'demo-r-water',   name: 'Water',            amount: 38,    type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 6,  icon: 'Droplet',    color: '#38BDF8' },
+    { id: 'demo-r-int',     name: 'Internet',         amount: 65,    type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 7,  icon: 'Wifi',       color: '#38BDF8' },
+    { id: 'demo-r-phone',   name: 'Phone Plan',       amount: 42,    type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 12, icon: 'Smartphone', color: '#A78BFA' },
+    { id: 'demo-r-netflix', name: 'Netflix',          amount: 15.49, type: 'expense', category: 'subs',     accountId: 'demo-cc',       dayOfMonth: 10, icon: 'Star',       color: '#E50914' },
+    { id: 'demo-r-spotify', name: 'Spotify',          amount: 11.99, type: 'expense', category: 'subs',     accountId: 'demo-cc',       dayOfMonth: 14, icon: 'Star',       color: '#1DB954' },
+    { id: 'demo-r-gym',     name: 'Gym',              amount: 39.99, type: 'expense', category: 'health',   accountId: 'demo-checking', dayOfMonth: 18, icon: 'Activity',   color: '#4ADE80' },
+    { id: 'demo-r-ins',     name: 'Auto Insurance',   amount: 125,   type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 25, icon: 'Shield',     color: '#A3A3A3' },
+    { id: 'demo-r-carloan', name: 'Car Loan Payment', amount: 320,   type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 20, icon: 'Car',        color: '#EAB308' },
+    { id: 'demo-r-salary',  name: 'Salary',           amount: 5200,  type: 'income',  category: 'salary',   accountId: 'demo-checking', dayOfMonth: 1,  icon: 'Briefcase',  color: '#00E09E' },
+    { id: 'demo-r-side',    name: 'Freelance',        amount: 700,   type: 'income',  category: 'freelance',accountId: 'demo-checking', dayOfMonth: 15, icon: 'TrendingUp', color: '#818CF8' },
   ]).run();
 }
 
@@ -151,12 +155,12 @@ function seedBudgets(): void {
   // already exists for the category id we update the budget column.
   const raw = getRawDB();
   const rows: { catId: string; name: string; icon: string; color: string; limit: number }[] = [
-    { catId: 'food',          name: 'Food',          icon: 'food',          color: '#F97316', limit: 450 },
-    { catId: 'transport',     name: 'Transport',     icon: 'car',           color: '#38BDF8', limit: 180 },
-    { catId: 'shopping',      name: 'Shopping',      icon: 'shopping',      color: '#A78BFA', limit: 250 },
-    { catId: 'entertainment', name: 'Entertainment', icon: 'movie-outline', color: '#FB923C', limit: 120 },
-    { catId: 'coffee',        name: 'Coffee',        icon: 'coffee',        color: '#7C3AED', limit: 80 },
-    { catId: 'health',        name: 'Health',        icon: 'heart-outline', color: '#10B981', limit: 150 },
+    { catId: 'food',          name: 'Food',          icon: 'food',                  color: '#FF6B8A', limit: 450 },
+    { catId: 'transport',     name: 'Transport',     icon: 'car',                   color: '#818CF8', limit: 180 },
+    { catId: 'shopping',      name: 'Shopping',      icon: 'cart-outline',          color: '#FFBE44', limit: 250 },
+    { catId: 'entertainment', name: 'Fun',           icon: 'star',                  color: '#FB7185', limit: 120 },
+    { catId: 'health',        name: 'Health',        icon: 'heart-outline',         color: '#34D399', limit: 150 },
+    { catId: 'bills',         name: 'Bills',         icon: 'flash',                 color: '#F97316', limit: 350 },
   ];
   for (const r of rows) {
     raw.runSync(
@@ -201,16 +205,19 @@ function seedTransactions(): void {
   const MONTHS_BACK = 24;
   const toInsert: (typeof transactions.$inferInsert)[] = [];
 
+  // Categories restricted to the seeded set. 'coffee' folds back into
+  // 'food' (lots of small daily food taps), and 'fuel' folds into
+  // 'transport' (cash-paid gas / parking / fares).
   const templates: TxnTemplate[] = [
     { category: 'food',          accountId: 'demo-checking', amount: () => rand(45, 95),  perMonth: 4, note: 'Groceries' },
     { category: 'food',          accountId: 'demo-cc',       amount: () => rand(9, 28),   perMonth: 8 },
-    { category: 'coffee',        accountId: 'demo-cc',       amount: () => rand(3.5, 7),  perMonth: 18 },
+    { category: 'food',          accountId: 'demo-cc',       amount: () => rand(3.5, 7),  perMonth: 18, note: 'Coffee' },
     { category: 'transport',     accountId: 'demo-checking', amount: () => rand(28, 55),  perMonth: 4, note: 'Gas' },
     { category: 'transport',     accountId: 'demo-cc',       amount: () => rand(8, 22),   perMonth: 4 },
+    { category: 'transport',     accountId: 'demo-cash',     amount: () => rand(5, 18),   perMonth: 6 },
     { category: 'shopping',      accountId: 'demo-cc',       amount: () => rand(18, 220), perMonth: 3 },
     { category: 'entertainment', accountId: 'demo-cc',       amount: () => rand(12, 80),  perMonth: 2 },
     { category: 'health',        accountId: 'demo-checking', amount: () => rand(15, 90),  perMonth: 1 },
-    { category: 'fuel',          accountId: 'demo-cash',     amount: () => rand(5, 18),   perMonth: 6 },
   ];
 
   for (let m = MONTHS_BACK; m >= 0; m--) {
@@ -253,16 +260,16 @@ function seedTransactions(): void {
     // unpaid checkboxes today.
     if (m > 0) {
       const recItems: { id: string; cat: string; acct: string; amt: number; day: number; note: string }[] = [
-        { id: 'mortgage', cat: 'rent',         acct: 'demo-checking', amt: 1650,  day: 1,  note: 'Mortgage Payment' },
-        { id: 'elec',     cat: 'utilities',    acct: 'demo-checking', amt: 92.5,  day: 5,  note: 'Electric' },
-        { id: 'water',    cat: 'utilities',    acct: 'demo-checking', amt: 38,    day: 6,  note: 'Water' },
-        { id: 'int',      cat: 'internet',     acct: 'demo-checking', amt: 65,    day: 7,  note: 'Internet' },
-        { id: 'phone',    cat: 'phone',        acct: 'demo-checking', amt: 42,    day: 12, note: 'Phone Plan' },
-        { id: 'netflix',  cat: 'subs',         acct: 'demo-cc',       amt: 15.49, day: 10, note: 'Netflix' },
-        { id: 'spotify',  cat: 'subs',         acct: 'demo-cc',       amt: 11.99, day: 14, note: 'Spotify' },
-        { id: 'gym',      cat: 'fitness',      acct: 'demo-checking', amt: 39.99, day: 18, note: 'Gym' },
-        { id: 'ins',      cat: 'insurance',    acct: 'demo-checking', amt: 125,   day: 25, note: 'Auto Insurance' },
-        { id: 'carloan',  cat: 'loan_payment', acct: 'demo-checking', amt: 320,   day: 20, note: 'Car Loan Payment' },
+        { id: 'mortgage', cat: 'rent',   acct: 'demo-checking', amt: 1650,  day: 1,  note: 'Mortgage Payment' },
+        { id: 'elec',     cat: 'bills',  acct: 'demo-checking', amt: 92.5,  day: 5,  note: 'Electric' },
+        { id: 'water',    cat: 'bills',  acct: 'demo-checking', amt: 38,    day: 6,  note: 'Water' },
+        { id: 'int',      cat: 'bills',  acct: 'demo-checking', amt: 65,    day: 7,  note: 'Internet' },
+        { id: 'phone',    cat: 'bills',  acct: 'demo-checking', amt: 42,    day: 12, note: 'Phone Plan' },
+        { id: 'netflix',  cat: 'subs',   acct: 'demo-cc',       amt: 15.49, day: 10, note: 'Netflix' },
+        { id: 'spotify',  cat: 'subs',   acct: 'demo-cc',       amt: 11.99, day: 14, note: 'Spotify' },
+        { id: 'gym',      cat: 'health', acct: 'demo-checking', amt: 39.99, day: 18, note: 'Gym' },
+        { id: 'ins',      cat: 'bills',  acct: 'demo-checking', amt: 125,   day: 25, note: 'Auto Insurance' },
+        { id: 'carloan',  cat: 'bills',  acct: 'demo-checking', amt: 320,   day: 20, note: 'Car Loan Payment' },
       ];
       for (const r of recItems) {
         const day = Math.min(r.day, daysInMonth);

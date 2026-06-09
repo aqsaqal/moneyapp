@@ -304,16 +304,20 @@ export function useCategoriesWithMeta(): CategoryWithMeta[] {
     // Start with seeded categories so even uncustomized ones show up in
     // Settings; merge custom_categories rows on top (shadow by id).
     const out = new Map<string, CategoryWithMeta>();
-    for (const c of EXPENSE_CATEGORIES) {
+    // Sort_order seeded from array index × 10 so the picker honours the
+    // canonical order defined in constants/categories.ts. (×10 leaves
+    // gaps for custom user reorders to slot between seeded entries
+    // without rewriting every neighbour.)
+    EXPENSE_CATEGORIES.forEach((c, i) => {
       out.set(c.id, {
         id: c.id, name: localizedSeededName(c.id, c.name), icon: c.icon, color: c.color, type: 'expense',
         isSystem: c.id === 'other' || c.id === 'adjustment',
         isPinned: false, archived: false,
         monthlyBudget: null, budgetCurrency: null, rolloverEnabled: false,
-        sortOrder: 0, budgetAlertsSent: null,
+        sortOrder: (i + 1) * 10, budgetAlertsSent: null,
       });
-    }
-    for (const c of INCOME_CATEGORIES) {
+    });
+    INCOME_CATEGORIES.forEach((c, i) => {
       const existing = out.get(c.id);
       if (existing) {
         existing.type = 'both';
@@ -323,10 +327,10 @@ export function useCategoriesWithMeta(): CategoryWithMeta[] {
           isSystem: c.id === 'other_in' || c.id === 'adjustment',
           isPinned: false, archived: false,
           monthlyBudget: null, budgetCurrency: null, rolloverEnabled: false,
-          sortOrder: 0, budgetAlertsSent: null,
+          sortOrder: (i + 1) * 10, budgetAlertsSent: null,
         });
       }
-    }
+    });
     try {
       const rows = raw.getAllSync(
         `SELECT id, name, icon, color, type, is_system, is_pinned, sort_order,
