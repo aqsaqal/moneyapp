@@ -14,18 +14,29 @@ const storage = isWeb
   ? null
   : createMMKV({ id: 'moneyflow-kv' });
 
-// Keys that should be stored per-profile, not globally. These are the
-// "Profile settings" group in the Settings screen — currency, currency
-// format, FAB swap, smart-add behaviour. Everything else (language,
-// appearance, biometric, notifications) stays global because it's a
-// user-level preference that doesn't change when the user switches
-// profiles for accounting purposes.
-const PROFILE_SCOPED_KEYS = new Set<string>([
+// Keys stored per-profile. Split into two policies:
+//
+//   INHERIT — on first read in a profile, fall back to the legacy
+//             unscoped value (so switching to a new profile carries
+//             over your currency / format / default-account from the
+//             main profile). Currency-like preferences.
+//
+//   FRESH   — never fall back. Every profile starts at the configured
+//             default (typically OFF). Used for behaviour-modifying
+//             toggles where inheriting from another profile feels
+//             surprising (Smart Add chips, FAB tap-swap).
+const PROFILE_SCOPED_KEYS_INHERIT = new Set<string>([
   'currency',
   'currencyFormat',
+  'defaultAccountId',
+]);
+const PROFILE_SCOPED_KEYS_FRESH = new Set<string>([
   'smartSuggestions',
   'fabSwapAction',
-  'defaultAccountId',
+]);
+const PROFILE_SCOPED_KEYS = new Set<string>([
+  ...PROFILE_SCOPED_KEYS_INHERIT,
+  ...PROFILE_SCOPED_KEYS_FRESH,
 ]);
 
 function scopedKey(key: string): string {
@@ -54,12 +65,13 @@ function rawGet(k: string): string | undefined {
 function getRaw(key: string): string | undefined {
   const scoped = scopedKey(key);
   if (scoped !== key) {
-    // Per-profile read; fall back to the legacy unscoped value so
-    // existing installs see their previous setting on first switch
-    // until the user explicitly changes it (which writes the scoped
-    // key).
     const v = rawGet(scoped);
     if (v !== undefined) return v;
+    // INHERIT keys carry over from the legacy unscoped slot so existing
+    // installs (and brand-new profiles) see the user's main-profile
+    // currency. FRESH keys do not — they must read as the default
+    // when the profile hasn't explicitly toggled them on.
+    if (PROFILE_SCOPED_KEYS_FRESH.has(key)) return undefined;
   }
   return rawGet(key);
 }
