@@ -680,6 +680,10 @@ export default function AddScreen() {
               mode="date"
               display={Platform.OS === 'ios' ? 'inline' : 'default'}
               maximumDate={new Date(Date.now() + 365 * 86_400_000)}
+              // Honour the in-app language setting — without this the
+              // Android dialog falls back to the OS locale and reads
+              // English even when the app is Russian.
+              locale={locale}
               onChange={(event, selected) => {
                 setDatePickerOpen(false);
                 if (event.type === 'set' && selected) setTxDate(selected);

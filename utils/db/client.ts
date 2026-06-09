@@ -58,7 +58,12 @@ function excludeFromBackup() {
 }
 
 export function getRawDB() {
-  if (!_expo) getDB();
+  // Always route through getDB() so its profile-switch check fires.
+  // Without this, the first getRawDB() call after switchActiveProfile
+  // returns the previous profile's SQLite handle — sometimes already
+  // closed (crash on the next .getAllSync), sometimes pointing at the
+  // wrong DB file (silent data leakage between profiles).
+  getDB();
   return _expo!;
 }
 

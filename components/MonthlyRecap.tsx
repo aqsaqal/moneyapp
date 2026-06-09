@@ -58,7 +58,7 @@ import {
 import { useStreak } from '@/hooks/useStreak';
 import { useT } from '@/hooks/useT';
 import { kv } from '@/utils/kv';
-import { monthKey as monthKeyOf } from '@/utils/format';
+import { monthKey as monthKeyOf, formatMonthYear } from '@/utils/format';
 
 export interface MonthlyRecapProps {
   visible: boolean;
@@ -239,7 +239,7 @@ function Stat({ label, value, accent }: { label: string; value: string; accent?:
 function formatMonthLabel(key: string): string {
   const [y, m] = key.split('-').map(Number);
   const d = new Date(y, m - 1, 1);
-  return d.toLocaleString('en', { month: 'long', year: 'numeric' });
+  return formatMonthYear(d);
 }
 
 const CARD_BG = '#0F172A';

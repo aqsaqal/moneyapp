@@ -32,7 +32,7 @@ import { convert as fxConvert } from '@/utils/fx';
 import { catInfo } from '@/constants/categories';
 import { useCategoriesWithMeta } from '@/hooks/useAppData';
 import { CategoryPicker } from '@/components/CategoryPicker';
-import { dayStr, monthKey, formatMoney } from '@/utils/format';
+import { dayStr, monthKey, formatMoney, formatMonthYear } from '@/utils/format';
 import { kv } from '@/utils/kv';
 import { onTabReselect } from '@/utils/tabReselect';
 import type { CurrencyCode } from '@/constants/currency';
@@ -225,7 +225,7 @@ export default function Activity() {
     return { start, end };
   }, [analyticsMonth]);
   const analyticsLabel = useMemo(
-    () => analyticsMonth.toLocaleString('default', { month: 'long', year: 'numeric' }),
+    () => formatMonthYear(analyticsMonth),
     [analyticsMonth],
   );
 
@@ -526,7 +526,7 @@ export default function Activity() {
           d.setMonth(d.getMonth() - i);
           return {
             value: d.toISOString().slice(0, 7),
-            label: d.toLocaleString('default', { month: 'long', year: 'numeric' }),
+            label: formatMonthYear(d),
           } as PickerOption<string>;
         })}
         onPick={(iso) => {

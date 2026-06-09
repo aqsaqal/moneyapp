@@ -51,7 +51,7 @@ import {
 import { kv } from '@/utils/kv';
 import { exportData, importData } from '@/utils/dataExport';
 import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
-import { monthKey as monthKeyOf } from '@/utils/format';
+import { monthKey as monthKeyOf, formatMonthYear } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
 import { useCategoriesWithMeta, setCategoryMeta, type CategoryWithMeta, useRecurring, bumpVersion } from '@/hooks/useAppData';
 import { DEFAULT_LEAD_DAYS } from '@/utils/notifications';
@@ -793,7 +793,7 @@ function DataSection() {
       />
       <SettingRow
         label={t('me.export.pdfMonth')}
-        hint={now.toLocaleString('en', { month: 'long', year: 'numeric' })}
+        hint={formatMonthYear(now)}
         icon="file-pdf-box"
         onPress={() => {
           void exportMonthlyPdf(monthKeyOf(now), currency);

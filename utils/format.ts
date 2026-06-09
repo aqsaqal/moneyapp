@@ -73,6 +73,29 @@ export function monthKey(d: Date | number = new Date()): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
 }
 
+/** "January 2026" in the app's selected locale. Sites used to pass
+ *  'default' or 'en' to toLocaleString which only worked when the
+ *  device locale already matched what the user picked in-app. */
+export function formatMonthYear(
+  d: Date | number,
+  style: 'long' | 'short' = 'long',
+): string {
+  const date = typeof d === 'number' ? new Date(d) : d;
+  const locale = kvLocale();
+  try {
+    return date.toLocaleString(locale, { month: style, year: 'numeric' });
+  } catch {
+    return date.toLocaleString(undefined, { month: style, year: 'numeric' });
+  }
+}
+
+function kvLocale(): string | undefined {
+  // Lazy require — utils/i18n imports kv which imports nothing from here,
+  // but bundlers sometimes flag the eager static import as a cycle warn.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  return require('@/utils/i18n').getLocale?.();
+}
+
 export function fmt(amount: number, code: CurrencyCode = 'USD', locale?: string) {
   return formatMoney(amount, code, locale);
 }

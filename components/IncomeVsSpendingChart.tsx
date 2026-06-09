@@ -175,12 +175,18 @@ export function IncomeVsSpendingChart({ data, currency, onPressMonth }: Props) {
   );
 }
 
-/** "YYYY-MM" → short month label, "Jan" / "Feb" etc., respecting the
- *  user's locale via toLocaleString. */
+/** "YYYY-MM" → short month label respecting the in-app locale (not
+ *  the device system locale — those can differ). */
 function monthLabel(key: string): string {
   const [y, m] = key.split('-').map(Number);
   const d = new Date(y, m - 1, 1);
-  return d.toLocaleString(undefined, { month: 'short' });
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const locale = require('@/utils/i18n').getLocale?.();
+  try {
+    return d.toLocaleString(locale, { month: 'short' });
+  } catch {
+    return d.toLocaleString(undefined, { month: 'short' });
+  }
 }
 
 const styles = StyleSheet.create({
