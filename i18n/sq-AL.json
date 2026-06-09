@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · ishte për ditën {dom}",
   "homeAction.due.today": "sot",
   "homeAction.due.tomorrow": "nesër",
-  "homeAction.due.inDays": "pas {n} ditësh"
+  "homeAction.due.inDays": "pas {n} ditësh",
+  "plan.goals.targetDate.optional": "Trokit për të zgjedhur një datë (opsionale)"
 }

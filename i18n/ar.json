@@ -490,5 +490,6 @@
   "homeAction.overdue.detail": "{amount} · كان مستحقًا يوم {dom}",
   "homeAction.due.today": "اليوم",
   "homeAction.due.tomorrow": "غدًا",
-  "homeAction.due.inDays": "خلال {n} أيام"
+  "homeAction.due.inDays": "خلال {n} أيام",
+  "plan.goals.targetDate.optional": "انقر لاختيار تاريخ (اختياري)"
 }

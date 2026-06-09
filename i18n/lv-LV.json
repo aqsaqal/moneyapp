@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · bija jāmaksā {dom}. dienā",
   "homeAction.due.today": "šodien",
   "homeAction.due.tomorrow": "rīt",
-  "homeAction.due.inDays": "pēc {n} dienām"
+  "homeAction.due.inDays": "pēc {n} dienām",
+  "plan.goals.targetDate.optional": "Pieskarieties, lai izvēlētos datumu (pēc izvēles)"
 }

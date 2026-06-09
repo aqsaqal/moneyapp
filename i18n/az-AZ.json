@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · {dom}-ci gün ödənilməli idi",
   "homeAction.due.today": "bu gün",
   "homeAction.due.tomorrow": "sabah",
-  "homeAction.due.inDays": "{n} gündən sonra"
+  "homeAction.due.inDays": "{n} gündən sonra",
+  "plan.goals.targetDate.optional": "Tarix seçmək üçün toxunun (istəyə bağlı)"
 }

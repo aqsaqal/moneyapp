@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · tähtaeg oli päeval {dom}",
   "homeAction.due.today": "täna",
   "homeAction.due.tomorrow": "homme",
-  "homeAction.due.inDays": "{n} päeva pärast"
+  "homeAction.due.inDays": "{n} päeva pärast",
+  "plan.goals.targetDate.optional": "Vajuta kuupäeva valimiseks (valikuline)"
 }

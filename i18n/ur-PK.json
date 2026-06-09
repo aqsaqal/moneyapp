@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · دن {dom} پر واجب الادا تھا",
   "homeAction.due.today": "آج",
   "homeAction.due.tomorrow": "کل",
-  "homeAction.due.inDays": "{n} دنوں میں"
+  "homeAction.due.inDays": "{n} دنوں میں",
+  "plan.goals.targetDate.optional": "تاریخ منتخب کرنے کے لیے ٹیپ کریں (اختیاری)"
 }

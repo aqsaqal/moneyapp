@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · موعد آن روز {dom} بود",
   "homeAction.due.today": "امروز",
   "homeAction.due.tomorrow": "فردا",
-  "homeAction.due.inDays": "در {n} روز"
+  "homeAction.due.inDays": "در {n} روز",
+  "plan.goals.targetDate.optional": "برای انتخاب تاریخ ضربه بزنید (اختیاری)"
 }

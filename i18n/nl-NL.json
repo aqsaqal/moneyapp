@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · was verschuldigd op dag {dom}",
   "homeAction.due.today": "vandaag",
   "homeAction.due.tomorrow": "morgen",
-  "homeAction.due.inDays": "over {n} dagen"
+  "homeAction.due.inDays": "over {n} dagen",
+  "plan.goals.targetDate.optional": "Tik om een datum te kiezen (optioneel)"
 }

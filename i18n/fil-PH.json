@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · dapat sa araw {dom}",
   "homeAction.due.today": "ngayon",
   "homeAction.due.tomorrow": "bukas",
-  "homeAction.due.inDays": "sa {n} araw"
+  "homeAction.due.inDays": "sa {n} araw",
+  "plan.goals.targetDate.optional": "I-tap upang pumili ng petsa (opsyonal)"
 }

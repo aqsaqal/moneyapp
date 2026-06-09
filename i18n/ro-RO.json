@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · era scadent ziua {dom}",
   "homeAction.due.today": "astăzi",
   "homeAction.due.tomorrow": "mâine",
-  "homeAction.due.inDays": "în {n} zile"
+  "homeAction.due.inDays": "în {n} zile",
+  "plan.goals.targetDate.optional": "Atinge pentru a alege o dată (opțional)"
 }

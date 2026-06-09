@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · 應於 {dom} 日付款",
   "homeAction.due.today": "今天",
   "homeAction.due.tomorrow": "明天",
-  "homeAction.due.inDays": "{n} 天後"
+  "homeAction.due.inDays": "{n} 天後",
+  "plan.goals.targetDate.optional": "點按選擇日期（選填）"
 }

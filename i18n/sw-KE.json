@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · ulipaswa siku {dom}",
   "homeAction.due.today": "leo",
   "homeAction.due.tomorrow": "kesho",
-  "homeAction.due.inDays": "baada ya siku {n}"
+  "homeAction.due.inDays": "baada ya siku {n}",
+  "plan.goals.targetDate.optional": "Gusa kuchagua tarehe (hiari)"
 }

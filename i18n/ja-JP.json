@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · 期限: {dom} 日",
   "homeAction.due.today": "今日",
   "homeAction.due.tomorrow": "明日",
-  "homeAction.due.inDays": "{n} 日後"
+  "homeAction.due.inDays": "{n} 日後",
+  "plan.goals.targetDate.optional": "タップして日付を選択（任意）"
 }

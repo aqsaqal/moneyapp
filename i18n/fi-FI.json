@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · erääntyi päivänä {dom}",
   "homeAction.due.today": "tänään",
   "homeAction.due.tomorrow": "huomenna",
-  "homeAction.due.inDays": "{n} päivän kuluttua"
+  "homeAction.due.inDays": "{n} päivän kuluttua",
+  "plan.goals.targetDate.optional": "Napauta valitaksesi päivän (vapaaehtoinen)"
 }

@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · đến hạn ngày {dom}",
   "homeAction.due.today": "hôm nay",
   "homeAction.due.tomorrow": "ngày mai",
-  "homeAction.due.inDays": "trong {n} ngày"
+  "homeAction.due.inDays": "trong {n} ngày",
+  "plan.goals.targetDate.optional": "Chạm để chọn ngày (tùy chọn)"
 }

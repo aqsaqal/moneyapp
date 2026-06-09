@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · attendu le jour {dom}",
   "homeAction.due.today": "aujourd'hui",
   "homeAction.due.tomorrow": "demain",
-  "homeAction.due.inDays": "dans {n} jours"
+  "homeAction.due.inDays": "dans {n} jours",
+  "plan.goals.targetDate.optional": "Appuyez pour choisir une date (facultatif)"
 }

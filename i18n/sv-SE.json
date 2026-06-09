@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · skulle ha betalats dag {dom}",
   "homeAction.due.today": "idag",
   "homeAction.due.tomorrow": "imorgon",
-  "homeAction.due.inDays": "om {n} dagar"
+  "homeAction.due.inDays": "om {n} dagar",
+  "plan.goals.targetDate.optional": "Tryck för att välja ett datum (valfritt)"
 }

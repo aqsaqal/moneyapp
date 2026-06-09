@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · రోజు {dom}కు చెల్లించాల్సింది",
   "homeAction.due.today": "ఈ రోజు",
   "homeAction.due.tomorrow": "రేపు",
-  "homeAction.due.inDays": "{n} రోజుల్లో"
+  "homeAction.due.inDays": "{n} రోజుల్లో",
+  "plan.goals.targetDate.optional": "తేదీని ఎంచుకోవడానికి ట్యాప్ చేయండి (ఐచ్ఛికం)"
 }

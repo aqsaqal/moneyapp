@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · требало је да буде плаћено {dom}.",
   "homeAction.due.today": "данас",
   "homeAction.due.tomorrow": "сутра",
-  "homeAction.due.inDays": "за {n} дана"
+  "homeAction.due.inDays": "за {n} дана",
+  "plan.goals.targetDate.optional": "Додирните за избор датума (опционо)"
 }

@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · היה אמור ביום {dom}",
   "homeAction.due.today": "היום",
   "homeAction.due.tomorrow": "מחר",
-  "homeAction.due.inDays": "בעוד {n} ימים"
+  "homeAction.due.inDays": "בעוד {n} ימים",
+  "plan.goals.targetDate.optional": "הקש לבחירת תאריך (אופציונלי)"
 }

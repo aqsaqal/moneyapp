@@ -490,5 +490,6 @@
   "homeAction.overdue.detail": "{amount} · sepatutnya hari {dom}",
   "homeAction.due.today": "hari ini",
   "homeAction.due.tomorrow": "esok",
-  "homeAction.due.inDays": "dalam {n} hari"
+  "homeAction.due.inDays": "dalam {n} hari",
+  "plan.goals.targetDate.optional": "Ketik untuk memilih tarikh (pilihan)"
 }

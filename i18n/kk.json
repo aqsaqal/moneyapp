@@ -490,5 +490,6 @@
   "homeAction.overdue.detail": "{amount} · {dom}-күні төленуі керек еді",
   "homeAction.due.today": "бүгін",
   "homeAction.due.tomorrow": "ертең",
-  "homeAction.due.inDays": "{n} күннен кейін"
+  "homeAction.due.inDays": "{n} күннен кейін",
+  "plan.goals.targetDate.optional": "Күнді таңдау үшін басыңыз (қалауыңызша)"
 }

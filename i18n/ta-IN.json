@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · {dom}-ம் நாள் செலுத்த வேண்டியது",
   "homeAction.due.today": "இன்று",
   "homeAction.due.tomorrow": "நாளை",
-  "homeAction.due.inDays": "{n} நாட்களில்"
+  "homeAction.due.inDays": "{n} நாட்களில்",
+  "plan.goals.targetDate.optional": "தேதியைத் தேர்ந்தெடுக்க தட்டவும் (விருப்பம்)"
 }

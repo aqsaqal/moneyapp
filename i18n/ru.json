@@ -490,5 +490,6 @@
   "homeAction.overdue.detail": "{amount} · должно было быть {dom}-го",
   "homeAction.due.today": "сегодня",
   "homeAction.due.tomorrow": "завтра",
-  "homeAction.due.inDays": "через {n} дн."
+  "homeAction.due.inDays": "через {n} дн.",
+  "plan.goals.targetDate.optional": "Нажмите, чтобы выбрать дату (необязательно)"
 }

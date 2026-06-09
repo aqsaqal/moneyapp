@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · forfaldt dag {dom}",
   "homeAction.due.today": "i dag",
   "homeAction.due.tomorrow": "i morgen",
-  "homeAction.due.inDays": "om {n} dage"
+  "homeAction.due.inDays": "om {n} dage",
+  "plan.goals.targetDate.optional": "Tryk for at vælge en dato (valgfrit)"
 }

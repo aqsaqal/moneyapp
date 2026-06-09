@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · zapadlo dne {dom}",
   "homeAction.due.today": "danes",
   "homeAction.due.tomorrow": "jutri",
-  "homeAction.due.inDays": "čez {n} dni"
+  "homeAction.due.inDays": "čez {n} dni",
+  "plan.goals.targetDate.optional": "Tapnite za izbiro datuma (neobvezno)"
 }

@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · malo byť uhradené {dom}.",
   "homeAction.due.today": "dnes",
   "homeAction.due.tomorrow": "zajtra",
-  "homeAction.due.inDays": "o {n} dní"
+  "homeAction.due.inDays": "o {n} dní",
+  "plan.goals.targetDate.optional": "Ťuknutím vyberte dátum (voliteľné)"
 }

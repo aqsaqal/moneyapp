@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · {dom}일에 결제 예정이었습니다",
   "homeAction.due.today": "오늘",
   "homeAction.due.tomorrow": "내일",
-  "homeAction.due.inDays": "{n}일 후"
+  "homeAction.due.inDays": "{n}일 후",
+  "plan.goals.targetDate.optional": "날짜를 선택하려면 탭하세요 (선택 사항)"
 }

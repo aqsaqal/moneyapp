@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · {dom}-kuni to'lanishi kerak edi",
   "homeAction.due.today": "bugun",
   "homeAction.due.tomorrow": "ertaga",
-  "homeAction.due.inDays": "{n} kundan keyin"
+  "homeAction.due.inDays": "{n} kundan keyin",
+  "plan.goals.targetDate.optional": "Sana tanlash uchun bosing (ixtiyoriy)"
 }

@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · ครบกำหนดวันที่ {dom}",
   "homeAction.due.today": "วันนี้",
   "homeAction.due.tomorrow": "พรุ่งนี้",
-  "homeAction.due.inDays": "อีก {n} วัน"
+  "homeAction.due.inDays": "อีก {n} วัน",
+  "plan.goals.targetDate.optional": "แตะเพื่อเลือกวันที่ (ตัวเลือก)"
 }

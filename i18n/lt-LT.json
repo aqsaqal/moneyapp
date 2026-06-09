@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · turėjo būti sumokėtas {dom} d.",
   "homeAction.due.today": "šiandien",
   "homeAction.due.tomorrow": "rytoj",
-  "homeAction.due.inDays": "po {n} dienų"
+  "homeAction.due.inDays": "po {n} dienų",
+  "plan.goals.targetDate.optional": "Bakstelėkite, kad pasirinktumėte datą (neprivaloma)"
 }

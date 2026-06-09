@@ -490,5 +490,6 @@
   "homeAction.overdue.detail": "{amount} · vadesi {dom}. gündü",
   "homeAction.due.today": "bugün",
   "homeAction.due.tomorrow": "yarın",
-  "homeAction.due.inDays": "{n} gün içinde"
+  "homeAction.due.inDays": "{n} gün içinde",
+  "plan.goals.targetDate.optional": "Tarih seçmek için dokunun (isteğe bağlı)"
 }

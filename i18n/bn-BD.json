@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · দিন {dom} এ বকেয়া ছিল",
   "homeAction.due.today": "আজ",
   "homeAction.due.tomorrow": "আগামীকাল",
-  "homeAction.due.inDays": "{n} দিনে"
+  "homeAction.due.inDays": "{n} দিনে",
+  "plan.goals.targetDate.optional": "একটি তারিখ বাছতে ট্যাপ করুন (ঐচ্ছিক)"
 }

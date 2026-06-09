@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · esedékes volt a(z) {dom}. napon",
   "homeAction.due.today": "ma",
   "homeAction.due.tomorrow": "holnap",
-  "homeAction.due.inDays": "{n} nap múlva"
+  "homeAction.due.inDays": "{n} nap múlva",
+  "plan.goals.targetDate.optional": "Koppintson a dátum kiválasztásához (opcionális)"
 }

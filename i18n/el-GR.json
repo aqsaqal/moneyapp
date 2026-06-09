@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · προθεσμία την ημέρα {dom}",
   "homeAction.due.today": "σήμερα",
   "homeAction.due.tomorrow": "αύριο",
-  "homeAction.due.inDays": "σε {n} ημέρες"
+  "homeAction.due.inDays": "σε {n} ημέρες",
+  "plan.goals.targetDate.optional": "Πατήστε για επιλογή ημερομηνίας (προαιρετικά)"
 }

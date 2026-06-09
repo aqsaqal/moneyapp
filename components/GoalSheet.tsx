@@ -6,6 +6,22 @@
 // advances the goal — no extra "log a contribution" step.
 
 import React, { useEffect, useState } from 'react';
+
+// Lazy-loaded datetimepicker — same trick app/add.tsx uses so the
+// native module is only required on platforms that bundle it. Kept at
+// module scope so re-renders don't re-import.
+type DateTimePickerModule = typeof import('@react-native-community/datetimepicker').default;
+let _datePicker: DateTimePickerModule | null = null;
+function getDatePicker(): DateTimePickerModule | null {
+  if (_datePicker) return _datePicker;
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    _datePicker = require('@react-native-community/datetimepicker').default as DateTimePickerModule;
+  } catch {
+    _datePicker = null;
+  }
+  return _datePicker;
+}
 import {
   Alert,
   KeyboardAvoidingView,
@@ -61,6 +77,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
   const [name, setName] = useState(goal?.name ?? '');
   const [target, setTarget] = useState(String(goal?.targetAmount ?? ''));
   const [numpadOpen, setNumpadOpen] = useState(false);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
   const [accountId, setAccountId] = useState<string>(
     goal?.accountId ?? accounts.find((a) => a.type === 'savings')?.id ?? accounts[0]?.id ?? '',
   );
@@ -211,16 +228,48 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>{t('plan.goals.targetDate')}</Text>
-            <TextInput
-              value={targetDate}
-              onChangeText={setTargetDate}
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor={theme.text3}
-              autoCapitalize="none"
-              autoCorrect={false}
+            <Pressable
+              onPress={() => setDatePickerOpen(true)}
               style={styles.input}
-            />
+              accessibilityRole="button"
+              accessibilityLabel={t('plan.goals.targetDate')}
+            >
+              <Text style={[styles.inputText, !targetDate && styles.inputPlaceholder]} numberOfLines={1}>
+                {targetDate
+                  ? new Date(targetDate).toLocaleDateString()
+                  : t('plan.goals.targetDate.optional')}
+              </Text>
+            </Pressable>
+            {targetDate && (
+              <Pressable onPress={() => setTargetDate('')} style={styles.clearDate}>
+                <Text style={styles.clearDateText}>{t('common.cancel')}</Text>
+              </Pressable>
+            )}
           </View>
+
+          {datePickerOpen && (() => {
+            const DateTimePicker = getDatePicker();
+            if (!DateTimePicker) {
+              setDatePickerOpen(false);
+              return null;
+            }
+            const seed = targetDate ? new Date(targetDate) : new Date();
+            return (
+              <DateTimePicker
+                value={seed}
+                mode="date"
+                display={Platform.OS === 'ios' ? 'inline' : 'default'}
+                minimumDate={new Date()}
+                locale={(kv.get('locale') ?? 'en-US') as never}
+                onChange={(event, selected) => {
+                  setDatePickerOpen(false);
+                  if (event.type === 'set' && selected) {
+                    setTargetDate(selected.toISOString().slice(0, 10));
+                  }
+                }}
+              />
+            );
+          })()}
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>{t('profile.field.color')}</Text>
@@ -341,6 +390,8 @@ const styles = StyleSheet.create({
   },
   inputText: { color: theme.text1, fontFamily: font.body, fontSize: sizes.md },
   inputPlaceholder: { color: theme.text3 },
+  clearDate: { alignSelf: 'flex-end', paddingVertical: 4, paddingHorizontal: 8 },
+  clearDateText: { color: theme.text3, fontSize: sizes.xs },
   swatchRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   swatch: {
     width: 36,

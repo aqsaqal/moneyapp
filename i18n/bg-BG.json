@@ -491,5 +491,6 @@
   "homeAction.overdue.detail": "{amount} · трябваше на ден {dom}",
   "homeAction.due.today": "днес",
   "homeAction.due.tomorrow": "утре",
-  "homeAction.due.inDays": "след {n} дни"
+  "homeAction.due.inDays": "след {n} дни",
+  "plan.goals.targetDate.optional": "Натиснете, за да изберете дата (по избор)"
 }
