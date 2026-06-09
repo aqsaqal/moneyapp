@@ -19,6 +19,7 @@ import {
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -76,6 +77,10 @@ export function CategoryPicker({
   onClose,
 }: CategoryPickerProps) {
   const t = useT();
+  const { width: screenW } = useWindowDimensions();
+  // Sheet has padding: spacing.md on the sides; grid uses gap:10 between
+  // tiles. Match the same pixel-perfect width derivation the FAB grid uses.
+  const TILE_W = Math.floor((screenW - spacing.md * 2 - 10 * 2) / 3);
   const [search, setSearch] = useState('');
   const [selection, setSelection] = useState<Set<string>>(new Set(initialSelection ?? []));
   const [creating, setCreating] = useState(false);
@@ -182,6 +187,7 @@ export function CategoryPicker({
                 onPress={() => handlePick(c)}
                 style={[
                   styles.tile,
+                  { width: TILE_W },
                   isSelected && { borderColor: c.color, backgroundColor: `${c.color}11` },
                 ]}
                 accessibilityRole="button"
@@ -208,7 +214,7 @@ export function CategoryPicker({
           {showAddNew && (
             <Pressable
               onPress={() => setCreating(true)}
-              style={[styles.tile, styles.tileNew]}
+              style={[styles.tile, { width: TILE_W }, styles.tileNew]}
               accessibilityRole="button"
               accessibilityLabel={t('category.new')}
             >
@@ -283,7 +289,8 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.lg,
   },
   tile: {
-    width: '30%',
+    // Width is set per-instance from useWindowDimensions so the
+    // three columns line up pixel-perfect.
     minHeight: 110,
     padding: spacing.sm,
     backgroundColor: theme.bg2,

@@ -161,6 +161,13 @@ function Pane({
   currency: CurrencyCode;
   onPick: (c: CategoryWithMeta) => void;
 }) {
+  // Pixel-precise 3-column layout: derive tile width from the actual
+  // pane width minus horizontal padding (spacing.md ×2) and the two
+  // 10px inter-tile gaps. Percent widths drifted because 30% × 3 +
+  // 20px gap doesn't quite equal 100% minus the padding.
+  const HORIZONTAL_PADDING = spacing.md;
+  const GAP = 10;
+  const tileWidth = Math.floor((width - HORIZONTAL_PADDING * 2 - GAP * 2) / 3);
   return (
     <ScrollView style={{ width }} contentContainerStyle={styles.grid}>
       {cats.map((c) => {
@@ -171,20 +178,17 @@ function Pane({
         const over = budget != null && budget > 0 && s > budget;
         const high = !over && budget != null && budget > 0 && pct >= 0.8;
         const barColor = over ? theme.expense : high ? '#F97316' : c.color;
-        // Caption priority:
-        //   • budget set → "spent / budget"
-        //   • no budget, but spent this month → "spent"
-        //   • neither → omit the caption line entirely (icon stays centred).
-        const caption = budget != null && budget > 0
-          ? `${formatMoney(s, budgetCcy)} / ${formatMoney(budget, budgetCcy)}`
-          : s > 0
-            ? formatMoney(s, currency)
-            : null;
+        // Always show the spent amount as the caption (formatMoney(0, ...)
+        // for categories with no this-month activity) so every tile has the
+        // same vertical footprint and the icon row stays aligned across
+        // columns. The progress bar still appears when a budget is set.
+        const captionCcy = budget != null && budget > 0 ? budgetCcy : currency;
+        const caption = formatMoney(s, captionCcy);
         return (
           <Pressable
             key={c.id}
             onPress={() => onPick(c)}
-            style={styles.tile}
+            style={[styles.tile, { width: tileWidth }]}
             accessibilityRole="button"
             accessibilityLabel={c.name}
           >
@@ -192,14 +196,12 @@ function Pane({
               <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={22} color={c.color} />
             </View>
             <Text style={styles.tileName} numberOfLines={1}>{c.name}</Text>
-            {caption && (
-              <Text
-                style={[styles.tileCaption, over && { color: theme.expense }]}
-                numberOfLines={1}
-              >
-                {caption}
-              </Text>
-            )}
+            <Text
+              style={[styles.tileCaption, over && { color: theme.expense }]}
+              numberOfLines={1}
+            >
+              {caption}
+            </Text>
             {budget != null && budget > 0 && (
               <View style={styles.tileBar}>
                 <View style={[styles.tileBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
@@ -262,7 +264,9 @@ const styles = StyleSheet.create({
     paddingBottom: spacing.xl,
   },
   tile: {
-    width: '30%',
+    // Width is set per-instance from useWindowDimensions so the
+    // three columns line up pixel-perfect against the spacing.md
+    // horizontal padding + 10px inter-tile gap.
     minHeight: 110,
     padding: spacing.sm,
     backgroundColor: theme.bg2,
