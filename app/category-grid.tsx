@@ -183,7 +183,10 @@ function Pane({
         // same vertical footprint and the icon row stays aligned across
         // columns. The progress bar still appears when a budget is set.
         const captionCcy = budget != null && budget > 0 ? budgetCcy : currency;
-        const caption = formatMoney(s, captionCcy);
+        // Round to whole units on the tile — decimals make the dense
+        // 3-column grid noisy and don't add information for "this month
+        // so far" totals.
+        const caption = formatMoney(s, captionCcy, undefined, 0);
         return (
           <Pressable
             key={c.id}

@@ -31,6 +31,8 @@ import {
 } from '@/hooks/useAppData';
 import { CustomCategorySheet } from '@/components/CustomCategorySheet';
 import { monthKey } from '@/utils/format';
+import { formatMoney, type CurrencyCode } from '@/constants/currency';
+import { kv } from '@/utils/kv';
 import { useT } from '@/hooks/useT';
 
 export type CategoryPickerMode = 'select' | 'multi-select';
@@ -78,9 +80,8 @@ export function CategoryPicker({
 }: CategoryPickerProps) {
   const t = useT();
   const { width: screenW } = useWindowDimensions();
-  // Sheet has padding: spacing.md on the sides; grid uses gap:10 between
-  // tiles. Match the same pixel-perfect width derivation the FAB grid uses.
   const TILE_W = Math.floor((screenW - spacing.md * 2 - 10 * 2) / 3);
+  const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [search, setSearch] = useState('');
   const [selection, setSelection] = useState<Set<string>>(new Set(initialSelection ?? []));
   const [creating, setCreating] = useState(false);
@@ -198,10 +199,20 @@ export function CategoryPicker({
                   <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={22} color={c.color} />
                 </View>
                 <Text style={styles.tileName} numberOfLines={1}>{c.name}</Text>
-                {showBudgetProgress && budget > 0 && (
-                  <View style={styles.tileBar}>
-                    <View style={[styles.tileBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
-                  </View>
+                {showBudgetProgress && (
+                  <>
+                    <Text
+                      style={[styles.tileCaption, over && { color: theme.expense }]}
+                      numberOfLines={1}
+                    >
+                      {formatMoney(spent, defaultCurrency, undefined, 0)}
+                    </Text>
+                    {budget > 0 && (
+                      <View style={styles.tileBar}>
+                        <View style={[styles.tileBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
+                      </View>
+                    )}
+                  </>
                 )}
                 {isSelected && (
                   <View style={[styles.checkBadge, { backgroundColor: c.color }]}>
@@ -310,6 +321,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   tileName: { color: theme.text1, fontSize: sizes.sm, textAlign: 'center' },
+  tileCaption: { color: theme.text3, fontSize: 10, textAlign: 'center' },
   tileBar: {
     width: '80%',
     height: 3,

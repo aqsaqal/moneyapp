@@ -429,15 +429,16 @@ export function previewWithPreset(
  *  the locale-aware Intl currency formatter, which honors regional
  *  convention (€ trailing in fr-FR, ₸ trailing in ru-RU, etc.). Users
  *  who want a consistent symbol position pick the matching preset. */
-export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?: string): string {
+export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?: string, digitsOverride?: number): string {
   const c = CURRENCIES[code];
   const abs = Math.abs(amount);
+  const digits = digitsOverride ?? c.decimalDigits;
   const presetId = kv.get('currencyFormat');
   const preset = getCurrencyFormatPreset(presetId);
   if (preset) {
-    const digits = applyNumberStyle(abs.toFixed(c.decimalDigits), preset.numberStyle);
-    if (preset.position === 'amount-symbol') return `${digits} ${c.symbolNative}`;
-    return `${c.symbolNative} ${digits}`;
+    const number = applyNumberStyle(abs.toFixed(digits), preset.numberStyle);
+    if (preset.position === 'amount-symbol') return `${number} ${c.symbolNative}`;
+    return `${c.symbolNative} ${number}`;
   }
   const eff = effectiveLocale(locale);
   try {
@@ -445,9 +446,11 @@ export function formatMoney(amount: number, code: CurrencyCode = 'USD', locale?:
       style: 'currency',
       currency: code,
       currencyDisplay: 'narrowSymbol',
+      minimumFractionDigits: digits,
+      maximumFractionDigits: digits,
     }).format(abs);
   } catch {
-    return `${c.symbol}${abs.toFixed(c.decimalDigits)}`;
+    return `${c.symbol}${abs.toFixed(digits)}`;
   }
 }
 

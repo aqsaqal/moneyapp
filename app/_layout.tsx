@@ -132,7 +132,10 @@ export default function RootLayout() {
               <Stack.Screen name="net-worth" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="account/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="account-balance" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
-              <Stack.Screen name="category-grid" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
+              {/* Long-press → category-grid mirrors Smart Add's near-
+                  instant fade so the picker pops up as quickly as the
+                  short-press FAB → /add does. */}
+              <Stack.Screen name="category-grid" options={{ presentation: 'modal', animation: 'fade', animationDuration: 1 }} />
               <Stack.Screen name="categories-manage" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
             </Stack>
