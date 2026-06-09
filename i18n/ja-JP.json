@@ -484,5 +484,12 @@
   "settings.demo.body": "これにより既存のデモプロファイル（あれば）が削除され、サンプルデータで再構築されます。あなた自身のプロファイルには影響しません。",
   "settings.demo.cta": "再作成",
   "recurring.skipped": "スキップ済み",
-  "account.archivedOn": "{date} にアーカイブ"
+  "account.archivedOn": "{date} にアーカイブ",
+  "homeAction.billSoon.title": "{name} の支払期限 {when}",
+  "homeAction.billSoon.detail": "{amount} · {dom} 日",
+  "homeAction.overdue.title": "{name} 期限超過",
+  "homeAction.overdue.detail": "{amount} · 期限: {dom} 日",
+  "homeAction.due.today": "今日",
+  "homeAction.due.tomorrow": "明日",
+  "homeAction.due.inDays": "{n} 日後"
 }

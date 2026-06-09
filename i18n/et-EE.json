@@ -484,5 +484,12 @@
   "settings.demo.body": "See kustutab olemasoleva demoprofiili (kui see on olemas) ja ehitab selle uuesti näidisandmetega. Sinu enda profiilid jäävad puutumata.",
   "settings.demo.cta": "Loo uuesti",
   "recurring.skipped": "Vahele jäetud",
-  "account.archivedOn": "Arhiveeritud {date}"
+  "account.archivedOn": "Arhiveeritud {date}",
+  "homeAction.billSoon.title": "{name} tasumistähtaeg {when}",
+  "homeAction.billSoon.detail": "{amount} · päev {dom}",
+  "homeAction.overdue.title": "{name} on viivituses",
+  "homeAction.overdue.detail": "{amount} · tähtaeg oli päeval {dom}",
+  "homeAction.due.today": "täna",
+  "homeAction.due.tomorrow": "homme",
+  "homeAction.due.inDays": "{n} päeva pärast"
 }

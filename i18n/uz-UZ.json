@@ -484,5 +484,12 @@
   "settings.demo.body": "Bu mavjud Demo profilni o'chiradi (agar bo'lsa) va uni namuna ma'lumotlari bilan qayta quradi. Sizning shaxsiy profillaringizga ta'sir qilmaydi.",
   "settings.demo.cta": "Qayta yaratish",
   "recurring.skipped": "O'tkazib yuborildi",
-  "account.archivedOn": "{date} sanasida arxivlandi"
+  "account.archivedOn": "{date} sanasida arxivlandi",
+  "homeAction.billSoon.title": "{name} muddati {when}",
+  "homeAction.billSoon.detail": "{amount} · {dom}-kun",
+  "homeAction.overdue.title": "{name} muddati o'tgan",
+  "homeAction.overdue.detail": "{amount} · {dom}-kuni to'lanishi kerak edi",
+  "homeAction.due.today": "bugun",
+  "homeAction.due.tomorrow": "ertaga",
+  "homeAction.due.inDays": "{n} kundan keyin"
 }

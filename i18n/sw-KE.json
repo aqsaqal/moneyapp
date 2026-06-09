@@ -484,5 +484,12 @@
   "settings.demo.body": "Hii itafuta wasifu wa Demo uliopo (kama upo) na kuujenga upya kwa data ya sampuli. Wasifu wako mwenyewe hautaathirika.",
   "settings.demo.cta": "Tengeneza upya",
   "recurring.skipped": "Imerukwa",
-  "account.archivedOn": "Iliyohifadhiwa {date}"
+  "account.archivedOn": "Iliyohifadhiwa {date}",
+  "homeAction.billSoon.title": "{name} unalipwa {when}",
+  "homeAction.billSoon.detail": "{amount} · siku {dom}",
+  "homeAction.overdue.title": "{name} umechelewa",
+  "homeAction.overdue.detail": "{amount} · ulipaswa siku {dom}",
+  "homeAction.due.today": "leo",
+  "homeAction.due.tomorrow": "kesho",
+  "homeAction.due.inDays": "baada ya siku {n}"
 }

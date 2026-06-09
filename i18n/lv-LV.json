@@ -484,5 +484,12 @@
   "settings.demo.body": "Tas izdzēsīs esošo demonstrācijas profilu (ja tāds ir) un izveidos to no jauna ar paraugu datiem. Jūsu personīgie profili netiks ietekmēti.",
   "settings.demo.cta": "Atjaunot",
   "recurring.skipped": "Izlaists",
-  "account.archivedOn": "Arhivēts {date}"
+  "account.archivedOn": "Arhivēts {date}",
+  "homeAction.billSoon.title": "{name} jāmaksā {when}",
+  "homeAction.billSoon.detail": "{amount} · {dom}. diena",
+  "homeAction.overdue.title": "{name} nokavēts",
+  "homeAction.overdue.detail": "{amount} · bija jāmaksā {dom}. dienā",
+  "homeAction.due.today": "šodien",
+  "homeAction.due.tomorrow": "rīt",
+  "homeAction.due.inDays": "pēc {n} dienām"
 }

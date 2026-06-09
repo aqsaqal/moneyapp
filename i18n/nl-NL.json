@@ -484,5 +484,12 @@
   "settings.demo.body": "Dit verwijdert het bestaande demoprofiel (indien aanwezig) en bouwt het opnieuw op met voorbeeldgegevens. Je eigen profielen worden niet beïnvloed.",
   "settings.demo.cta": "Opnieuw maken",
   "recurring.skipped": "Overgeslagen",
-  "account.archivedOn": "Gearchiveerd op {date}"
+  "account.archivedOn": "Gearchiveerd op {date}",
+  "homeAction.billSoon.title": "{name} vervalt {when}",
+  "homeAction.billSoon.detail": "{amount} · dag {dom}",
+  "homeAction.overdue.title": "{name} achterstallig",
+  "homeAction.overdue.detail": "{amount} · was verschuldigd op dag {dom}",
+  "homeAction.due.today": "vandaag",
+  "homeAction.due.tomorrow": "morgen",
+  "homeAction.due.inDays": "over {n} dagen"
 }

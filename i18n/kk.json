@@ -483,5 +483,12 @@
   "settings.demo.body": "Бұл бар Демо профильді жояды (бар болса) және оны үлгі деректермен қайта жасайды. Сіздің жеке профильдеріңізге әсер етпейді.",
   "settings.demo.cta": "Қайта жасау",
   "recurring.skipped": "Өткізілді",
-  "account.archivedOn": "{date} мұрағатталды"
+  "account.archivedOn": "{date} мұрағатталды",
+  "homeAction.billSoon.title": "{name} мерзімі {when}",
+  "homeAction.billSoon.detail": "{amount} · {dom}-күн",
+  "homeAction.overdue.title": "{name} мерзімі өткен",
+  "homeAction.overdue.detail": "{amount} · {dom}-күні төленуі керек еді",
+  "homeAction.due.today": "бүгін",
+  "homeAction.due.tomorrow": "ертең",
+  "homeAction.due.inDays": "{n} күннен кейін"
 }

@@ -20,9 +20,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
-import { useCategoriesWithMeta, type CategoryWithMeta } from '@/hooks/useAppData';
+import { useCategoriesWithMeta, useMonthTotalsByCategory, type CategoryWithMeta } from '@/hooks/useAppData';
 import { encodePrefill } from '@/utils/prefill';
 import { useT } from '@/hooks/useT';
+import { monthKey } from '@/utils/format';
+import { formatMoney, type CurrencyCode } from '@/constants/currency';
+import { kv } from '@/utils/kv';
 
 type Tab = 'expense' | 'income';
 
@@ -34,6 +37,14 @@ export default function CategoryGridScreen() {
   const [tab, setTab] = useState<Tab>('expense');
   const [search, setSearch] = useState('');
   const cats = useCategoriesWithMeta();
+  // This-month per-category spend, keyed by category id, used by the
+  // tile to show "spent" + (if a budget is set) "spent / budget".
+  const monthSpend = useMonthTotalsByCategory(monthKey(), 'expense');
+  const spentMap = useMemo(
+    () => new Map(monthSpend.map((m) => [m.category, m.total])),
+    [monthSpend],
+  );
+  const displayCcy = (kv.get('currency') ?? 'USD') as CurrencyCode;
 
   const expense = useMemo(() => filterFor(cats, 'expense', search), [cats, search]);
   const income = useMemo(() => filterFor(cats, 'income', search), [cats, search]);
@@ -105,8 +116,8 @@ export default function CategoryGridScreen() {
         onMomentumScrollEnd={onPagerScroll}
         keyboardShouldPersistTaps="handled"
       >
-        <Pane width={width} cats={expense} onPick={(c) => pick(c, 'expense')} />
-        <Pane width={width} cats={income} onPick={(c) => pick(c, 'income')} />
+        <Pane width={width} cats={expense} spent={spentMap} currency={displayCcy} onPick={(c) => pick(c, 'expense')} />
+        <Pane width={width} cats={income} spent={spentMap} currency={displayCcy} onPick={(c) => pick(c, 'income')} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -140,28 +151,63 @@ function TabBtn({ label, active, onPress }: { label: string; active: boolean; on
 function Pane({
   width,
   cats,
+  spent,
+  currency,
   onPick,
 }: {
   width: number;
   cats: CategoryWithMeta[];
+  spent: Map<string, number>;
+  currency: CurrencyCode;
   onPick: (c: CategoryWithMeta) => void;
 }) {
   return (
     <ScrollView style={{ width }} contentContainerStyle={styles.grid}>
-      {cats.map((c) => (
-        <Pressable
-          key={c.id}
-          onPress={() => onPick(c)}
-          style={styles.tile}
-          accessibilityRole="button"
-          accessibilityLabel={c.name}
-        >
-          <View style={[styles.tileIcon, { backgroundColor: `${c.color}22` }]}>
-            <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={22} color={c.color} />
-          </View>
-          <Text style={styles.tileName} numberOfLines={1}>{c.name}</Text>
-        </Pressable>
-      ))}
+      {cats.map((c) => {
+        const s = spent.get(c.id) ?? 0;
+        const budget = c.monthlyBudget ?? null;
+        const budgetCcy = (c.budgetCurrency as CurrencyCode | null) ?? currency;
+        const pct = budget != null && budget > 0 ? Math.min(s / budget, 1) : 0;
+        const over = budget != null && budget > 0 && s > budget;
+        const high = !over && budget != null && budget > 0 && pct >= 0.8;
+        const barColor = over ? theme.expense : high ? '#F97316' : c.color;
+        // Caption priority:
+        //   • budget set → "spent / budget"
+        //   • no budget, but spent this month → "spent"
+        //   • neither → omit the caption line entirely (icon stays centred).
+        const caption = budget != null && budget > 0
+          ? `${formatMoney(s, budgetCcy)} / ${formatMoney(budget, budgetCcy)}`
+          : s > 0
+            ? formatMoney(s, currency)
+            : null;
+        return (
+          <Pressable
+            key={c.id}
+            onPress={() => onPick(c)}
+            style={styles.tile}
+            accessibilityRole="button"
+            accessibilityLabel={c.name}
+          >
+            <View style={[styles.tileIcon, { backgroundColor: `${c.color}22` }]}>
+              <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={22} color={c.color} />
+            </View>
+            <Text style={styles.tileName} numberOfLines={1}>{c.name}</Text>
+            {caption && (
+              <Text
+                style={[styles.tileCaption, over && { color: theme.expense }]}
+                numberOfLines={1}
+              >
+                {caption}
+              </Text>
+            )}
+            {budget != null && budget > 0 && (
+              <View style={styles.tileBar}>
+                <View style={[styles.tileBarFill, { width: `${pct * 100}%`, backgroundColor: barColor }]} />
+              </View>
+            )}
+          </Pressable>
+        );
+      })}
     </ScrollView>
   );
 }
@@ -217,19 +263,32 @@ const styles = StyleSheet.create({
   },
   tile: {
     width: '30%',
-    aspectRatio: 1,
+    minHeight: 110,
     padding: spacing.sm,
     backgroundColor: theme.bg2,
     borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: theme.border,
+    // Top-anchor every tile so the icon row lines up across columns
+    // even when one tile has a caption and its neighbour doesn't.
+    // Without this the tiles centre their contents and the icons drift
+    // up/down depending on how much text follows them.
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: spacing.md,
     gap: 6,
   },
   tileIcon: {
     width: 44, height: 44, borderRadius: 22,
     alignItems: 'center', justifyContent: 'center',
   },
-  tileName: { color: theme.text1, fontSize: sizes.sm },
+  tileName: { color: theme.text1, fontSize: sizes.sm, textAlign: 'center' },
+  tileCaption: { color: theme.text3, fontSize: 10, textAlign: 'center' },
+  tileBar: {
+    width: '80%', height: 3,
+    backgroundColor: theme.bg3,
+    borderRadius: 2,
+    overflow: 'hidden',
+  },
+  tileBarFill: { height: '100%', borderRadius: 2 },
 });

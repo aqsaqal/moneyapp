@@ -484,5 +484,12 @@
   "settings.demo.body": "Αυτό θα διαγράψει το υπάρχον προφίλ επίδειξης (αν υπάρχει) και θα το ξαναδημιουργήσει με δείγματα δεδομένων. Τα δικά σας προφίλ δεν θα επηρεαστούν.",
   "settings.demo.cta": "Επαναδημιουργία",
   "recurring.skipped": "Παραλείφθηκε",
-  "account.archivedOn": "Αρχειοθετήθηκε στις {date}"
+  "account.archivedOn": "Αρχειοθετήθηκε στις {date}",
+  "homeAction.billSoon.title": "{name} με λήξη {when}",
+  "homeAction.billSoon.detail": "{amount} · ημέρα {dom}",
+  "homeAction.overdue.title": "{name} σε καθυστέρηση",
+  "homeAction.overdue.detail": "{amount} · προθεσμία την ημέρα {dom}",
+  "homeAction.due.today": "σήμερα",
+  "homeAction.due.tomorrow": "αύριο",
+  "homeAction.due.inDays": "σε {n} ημέρες"
 }

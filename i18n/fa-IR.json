@@ -484,5 +484,12 @@
   "settings.demo.body": "این کار نمایه دموی موجود (در صورت وجود) را حذف می‌کند و آن را با داده‌های نمونه بازسازی می‌کند. نمایه‌های شخصی شما تحت تأثیر قرار نمی‌گیرند.",
   "settings.demo.cta": "بازسازی",
   "recurring.skipped": "رد شد",
-  "account.archivedOn": "بایگانی شده در {date}"
+  "account.archivedOn": "بایگانی شده در {date}",
+  "homeAction.billSoon.title": "{name} سررسید {when}",
+  "homeAction.billSoon.detail": "{amount} · روز {dom}",
+  "homeAction.overdue.title": "{name} گذشته از موعد",
+  "homeAction.overdue.detail": "{amount} · موعد آن روز {dom} بود",
+  "homeAction.due.today": "امروز",
+  "homeAction.due.tomorrow": "فردا",
+  "homeAction.due.inDays": "در {n} روز"
 }

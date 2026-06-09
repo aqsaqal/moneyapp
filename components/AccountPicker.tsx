@@ -158,15 +158,7 @@ export function AccountPicker({
 }
 
 function labelForType(t: Account['type']): string {
-  switch (t) {
-    case 'cash': return 'Cash';
-    case 'bank': return 'Bank';
-    case 'credit': return 'Credit';
-    case 'savings': return 'Savings';
-    case 'debt': return 'Loan';
-    case 'investment': return 'Investment';
-    default: return t;
-  }
+  return i18nT(`accountType.${t}`);
 }
 
 const styles = StyleSheet.create({

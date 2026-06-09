@@ -484,5 +484,12 @@
   "settings.demo.body": "Cela supprimera le profil démo existant (le cas échéant) et le reconstruira avec des données d'exemple. Vos propres profils ne sont pas affectés.",
   "settings.demo.cta": "Recréer",
   "recurring.skipped": "Sauté",
-  "account.archivedOn": "Archivé le {date}"
+  "account.archivedOn": "Archivé le {date}",
+  "homeAction.billSoon.title": "{name} dû {when}",
+  "homeAction.billSoon.detail": "{amount} · jour {dom}",
+  "homeAction.overdue.title": "{name} en retard",
+  "homeAction.overdue.detail": "{amount} · attendu le jour {dom}",
+  "homeAction.due.today": "aujourd'hui",
+  "homeAction.due.tomorrow": "demain",
+  "homeAction.due.inDays": "dans {n} jours"
 }

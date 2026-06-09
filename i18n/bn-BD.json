@@ -484,5 +484,12 @@
   "settings.demo.body": "এটি বিদ্যমান ডেমো প্রোফাইল মুছে ফেলবে (যদি থাকে) এবং নমুনা ডেটা দিয়ে আবার তৈরি করবে। আপনার নিজের প্রোফাইলগুলি প্রভাবিত হবে না।",
   "settings.demo.cta": "পুনরায় তৈরি করুন",
   "recurring.skipped": "বাদ দেওয়া হয়েছে",
-  "account.archivedOn": "{date} এ আর্কাইভ করা হয়েছে"
+  "account.archivedOn": "{date} এ আর্কাইভ করা হয়েছে",
+  "homeAction.billSoon.title": "{name} {when} বকেয়া",
+  "homeAction.billSoon.detail": "{amount} · দিন {dom}",
+  "homeAction.overdue.title": "{name} মেয়াদোত্তীর্ণ",
+  "homeAction.overdue.detail": "{amount} · দিন {dom} এ বকেয়া ছিল",
+  "homeAction.due.today": "আজ",
+  "homeAction.due.tomorrow": "আগামীকাল",
+  "homeAction.due.inDays": "{n} দিনে"
 }

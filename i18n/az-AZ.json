@@ -484,5 +484,12 @@
   "settings.demo.body": "Bu, mövcud Demo profilini siləcək (əgər varsa) və nümunə məlumatları ilə yenidən yaradacaq. Sizin öz profilləriniz təsirlənməyəcək.",
   "settings.demo.cta": "Yenidən yarat",
   "recurring.skipped": "Atlandı",
-  "account.archivedOn": "{date} tarixində arxivləndi"
+  "account.archivedOn": "{date} tarixində arxivləndi",
+  "homeAction.billSoon.title": "{name} {when} ödənməlidir",
+  "homeAction.billSoon.detail": "{amount} · gün {dom}",
+  "homeAction.overdue.title": "{name} gecikmişdir",
+  "homeAction.overdue.detail": "{amount} · {dom}-ci gün ödənilməli idi",
+  "homeAction.due.today": "bu gün",
+  "homeAction.due.tomorrow": "sabah",
+  "homeAction.due.inDays": "{n} gündən sonra"
 }

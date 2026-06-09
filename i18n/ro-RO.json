@@ -484,5 +484,12 @@
   "settings.demo.body": "Acest lucru va șterge profilul Demo existent (dacă există) și îl va reconstrui cu date exemplu. Profilurile tale personale nu vor fi afectate.",
   "settings.demo.cta": "Recreează",
   "recurring.skipped": "Sărit",
-  "account.archivedOn": "Arhivat pe {date}"
+  "account.archivedOn": "Arhivat pe {date}",
+  "homeAction.billSoon.title": "{name} scadent {when}",
+  "homeAction.billSoon.detail": "{amount} · ziua {dom}",
+  "homeAction.overdue.title": "{name} restant",
+  "homeAction.overdue.detail": "{amount} · era scadent ziua {dom}",
+  "homeAction.due.today": "astăzi",
+  "homeAction.due.tomorrow": "mâine",
+  "homeAction.due.inDays": "în {n} zile"
 }

@@ -484,5 +484,12 @@
   "settings.demo.body": "ఇది ఉన్న డెమో ప్రొఫైల్‌ను (ఉంటే) తొలగించి, నమూనా డేటాతో మళ్లీ నిర్మిస్తుంది. మీ స్వంత ప్రొఫైల్‌లు ప్రభావితం కావు.",
   "settings.demo.cta": "మళ్లీ సృష్టించండి",
   "recurring.skipped": "దాటవేయబడింది",
-  "account.archivedOn": "{date}న ఆర్కైవ్ చేయబడింది"
+  "account.archivedOn": "{date}న ఆర్కైవ్ చేయబడింది",
+  "homeAction.billSoon.title": "{name} గడువు {when}",
+  "homeAction.billSoon.detail": "{amount} · రోజు {dom}",
+  "homeAction.overdue.title": "{name} గడువు దాటింది",
+  "homeAction.overdue.detail": "{amount} · రోజు {dom}కు చెల్లించాల్సింది",
+  "homeAction.due.today": "ఈ రోజు",
+  "homeAction.due.tomorrow": "రేపు",
+  "homeAction.due.inDays": "{n} రోజుల్లో"
 }

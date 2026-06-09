@@ -484,5 +484,12 @@
   "settings.demo.body": "การดำเนินการนี้จะลบโปรไฟล์ตัวอย่างที่มีอยู่ (ถ้ามี) และสร้างใหม่ด้วยข้อมูลตัวอย่าง โปรไฟล์ของคุณจะไม่ได้รับผลกระทบ",
   "settings.demo.cta": "สร้างใหม่",
   "recurring.skipped": "ข้ามแล้ว",
-  "account.archivedOn": "จัดเก็บเมื่อ {date}"
+  "account.archivedOn": "จัดเก็บเมื่อ {date}",
+  "homeAction.billSoon.title": "{name} ครบกำหนด {when}",
+  "homeAction.billSoon.detail": "{amount} · วันที่ {dom}",
+  "homeAction.overdue.title": "{name} เกินกำหนด",
+  "homeAction.overdue.detail": "{amount} · ครบกำหนดวันที่ {dom}",
+  "homeAction.due.today": "วันนี้",
+  "homeAction.due.tomorrow": "พรุ่งนี้",
+  "homeAction.due.inDays": "อีก {n} วัน"
 }

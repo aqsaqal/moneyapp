@@ -483,5 +483,12 @@
   "settings.demo.body": "Это удалит существующий демо-профиль (если он есть) и пересоздаст его с образцами данных. Ваши собственные профили не пострадают.",
   "settings.demo.cta": "Пересоздать",
   "recurring.skipped": "Пропущено",
-  "account.archivedOn": "Архивирован {date}"
+  "account.archivedOn": "Архивирован {date}",
+  "homeAction.billSoon.title": "{name} к оплате {when}",
+  "homeAction.billSoon.detail": "{amount} · {dom}-е число",
+  "homeAction.overdue.title": "{name} просрочено",
+  "homeAction.overdue.detail": "{amount} · должно было быть {dom}-го",
+  "homeAction.due.today": "сегодня",
+  "homeAction.due.tomorrow": "завтра",
+  "homeAction.due.inDays": "через {n} дн."
 }

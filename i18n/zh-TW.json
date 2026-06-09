@@ -484,5 +484,12 @@
   "settings.demo.body": "這將刪除現有的示範檔案（如果有）並使用範例資料重新建立。您自己的檔案不會受到影響。",
   "settings.demo.cta": "重建",
   "recurring.skipped": "已略過",
-  "account.archivedOn": "已於 {date} 封存"
+  "account.archivedOn": "已於 {date} 封存",
+  "homeAction.billSoon.title": "{name} {when} 到期",
+  "homeAction.billSoon.detail": "{amount} · {dom} 日",
+  "homeAction.overdue.title": "{name} 已逾期",
+  "homeAction.overdue.detail": "{amount} · 應於 {dom} 日付款",
+  "homeAction.due.today": "今天",
+  "homeAction.due.tomorrow": "明天",
+  "homeAction.due.inDays": "{n} 天後"
 }

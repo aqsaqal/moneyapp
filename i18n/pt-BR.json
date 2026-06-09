@@ -484,5 +484,12 @@
   "settings.demo.body": "Isso excluirá o perfil Demo existente (se houver) e o recriará com dados de exemplo. Seus próprios perfis não serão afetados.",
   "settings.demo.cta": "Recriar",
   "recurring.skipped": "Pulado",
-  "account.archivedOn": "Arquivado em {date}"
+  "account.archivedOn": "Arquivado em {date}",
+  "homeAction.billSoon.title": "{name} vence {when}",
+  "homeAction.billSoon.detail": "{amount} · dia {dom}",
+  "homeAction.overdue.title": "{name} vencido",
+  "homeAction.overdue.detail": "{amount} · venceu no dia {dom}",
+  "homeAction.due.today": "hoje",
+  "homeAction.due.tomorrow": "amanhã",
+  "homeAction.due.inDays": "em {n} dias"
 }

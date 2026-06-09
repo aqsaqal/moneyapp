@@ -484,5 +484,12 @@
   "settings.demo.body": "یہ موجودہ ڈیمو پروفائل کو حذف کر دے گا (اگر کوئی ہو) اور اسے نمونے کے ڈیٹا کے ساتھ دوبارہ بنائے گا۔ آپ کے اپنے پروفائلز متاثر نہیں ہوں گے۔",
   "settings.demo.cta": "دوبارہ بنائیں",
   "recurring.skipped": "چھوڑا گیا",
-  "account.archivedOn": "{date} کو محفوظ شدہ"
+  "account.archivedOn": "{date} کو محفوظ شدہ",
+  "homeAction.billSoon.title": "{name} واجب الادا {when}",
+  "homeAction.billSoon.detail": "{amount} · دن {dom}",
+  "homeAction.overdue.title": "{name} مدت پوری",
+  "homeAction.overdue.detail": "{amount} · دن {dom} پر واجب الادا تھا",
+  "homeAction.due.today": "آج",
+  "homeAction.due.tomorrow": "کل",
+  "homeAction.due.inDays": "{n} دنوں میں"
 }

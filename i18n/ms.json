@@ -483,5 +483,12 @@
   "settings.demo.body": "Ini akan memadamkan profil Demo yang sedia ada (jika ada) dan membinanya semula dengan data sampel. Profil peribadi anda tidak akan terjejas.",
   "settings.demo.cta": "Cipta semula",
   "recurring.skipped": "Dilangkau",
-  "account.archivedOn": "Diarkibkan pada {date}"
+  "account.archivedOn": "Diarkibkan pada {date}",
+  "homeAction.billSoon.title": "{name} matang {when}",
+  "homeAction.billSoon.detail": "{amount} · hari {dom}",
+  "homeAction.overdue.title": "{name} tertunggak",
+  "homeAction.overdue.detail": "{amount} · sepatutnya hari {dom}",
+  "homeAction.due.today": "hari ini",
+  "homeAction.due.tomorrow": "esok",
+  "homeAction.due.inDays": "dalam {n} hari"
 }

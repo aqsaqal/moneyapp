@@ -484,5 +484,12 @@
   "settings.demo.body": "Dies löscht das vorhandene Demoprofil (falls vorhanden) und baut es mit Beispieldaten neu auf. Ihre eigenen Profile sind nicht betroffen.",
   "settings.demo.cta": "Neu erstellen",
   "recurring.skipped": "Übersprungen",
-  "account.archivedOn": "Archiviert am {date}"
+  "account.archivedOn": "Archiviert am {date}",
+  "homeAction.billSoon.title": "{name} fällig {when}",
+  "homeAction.billSoon.detail": "{amount} · Tag {dom}",
+  "homeAction.overdue.title": "{name} überfällig",
+  "homeAction.overdue.detail": "{amount} · fällig am Tag {dom}",
+  "homeAction.due.today": "heute",
+  "homeAction.due.tomorrow": "morgen",
+  "homeAction.due.inDays": "in {n} Tagen"
 }

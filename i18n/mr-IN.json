@@ -484,5 +484,12 @@
   "settings.demo.body": "हे अस्तित्वातील डेमो प्रोफाइल हटवेल (असल्यास) आणि नमुना डेटासह पुन्हा तयार करेल. आपले स्वतःचे प्रोफाइल प्रभावित होणार नाहीत.",
   "settings.demo.cta": "पुन्हा तयार करा",
   "recurring.skipped": "वगळले",
-  "account.archivedOn": "{date} रोजी संग्रहित"
+  "account.archivedOn": "{date} रोजी संग्रहित",
+  "homeAction.billSoon.title": "{name} देय {when}",
+  "homeAction.billSoon.detail": "{amount} · दिवस {dom}",
+  "homeAction.overdue.title": "{name} ओव्हरड्यू",
+  "homeAction.overdue.detail": "{amount} · दिवस {dom} रोजी देय होते",
+  "homeAction.due.today": "आज",
+  "homeAction.due.tomorrow": "उद्या",
+  "homeAction.due.inDays": "{n} दिवसांत"
 }

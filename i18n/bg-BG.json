@@ -484,5 +484,12 @@
   "settings.demo.body": "Това ще изтрие съществуващия демо профил (ако има такъв) и ще го изгради отново с примерни данни. Вашите собствени профили няма да бъдат засегнати.",
   "settings.demo.cta": "Пресъздай",
   "recurring.skipped": "Пропуснат",
-  "account.archivedOn": "Архивиран на {date}"
+  "account.archivedOn": "Архивиран на {date}",
+  "homeAction.billSoon.title": "{name} с падеж {when}",
+  "homeAction.billSoon.detail": "{amount} · ден {dom}",
+  "homeAction.overdue.title": "{name} е просрочено",
+  "homeAction.overdue.detail": "{amount} · трябваше на ден {dom}",
+  "homeAction.due.today": "днес",
+  "homeAction.due.tomorrow": "утре",
+  "homeAction.due.inDays": "след {n} дни"
 }

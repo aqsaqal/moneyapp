@@ -484,5 +484,12 @@
   "settings.demo.body": "Questo eliminerà il profilo Demo esistente (se presente) e lo ricostruirà con dati di esempio. I tuoi profili non saranno interessati.",
   "settings.demo.cta": "Ricrea",
   "recurring.skipped": "Saltato",
-  "account.archivedOn": "Archiviato il {date}"
+  "account.archivedOn": "Archiviato il {date}",
+  "homeAction.billSoon.title": "{name} in scadenza {when}",
+  "homeAction.billSoon.detail": "{amount} · giorno {dom}",
+  "homeAction.overdue.title": "{name} in ritardo",
+  "homeAction.overdue.detail": "{amount} · era previsto il giorno {dom}",
+  "homeAction.due.today": "oggi",
+  "homeAction.due.tomorrow": "domani",
+  "homeAction.due.inDays": "tra {n} giorni"
 }

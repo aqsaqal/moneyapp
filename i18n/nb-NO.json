@@ -484,5 +484,12 @@
   "settings.demo.body": "Dette vil slette den eksisterende demoprofilen (hvis noen) og bygge den opp på nytt med eksempeldata. Dine egne profiler påvirkes ikke.",
   "settings.demo.cta": "Gjenopprett",
   "recurring.skipped": "Hoppet over",
-  "account.archivedOn": "Arkivert {date}"
+  "account.archivedOn": "Arkivert {date}",
+  "homeAction.billSoon.title": "{name} forfaller {when}",
+  "homeAction.billSoon.detail": "{amount} · dag {dom}",
+  "homeAction.overdue.title": "{name} forfalt",
+  "homeAction.overdue.detail": "{amount} · forfalt dag {dom}",
+  "homeAction.due.today": "i dag",
+  "homeAction.due.tomorrow": "i morgen",
+  "homeAction.due.inDays": "om {n} dager"
 }

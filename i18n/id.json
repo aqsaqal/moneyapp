@@ -483,5 +483,12 @@
   "settings.demo.body": "Ini akan menghapus profil Demo yang ada (jika ada) dan membangunnya kembali dengan data contoh. Profil pribadi Anda tidak akan terpengaruh.",
   "settings.demo.cta": "Buat ulang",
   "recurring.skipped": "Dilewati",
-  "account.archivedOn": "Diarsipkan pada {date}"
+  "account.archivedOn": "Diarsipkan pada {date}",
+  "homeAction.billSoon.title": "{name} jatuh tempo {when}",
+  "homeAction.billSoon.detail": "{amount} · hari {dom}",
+  "homeAction.overdue.title": "{name} terlewat",
+  "homeAction.overdue.detail": "{amount} · jatuh tempo hari {dom}",
+  "homeAction.due.today": "hari ini",
+  "homeAction.due.tomorrow": "besok",
+  "homeAction.due.inDays": "dalam {n} hari"
 }

@@ -484,5 +484,12 @@
   "settings.demo.body": "Це видалить наявний демо-профіль (якщо є) і відтворить його зі зразковими даними. Ваші власні профілі не постраждають.",
   "settings.demo.cta": "Перестворити",
   "recurring.skipped": "Пропущено",
-  "account.archivedOn": "Заархівовано {date}"
+  "account.archivedOn": "Заархівовано {date}",
+  "homeAction.billSoon.title": "{name} до сплати {when}",
+  "homeAction.billSoon.detail": "{amount} · день {dom}",
+  "homeAction.overdue.title": "{name} прострочено",
+  "homeAction.overdue.detail": "{amount} · мало бути сплачено {dom}-го",
+  "homeAction.due.today": "сьогодні",
+  "homeAction.due.tomorrow": "завтра",
+  "homeAction.due.inDays": "через {n} дн."
 }

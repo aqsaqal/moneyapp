@@ -484,5 +484,12 @@
   "settings.demo.body": "Kjo do të fshijë profilin Demo ekzistues (nëse ka) dhe do ta rindërtojë me të dhëna mostër. Profilet tuaja personale nuk do të preken.",
   "settings.demo.cta": "Rikrijo",
   "recurring.skipped": "Anashkaluar",
-  "account.archivedOn": "Arkivuar më {date}"
+  "account.archivedOn": "Arkivuar më {date}",
+  "homeAction.billSoon.title": "{name} skadon {when}",
+  "homeAction.billSoon.detail": "{amount} · dita {dom}",
+  "homeAction.overdue.title": "{name} e prapambetur",
+  "homeAction.overdue.detail": "{amount} · ishte për ditën {dom}",
+  "homeAction.due.today": "sot",
+  "homeAction.due.tomorrow": "nesër",
+  "homeAction.due.inDays": "pas {n} ditësh"
 }

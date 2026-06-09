@@ -484,5 +484,12 @@
   "settings.demo.body": "这将删除现有的演示档案（如果有）并使用示例数据重新构建。您自己的档案不会受到影响。",
   "settings.demo.cta": "重建",
   "recurring.skipped": "已跳过",
-  "account.archivedOn": "于 {date} 归档"
+  "account.archivedOn": "于 {date} 归档",
+  "homeAction.billSoon.title": "{name} {when} 到期",
+  "homeAction.billSoon.detail": "{amount} · {dom} 日",
+  "homeAction.overdue.title": "{name} 已逾期",
+  "homeAction.overdue.detail": "{amount} · 应在 {dom} 日支付",
+  "homeAction.due.today": "今天",
+  "homeAction.due.tomorrow": "明天",
+  "homeAction.due.inDays": "{n} 天后"
 }

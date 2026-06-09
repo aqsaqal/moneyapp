@@ -484,5 +484,12 @@
   "settings.demo.body": "Tämä poistaa olemassa olevan demoprofiilin (jos sellainen on) ja rakentaa sen uudelleen esimerkkitiedoilla. Omat profiilisi eivät muutu.",
   "settings.demo.cta": "Luo uudelleen",
   "recurring.skipped": "Ohitettu",
-  "account.archivedOn": "Arkistoitu {date}"
+  "account.archivedOn": "Arkistoitu {date}",
+  "homeAction.billSoon.title": "{name} eräpäivä {when}",
+  "homeAction.billSoon.detail": "{amount} · päivä {dom}",
+  "homeAction.overdue.title": "{name} myöhässä",
+  "homeAction.overdue.detail": "{amount} · erääntyi päivänä {dom}",
+  "homeAction.due.today": "tänään",
+  "homeAction.due.tomorrow": "huomenna",
+  "homeAction.due.inDays": "{n} päivän kuluttua"
 }

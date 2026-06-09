@@ -484,5 +484,12 @@
   "settings.demo.body": "기존 데모 프로필(있는 경우)을 삭제하고 샘플 데이터로 다시 만듭니다. 본인의 프로필에는 영향이 없습니다.",
   "settings.demo.cta": "다시 만들기",
   "recurring.skipped": "건너뜀",
-  "account.archivedOn": "{date}에 보관됨"
+  "account.archivedOn": "{date}에 보관됨",
+  "homeAction.billSoon.title": "{name} 결제일 {when}",
+  "homeAction.billSoon.detail": "{amount} · {dom}일",
+  "homeAction.overdue.title": "{name} 연체",
+  "homeAction.overdue.detail": "{amount} · {dom}일에 결제 예정이었습니다",
+  "homeAction.due.today": "오늘",
+  "homeAction.due.tomorrow": "내일",
+  "homeAction.due.inDays": "{n}일 후"
 }

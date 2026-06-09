@@ -284,14 +284,17 @@ const styles = StyleSheet.create({
   },
   tile: {
     width: '30%',
-    aspectRatio: 1,
+    minHeight: 110,
     padding: spacing.sm,
     backgroundColor: theme.bg2,
     borderRadius: radii.lg,
     borderWidth: 1,
     borderColor: theme.border,
+    // Top-anchor: icons line up across the row regardless of which
+    // tiles have a budget progress bar / caption below the name.
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
+    paddingTop: spacing.md,
     gap: 6,
   },
   tileNew: { borderStyle: 'dashed' },
@@ -299,7 +302,7 @@ const styles = StyleSheet.create({
     width: 44, height: 44, borderRadius: 22,
     alignItems: 'center', justifyContent: 'center',
   },
-  tileName: { color: theme.text1, fontSize: sizes.sm },
+  tileName: { color: theme.text1, fontSize: sizes.sm, textAlign: 'center' },
   tileBar: {
     width: '80%',
     height: 3,

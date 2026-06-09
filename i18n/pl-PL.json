@@ -484,5 +484,12 @@
   "settings.demo.body": "Spowoduje to usunięcie istniejącego profilu Demo (jeśli istnieje) i odbudowanie go z przykładowymi danymi. Twoje własne profile nie zostaną naruszone.",
   "settings.demo.cta": "Utwórz ponownie",
   "recurring.skipped": "Pominięto",
-  "account.archivedOn": "Zarchiwizowano {date}"
+  "account.archivedOn": "Zarchiwizowano {date}",
+  "homeAction.billSoon.title": "{name} termin {when}",
+  "homeAction.billSoon.detail": "{amount} · dzień {dom}",
+  "homeAction.overdue.title": "{name} zaległe",
+  "homeAction.overdue.detail": "{amount} · termin był dnia {dom}",
+  "homeAction.due.today": "dziś",
+  "homeAction.due.tomorrow": "jutro",
+  "homeAction.due.inDays": "za {n} dni"
 }

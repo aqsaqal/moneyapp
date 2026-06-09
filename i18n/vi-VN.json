@@ -484,5 +484,12 @@
   "settings.demo.body": "Thao tác này sẽ xóa hồ sơ Demo hiện có (nếu có) và xây dựng lại với dữ liệu mẫu. Hồ sơ cá nhân của bạn sẽ không bị ảnh hưởng.",
   "settings.demo.cta": "Tạo lại",
   "recurring.skipped": "Đã bỏ qua",
-  "account.archivedOn": "Đã lưu trữ vào {date}"
+  "account.archivedOn": "Đã lưu trữ vào {date}",
+  "homeAction.billSoon.title": "{name} đến hạn {when}",
+  "homeAction.billSoon.detail": "{amount} · ngày {dom}",
+  "homeAction.overdue.title": "{name} quá hạn",
+  "homeAction.overdue.detail": "{amount} · đến hạn ngày {dom}",
+  "homeAction.due.today": "hôm nay",
+  "homeAction.due.tomorrow": "ngày mai",
+  "homeAction.due.inDays": "trong {n} ngày"
 }

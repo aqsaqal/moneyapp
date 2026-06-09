@@ -484,5 +484,12 @@
   "settings.demo.body": "Tým sa odstráni existujúci demo profil (ak existuje) a znova sa vytvorí s ukážkovými údajmi. Vaše vlastné profily nebudú ovplyvnené.",
   "settings.demo.cta": "Znova vytvoriť",
   "recurring.skipped": "Preskočené",
-  "account.archivedOn": "Archivované {date}"
+  "account.archivedOn": "Archivované {date}",
+  "homeAction.billSoon.title": "{name} splatné {when}",
+  "homeAction.billSoon.detail": "{amount} · deň {dom}",
+  "homeAction.overdue.title": "{name} po splatnosti",
+  "homeAction.overdue.detail": "{amount} · malo byť uhradené {dom}.",
+  "homeAction.due.today": "dnes",
+  "homeAction.due.tomorrow": "zajtra",
+  "homeAction.due.inDays": "o {n} dní"
 }

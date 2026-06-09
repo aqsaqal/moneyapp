@@ -484,5 +484,12 @@
   "settings.demo.body": "פעולה זו תמחק את פרופיל ההדגמה הקיים (אם קיים) ותבנה אותו מחדש עם נתוני דוגמה. הפרופילים האישיים שלך לא יושפעו.",
   "settings.demo.cta": "צור מחדש",
   "recurring.skipped": "דולג",
-  "account.archivedOn": "הועבר לארכיון ב-{date}"
+  "account.archivedOn": "הועבר לארכיון ב-{date}",
+  "homeAction.billSoon.title": "{name} לתשלום {when}",
+  "homeAction.billSoon.detail": "{amount} · יום {dom}",
+  "homeAction.overdue.title": "{name} באיחור",
+  "homeAction.overdue.detail": "{amount} · היה אמור ביום {dom}",
+  "homeAction.due.today": "היום",
+  "homeAction.due.tomorrow": "מחר",
+  "homeAction.due.inDays": "בעוד {n} ימים"
 }

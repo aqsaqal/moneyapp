@@ -484,5 +484,12 @@
   "settings.demo.body": "Ez törli a meglévő Demo profilt (ha van) és újra felépíti mintaadatokkal. A saját profiljaid nem érintettek.",
   "settings.demo.cta": "Újralétrehozás",
   "recurring.skipped": "Kihagyva",
-  "account.archivedOn": "Archiválva: {date}"
+  "account.archivedOn": "Archiválva: {date}",
+  "homeAction.billSoon.title": "{name} esedékes {when}",
+  "homeAction.billSoon.detail": "{amount} · {dom}. nap",
+  "homeAction.overdue.title": "{name} lejárt",
+  "homeAction.overdue.detail": "{amount} · esedékes volt a(z) {dom}. napon",
+  "homeAction.due.today": "ma",
+  "homeAction.due.tomorrow": "holnap",
+  "homeAction.due.inDays": "{n} nap múlva"
 }

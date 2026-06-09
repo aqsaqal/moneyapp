@@ -484,5 +484,12 @@
   "settings.demo.body": "Tai ištrins esamą demonstracinį profilį (jei toks yra) ir vėl jį sukurs su pavyzdiniais duomenimis. Jūsų asmeniniai profiliai nebus paveikti.",
   "settings.demo.cta": "Atkurti",
   "recurring.skipped": "Praleista",
-  "account.archivedOn": "Archyvuota {date}"
+  "account.archivedOn": "Archyvuota {date}",
+  "homeAction.billSoon.title": "{name} mokėtinas {when}",
+  "homeAction.billSoon.detail": "{amount} · {dom} d.",
+  "homeAction.overdue.title": "{name} pradelstas",
+  "homeAction.overdue.detail": "{amount} · turėjo būti sumokėtas {dom} d.",
+  "homeAction.due.today": "šiandien",
+  "homeAction.due.tomorrow": "rytoj",
+  "homeAction.due.inDays": "po {n} dienų"
 }

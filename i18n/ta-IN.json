@@ -484,5 +484,12 @@
   "settings.demo.body": "இது தற்போதுள்ள டெமோ சுயவிவரத்தை (இருந்தால்) நீக்கி, மாதிரி தரவுகளுடன் மீண்டும் உருவாக்கும். உங்கள் சொந்த சுயவிவரங்கள் பாதிக்கப்படாது.",
   "settings.demo.cta": "மீண்டும் உருவாக்கு",
   "recurring.skipped": "தவிர்க்கப்பட்டது",
-  "account.archivedOn": "{date} அன்று காப்பகப்படுத்தப்பட்டது"
+  "account.archivedOn": "{date} அன்று காப்பகப்படுத்தப்பட்டது",
+  "homeAction.billSoon.title": "{name} செலுத்த வேண்டிய {when}",
+  "homeAction.billSoon.detail": "{amount} · நாள் {dom}",
+  "homeAction.overdue.title": "{name} தாமதம்",
+  "homeAction.overdue.detail": "{amount} · {dom}-ம் நாள் செலுத்த வேண்டியது",
+  "homeAction.due.today": "இன்று",
+  "homeAction.due.tomorrow": "நாளை",
+  "homeAction.due.inDays": "{n} நாட்களில்"
 }

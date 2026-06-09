@@ -484,5 +484,12 @@
   "settings.demo.body": "Ovo će izbrisati postojeći demo profil (ako postoji) i ponovno ga izgraditi s primjerima podataka. Vaši osobni profili neće biti pogođeni.",
   "settings.demo.cta": "Ponovno stvori",
   "recurring.skipped": "Preskočeno",
-  "account.archivedOn": "Arhivirano {date}"
+  "account.archivedOn": "Arhivirano {date}",
+  "homeAction.billSoon.title": "{name} dospijeva {when}",
+  "homeAction.billSoon.detail": "{amount} · dan {dom}",
+  "homeAction.overdue.title": "{name} dospjelo",
+  "homeAction.overdue.detail": "{amount} · bilo je za platiti dan {dom}",
+  "homeAction.due.today": "danas",
+  "homeAction.due.tomorrow": "sutra",
+  "homeAction.due.inDays": "za {n} dana"
 }

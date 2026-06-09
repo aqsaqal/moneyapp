@@ -484,5 +484,12 @@
   "settings.demo.body": "Tatanggalin nito ang umiiral na Demo profile (kung mayroon) at muling itatayo gamit ang sample data. Ang sarili mong profiles ay hindi maaapektuhan.",
   "settings.demo.cta": "Likhain muli",
   "recurring.skipped": "Nilaktawan",
-  "account.archivedOn": "Na-archive noong {date}"
+  "account.archivedOn": "Na-archive noong {date}",
+  "homeAction.billSoon.title": "{name} due {when}",
+  "homeAction.billSoon.detail": "{amount} · araw {dom}",
+  "homeAction.overdue.title": "{name} lampas na sa due date",
+  "homeAction.overdue.detail": "{amount} · dapat sa araw {dom}",
+  "homeAction.due.today": "ngayon",
+  "homeAction.due.tomorrow": "bukas",
+  "homeAction.due.inDays": "sa {n} araw"
 }
