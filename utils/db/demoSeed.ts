@@ -285,6 +285,33 @@ function seedTransactions(): void {
           note: r.note,
         });
       }
+
+      // "Undetected" subscriptions — same note + same amount each month
+      // but NOT in the recurring table, so useSubscriptionAudit picks
+      // them up as detected candidates on Plan. Only emit in the last
+      // 5 months so we have ≥3 months of stable data without
+      // dominating the early history.
+      if (m <= 5) {
+        const ghosts: { id: string; acct: string; amt: number; day: number; note: string }[] = [
+          { id: 'adobe',   acct: 'demo-cc', amt: 54.99, day: 4,  note: 'Adobe Creative' },
+          { id: 'disney',  acct: 'demo-cc', amt: 7.99,  day: 8,  note: 'Disney Plus' },
+          { id: 'chatgpt', acct: 'demo-cc', amt: 20.00, day: 22, note: 'ChatGPT Plus' },
+        ];
+        for (const g of ghosts) {
+          const day = Math.min(g.day, daysInMonth);
+          const d = new Date(monthStart.getFullYear(), monthStart.getMonth(), day, 9, 0);
+          toInsert.push({
+            id: `demo-ghost-${m}-${g.id}`,
+            type: 'expense',
+            amount: g.amt,
+            category: 'subs',
+            accountId: g.acct,
+            date: d.getTime(),
+            createdAt: Date.now(),
+            note: g.note,
+          });
+        }
+      }
     }
 
     // Income — salary on the 1st, freelance on the 15th.
