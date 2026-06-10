@@ -120,6 +120,11 @@ const config: ExpoConfig = {
           // still ship with non-AndroidX classnames.
           enableJetifier: true,
         },
+        ios: {
+          // @react-native-ml-kit/text-recognition's pod requires 15.5
+          // minimum; default Expo target is 15.1 which fails pod install.
+          deploymentTarget: '15.5',
+        },
       },
     ],
   ],
