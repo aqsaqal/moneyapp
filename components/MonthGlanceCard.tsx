@@ -27,16 +27,10 @@ interface Props {
 export function MonthGlanceCard({ income, spending, currency }: Props) {
   const t = useT();
   const router = useRouter();
-  if (income === 0 && spending === 0) return null;
-
-  const net = income - spending;
-  const netUp = net >= 0;
-  const netColor = netUp ? theme.accent : theme.expense;
-
-  // Tap → Activity → Categories view, anchored to the current month.
-  // kv handoff mirrors the Insights chart's month-bar drill-down.
-  // Debounced so a double-tap doesn't push the route twice while the
-  // tab is finishing its focus transition.
+  // Hooks first; the empty-month early return lives BELOW the hook
+  // calls. Profile switches into an empty profile would otherwise drop
+  // useOncePress from the second render and React throws "Rendered
+  // fewer hooks than expected", taking the whole Home tree with it.
   const onPress = useOncePress(() => {
     const now = new Date();
     const monthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -44,6 +38,12 @@ export function MonthGlanceCard({ income, spending, currency }: Props) {
     kv.set('activityJumpToView', 'categories');
     router.push('/(tabs)/activity' as never);
   });
+
+  if (income === 0 && spending === 0) return null;
+
+  const net = income - spending;
+  const netUp = net >= 0;
+  const netColor = netUp ? theme.accent : theme.expense;
 
   return (
     <Pressable
