@@ -10,7 +10,12 @@
 //
 // react-native-reanimated/plugin must be listed LAST per the Reanimated docs.
 module.exports = function (api) {
-  api.cache(true);
+  // Cache key must include APP_FLAVOR — without this, switching from
+  // `npm run android:generic` to `npm run android:islamic` (or back)
+  // serves the previously-compiled bundle and APP_FLAVOR-gated code
+  // (FeatureSlots, halal badges, Hijri hero, etc.) end up matching
+  // whichever flavor was built FIRST. Same hazard with `eas build`.
+  api.cache.using(() => process.env.APP_FLAVOR ?? 'generic');
   return {
     presets: ['babel-preset-expo'],
     plugins: [
