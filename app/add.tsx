@@ -174,7 +174,11 @@ export default function AddScreen() {
   useEffect(() => {
     if (!prefill) return;
     if (prefill.type) setMode(prefill.type);
-    if (prefill.amount != null) setAmount(String(prefill.amount));
+    if (prefill.amount != null) {
+      const ccy = (prefill.originalCurrency as CurrencyCode | undefined);
+      const digits = (ccy && CURRENCIES[ccy]?.decimalDigits) ?? 2;
+      setAmount(prefill.amount.toFixed(digits));
+    }
     if (prefill.note != null) setNote(prefill.note);
     if (prefill.date != null) setTxDate(new Date(prefill.date));
     if (prefill.category != null) setCatOverride(prefill.category);
