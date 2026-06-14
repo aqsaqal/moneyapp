@@ -115,7 +115,19 @@ export default function AddScreen() {
 
   const isEditing = !!prefill?.editId;
   const [mode, setMode] = useState<Mode>(prefill?.type ?? 'expense');
-  const [amount, setAmount] = useState(prefill?.amount ? String(prefill.amount) : '0');
+  // String(20.00) drops to "20" and String(23.2) to "23.2" — both look
+  // weird on the Smart Add display when seeded from a recurring's amount.
+  // Format with the prefill currency's decimal-digits (default 2) so
+  // "20.00" stays "20.00" and "23.20" stays "23.20". The display amount
+  // is just a string going into the calc/expression parser — leading
+  // trailing zeros don't affect submit math.
+  const [amount, setAmount] = useState(() => {
+    const a = prefill?.amount;
+    if (a == null) return '0';
+    const ccy = (prefill?.originalCurrency as CurrencyCode | undefined);
+    const digits = (ccy && CURRENCIES[ccy]?.decimalDigits) ?? 2;
+    return a.toFixed(digits);
+  });
   const [note, setNote] = useState(prefill?.note ?? '');
   const [txDate, setTxDate] = useState<Date>(prefill?.date ? new Date(prefill.date) : new Date());
   const [datePickerOpen, setDatePickerOpen] = useState(false);
