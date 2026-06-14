@@ -49,6 +49,11 @@ const config: ExpoConfig = {
     infoPlist: {
       // iPhone-only — keeps App Store from demanding iPad screenshots.
       UIDeviceFamily: [1],
+      // Flow only uses iOS-provided HTTPS (Apple's TLS) — that's exempt
+      // under U.S. encryption export rules. Setting this to false here
+      // makes App Store Connect skip the "App Encryption Documentation"
+      // prompt on every single build upload.
+      ITSAppUsesNonExemptEncryption: false,
       // Voice dictation is deferred to v1.1+. The NSMicrophone /
       // NSSpeechRecognition strings were intentionally removed so the
       // privacy nutrition label doesn't have to declare microphone use.
