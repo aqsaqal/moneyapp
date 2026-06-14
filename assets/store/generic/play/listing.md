@@ -1,11 +1,11 @@
 # Flow — Google Play listing
 
-App: **Flow: Personal Finance** (bundle id `com.moneyflow.generic`)
+App: **Flow: Money Tracker** (bundle id `com.moneyflow.generic`)
 
 ---
 
 ## App name (≤30 chars)
-> Flow: Personal Finance
+> Flow: Money Tracker
 
 (24 chars)
 
