@@ -33,6 +33,7 @@ import {
   useRecurring as useRecurringList,
   useAccounts,
   usePaidItemsForMonth,
+  useMonthFlow,
 } from '@/hooks/useAppData';
 import { useStreak } from '@/hooks/useStreak';
 import { useT } from '@/hooks/useT';
@@ -104,23 +105,11 @@ export default function Home() {
     return accountName.get(tx.accountId ?? '');
   };
 
-  // Income / expense for this month. Both exclude the 'adjustment'
-  // category (balance reconciliation, not real flow) so MonthGlance
-  // and Hero math don't get inflated by manual balance fixups.
-  const income = useMemo(
-    () =>
-      thisMoTxns
-        .filter((t) => t.type === 'income' && t.category !== 'adjustment')
-        .reduce((s, t) => s + t.amount, 0),
-    [thisMoTxns],
-  );
-  const expense = useMemo(
-    () =>
-      thisMoTxns
-        .filter((t) => t.type === 'expense' && t.category !== 'adjustment')
-        .reduce((s, t) => s + t.amount, 0),
-    [thisMoTxns],
-  );
+  // Income / expense for this month — SQL-aggregated so a busy month
+  // (≥ DEFAULT_TX_LIMIT entries) doesn't silently drop older rows
+  // like a day-1 salary. 'adjustment' category + scheduled-but-not-
+  // applied txns are excluded inside the hook itself.
+  const { income, expense } = useMonthFlow(thisMonth);
   // `fixedExp` is the projection of recurring bills still on the books
   // this month. When a recurring item is marked paid, the resulting
   // transaction already shows up in `expense` — so including the

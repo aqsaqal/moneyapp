@@ -43,7 +43,7 @@ import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { convert } from '@/utils/fx';
-import { CURRENCIES, formatMoney } from '@/constants/currency';
+import { CURRENCIES, formatMoney, formatSmartAddAmount } from '@/constants/currency';
 // Lazy-imported so a binary that predates the native module shows a
 // graceful fallback instead of crashing.
 type DateTimePickerModule = typeof import('@react-native-community/datetimepicker').default;
@@ -611,13 +611,13 @@ export default function AddScreen() {
         <View style={styles.amountRow}>
           <Text
             style={styles.amount}
-            accessibilityLabel={`Amount ${currencyPrefix(effectiveEntryCurrency)}${amount}`}
+            accessibilityLabel={`Amount ${currencyPrefix(effectiveEntryCurrency)}${formatSmartAddAmount(amount)}`}
             accessibilityLiveRegion="polite"
             adjustsFontSizeToFit
             numberOfLines={1}
           >
             {currencyPrefix(effectiveEntryCurrency)}
-            {amount}
+            {formatSmartAddAmount(amount)}
           </Text>
           <Pressable
             onPress={() => setCurrencyPickerOpen(true)}

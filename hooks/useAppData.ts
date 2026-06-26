@@ -593,6 +593,35 @@ export interface CategoryTotal {
   total: number;
 }
 
+/** Income + expense totals for a month, summed in SQL (no row cap).
+ *  Replaces the previous "load N txns + reduce in JS" pattern on Home
+ *  that silently dropped older transactions once the user crossed the
+ *  DEFAULT_TX_LIMIT row count — e.g. a day-1 salary fell out of the
+ *  result set on day 21 of a busy month. Excludes 'adjustment'
+ *  category (manual balance reconciliation, not real flow) and
+ *  scheduled-but-not-yet-applied transactions. */
+export function useMonthFlow(key: string, dateLte: number = Date.now()): { income: number; expense: number } {
+  useVersion();
+  const raw = getRawDB();
+  return useMemo(() => {
+    const [s, e] = monthRange(key);
+    const row = raw.getFirstSync<{ income: number; expense: number }>(
+      `SELECT
+         COALESCE(SUM(CASE WHEN type = 'income'  THEN amount END), 0) AS income,
+         COALESCE(SUM(CASE WHEN type = 'expense' THEN amount END), 0) AS expense
+       FROM transactions
+       WHERE date >= ?
+         AND date <  ?
+         AND date <= ?
+         AND (category IS NULL OR category != 'adjustment')
+         AND (applied IS NULL OR applied = 1)`,
+      [s, e, dateLte],
+    );
+    return { income: row?.income ?? 0, expense: row?.expense ?? 0 };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version, key, dateLte]);
+}
+
 export function useMonthTotalsByCategory(key: string, type: 'expense' | 'income' = 'expense'): CategoryTotal[] {
   useVersion();
   const db = getDB();

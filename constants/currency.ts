@@ -406,6 +406,44 @@ export function formatNumber(amount: number, code: CurrencyCode = 'USD', locale?
   }
 }
 
+/** Format an in-progress Smart Add amount string for display.
+ *  - Adds the user's thousand separator (per format preset, else western).
+ *  - Suppresses the decimal portion entirely when fractional digits are
+ *    all zero ("20", "20.0", "20.00" → "20").
+ *  - Preserves a trailing separator while typing ("20." → "20.").
+ *  - Preserves what the user typed for nonzero fractions ("20.5" → "20.5",
+ *    "20.50" → "20.50"). The decimal separator follows the preset
+ *    (comma for european / space-comma, otherwise dot). */
+export function formatSmartAddAmount(raw: string): string {
+  if (!raw) return '';
+  const dot = raw.indexOf('.');
+  const intRaw = dot < 0 ? raw : raw.slice(0, dot);
+  const fracRaw = dot < 0 ? '' : raw.slice(dot + 1);
+  const showFrac = fracRaw.length > 0 && /[1-9]/.test(fracRaw);
+  const trailingDot = dot >= 0 && fracRaw.length === 0;
+  const intDigits = intRaw === '' ? '0' : intRaw;
+  const composed = showFrac ? `${intDigits}.${fracRaw}` : intDigits;
+
+  const presetId = kv.get('currencyFormat');
+  const preset = getCurrencyFormatPreset(presetId);
+  let formatted: string;
+  if (preset) {
+    formatted = applyNumberStyle(composed, preset.numberStyle);
+  } else {
+    const [i, f] = composed.split('.');
+    const grouped = i.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    formatted = f !== undefined ? `${grouped}.${f}` : grouped;
+  }
+  if (!trailingDot) return formatted;
+  // Pick the decimal separator the active style uses, so a partial
+  // entry like "20." shows the user's expected separator.
+  const sep =
+    preset?.numberStyle === 'european' || preset?.numberStyle === 'space-comma'
+      ? ','
+      : '.';
+  return `${formatted}${sep}`;
+}
+
 /** Render a preset-formatted preview for the given numeric value
  *  and symbol — used by the Currency format picker rows. */
 export function previewWithPreset(
