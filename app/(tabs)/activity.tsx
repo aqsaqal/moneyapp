@@ -8,7 +8,7 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { useOncePress } from '@/hooks/useOncePress';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { InteractionManager, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
@@ -26,6 +26,7 @@ import {
   useTransactions,
   useDailySpend,
   useMonthTotalsByCategory,
+  useToDefaultCurrency,
   useAccounts,
 } from '@/hooks/useAppData';
 import { convert as fxConvert } from '@/utils/fx';
@@ -212,6 +213,24 @@ export default function Activity() {
       return [day, ts, net] as const;
     });
   }, [txns, accountCcy, currency]);
+
+  // Progressive render — paint the first few day-groups synchronously
+  // so nav-in is instant, then mount the rest after the interaction
+  // settles. Resets whenever the visible slice changes (month, filter,
+  // search, halal filter) so each new view also paints fast.
+  const INITIAL_GROUP_COUNT = 3;
+  const [showAllGroups, setShowAllGroups] = React.useState(false);
+  React.useEffect(() => {
+    setShowAllGroups(false);
+    const handle = InteractionManager.runAfterInteractions(() =>
+      setShowAllGroups(true),
+    );
+    return () => handle.cancel();
+  }, [listMonthKey, filterCat, search, halalFilter]);
+  const visibleGroups = React.useMemo(
+    () => (showAllGroups ? grouped : grouped.slice(0, INITIAL_GROUP_COUNT)),
+    [grouped, showAllGroups],
+  );
 
   // ─── Categories analytics period range ────────────────────────────
   // For Month view: [first of month, first of next month).
@@ -451,7 +470,7 @@ export default function Activity() {
             </View>
           </View>
         )}
-        {grouped.map(([day, ts, net]) => (
+        {visibleGroups.map(([day, ts, net]) => (
           <View key={day} style={styles.group}>
             <View style={styles.dayHeader}>
               <Text style={styles.dayLabel}>{day}</Text>
@@ -573,9 +592,12 @@ function ChartModal({
   const monthTxns = useTransactions({ monthKey: key });
   const daily = useDailySpend(key);
   const totals = useMonthTotalsByCategory(key);
+  const toDefault = useToDefaultCurrency();
 
   const expenses = monthTxns.filter((t) => t.type === 'expense');
-  const totalSpend = expenses.reduce((s, t) => s + t.amount, 0);
+  // Each row is in its account's currency — fold into the display
+  // currency before summing.
+  const totalSpend = expenses.reduce((s, t) => s + toDefault(t.amount, t.accountId), 0);
   const today = new Date();
   const dim = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
   // Avg/Day = total spend ÷ elapsed calendar days. Using elapsed days

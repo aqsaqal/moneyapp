@@ -426,17 +426,15 @@ function BudgetsSection() {
   const budgeted = categories.filter((c) => c.monthlyBudget != null && !c.archived);
 
   // Sort by urgency: over-budget first, then close-to-cap (>80%), then
-  // healthy. Spend is expense-only and currency-converted into the budget's
-  // currency at today's rate (since useMonthTotalsByCategory returns native
-  // sums per the user's display currency — we treat that as already in
-  // default; in mixed-currency cases this is best-effort and surfaces
-  // exactly when the budget currency differs from default).
+  // healthy. Spend is expense-only. useMonthTotalsByCategory already folds
+  // every account's native amounts into the default currency, so the only
+  // conversion left here is default → budget currency when they differ.
   const rows = budgeted
     .map((c) => {
       const budget = c.monthlyBudget ?? 0;
       const ccy = (c.budgetCurrency as CurrencyCode | null) ?? defaultCurrency;
-      // Approximation: month totals are in default currency. If the
-      // budget is in another currency, convert the spend total over.
+      // Month totals are in default currency. If the budget is in
+      // another currency, convert the spend total over.
       const spentInDefault = totalsMap.get(c.id) ?? 0;
       const spent =
         ccy === defaultCurrency ? spentInDefault : convert(spentInDefault, defaultCurrency, ccy);

@@ -27,7 +27,7 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { useT } from '@/hooks/useT';
-import { useTransactions, useCategoriesWithMeta } from '@/hooks/useAppData';
+import { useTransactions, useCategoriesWithMeta, useAccounts } from '@/hooks/useAppData';
 import { catInfo } from '@/constants/categories';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import { convert } from '@/utils/fx';
@@ -85,19 +85,31 @@ export function CategoriesAnalytics({
     limit: 10_000,
   });
   const categories = useCategoriesWithMeta();
+  // `amount` is stored in the ACCOUNT's currency, so each row converts
+  // from its account currency (archived included — historical rows
+  // still need their wallet's currency). A row with no account match
+  // is treated as already in the display currency.
+  const allAccounts = useAccounts({ includeArchived: true });
+  const accountCcy = useMemo(() => {
+    const m = new Map<string, CurrencyCode>();
+    allAccounts.forEach((a) => m.set(a.id, ((a.currency ?? currency) as CurrencyCode)));
+    return m;
+  }, [allAccounts, currency]);
 
   // Aggregate: for each category, sum the txns of the active type
   // (expense or income), converted into the display currency. Transfers
   // and the system 'adjustment' category are skipped per the spec.
+  // Uses the account-side amount (what actually hit the account, incl.
+  // any manual FX correction) rather than the entry-currency original,
+  // matching Home / budgets / insights.
   const { rowsForType, otherTotal } = useMemo(() => {
     const sums = new Map<string, number>();
     let other = 0;
     for (const x of txns) {
       if (x.type === 'transfer') continue;
       if (x.category === 'adjustment') continue;
-      const txCcy = (x.originalCurrency as CurrencyCode | null) ?? currency;
-      const txAmt = x.originalAmount ?? x.amount;
-      const inDisplay = convert(txAmt, txCcy, currency);
+      const txCcy = accountCcy.get(x.accountId ?? '') ?? currency;
+      const inDisplay = convert(x.amount, txCcy, currency);
       if (x.type === type) {
         const key = x.category ?? (type === 'expense' ? 'other' : 'other_in');
         sums.set(key, (sums.get(key) ?? 0) + inDisplay);
@@ -121,7 +133,7 @@ export function CategoriesAnalytics({
     }
     rows.sort((a, b) => b.total - a.total);
     return { rowsForType: rows, otherTotal: other };
-  }, [txns, type, categories, currency]);
+  }, [txns, type, categories, currency, accountCcy]);
 
   const total = rowsForType.reduce((s, r) => s + r.total, 0);
   const headlineColor = type === 'expense' ? theme.expense : theme.accent;

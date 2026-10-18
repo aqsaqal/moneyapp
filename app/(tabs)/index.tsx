@@ -42,6 +42,7 @@ import { ProfileSheet } from '@/components/ProfileSheet';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { monthKey } from '@/utils/format';
 import { buildEditPrefill } from '@/utils/prefill';
+import { convert as fxConvert } from '@/utils/fx';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 
@@ -120,12 +121,18 @@ export default function Home() {
     () => new Set(paidThisMonth.map((p) => p.recurringId)),
     [paidThisMonth],
   );
+  // Every number on the hero is in the display currency. Recurring items
+  // carry their own currency (null = default); transactions are stored
+  // in their account's currency. Fold both before adding anything up.
+  const recurringToDisplay = (r: { amount: number; currency: string | null }) =>
+    r.currency && r.currency !== currency ? fxConvert(r.amount, r.currency, currency) : r.amount;
   const fixedExp = useMemo(
     () =>
       recurring
         .filter((r) => r.type === 'expense' && !paidRecurringIds.has(r.id))
-        .reduce((s, r) => s + r.amount, 0),
-    [recurring, paidRecurringIds],
+        .reduce((s, r) => s + recurringToDisplay(r), 0),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [recurring, paidRecurringIds, currency],
   );
   const disposable = income - fixedExp - expense;
 
@@ -142,8 +149,11 @@ export default function Home() {
   const variableExpense = useMemo(
     () => thisMoTxns
       .filter((t) => t.type === 'expense' && !t.recurringId)
-      .reduce((s, t) => s + t.amount, 0),
-    [thisMoTxns],
+      .reduce(
+        (s, t) => s + fxConvert(t.amount, accountCcyMap.get(t.accountId ?? '') ?? currency, currency),
+        0,
+      ),
+    [thisMoTxns, accountCcyMap, currency],
   );
 
   // Phase 10u — cashflow forecast. Project end-of-month disposable based
@@ -175,14 +185,15 @@ export default function Home() {
           r.type === 'expense' &&
           !paidRecurringIds.has(r.id),
       )
-      .reduce((s, r) => s + r.amount, 0);
+      .reduce((s, r) => s + recurringToDisplay(r), 0);
     return {
       forecast: disposable - projectedVar,
       avgDailyVariable: avgDailyVar,
       remainingBills,
       daysOfData: daysElapsed,
     };
-  }, [variableExpense, daysElapsed, daysLeft, disposable, recurring, paidRecurringIds]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [variableExpense, daysElapsed, daysLeft, disposable, recurring, paidRecurringIds, currency]);
   const forecast = forecastBundle?.forecast ?? null;
 
   return (

@@ -12,6 +12,7 @@ import { FeatureSlots } from '@/features';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import { deleteTransaction } from '@/hooks/useAppData';
 import { dayStr } from '@/utils/format';
+import { convert } from '@/utils/fx';
 import { t as i18nT } from '@/utils/i18n';
 import type { Transaction } from '@/utils/db/schema';
 
@@ -40,8 +41,14 @@ export interface TransactionRowProps {
   accountColor?: string;
 }
 
-export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountLabel, fromCurrency, toCurrency, accountIcon, accountColor }: TransactionRowProps) {
+function TransactionRowInner({ t, currency = 'USD', onPressMore, tag, accountLabel, fromCurrency, toCurrency, accountIcon, accountColor }: TransactionRowProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
+  // `t.amount` is stored in the ACCOUNT's currency (balance math), not the
+  // app's display currency. Non-transfer rows must format with the account
+  // currency, otherwise a CAD expense in a KZT-default app reads as ₸.
+  // Callers that don't pass fromCurrency (account detail) pass the account
+  // currency as `currency` already.
+  const rowCcy: CurrencyCode = fromCurrency ?? currency;
 
   // Title = category (or "Transfer"); subtitle = user-typed note when set.
   // Previous behavior collapsed both into one line, which made it
@@ -104,8 +111,8 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountL
   const a11yLabel = [
     name,
     t.type === 'transfer'
-      ? `transfer ${formatMoney(t.amount, currency)}`
-      : `${t.type === 'income' ? 'received' : 'spent'} ${formatMoney(t.amount, currency)}`,
+      ? `transfer ${formatMoney(t.amount, rowCcy)}`
+      : `${t.type === 'income' ? 'received' : 'spent'} ${formatMoney(t.amount, rowCcy)}`,
     dayStr(t.date),
     t.halalStatus && t.halalStatus !== 'unspecified' ? `marked ${t.halalStatus}` : '',
   ].filter(Boolean).join(', ');
@@ -171,9 +178,11 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountL
                      one of the account currencies. Large = From-side
                      debit, sub = To-side credit.
                   3. Mixed-currency expense/income (originalCurrency set
-                     and ≠ display): original entry LARGE, account-side
+                     and ≠ account): original entry LARGE, account-side
                      withdrawal SMALL beneath.
-                  4. Otherwise: single amount in display currency. */}
+                  4. Foreign-account row (account ≠ display currency):
+                     account amount LARGE, ≈ display-currency SMALL.
+                  5. Otherwise: single amount in the account currency. */}
             {(() => {
               const isCrossXfer =
                 t.type === 'transfer' &&
@@ -212,7 +221,7 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountL
                   </>
                 );
               }
-              if (t.originalAmount != null && t.originalCurrency && t.originalCurrency !== currency) {
+              if (t.originalAmount != null && t.originalCurrency && t.originalCurrency !== rowCcy) {
                 return (
                   <>
                     <Text style={[styles.amount, { color: amountColor }]}>
@@ -220,7 +229,20 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountL
                       {formatMoney(t.originalAmount, t.originalCurrency as CurrencyCode)}
                     </Text>
                     <Text style={styles.amountSub}>
-                      {formatMoney(t.amount, currency)}
+                      {formatMoney(t.amount, rowCcy)}
+                    </Text>
+                  </>
+                );
+              }
+              if (t.type !== 'transfer' && rowCcy !== currency) {
+                return (
+                  <>
+                    <Text style={[styles.amount, { color: amountColor }]}>
+                      {sign}
+                      {formatMoney(t.amount, rowCcy)}
+                    </Text>
+                    <Text style={styles.amountSub}>
+                      ≈ {formatMoney(convert(t.amount, rowCcy, currency), currency)}
                     </Text>
                   </>
                 );
@@ -228,7 +250,7 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountL
               return (
                 <Text style={[styles.amount, { color: amountColor }]}>
                   {sign}
-                  {formatMoney(t.amount, currency)}
+                  {formatMoney(t.amount, rowCcy)}
                 </Text>
               );
             })()}
@@ -251,6 +273,13 @@ export function TransactionRow({ t, currency = 'USD', onPressMore, tag, accountL
     </>
   );
 }
+
+// Memoized so big lists (Activity month view, up to DEFAULT_TX_LIMIT
+// rows) don't re-render every row when an unrelated state in the parent
+// changes (filter toggle, deferred-render flip, etc.). Reference
+// equality on the `t` row works because useTransactions returns stable
+// row identities until the version bumps.
+export const TransactionRow = React.memo(TransactionRowInner);
 
 const styles = StyleSheet.create({
   row: {

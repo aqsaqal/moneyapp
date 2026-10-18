@@ -21,6 +21,8 @@ import { useMemo } from 'react';
 import { getRawDB } from '@/utils/db/client';
 import { useTransactions } from './useAppData';
 import { catInfo } from '@/constants/categories';
+import { convert as fxConvert } from '@/utils/fx';
+import { kv } from '@/utils/kv';
 
 export interface CategoryDelta {
   /** Stable category id (matches categories.ts ids). */
@@ -61,6 +63,8 @@ function startOfMonth(d: Date): Date {
 interface CategoryMonthRow {
   category: string;
   yyyymm: string;
+  /** Account currency of this bucket; null = default currency. */
+  ccy: string | null;
   total: number;
 }
 
@@ -78,17 +82,22 @@ export function useInsights(): Insights {
 
     // strftime works on unix seconds; we store ms — divide by 1000.
     // 'YYYY-MM' grouping per category gives us a sparse matrix.
+    // Grouped per account currency too, so each bucket can be folded
+    // into the default currency before the month-over-month math.
+    const defaultCcy = kv.get('currency') ?? 'USD';
     const rows = raw.getAllSync(
       `SELECT
-         category,
-         strftime('%Y-%m', date/1000, 'unixepoch') AS yyyymm,
-         SUM(amount) AS total
-       FROM transactions
-       WHERE type = 'expense'
-         AND category IS NOT NULL
-         AND date >= ?
-         AND date <  ?
-       GROUP BY category, yyyymm`,
+         t.category,
+         strftime('%Y-%m', t.date/1000, 'unixepoch') AS yyyymm,
+         a.currency AS ccy,
+         SUM(t.amount) AS total
+       FROM transactions t
+       LEFT JOIN accounts a ON a.id = t.account_id
+       WHERE t.type = 'expense'
+         AND t.category IS NOT NULL
+         AND t.date >= ?
+         AND t.date <  ?
+       GROUP BY t.category, yyyymm, a.currency`,
       [window12Start, nextMonthStart],
     ) as CategoryMonthRow[];
 
@@ -102,17 +111,28 @@ export function useInsights(): Insights {
       lastMonth: number;
       history: number[]; // months strictly before thisYYYYMM
     }
-    const byCat = new Map<string, Bucket>();
+    // Fold currency buckets first so each (category, month) is a single
+    // default-currency total, then bucket per category as before.
+    const perCatMonth = new Map<string, Map<string, number>>();
     for (const r of rows) {
-      let b = byCat.get(r.category);
-      if (!b) {
-        b = { thisMonth: 0, lastMonth: 0, history: [] };
-        byCat.set(r.category, b);
+      const v = fxConvert(r.total ?? 0, r.ccy ?? defaultCcy, defaultCcy);
+      let months = perCatMonth.get(r.category);
+      if (!months) {
+        months = new Map();
+        perCatMonth.set(r.category, months);
       }
-      if (r.yyyymm === thisYYYYMM) b.thisMonth = r.total;
-      else {
-        if (r.yyyymm === lastYYYYMM) b.lastMonth = r.total;
-        b.history.push(r.total);
+      months.set(r.yyyymm, (months.get(r.yyyymm) ?? 0) + v);
+    }
+    const byCat = new Map<string, Bucket>();
+    for (const [category, months] of perCatMonth) {
+      const b: Bucket = { thisMonth: 0, lastMonth: 0, history: [] };
+      byCat.set(category, b);
+      for (const [yyyymm, total] of months) {
+        if (yyyymm === thisYYYYMM) b.thisMonth = total;
+        else {
+          if (yyyymm === lastYYYYMM) b.lastMonth = total;
+          b.history.push(total);
+        }
       }
     }
 

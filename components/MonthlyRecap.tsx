@@ -53,6 +53,7 @@ import { catInfo } from '@/constants/categories';
 import {
   useTransactions,
   useMonthTotalsByCategory,
+  useToDefaultCurrency,
   useDailySpend,
 } from '@/hooks/useAppData';
 import { useStreak } from '@/hooks/useStreak';
@@ -80,9 +81,11 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
   const totals = useMonthTotalsByCategory(key, 'expense');
   const daily = useDailySpend(key);
   const streak = useStreak();
+  const toDefault = useToDefaultCurrency();
 
-  const income = txns.filter((t) => t.type === 'income').reduce((s, t) => s + t.amount, 0);
-  const expense = txns.filter((t) => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+  // Rows are in their account's currency — fold into the display currency.
+  const income = txns.filter((t) => t.type === 'income').reduce((s, t) => s + toDefault(t.amount, t.accountId), 0);
+  const expense = txns.filter((t) => t.type === 'expense').reduce((s, t) => s + toDefault(t.amount, t.accountId), 0);
   const net = income - expense;
   const daysTracked = new Set(daily.filter((d) => d.amount > 0).map((d) => d.day)).size;
   // Cultural review (islamic): ibadah categories (zakat / sadaqa /
