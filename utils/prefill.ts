@@ -58,6 +58,9 @@ export function buildEditPrefill(tx: Transaction): string {
     // auto-convert override line so a re-save preserves the user's
     // bank-rate adjustment.
     accountAmount: tx.originalAmount != null ? tx.amount : undefined,
+    // Cross-currency transfer: the stored To-side credit (possibly a manual
+    // correction) seeds the To conversion line the same way.
+    toAccountAmount: tx.toAmount ?? undefined,
     accountId: tx.accountId,
     toAccountId: tx.toAccountId ?? undefined,
     category: tx.category ?? undefined,

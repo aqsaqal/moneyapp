@@ -97,6 +97,10 @@ export default function AddScreen() {
       type?: Mode;
       amount?: number;
       accountAmount?: number;
+      /** Edit-mode only: the stored To-side credit of a cross-currency
+       *  transfer. Seeds the To conversion line so a re-save keeps the
+       *  user's manual correction instead of re-converting. */
+      toAccountAmount?: number;
       accountId?: string;
       toAccountId?: string;
       category?: string;
@@ -162,7 +166,23 @@ export default function AddScreen() {
   // Phase 10z: independent override for the destination side of a
   // transfer. From-side keeps using accountAmountOverride above so the
   // existing reconciliation logic for non-transfer types stays as-is.
-  const [accountAmountOverrideTo, setAccountAmountOverrideTo] = useState<string | null>(null);
+  const [accountAmountOverrideTo, setAccountAmountOverrideTo] = useState<string | null>(
+    prefill?.toAccountAmount != null ? prefill.toAccountAmount.toFixed(2) : null,
+  );
+
+  // Bug fix: a manual correction on a conversion line is tied to the
+  // amount it was typed against. When the user changes the amount
+  // afterwards (numpad, suggestion, OCR), drop the stale override so the
+  // line flips back to the live auto conversion. The ref lets the prefill
+  // re-sync effect below set amount + override together without this
+  // effect immediately wiping the override it just seeded.
+  const lastAmountRef = React.useRef(amount);
+  useEffect(() => {
+    if (amount === lastAmountRef.current) return;
+    lastAmountRef.current = amount;
+    setAccountAmountOverride(null);
+    setAccountAmountOverrideTo(null);
+  }, [amount]);
 
   // Re-sync state from prefill whenever the route params change. Expo
   // Router reuses the /add screen instance across navigations from Plan
@@ -177,7 +197,9 @@ export default function AddScreen() {
     if (prefill.amount != null) {
       const ccy = (prefill.originalCurrency as CurrencyCode | undefined);
       const digits = (ccy && CURRENCIES[ccy]?.decimalDigits) ?? 2;
-      setAmount(prefill.amount.toFixed(digits));
+      const next = prefill.amount.toFixed(digits);
+      lastAmountRef.current = next;
+      setAmount(next);
     }
     if (prefill.note != null) setNote(prefill.note);
     if (prefill.date != null) setTxDate(new Date(prefill.date));
@@ -188,6 +210,9 @@ export default function AddScreen() {
     }
     if (prefill.accountAmount != null) {
       setAccountAmountOverride(prefill.accountAmount.toFixed(2));
+    }
+    if (prefill.toAccountAmount != null) {
+      setAccountAmountOverrideTo(prefill.toAccountAmount.toFixed(2));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.prefill]);
@@ -463,9 +488,17 @@ export default function AddScreen() {
       // entry amount converted into toAccountCcy. Same currency on
       // both sides → toAmount stays null (legacy single-amount path).
       const toCcy = toAccountCcy ?? currency;
+      // Honor a manual correction on the To line (the bank credited a
+      // different amount than our cached rate predicts), same as the
+      // From side above. Fall back to the live conversion otherwise.
+      const overrideToNum = accountAmountOverrideTo
+        ? parseFloat(accountAmountOverrideTo.replace(',', '.'))
+        : NaN;
       const toAmount =
         fromAccountCcy && toCcy && fromAccountCcy !== toCcy
-          ? convert(v, effectiveEntryCurrency, toCcy)
+          ? Number.isFinite(overrideToNum) && overrideToNum > 0
+            ? overrideToNum
+            : convert(v, effectiveEntryCurrency, toCcy)
           : null;
       if (isEditing && prefill?.editId) {
         updateTransaction(prefill.editId, {
