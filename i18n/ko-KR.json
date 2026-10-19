@@ -524,5 +524,15 @@
   "toast.saved.debt": "부채 저장됨",
   "toast.saved.recurring": "반복 저장됨",
   "toast.saved.account": "계정 저장됨",
-  "toast.saved.category": "카테고리 저장됨"
+  "toast.saved.category": "카테고리 저장됨",
+  "add.field.paid": "결제한 금액",
+  "add.field.received": "받은 금액",
+  "add.field.send": "보내는 금액",
+  "add.field.charged": "{account} 청구 금액",
+  "add.field.credited": "{account} 입금 금액",
+  "add.field.debited": "{account} 출금 금액",
+  "add.field.receives": "{account} 수령 금액",
+  "add.field.a11y": "{label}: {amount}. 탭하여 편집",
+  "add.rate.market": "시장 환율",
+  "add.rate.bank": "내 환율"
 }

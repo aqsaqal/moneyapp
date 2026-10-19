@@ -524,5 +524,15 @@
   "toast.saved.debt": "Gjeld lagret",
   "toast.saved.recurring": "Gjentakende lagret",
   "toast.saved.account": "Konto lagret",
-  "toast.saved.category": "Kategori lagret"
+  "toast.saved.category": "Kategori lagret",
+  "add.field.paid": "Du betalte",
+  "add.field.received": "Du mottok",
+  "add.field.send": "Du sender",
+  "add.field.charged": "{account} belastet",
+  "add.field.credited": "{account} godskrevet",
+  "add.field.debited": "Trukket fra {account}",
+  "add.field.receives": "{account} mottar",
+  "add.field.a11y": "{label}: {amount}. Trykk for å redigere",
+  "add.rate.market": "Markedskurs",
+  "add.rate.bank": "Din kurs"
 }

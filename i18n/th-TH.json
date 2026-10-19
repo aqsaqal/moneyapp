@@ -524,5 +524,15 @@
   "toast.saved.debt": "บันทึกหนี้สินแล้ว",
   "toast.saved.recurring": "บันทึกรายการประจำแล้ว",
   "toast.saved.account": "บันทึกบัญชีแล้ว",
-  "toast.saved.category": "บันทึกหมวดแล้ว"
+  "toast.saved.category": "บันทึกหมวดแล้ว",
+  "add.field.paid": "คุณจ่าย",
+  "add.field.received": "คุณได้รับ",
+  "add.field.send": "คุณส่ง",
+  "add.field.charged": "หักจาก {account}",
+  "add.field.credited": "เข้า {account}",
+  "add.field.debited": "ตัดจาก {account}",
+  "add.field.receives": "{account} ได้รับ",
+  "add.field.a11y": "{label}: {amount} แตะเพื่อแก้ไข",
+  "add.rate.market": "อัตราตลาด",
+  "add.rate.bank": "อัตราของคุณ"
 }

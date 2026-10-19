@@ -524,5 +524,15 @@
   "toast.saved.debt": "Skola išsaugota",
   "toast.saved.recurring": "Pasikartojantis išsaugotas",
   "toast.saved.account": "Sąskaita išsaugota",
-  "toast.saved.category": "Kategorija išsaugota"
+  "toast.saved.category": "Kategorija išsaugota",
+  "add.field.paid": "Sumokėjote",
+  "add.field.received": "Gavote",
+  "add.field.send": "Siunčiate",
+  "add.field.charged": "Nuskaičiuota iš {account}",
+  "add.field.credited": "Įskaityta į {account}",
+  "add.field.debited": "Nurašyta iš {account}",
+  "add.field.receives": "{account} gauna",
+  "add.field.a11y": "{label}: {amount}. Bakstelėkite, kad redaguotumėte",
+  "add.rate.market": "Rinkos kursas",
+  "add.rate.bank": "Jūsų kursas"
 }

@@ -524,5 +524,15 @@
   "toast.saved.debt": "Борг збережено",
   "toast.saved.recurring": "Повторюване збережено",
   "toast.saved.account": "Рахунок збережено",
-  "toast.saved.category": "Категорію збережено"
+  "toast.saved.category": "Категорію збережено",
+  "add.field.paid": "Сплачено",
+  "add.field.received": "Отримано",
+  "add.field.send": "Надсилаєш",
+  "add.field.charged": "Списано з {account}",
+  "add.field.credited": "Зараховано на {account}",
+  "add.field.debited": "Знято з {account}",
+  "add.field.receives": "{account} отримує",
+  "add.field.a11y": "{label}: {amount}. Натисни, щоб змінити",
+  "add.rate.market": "Ринковий курс",
+  "add.rate.bank": "Твій курс"
 }

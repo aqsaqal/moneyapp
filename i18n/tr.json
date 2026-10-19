@@ -523,5 +523,15 @@
   "toast.saved.debt": "Borç kaydedildi",
   "toast.saved.recurring": "Tekrarlayan kaydedildi",
   "toast.saved.account": "Hesap kaydedildi",
-  "toast.saved.category": "Kategori kaydedildi"
+  "toast.saved.category": "Kategori kaydedildi",
+  "add.field.paid": "Ödediğin",
+  "add.field.received": "Aldığın",
+  "add.field.send": "Gönderdiğin",
+  "add.field.charged": "{account} hesabından çekildi",
+  "add.field.credited": "{account} hesabına yatırıldı",
+  "add.field.debited": "{account} hesabından düşüldü",
+  "add.field.receives": "{account} hesabına geçer",
+  "add.field.a11y": "{label}: {amount}. Düzenlemek için dokun",
+  "add.rate.market": "Piyasa kuru",
+  "add.rate.bank": "Senin kurun"
 }

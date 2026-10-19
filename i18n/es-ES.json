@@ -524,5 +524,15 @@
   "toast.saved.debt": "Deuda guardada",
   "toast.saved.recurring": "Recurrente guardado",
   "toast.saved.account": "Cuenta guardada",
-  "toast.saved.category": "Categoría guardada"
+  "toast.saved.category": "Categoría guardada",
+  "add.field.paid": "Pagaste",
+  "add.field.received": "Recibiste",
+  "add.field.send": "Envías",
+  "add.field.charged": "Cargado en {account}",
+  "add.field.credited": "Abonado en {account}",
+  "add.field.debited": "Retirado de {account}",
+  "add.field.receives": "{account} recibe",
+  "add.field.a11y": "{label}: {amount}. Toca para editar",
+  "add.rate.market": "Tipo de mercado",
+  "add.rate.bank": "Tu tipo"
 }

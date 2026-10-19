@@ -524,5 +524,15 @@
   "toast.saved.debt": "Dlh uložený",
   "toast.saved.recurring": "Opakovanie uložené",
   "toast.saved.account": "Účet uložený",
-  "toast.saved.category": "Kategória uložená"
+  "toast.saved.category": "Kategória uložená",
+  "add.field.paid": "Zaplatené",
+  "add.field.received": "Prijaté",
+  "add.field.send": "Posielaš",
+  "add.field.charged": "Strhnuté z {account}",
+  "add.field.credited": "Pripísané na {account}",
+  "add.field.debited": "Odpísané z {account}",
+  "add.field.receives": "{account} prijíma",
+  "add.field.a11y": "{label}: {amount}. Klepni pre úpravu",
+  "add.rate.market": "Trhový kurz",
+  "add.rate.bank": "Tvoj kurz"
 }

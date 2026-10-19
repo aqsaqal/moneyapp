@@ -523,5 +523,15 @@
   "toast.saved.debt": "تم حفظ الدين",
   "toast.saved.recurring": "تم حفظ المتكرر",
   "toast.saved.account": "تم حفظ الحساب",
-  "toast.saved.category": "تم حفظ الفئة"
+  "toast.saved.category": "تم حفظ الفئة",
+  "add.field.paid": "دفعتَ",
+  "add.field.received": "استلمتَ",
+  "add.field.send": "أنت ترسل",
+  "add.field.charged": "خُصم من {account}",
+  "add.field.credited": "أُضيف إلى {account}",
+  "add.field.debited": "سُحب من {account}",
+  "add.field.receives": "يستلم {account}",
+  "add.field.a11y": "{label}: {amount}. اضغط للتعديل",
+  "add.rate.market": "سعر السوق",
+  "add.rate.bank": "سعرك"
 }

@@ -523,5 +523,15 @@
   "toast.saved.debt": "Utang disimpan",
   "toast.saved.recurring": "Langganan tetap disimpan",
   "toast.saved.account": "Akun disimpan",
-  "toast.saved.category": "Kategori disimpan"
+  "toast.saved.category": "Kategori disimpan",
+  "add.field.paid": "Anda bayar",
+  "add.field.received": "Anda terima",
+  "add.field.send": "Anda kirim",
+  "add.field.charged": "Dipotong dari {account}",
+  "add.field.credited": "Dikredit ke {account}",
+  "add.field.debited": "Didebit dari {account}",
+  "add.field.receives": "{account} menerima",
+  "add.field.a11y": "{label}: {amount}. Ketuk untuk mengubah",
+  "add.rate.market": "Kurs pasar",
+  "add.rate.bank": "Kurs Anda"
 }

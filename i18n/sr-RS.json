@@ -524,5 +524,15 @@
   "toast.saved.debt": "Дуг сачуван",
   "toast.saved.recurring": "Понављање сачувано",
   "toast.saved.account": "Рачун сачуван",
-  "toast.saved.category": "Категорија сачувана"
+  "toast.saved.category": "Категорија сачувана",
+  "add.field.paid": "Плаћено",
+  "add.field.received": "Примљено",
+  "add.field.send": "Шаљеш",
+  "add.field.charged": "Наплаћено са {account}",
+  "add.field.credited": "Уплаћено на {account}",
+  "add.field.debited": "Скинуто са {account}",
+  "add.field.receives": "{account} прима",
+  "add.field.a11y": "{label}: {amount}. Тапни за измену",
+  "add.rate.market": "Тржишни курс",
+  "add.rate.bank": "Твој курс"
 }

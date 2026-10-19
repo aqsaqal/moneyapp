@@ -524,5 +524,15 @@
   "toast.saved.debt": "Adósság mentve",
   "toast.saved.recurring": "Ismétlődő mentve",
   "toast.saved.account": "Számla mentve",
-  "toast.saved.category": "Kategória mentve"
+  "toast.saved.category": "Kategória mentve",
+  "add.field.paid": "Fizetted",
+  "add.field.received": "Kaptad",
+  "add.field.send": "Küldesz",
+  "add.field.charged": "{account} terhelése",
+  "add.field.credited": "{account} jóváírása",
+  "add.field.debited": "Levonva: {account}",
+  "add.field.receives": "{account} kapja",
+  "add.field.a11y": "{label}: {amount}. Koppints a szerkesztéshez",
+  "add.rate.market": "Piaci árfolyam",
+  "add.rate.bank": "Saját árfolyam"
 }

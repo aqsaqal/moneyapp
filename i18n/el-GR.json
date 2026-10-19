@@ -524,5 +524,15 @@
   "toast.saved.debt": "Το χρέος αποθηκεύτηκε",
   "toast.saved.recurring": "Η επανάληψη αποθηκεύτηκε",
   "toast.saved.account": "Ο λογαριασμός αποθηκεύτηκε",
-  "toast.saved.category": "Η κατηγορία αποθηκεύτηκε"
+  "toast.saved.category": "Η κατηγορία αποθηκεύτηκε",
+  "add.field.paid": "Πλήρωσες",
+  "add.field.received": "Έλαβες",
+  "add.field.send": "Στέλνεις",
+  "add.field.charged": "Χρέωση {account}",
+  "add.field.credited": "Πίστωση {account}",
+  "add.field.debited": "Ανάληψη από {account}",
+  "add.field.receives": "{account} λαμβάνει",
+  "add.field.a11y": "{label}: {amount}. Πάτα για επεξεργασία",
+  "add.rate.market": "Ισοτιμία αγοράς",
+  "add.rate.bank": "Η ισοτιμία σου"
 }

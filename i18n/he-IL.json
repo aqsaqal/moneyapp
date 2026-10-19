@@ -524,5 +524,15 @@
   "toast.saved.debt": "החוב נשמר",
   "toast.saved.recurring": "החוזר נשמר",
   "toast.saved.account": "החשבון נשמר",
-  "toast.saved.category": "הקטגוריה נשמרה"
+  "toast.saved.category": "הקטגוריה נשמרה",
+  "add.field.paid": "שילמת",
+  "add.field.received": "קיבלת",
+  "add.field.send": "אתה שולח",
+  "add.field.charged": "חויב מ-{account}",
+  "add.field.credited": "זוכה ב-{account}",
+  "add.field.debited": "נמשך מ-{account}",
+  "add.field.receives": "{account} מקבל",
+  "add.field.a11y": "{label}: {amount}. הקש לעריכה",
+  "add.rate.market": "שער שוק",
+  "add.rate.bank": "השער שלך"
 }

@@ -524,5 +524,15 @@
   "toast.saved.debt": "ঋণ সংরক্ষিত",
   "toast.saved.recurring": "পুনরাবৃত্ত সংরক্ষিত",
   "toast.saved.account": "অ্যাকাউন্ট সংরক্ষিত",
-  "toast.saved.category": "বিভাগ সংরক্ষিত"
+  "toast.saved.category": "বিভাগ সংরক্ষিত",
+  "add.field.paid": "আপনি দিয়েছেন",
+  "add.field.received": "আপনি পেয়েছেন",
+  "add.field.send": "আপনি পাঠাচ্ছেন",
+  "add.field.charged": "{account} থেকে কাটা হয়েছে",
+  "add.field.credited": "{account}-এ যোগ হয়েছে",
+  "add.field.debited": "{account} থেকে ডেবিট হয়েছে",
+  "add.field.receives": "{account}-এ জমা হবে",
+  "add.field.a11y": "{label}: {amount}। সম্পাদনা করতে ট্যাপ করুন",
+  "add.rate.market": "বাজার হার",
+  "add.rate.bank": "আপনার হার"
 }

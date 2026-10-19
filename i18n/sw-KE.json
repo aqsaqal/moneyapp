@@ -524,5 +524,15 @@
   "toast.saved.debt": "Deni limehifadhiwa",
   "toast.saved.recurring": "Inayojirudia imehifadhiwa",
   "toast.saved.account": "Akaunti imehifadhiwa",
-  "toast.saved.category": "Kategoria imehifadhiwa"
+  "toast.saved.category": "Kategoria imehifadhiwa",
+  "add.field.paid": "Ulilipa",
+  "add.field.received": "Ulipokea",
+  "add.field.send": "Unatuma",
+  "add.field.charged": "Imetozwa kutoka {account}",
+  "add.field.credited": "Imewekwa kwenye {account}",
+  "add.field.debited": "Imekatwa kutoka {account}",
+  "add.field.receives": "{account} inapokea",
+  "add.field.a11y": "{label}: {amount}. Gusa kuhariri",
+  "add.rate.market": "Kiwango cha soko",
+  "add.rate.bank": "Kiwango chako"
 }

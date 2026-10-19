@@ -524,5 +524,15 @@
   "toast.saved.debt": "Skuld sparad",
   "toast.saved.recurring": "Återkommande sparad",
   "toast.saved.account": "Konto sparat",
-  "toast.saved.category": "Kategori sparad"
+  "toast.saved.category": "Kategori sparad",
+  "add.field.paid": "Du betalade",
+  "add.field.received": "Du fick",
+  "add.field.send": "Du skickar",
+  "add.field.charged": "{account} belastas",
+  "add.field.credited": "{account} krediteras",
+  "add.field.debited": "{account} debiteras",
+  "add.field.receives": "{account} tar emot",
+  "add.field.a11y": "{label}: {amount}. Tryck för att redigera",
+  "add.rate.market": "Marknadskurs",
+  "add.rate.bank": "Din kurs"
 }

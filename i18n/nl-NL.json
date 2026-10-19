@@ -524,5 +524,15 @@
   "toast.saved.debt": "Schuld opgeslagen",
   "toast.saved.recurring": "Herhaling opgeslagen",
   "toast.saved.account": "Rekening opgeslagen",
-  "toast.saved.category": "Categorie opgeslagen"
+  "toast.saved.category": "Categorie opgeslagen",
+  "add.field.paid": "Je betaalde",
+  "add.field.received": "Je ontving",
+  "add.field.send": "Je stuurt",
+  "add.field.charged": "{account} belast",
+  "add.field.credited": "Bijgeschreven op {account}",
+  "add.field.debited": "Afgeschreven van {account}",
+  "add.field.receives": "{account} ontvangt",
+  "add.field.a11y": "{label}: {amount}. Tik om te bewerken",
+  "add.rate.market": "Marktkoers",
+  "add.rate.bank": "Jouw koers"
 }

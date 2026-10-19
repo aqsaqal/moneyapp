@@ -524,5 +524,15 @@
   "toast.saved.debt": "Velka tallennettu",
   "toast.saved.recurring": "Toistuva tallennettu",
   "toast.saved.account": "Tili tallennettu",
-  "toast.saved.category": "Kategoria tallennettu"
+  "toast.saved.category": "Kategoria tallennettu",
+  "add.field.paid": "Maksoit",
+  "add.field.received": "Sait",
+  "add.field.send": "Lähetät",
+  "add.field.charged": "Veloitus: {account}",
+  "add.field.credited": "Hyvitys: {account}",
+  "add.field.debited": "Veloitettu: {account}",
+  "add.field.receives": "{account} saa",
+  "add.field.a11y": "{label}: {amount}. Muokkaa napauttamalla",
+  "add.rate.market": "Markkinakurssi",
+  "add.rate.bank": "Oma kurssi"
 }

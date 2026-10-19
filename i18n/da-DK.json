@@ -524,5 +524,15 @@
   "toast.saved.debt": "Gæld gemt",
   "toast.saved.recurring": "Gentagende gemt",
   "toast.saved.account": "Konto gemt",
-  "toast.saved.category": "Kategori gemt"
+  "toast.saved.category": "Kategori gemt",
+  "add.field.paid": "Du betalte",
+  "add.field.received": "Du modtog",
+  "add.field.send": "Du sender",
+  "add.field.charged": "Trukket fra {account}",
+  "add.field.credited": "Indsat på {account}",
+  "add.field.debited": "Hævet fra {account}",
+  "add.field.receives": "{account} modtager",
+  "add.field.a11y": "{label}: {amount}. Tryk for at redigere",
+  "add.rate.market": "Markedskurs",
+  "add.rate.bank": "Din kurs"
 }

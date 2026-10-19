@@ -524,5 +524,15 @@
   "toast.saved.debt": "Na-save ang utang",
   "toast.saved.recurring": "Na-save ang paulit-ulit",
   "toast.saved.account": "Na-save ang account",
-  "toast.saved.category": "Na-save ang kategorya"
+  "toast.saved.category": "Na-save ang kategorya",
+  "add.field.paid": "Binayaran mo",
+  "add.field.received": "Natanggap mo",
+  "add.field.send": "Ipinapadala mo",
+  "add.field.charged": "Sininingil sa {account}",
+  "add.field.credited": "Na-credit sa {account}",
+  "add.field.debited": "Na-debit sa {account}",
+  "add.field.receives": "Tatanggapin ng {account}",
+  "add.field.a11y": "{label}: {amount}. I-tap para i-edit",
+  "add.rate.market": "Market rate",
+  "add.rate.bank": "Rate mo"
 }

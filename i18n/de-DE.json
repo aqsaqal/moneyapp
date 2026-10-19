@@ -524,5 +524,15 @@
   "toast.saved.debt": "Schuld gespeichert",
   "toast.saved.recurring": "Wiederkehrende gespeichert",
   "toast.saved.account": "Konto gespeichert",
-  "toast.saved.category": "Kategorie gespeichert"
+  "toast.saved.category": "Kategorie gespeichert",
+  "add.field.paid": "Du zahlst",
+  "add.field.received": "Du erhältst",
+  "add.field.send": "Du sendest",
+  "add.field.charged": "{account} belastet",
+  "add.field.credited": "{account} gutgeschrieben",
+  "add.field.debited": "{account} abgebucht",
+  "add.field.receives": "{account} erhält",
+  "add.field.a11y": "{label}: {amount}. Zum Bearbeiten tippen",
+  "add.rate.market": "Marktkurs",
+  "add.rate.bank": "Dein Kurs"
 }

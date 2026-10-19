@@ -524,5 +524,15 @@
   "toast.saved.debt": "Đã lưu khoản nợ",
   "toast.saved.recurring": "Đã lưu lặp lại",
   "toast.saved.account": "Đã lưu tài khoản",
-  "toast.saved.category": "Đã lưu danh mục"
+  "toast.saved.category": "Đã lưu danh mục",
+  "add.field.paid": "Bạn đã trả",
+  "add.field.received": "Bạn đã nhận",
+  "add.field.send": "Bạn gửi",
+  "add.field.charged": "Trừ từ {account}",
+  "add.field.credited": "Ghi có {account}",
+  "add.field.debited": "Ghi nợ {account}",
+  "add.field.receives": "{account} nhận được",
+  "add.field.a11y": "{label}: {amount}. Chạm để sửa",
+  "add.rate.market": "Tỷ giá thị trường",
+  "add.rate.bank": "Tỷ giá của bạn"
 }

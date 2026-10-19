@@ -524,5 +524,15 @@
   "toast.saved.debt": "Dívida salva",
   "toast.saved.recurring": "Recorrente salvo",
   "toast.saved.account": "Conta salva",
-  "toast.saved.category": "Categoria salva"
+  "toast.saved.category": "Categoria salva",
+  "add.field.paid": "Você pagou",
+  "add.field.received": "Você recebeu",
+  "add.field.send": "Você envia",
+  "add.field.charged": "Cobrado de {account}",
+  "add.field.credited": "Creditado em {account}",
+  "add.field.debited": "Debitado de {account}",
+  "add.field.receives": "{account} recebe",
+  "add.field.a11y": "{label}: {amount}. Toque para editar",
+  "add.rate.market": "Cotação de mercado",
+  "add.rate.bank": "Sua cotação"
 }

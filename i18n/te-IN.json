@@ -524,5 +524,15 @@
   "toast.saved.debt": "అప్పు సేవ్ అయింది",
   "toast.saved.recurring": "పునరావృతం సేవ్ అయింది",
   "toast.saved.account": "ఖాతా సేవ్ అయింది",
-  "toast.saved.category": "వర్గం సేవ్ అయింది"
+  "toast.saved.category": "వర్గం సేవ్ అయింది",
+  "add.field.paid": "మీరు చెల్లించింది",
+  "add.field.received": "మీరు అందుకున్నది",
+  "add.field.send": "మీరు పంపేది",
+  "add.field.charged": "{account} నుండి వసూలు",
+  "add.field.credited": "{account} క్రెడిట్ అయింది",
+  "add.field.debited": "{account} డెబిట్ అయింది",
+  "add.field.receives": "{account} అందుకుంటుంది",
+  "add.field.a11y": "{label}: {amount}. సవరించడానికి తట్టండి",
+  "add.rate.market": "మార్కెట్ రేటు",
+  "add.rate.bank": "మీ రేటు"
 }

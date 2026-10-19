@@ -524,5 +524,15 @@
   "toast.saved.debt": "Parāds saglabāts",
   "toast.saved.recurring": "Atkārtotais saglabāts",
   "toast.saved.account": "Konts saglabāts",
-  "toast.saved.category": "Kategorija saglabāta"
+  "toast.saved.category": "Kategorija saglabāta",
+  "add.field.paid": "Jūs samaksājāt",
+  "add.field.received": "Jūs saņēmāt",
+  "add.field.send": "Jūs sūtāt",
+  "add.field.charged": "Noņemts no {account}",
+  "add.field.credited": "Ieskaitīts kontā {account}",
+  "add.field.debited": "Norakstīts no {account}",
+  "add.field.receives": "{account} saņem",
+  "add.field.a11y": "{label}: {amount}. Pieskarieties, lai rediģētu",
+  "add.rate.market": "Tirgus kurss",
+  "add.rate.bank": "Jūsu kurss"
 }

@@ -524,5 +524,15 @@
   "toast.saved.debt": "Võlg salvestatud",
   "toast.saved.recurring": "Korduv salvestatud",
   "toast.saved.account": "Konto salvestatud",
-  "toast.saved.category": "Kategooria salvestatud"
+  "toast.saved.category": "Kategooria salvestatud",
+  "add.field.paid": "Maksid",
+  "add.field.received": "Said",
+  "add.field.send": "Saadad",
+  "add.field.charged": "Kontolt {account} võetud",
+  "add.field.credited": "Kontole {account} lisatud",
+  "add.field.debited": "Kontolt {account} debiteeritud",
+  "add.field.receives": "{account} saab",
+  "add.field.a11y": "{label}: {amount}. Puuduta muutmiseks",
+  "add.rate.market": "Turukurss",
+  "add.rate.bank": "Sinu kurss"
 }

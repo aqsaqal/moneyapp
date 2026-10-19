@@ -524,5 +524,15 @@
   "toast.saved.debt": "Задължението е запазено",
   "toast.saved.recurring": "Повтарящото е запазено",
   "toast.saved.account": "Сметката е запазена",
-  "toast.saved.category": "Категорията е запазена"
+  "toast.saved.category": "Категорията е запазена",
+  "add.field.paid": "Платихте",
+  "add.field.received": "Получихте",
+  "add.field.send": "Изпращате",
+  "add.field.charged": "Удържано от {account}",
+  "add.field.credited": "Добавено към {account}",
+  "add.field.debited": "Изтеглено от {account}",
+  "add.field.receives": "{account} получава",
+  "add.field.a11y": "{label}: {amount}. Докоснете за редакция",
+  "add.rate.market": "Пазарен курс",
+  "add.rate.bank": "Вашият курс"
 }

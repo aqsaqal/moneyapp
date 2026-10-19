@@ -524,5 +524,15 @@
   "toast.saved.debt": "Datorie salvată",
   "toast.saved.recurring": "Recurent salvat",
   "toast.saved.account": "Cont salvat",
-  "toast.saved.category": "Categorie salvată"
+  "toast.saved.category": "Categorie salvată",
+  "add.field.paid": "Ai plătit",
+  "add.field.received": "Ai primit",
+  "add.field.send": "Trimiți",
+  "add.field.charged": "Reținut din {account}",
+  "add.field.credited": "Creditat în {account}",
+  "add.field.debited": "Debitat din {account}",
+  "add.field.receives": "{account} primește",
+  "add.field.a11y": "{label}: {amount}. Apasă pentru a edita",
+  "add.rate.market": "Cursul pieței",
+  "add.rate.bank": "Cursul tău"
 }

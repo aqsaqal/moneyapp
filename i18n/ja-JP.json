@@ -524,5 +524,15 @@
   "toast.saved.debt": "負債を保存しました",
   "toast.saved.recurring": "定期を保存しました",
   "toast.saved.account": "口座を保存しました",
-  "toast.saved.category": "カテゴリを保存しました"
+  "toast.saved.category": "カテゴリを保存しました",
+  "add.field.paid": "支払額",
+  "add.field.received": "受取額",
+  "add.field.send": "送金額",
+  "add.field.charged": "{account} 請求額",
+  "add.field.credited": "{account} 入金額",
+  "add.field.debited": "{account} 引落額",
+  "add.field.receives": "{account} 受取額",
+  "add.field.a11y": "{label}：{amount}。タップして編集",
+  "add.rate.market": "市場レート",
+  "add.rate.bank": "あなたのレート"
 }

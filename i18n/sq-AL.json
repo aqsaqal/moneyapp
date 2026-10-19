@@ -524,5 +524,15 @@
   "toast.saved.debt": "Borxhi u ruajt",
   "toast.saved.recurring": "I përsërituri u ruajt",
   "toast.saved.account": "Llogaria u ruajt",
-  "toast.saved.category": "Kategoria u ruajt"
+  "toast.saved.category": "Kategoria u ruajt",
+  "add.field.paid": "Ke paguar",
+  "add.field.received": "Ke marrë",
+  "add.field.send": "Ti dërgon",
+  "add.field.charged": "{account} u ngarkua",
+  "add.field.credited": "{account} u kreditua",
+  "add.field.debited": "{account} u debitua",
+  "add.field.receives": "{account} merr",
+  "add.field.a11y": "{label}: {amount}. Prek për të modifikuar",
+  "add.rate.market": "Kursi i tregut",
+  "add.rate.bank": "Kursi yt"
 }

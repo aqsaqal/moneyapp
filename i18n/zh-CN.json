@@ -524,5 +524,15 @@
   "toast.saved.debt": "债务已保存",
   "toast.saved.recurring": "循环已保存",
   "toast.saved.account": "账户已保存",
-  "toast.saved.category": "类别已保存"
+  "toast.saved.category": "类别已保存",
+  "add.field.paid": "你支付",
+  "add.field.received": "你收到",
+  "add.field.send": "你发送",
+  "add.field.charged": "{account} 扣款",
+  "add.field.credited": "{account} 入账",
+  "add.field.debited": "{account} 扣除",
+  "add.field.receives": "{account} 收到",
+  "add.field.a11y": "{label}：{amount}。点击编辑",
+  "add.rate.market": "市场汇率",
+  "add.rate.bank": "你的汇率"
 }

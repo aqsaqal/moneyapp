@@ -524,5 +524,15 @@
   "toast.saved.debt": "Qarz saqlandi",
   "toast.saved.recurring": "Takrorlanuvchi saqlandi",
   "toast.saved.account": "Hisob saqlandi",
-  "toast.saved.category": "Kategoriya saqlandi"
+  "toast.saved.category": "Kategoriya saqlandi",
+  "add.field.paid": "Siz toʻladingiz",
+  "add.field.received": "Siz oldingiz",
+  "add.field.send": "Siz yuborasiz",
+  "add.field.charged": "{account}dan yechildi",
+  "add.field.credited": "{account}ga kirim",
+  "add.field.debited": "{account}dan chiqim",
+  "add.field.receives": "{account} qabul qiladi",
+  "add.field.a11y": "{label}: {amount}. Tahrirlash uchun bosing",
+  "add.rate.market": "Bozor kursi",
+  "add.rate.bank": "Sizning kursingiz"
 }

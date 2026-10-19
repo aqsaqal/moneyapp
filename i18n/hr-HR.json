@@ -524,5 +524,15 @@
   "toast.saved.debt": "Dug spremljen",
   "toast.saved.recurring": "Ponavljajuće spremljeno",
   "toast.saved.account": "Račun spremljen",
-  "toast.saved.category": "Kategorija spremljena"
+  "toast.saved.category": "Kategorija spremljena",
+  "add.field.paid": "Plaćeno",
+  "add.field.received": "Primljeno",
+  "add.field.send": "Šalješ",
+  "add.field.charged": "Naplaćeno s {account}",
+  "add.field.credited": "Uplaćeno na {account}",
+  "add.field.debited": "Skinuto s {account}",
+  "add.field.receives": "{account} prima",
+  "add.field.a11y": "{label}: {amount}. Dodirni za uređivanje",
+  "add.rate.market": "Tržišni tečaj",
+  "add.rate.bank": "Tvoj tečaj"
 }

@@ -524,5 +524,15 @@
   "toast.saved.debt": "قرض محفوظ ہو گیا",
   "toast.saved.recurring": "بار بار محفوظ ہو گیا",
   "toast.saved.account": "اکاؤنٹ محفوظ ہو گیا",
-  "toast.saved.category": "زمرہ محفوظ ہو گیا"
+  "toast.saved.category": "زمرہ محفوظ ہو گیا",
+  "add.field.paid": "آپ نے ادا کیا",
+  "add.field.received": "آپ کو ملا",
+  "add.field.send": "آپ بھیج رہے ہیں",
+  "add.field.charged": "{account} سے کٹوتی",
+  "add.field.credited": "{account} میں کریڈٹ",
+  "add.field.debited": "{account} سے ڈیبٹ",
+  "add.field.receives": "{account} وصول کرے گا",
+  "add.field.a11y": "{label}: {amount}۔ ترمیم کے لیے ٹیپ کریں",
+  "add.rate.market": "مارکیٹ ریٹ",
+  "add.rate.bank": "آپ کا ریٹ"
 }

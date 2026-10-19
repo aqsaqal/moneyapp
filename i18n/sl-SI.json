@@ -524,5 +524,15 @@
   "toast.saved.debt": "Dolg shranjen",
   "toast.saved.recurring": "Ponavljanje shranjeno",
   "toast.saved.account": "Račun shranjen",
-  "toast.saved.category": "Kategorija shranjena"
+  "toast.saved.category": "Kategorija shranjena",
+  "add.field.paid": "Plačano",
+  "add.field.received": "Prejeto",
+  "add.field.send": "Pošiljaš",
+  "add.field.charged": "Z računa {account}",
+  "add.field.credited": "Na račun {account}",
+  "add.field.debited": "Odliv z {account}",
+  "add.field.receives": "{account} prejme",
+  "add.field.a11y": "{label}: {amount}. Tapni za urejanje",
+  "add.rate.market": "Tržni tečaj",
+  "add.rate.bank": "Tvoj tečaj"
 }

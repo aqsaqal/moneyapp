@@ -524,5 +524,15 @@
   "toast.saved.debt": "بدهی ذخیره شد",
   "toast.saved.recurring": "مکرر ذخیره شد",
   "toast.saved.account": "حساب ذخیره شد",
-  "toast.saved.category": "دسته ذخیره شد"
+  "toast.saved.category": "دسته ذخیره شد",
+  "add.field.paid": "پرداخت کردید",
+  "add.field.received": "دریافت کردید",
+  "add.field.send": "ارسال می‌کنید",
+  "add.field.charged": "از {account} کسر شد",
+  "add.field.credited": "به {account} واریز شد",
+  "add.field.debited": "از {account} برداشت شد",
+  "add.field.receives": "به {account} می‌رسد",
+  "add.field.a11y": "{label}: {amount}. برای ویرایش ضربه بزنید",
+  "add.rate.market": "نرخ بازار",
+  "add.rate.bank": "نرخ شما"
 }

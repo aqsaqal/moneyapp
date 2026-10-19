@@ -524,5 +524,15 @@
   "toast.saved.debt": "कर्ज जतन केले",
   "toast.saved.recurring": "आवर्ती जतन केले",
   "toast.saved.account": "खाते जतन केले",
-  "toast.saved.category": "श्रेणी जतन केली"
+  "toast.saved.category": "श्रेणी जतन केली",
+  "add.field.paid": "तुम्ही दिले",
+  "add.field.received": "तुम्हाला मिळाले",
+  "add.field.send": "तुम्ही पाठवता",
+  "add.field.charged": "{account} वरून आकारले",
+  "add.field.credited": "{account} मध्ये जमा",
+  "add.field.debited": "{account} वरून वजा",
+  "add.field.receives": "{account} ला मिळते",
+  "add.field.a11y": "{label}: {amount}. संपादित करण्यासाठी टॅप करा",
+  "add.rate.market": "बाजार दर",
+  "add.rate.bank": "तुमचा दर"
 }

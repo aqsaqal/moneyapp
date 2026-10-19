@@ -524,5 +524,15 @@
   "toast.saved.debt": "Dług zapisany",
   "toast.saved.recurring": "Powtarzający zapisany",
   "toast.saved.account": "Konto zapisane",
-  "toast.saved.category": "Kategoria zapisana"
+  "toast.saved.category": "Kategoria zapisana",
+  "add.field.paid": "Zapłacono",
+  "add.field.received": "Otrzymano",
+  "add.field.send": "Wysyłasz",
+  "add.field.charged": "Obciążono: {account}",
+  "add.field.credited": "Zaksięgowano na {account}",
+  "add.field.debited": "Pobrano z {account}",
+  "add.field.receives": "{account} otrzymuje",
+  "add.field.a11y": "{label}: {amount}. Dotknij, aby edytować",
+  "add.rate.market": "Kurs rynkowy",
+  "add.rate.bank": "Twój kurs"
 }

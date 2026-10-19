@@ -524,5 +524,15 @@
   "toast.saved.debt": "Dette enregistrée",
   "toast.saved.recurring": "Récurrent enregistré",
   "toast.saved.account": "Compte enregistré",
-  "toast.saved.category": "Catégorie enregistrée"
+  "toast.saved.category": "Catégorie enregistrée",
+  "add.field.paid": "Tu as payé",
+  "add.field.received": "Tu as reçu",
+  "add.field.send": "Tu envoies",
+  "add.field.charged": "Prélevé sur {account}",
+  "add.field.credited": "Crédité sur {account}",
+  "add.field.debited": "Débité de {account}",
+  "add.field.receives": "{account} reçoit",
+  "add.field.a11y": "{label} : {amount}. Touche pour modifier",
+  "add.rate.market": "Taux du marché",
+  "add.rate.bank": "Ton taux"
 }

@@ -524,5 +524,15 @@
   "toast.saved.debt": "Borc saxlanıldı",
   "toast.saved.recurring": "Təkrarlanan saxlanıldı",
   "toast.saved.account": "Hesab saxlanıldı",
-  "toast.saved.category": "Kateqoriya saxlanıldı"
+  "toast.saved.category": "Kateqoriya saxlanıldı",
+  "add.field.paid": "Ödədin",
+  "add.field.received": "Aldın",
+  "add.field.send": "Göndərirsən",
+  "add.field.charged": "{account} hesabından tutuldu",
+  "add.field.credited": "{account} hesabına əlavə edildi",
+  "add.field.debited": "{account} hesabından çıxıldı",
+  "add.field.receives": "{account} hesabına daxil olur",
+  "add.field.a11y": "{label}: {amount}. Redaktə etmək üçün toxun",
+  "add.rate.market": "Bazar məzənnəsi",
+  "add.rate.bank": "Sənin məzənnən"
 }
