@@ -10,7 +10,7 @@
 
 import { useMemo } from 'react';
 import { useAccounts, useTransactions } from '@/hooks/useAppData';
-import type { Transaction } from '@/utils/db/schema';
+import type { Account, Transaction } from '@/utils/db/schema';
 
 export interface BalancePoint {
   /** Sample timestamp (end of the bucket). */
@@ -101,6 +101,42 @@ export function useAccountBalanceHistory(
     }
     return points;
   }, [accountId, monthsBack, accounts, txns]);
+}
+
+/** Balance of `account` as of `ts` (inclusive): start from today's
+ *  balance and undo every applied transaction dated after `ts`. Pure —
+ *  pass the account's own transactions (either side of a transfer). */
+export function balanceAt(account: Account, txns: Transaction[], ts: number): number {
+  let bal = account.balance;
+  for (const tx of txns) {
+    if (tx.date <= ts) continue;
+    if (tx.applied === 0) continue; // scheduled, not in the balance yet
+    bal -= signedFor(tx, account.id);
+  }
+  return bal;
+}
+
+/** End-of-day balances for the last `days` days, oldest → newest; the
+ *  last point is today's balance. Used for row sparklines, computed in
+ *  one pass by the caller rather than one hook per row. */
+export function balanceSeriesDaily(account: Account, txns: Transaction[], days: number): number[] {
+  const relevant = txns
+    .filter((t) => t.applied !== 0)
+    .sort((a, b) => b.date - a.date);
+  const out: number[] = [];
+  let bal = account.balance;
+  let idx = 0;
+  const cursor = new Date();
+  cursor.setHours(23, 59, 59, 999);
+  for (let d = 0; d < days; d++) {
+    while (idx < relevant.length && relevant[idx].date > cursor.getTime()) {
+      bal -= signedFor(relevant[idx], account.id);
+      idx++;
+    }
+    out.unshift(bal);
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return out;
 }
 
 /** How a single tx moves this account's balance forward in time. */

@@ -247,7 +247,7 @@ export default function Home() {
           forecast={forecast ?? undefined}
           emptyKind={accounts.length === 0 ? 'no-accounts' : income <= 0 ? 'no-income' : null}
           onSetUp={() => {
-            if (accounts.length === 0) router.push('/(tabs)/me' as never);
+            if (accounts.length === 0) router.push('/(tabs)/accounts' as never);
             else router.push('/(tabs)/plan' as never);
           }}
           // fixedExp at this point already filters out paid recurring,

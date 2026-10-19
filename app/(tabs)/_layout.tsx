@@ -40,16 +40,16 @@ const TAB_ICONS: Record<
   index: 'home-variant',
   plan: 'calendar-check',
   activity: 'format-list-bulleted',
-  me: 'wallet-outline',
+  accounts: 'wallet-outline',
 };
 const TAB_LABEL_KEYS: Record<string, string> = {
   index: 'tabs.home',
   plan: 'tabs.plan',
   activity: 'tabs.activity',
-  me: 'tabs.me',
+  accounts: 'tabs.me',
 };
 // Visual order in the bar — splits 2 + spacer + 2 around the FAB.
-const TAB_ORDER = ['index', 'plan', '__spacer__', 'activity', 'me'] as const;
+const TAB_ORDER = ['index', 'plan', '__spacer__', 'activity', 'accounts'] as const;
 
 function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarProps) {
   const t = useT();
@@ -126,7 +126,7 @@ export default function TabsLayout() {
         <Tabs.Screen name="index" options={{ title: 'Home' }} />
         <Tabs.Screen name="plan" options={{ title: 'Plan' }} />
         <Tabs.Screen name="activity" options={{ title: 'Activity' }} />
-        <Tabs.Screen name="me" options={{ title: 'Me' }} />
+        <Tabs.Screen name="accounts" options={{ title: 'Accounts' }} />
       </Tabs>
       <View style={[styles.fabWrap, { bottom: fabBottom }]} pointerEvents="box-none">
         <FabButton
