@@ -27,7 +27,7 @@ const config: ExpoConfig = {
   name: process.env.APP_NAME ?? 'Flow',
   slug: isIslamic ? 'amanah' : 'flow',
   scheme: process.env.APP_SCHEME ?? 'flow',
-  version: '1.0.0',
+  version: '1.1.0',
   orientation: 'portrait',
   userInterfaceStyle: 'dark',
   newArchEnabled: true,
@@ -42,7 +42,7 @@ const config: ExpoConfig = {
     // Increment monotonically per upload to App Store Connect — see the
     // checklist in v2-features.md §1.1. version stays the marketing
     // string ('1.0.0'); buildNumber is what Apple uniques on.
-    buildNumber: '1',
+    buildNumber: '2',
     supportsTablet: false,
     icon: ICON,
     requireFullScreen: true,
@@ -85,7 +85,7 @@ const config: ExpoConfig = {
     // Increment monotonically per submitted APK / AAB. Once a higher
     // versionCode lands in Play Console you can never re-upload a
     // lower one for that track.
-    versionCode: 1,
+    versionCode: 2,
     edgeToEdgeEnabled: true,
     adaptiveIcon: {
       foregroundImage: ADAPTIVE_ICON,

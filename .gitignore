@@ -46,3 +46,6 @@ yarn-error.*
 /ios
 /android
 .idea/
+
+# Local Xcode archives / IPA exports (regenerated per release)
+/build

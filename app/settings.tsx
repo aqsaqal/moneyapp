@@ -786,7 +786,18 @@ function AboutSection() {
   return (
     <View style={styles.group}>
       <SectionHeader title={t('me.section.about')} />
-      <SettingRow label={APP_NAME} value={t('me.version', { v: Constants.expoConfig?.version ?? '1.0.0' })} icon="information-outline" iconColor={theme.text2} />
+      <SettingRow
+        label={APP_NAME}
+        value={t('me.version', {
+          v: `${Constants.expoConfig?.version ?? '1.0.0'} (${
+            Platform.OS === 'ios'
+              ? Constants.expoConfig?.ios?.buildNumber ?? '—'
+              : String(Constants.expoConfig?.android?.versionCode ?? '—')
+          })`,
+        })}
+        icon="information-outline"
+        iconColor={theme.text2}
+      />
       <SettingRow label={t('me.privacyPolicy')} icon="shield-lock-outline" iconColor={theme.text2} onPress={() => Linking.openURL(PRIVACY_POLICY_URL).catch(() => {})} />
       <SettingRow label={t('me.terms')} icon="file-document-outline" iconColor={theme.text2} onPress={() => Linking.openURL(TERMS_URL).catch(() => {})} />
       <SettingRow label={t('me.support')} hint={SUPPORT_EMAIL} icon="email-outline" iconColor={theme.text2} onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`).catch(() => {})} />
