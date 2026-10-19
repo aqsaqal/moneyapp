@@ -188,12 +188,21 @@ export default function AddScreen() {
     amountErrorTimer.current = setTimeout(() => setAmountError(false), 1600);
   };
   useEffect(() => () => { if (amountErrorTimer.current) clearTimeout(amountErrorTimer.current); }, []);
+  // A manual conversion is tied to the amount, account pair and entry
+  // currency it was typed against. Any user-driven change to those
+  // drops it so the line flips back to the live auto conversion.
+  // (Prefill re-sync below seeds overrides directly and never goes
+  // through these handlers.)
+  const resetFxOverrides = () => {
+    setAccountAmountOverride(null);
+    setAccountAmountOverrideTo(null);
+  };
   const lastAmountRef = React.useRef(amount);
   useEffect(() => {
     if (amount === lastAmountRef.current) return;
     lastAmountRef.current = amount;
-    setAccountAmountOverride(null);
-    setAccountAmountOverrideTo(null);
+    resetFxOverrides();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
   // Re-sync state from prefill whenever the route params change. Expo
@@ -645,7 +654,10 @@ export default function AddScreen() {
           {(['expense', 'income', 'transfer'] as Mode[]).map((m) => (
             <Pressable
               key={m}
-              onPress={() => setMode(m)}
+              onPress={() => {
+                if (m !== mode) resetFxOverrides();
+                setMode(m);
+              }}
               style={[styles.modeTab, mode === m && styles.modeActive]}
             >
               <Text style={[styles.modeText, mode === m && styles.modeTextActive]} maxFontSizeMultiplier={1.3}>{t(`add.${m}`)}</Text>
@@ -766,7 +778,10 @@ export default function AddScreen() {
           visible={currencyPickerOpen}
           title={t('me.currency')}
           selected={effectiveEntryCurrency}
-          onPick={(c) => setEntryCurrency(c)}
+          onPick={(c) => {
+            if (c !== effectiveEntryCurrency) resetFxOverrides();
+            setEntryCurrency(c);
+          }}
           onClose={() => setCurrencyPickerOpen(false)}
         />
 
@@ -804,11 +819,13 @@ export default function AddScreen() {
               setAmount(String(tx.amount));
               setNote(tx.note ?? '');
               if (tx.category) setCatOverride(tx.category);
+              if (tx.accountId !== effectiveAcct) resetFxOverrides();
               setAccountOverride(tx.accountId);
             }}
             onPickFuzzy={(m) => {
               setNote(m.note);
               setCatOverride(m.category);
+              if (m.accountId !== effectiveAcct) resetFxOverrides();
               setAccountOverride(m.accountId);
             }}
           />
@@ -845,6 +862,7 @@ export default function AddScreen() {
                   // Picking the account that's already on To swaps the
                   // two sides instead of nudging To to the next active
                   // account — natural "I'm reversing this transfer" UX.
+                  if (id !== fromAcct) resetFxOverrides();
                   if (id === toAcct) setToAcct(fromAcct);
                   setFromAcct(id);
                 }}
@@ -855,6 +873,7 @@ export default function AddScreen() {
                 accounts={pickerList}
                 value={toAcct}
                 onPick={(id) => {
+                  if (id !== toAcct) resetFxOverrides();
                   if (id === fromAcct) setFromAcct(toAcct);
                   setToAcct(id);
                 }}
@@ -886,7 +905,10 @@ export default function AddScreen() {
                       label={t('add.transfer.from')}
                       accounts={accounts}
                       value={effectiveAcct}
-                      onPick={setAccountOverride}
+                      onPick={(id) => {
+                        if (id !== effectiveAcct) resetFxOverrides();
+                        setAccountOverride(id);
+                      }}
                       auto={acctAuto}
                       autoLabel={badge}
                       debit={{
@@ -921,7 +943,10 @@ export default function AddScreen() {
                       label={t('add.transfer.to')}
                       accounts={accounts}
                       value={effectiveAcct}
-                      onPick={setAccountOverride}
+                      onPick={(id) => {
+                        if (id !== effectiveAcct) resetFxOverrides();
+                        setAccountOverride(id);
+                      }}
                       auto={acctAuto}
                       autoLabel={badge}
                     />
