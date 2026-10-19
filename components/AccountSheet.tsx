@@ -53,7 +53,7 @@ import { showToast } from '@/components/Toast';
 import { kv } from '@/utils/kv';
 import type { Account } from '@/utils/db/schema';
 
-export type AccountType = 'cash' | 'bank' | 'credit' | 'savings' | 'debt' | 'investment';
+export type AccountType = 'cash' | 'bank' | 'credit' | 'savings' | 'debt' | 'investment' | 'receivable';
 
 const TYPES: { value: AccountType; label: string; icon: string; defaultColor: string }[] = [
   { value: 'cash', label: 'Cash', icon: 'Wallet', defaultColor: '#00E09E' },
@@ -62,7 +62,21 @@ const TYPES: { value: AccountType; label: string; icon: string; defaultColor: st
   { value: 'savings', label: 'Savings', icon: 'PiggyBank', defaultColor: '#FFBE44' },
   { value: 'debt', label: 'Debt / Loan', icon: 'CreditCard', defaultColor: '#F472B6' },
   { value: 'investment', label: 'Investment', icon: 'TrendingUp', defaultColor: '#06B6D4' },
+  { value: 'receivable', label: 'Owed to me', icon: 'ArrowDownLeft', defaultColor: '#2DD4BF' },
 ];
+
+/** The sheet shows liabilities and receivables as plain positive
+ *  amounts ("amount owed"); storage carries the sign. Loans are
+ *  always ≤ 0, receivables always ≥ 0, every other type as typed. */
+function signedBalance(type: AccountType, n: number): number {
+  if (!Number.isFinite(n)) return n;
+  if (type === 'debt') return -Math.abs(n);
+  if (type === 'receivable') return Math.abs(n);
+  return n;
+}
+function displayBalance(type: AccountType, n: number): number {
+  return type === 'debt' || type === 'receivable' ? Math.abs(n) : n;
+}
 
 // Account-icon palette — Lucide-style names that resolve through
 // ICON_MAP in constants/icons.tsx. Curated to cover the common
@@ -100,7 +114,9 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [type, setType] = useState<AccountType>(account?.type ?? 'cash');
   const [name, setName] = useState(account?.name ?? '');
-  const [balance, setBalance] = useState(String(account?.balance ?? ''));
+  const [balance, setBalance] = useState(
+    account ? String(displayBalance(account.type as AccountType, account.balance)) : '',
+  );
   const [limit, setLimit] = useState(String(account?.creditLimit ?? ''));
   // Open-state for the shared NumpadInputSheet. Each field that takes
   // an amount routes through here so the user gets the same numpad
@@ -139,7 +155,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
       const initialType = account?.type ?? 'cash';
       setType(initialType);
       setName(account?.name ?? '');
-      setBalance(String(account?.balance ?? ''));
+      setBalance(account ? String(displayBalance(account.type as AccountType, account.balance)) : '');
       setLimit(String(account?.creditLimit ?? ''));
       setColor(account?.color ?? TYPES.find((t) => t.value === initialType)!.defaultColor);
       setCurrency((account?.currency as CurrencyCode | null | undefined) ?? defaultCurrency);
@@ -157,9 +173,10 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const commitSave = (opts: { skipBalanceCheck?: boolean } = {}) => {
     // Empty balance → 0. Letting the user save a new account with just
     // a name (no typed 0) avoids a friction point on every first add.
-    const balanceNum = balance.trim() === ''
-      ? 0
-      : parseFloat(balance.replace(',', '.'));
+    const balanceNum = signedBalance(
+      type,
+      balance.trim() === '' ? 0 : parseFloat(balance.replace(',', '.')),
+    );
     if (!name.trim() || !Number.isFinite(balanceNum)) {
       Alert.alert(t('common.required'), t('account.nameBalanceRequired'));
       return;
@@ -361,7 +378,11 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>
-              {type === 'debt' ? t('account.field.amountOwed') : t('account.field.balance')}
+              {type === 'debt'
+                ? t('account.field.amountOwed')
+                : type === 'receivable'
+                  ? t('account.field.amountOwedToYou')
+                  : t('account.field.balance')}
             </Text>
             <Pressable
               onPress={() => setNumpadField('balance')}
@@ -373,15 +394,19 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
                 {balance || '0'}
               </Text>
             </Pressable>
-            {editing && account && parseFloat(balance) !== account.balance && Number.isFinite(parseFloat(balance)) && (
-              <Text style={styles.adjustHint}>
-                {t('account.adjustHint', {
-                  sign: parseFloat(balance) - account.balance >= 0 ? '+' : '−',
-                  diff: Math.abs(parseFloat(balance) - account.balance).toFixed(2),
-                  currency,
-                })}
-              </Text>
-            )}
+            {editing && account && (() => {
+              const entered = signedBalance(type, parseFloat(balance.replace(',', '.')));
+              if (!Number.isFinite(entered) || entered === account.balance) return null;
+              return (
+                <Text style={styles.adjustHint}>
+                  {t('account.adjustHint', {
+                    sign: entered - account.balance >= 0 ? '+' : '−',
+                    diff: Math.abs(entered - account.balance).toFixed(2),
+                    currency,
+                  })}
+                </Text>
+              );
+            })()}
           </View>
 
           {type === 'credit' && (
@@ -573,7 +598,9 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
               ? t('account.field.creditLimit')
               : type === 'debt'
                 ? t('account.field.amountOwed')
-                : t('account.field.balance')
+                : type === 'receivable'
+                  ? t('account.field.amountOwedToYou')
+                  : t('account.field.balance')
           }
           initial={
             numpadField === 'limit'

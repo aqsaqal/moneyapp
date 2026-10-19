@@ -134,6 +134,8 @@ export interface KVSchema {
   netWorthBackfillDoneV2: string; // CSV of profile IDs whose net-worth history has been backfilled by the v2 (active-month-only) pass
   fabSwapAction: string;          // '1' = tap → category grid, long-press → Smart Add; default '0' (tap → Smart Add)
   demoProfileAttempted: string;   // '1' once the boot path has tried to create the Demo profile; prevents re-creation after the user deletes it
+  liabilitySignsRepaired_v1: string; // '1' once positive loan / negative receivable balances were sign-fixed for this profile
+  accountsOverviewHidden: string;    // '1' = Accounts tab hides the net-worth Overview (chart + tiles); header chart button toggles it
 }
 
 export const kv = {

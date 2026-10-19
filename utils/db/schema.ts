@@ -63,7 +63,10 @@ export const accounts = sqliteTable('accounts', {
   // 'credit' (credit card) which has a creditLimit and is paid back monthly.
   // 'investment' (10v) tracks brokerage / pension / crypto wallets — value
   // can fluctuate, included in net worth by default.
-  type: text('type', { enum: ['cash', 'bank', 'credit', 'savings', 'debt', 'investment'] }).notNull(),
+  // 'receivable' = money OWED TO the user (lent to a friend, a deposit
+  // due back). Positive balance, counts as an asset; the mirror image of
+  // 'debt'. Lending = transfer cash → receivable; repayment = back.
+  type: text('type', { enum: ['cash', 'bank', 'credit', 'savings', 'debt', 'investment', 'receivable'] }).notNull(),
   balance: real('balance').notNull(),
   creditLimit: real('credit_limit'),
   icon: text('icon').notNull(),

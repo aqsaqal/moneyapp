@@ -100,6 +100,11 @@ export function bootAppData(): Promise<void> {
       // `budgets` rows onto the matching custom_categories row so the
       // category becomes the single source of truth.
       try { migrateBudgetsToCategories(); } catch { /* idempotent; safe to ignore */ }
+      // One-time repair: the account sheet used to store a loan's
+      // "amount owed" as typed (positive), so loans counted as assets.
+      // Flip any positive 'debt' balance negative (and any negative
+      // 'receivable' positive). Gated per profile by kv flag.
+      try { repairLiabilitySigns(); } catch { /* best-effort */ }
       // Phase 10z: settle any scheduled transactions whose date has
       // passed since the last launch. Idempotent, fast (single SELECT
       // + per-row UPDATE inside a transaction).
@@ -1076,6 +1081,20 @@ function migrateBudgetsToCategories() {
 /** Reorder accounts. Caller passes the IDs in the new display order;
  *  we batch-update sort_order to N×10 so future inserts have room
  *  between existing rows without renumbering. */
+/** Loans must be ≤ 0 and receivables ≥ 0 in storage. Fixes rows written
+ *  before the account sheet applied the sign. Idempotent; runs once per
+ *  profile (kv is profile-scoped). */
+export function repairLiabilitySigns(): void {
+  if (kv.getBool('liabilitySignsRepaired_v1', false)) return;
+  const raw = getRawDB();
+  raw.withTransactionSync(() => {
+    raw.runSync(`UPDATE accounts SET balance = -ABS(balance) WHERE type = 'debt' AND balance > 0`);
+    raw.runSync(`UPDATE accounts SET balance = ABS(balance) WHERE type = 'receivable' AND balance < 0`);
+  });
+  kv.setBool('liabilitySignsRepaired_v1', true);
+  try { refreshTodaySnapshot(); } catch { /* snapshot is best-effort */ }
+}
+
 export function reorderAccounts(orderedIds: string[]): void {
   const db = getDB();
   const raw = getRawDB();
