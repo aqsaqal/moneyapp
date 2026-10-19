@@ -101,6 +101,7 @@ export function AddRow({
 export function SettingRow({
   label,
   hint,
+  value,
   icon,
   iconColor = theme.accent,
   trailing,
@@ -109,6 +110,9 @@ export function SettingRow({
 }: {
   label: string;
   hint?: string;
+  /** Current value, right-aligned — lets a settings list answer "what
+   *  is it set to?" without a tap. */
+  value?: string;
   icon?: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
   iconColor?: string;
   trailing?: React.ReactNode;
@@ -118,11 +122,17 @@ export function SettingRow({
   const Inner = (
     <>
       {icon && <MaterialCommunityIcons name={icon} size={20} color={iconColor} />}
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, minWidth: 0 }}>
         <Text style={sectionStyles.settingLabel}>{label}</Text>
         {hint ? <Text style={sectionStyles.settingHint}>{hint}</Text> : null}
       </View>
+      {value ? (
+        <Text style={sectionStyles.settingValue} numberOfLines={1}>{value}</Text>
+      ) : null}
       {trailing}
+      {onPress && !trailing ? (
+        <MaterialCommunityIcons name="chevron-right" size={18} color={theme.text3} />
+      ) : null}
     </>
   );
   if (onPress) {
@@ -209,6 +219,7 @@ export const sectionStyles = StyleSheet.create({
   },
   settingLabel: { color: theme.text1, fontSize: sizes.md },
   settingHint: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
+  settingValue: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.bodySemi, maxWidth: '45%' },
   // Carried over for downstream consumers' inline overrides
   chipRow: { gap: 8 },
   chip: {

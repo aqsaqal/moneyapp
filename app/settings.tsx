@@ -1,15 +1,23 @@
 // Settings — modal screen reachable from the header cog on every tab.
 //
-// Lifted out of (tabs)/me.tsx in Phase 10g. Me now owns Profiles + Accounts
-// (identity / day-to-day data); this screen owns configuration:
-//   - Preferences (Language, Currency, Appearance, Arabic numerals)
-//   - Security (Biometric Unlock)
-//   - Islamic (mazhab + prayer-method, via FeatureSlots.MeTabExtras)
-//   - Data (Export JSON / CSV)
-//   - About (Privacy Policy / Terms / Support / version + disclaimer)
+// Layout:
+//   Profile card      active profile (icon · name · currency · language),
+//                     visible Edit button, horizontal profile chips to
+//                     switch, "+" to create.
+//   Money             currency, number format, exchange rates (age +
+//                     inline refresh), islamic mazhab / method rows.
+//   Look & language   language, Arabic numerals (ar-* only), appearance
+//                     as an inline System / Light / Dark control.
+//   Smart Add         merchant chips, FAB tap ↔ long-press swap.
+//   Categories        one row → /categories-manage.
+//   Security & data   biometric lock, bill reminders, Export (one row →
+//                     sheet with 4 formats, shows last backup).
+//   Advanced          import backup, recreate demo profile.
+//   About             version, privacy, terms, support, disclaimer.
 //
-// The PickerSheets, locale-change-and-reload flow, and theme-change-and-reload
-// flow are unchanged from where they used to live on Me — pure relocation.
+// Every row shows its current value on the right so the screen answers
+// "what is it set to?" without a tap. Profile-scoped rows are re-keyed
+// by profile id so their kv-seeded state re-reads on a switch.
 
 import React, { useEffect, useState } from 'react';
 import {
@@ -29,11 +37,7 @@ import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
-import {
-  SectionHeader,
-  SettingRow,
-  sectionStyles,
-} from '@/components/Sections';
+import { SectionHeader, SettingRow, sectionStyles } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { rebuildDemoProfile } from '@/utils/db/demoSeed';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
@@ -42,6 +46,7 @@ import {
   isBiometricEnabled,
   setBiometricEnabled,
   useBiometricSupported,
+  useBiometricKind,
 } from '@/hooks/useBiometricLock';
 import {
   CURRENCIES,
@@ -54,7 +59,7 @@ import { exportData, importData } from '@/utils/dataExport';
 import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
 import { monthKey as monthKeyOf, formatMonthYear } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
-import { useCategoriesWithMeta, setCategoryMeta, type CategoryWithMeta, useRecurring, bumpVersion } from '@/hooks/useAppData';
+import { useCategoriesWithMeta, setCategoryMeta, useRecurring, bumpVersion } from '@/hooks/useAppData';
 import { DEFAULT_LEAD_DAYS } from '@/utils/notifications';
 import { convert } from '@/utils/fx';
 import { getRawDB } from '@/utils/db/client';
@@ -64,26 +69,22 @@ import { useT } from '@/hooks/useT';
 import { setLocale as setI18nLocale, type LocaleCode } from '@/utils/i18n';
 import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
 import { ProfileSheet } from '@/components/ProfileSheet';
-import type { Profile } from '@/utils/profiles';
-
-// LOCALES is shared with onboarding/locale search; defined centrally in
-// constants/locales.ts so the two surfaces never drift.
+import { switchActiveProfile, type Profile } from '@/utils/profiles';
+import { useHaptics } from '@/hooks/useHaptics';
 import { LOCALES } from '@/constants/locales';
 
 export default function SettingsScreen() {
   const router = useRouter();
   const t = useT();
-  // Profile-scoped setting rows seed their local state from kv at
-  // mount. Switching the active profile changes which kv namespace
-  // they should read from — re-key them by profile id so React
-  // remounts and the seeds re-run.
   const activeProfile = useActiveProfile();
+  const k = activeProfile.id;
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.header}>
         <Pressable
           onPress={() => router.back()}
           hitSlop={10}
+          accessibilityRole="button"
           accessibilityLabel={t('common.close')}
         >
           <MaterialCommunityIcons name="close" size={24} color={theme.text1} />
@@ -92,134 +93,155 @@ export default function SettingsScreen() {
         <View style={{ width: 24 }} />
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* ───── PROFILE SETTINGS ───── */}
-        <Text style={settingsTopStyles.groupTitle}>{t('settings.groups.profile')}</Text>
-        <ActiveProfileRow />
-        <CurrencyRow key={`currency-${activeProfile.id}`} />
-        <CurrencyFormatRow key={`fmt-${activeProfile.id}`} />
-        <CategoriesSection key={`cats-${activeProfile.id}`} />
-        <SmartSuggestionsRow key={`smart-${activeProfile.id}`} />
-        <FabActionRow key={`fab-${activeProfile.id}`} />
-        {/* Islamic flavor: mazhab + prayer-method rows. Generic: nothing. */}
-        <FeatureSlots.MeTabExtras onNavigate={(p) => router.push(p as never)} />
+        <ProfileCard key={`profile-${k}`} />
 
-        {/* ───── APP SETTINGS ───── */}
-        <Text style={[settingsTopStyles.groupTitle, { marginTop: spacing.xl }]}>{t('settings.groups.app')}</Text>
-        <LanguageRow />
-        <ArabicNumeralsRow />
-        <AppearanceRow />
-        <SecuritySection />
-        <NotificationsRow />
-        <DataSection />
-        <ProfileManagementSection />
+        <Group title={t('settings.groups.money')}>
+          <CurrencyRow key={`currency-${k}`} />
+          <CurrencyFormatRow key={`fmt-${k}`} />
+          <FxRow />
+          <FeatureSlots.MeTabExtras onNavigate={(p) => router.push(p as never)} />
+        </Group>
 
-        {/* ───── ABOUT (sits below both groups) ───── */}
-        <View style={{ marginTop: spacing.xl }}>
-          <AboutSection />
-        </View>
+        <Group title={t('settings.groups.look')}>
+          <LanguageRow />
+          <ArabicNumeralsRow />
+          <AppearanceRow />
+        </Group>
+
+        <Group title={t('settings.groups.smartAdd')}>
+          <SmartSuggestionsRow key={`smart-${k}`} />
+          <FabActionRow key={`fab-${k}`} />
+        </Group>
+
+        <Group title={t('settings.categories.title')}>
+          <CategoriesRow key={`cats-${k}`} />
+        </Group>
+
+        <Group title={t('settings.groups.securityData')}>
+          <BiometricRow />
+          <NotificationsRow />
+          <ExportRow key={`export-${k}`} />
+        </Group>
+
+        <Group title={t('settings.groups.advanced')}>
+          <ImportRow />
+          <DemoProfileRow />
+        </Group>
+
+        <AboutSection />
         <View style={{ height: 60 }} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-// ---- Preferences ----
-
-function changeLocale(next: string, tFn: (k: string) => string) {
-  const cur = kv.get('locale');
-  if (cur === next) return;
-  Alert.alert(
-    tFn('me.lang.changeTitle'),
-    tFn('me.lang.changeBody'),
-    [
-      { text: tFn('common.cancel'), style: 'cancel' },
-      {
-        text: tFn('me.lang.restart'),
-        style: 'default',
-        onPress: async () => {
-          kv.set('locale', next);
-          setI18nLocale(next as LocaleCode);
-          if (Platform.OS !== 'web') {
-            const shouldBeRTL = next.startsWith('ar');
-            if (shouldBeRTL !== I18nManager.isRTL) {
-              I18nManager.forceRTL(shouldBeRTL);
-              kv.set('rtlSetForLocale', next);
-            }
-            if (__DEV__ && DevSettings?.reload) {
-              DevSettings.reload();
-              return;
-            }
-            try {
-              // eslint-disable-next-line @typescript-eslint/no-require-imports
-              const Updates = require('expo-updates');
-              await Updates.reloadAsync();
-            } catch {
-              Alert.alert(tFn('me.lang.changeTitle'), tFn('me.lang.restartManual'));
-            }
-          }
-        },
-      },
-    ],
+function Group({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <View style={styles.group}>
+      <SectionHeader title={title} />
+      {children}
+    </View>
   );
 }
 
-// ---- Profiles ----
-// Moved from Me/Accounts (Phase 10v): profiles are configuration, not
-// identity data the user manages daily. They live above Preferences here.
+function Toggle({ on, onToggle, disabled }: { on: boolean; onToggle: () => void; disabled?: boolean }) {
+  return (
+    <Pressable
+      onPress={disabled ? undefined : onToggle}
+      style={[sectionStyles.toggle, on && { backgroundColor: theme.accent }, disabled && { opacity: 0.4 }]}
+      accessibilityRole="switch"
+      accessibilityState={{ checked: on, disabled: !!disabled }}
+    >
+      <View style={[sectionStyles.toggleKnob, on && { transform: [{ translateX: 18 }] }]} />
+    </Pressable>
+  );
+}
+
+async function reloadApp(t: (k: string) => string) {
+  if (__DEV__ && DevSettings?.reload) {
+    DevSettings.reload();
+    return;
+  }
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const Updates = require('expo-updates');
+    await Updates.reloadAsync();
+  } catch {
+    Alert.alert(t('me.lang.changeTitle'), t('me.lang.restartManual'));
+  }
+}
+
+// ─────────────────────────── Profile card ───────────────────────────
 
 type ProfileSheetMode =
   | { kind: 'closed' }
-  | { kind: 'switch'; profiles: Profile[]; activeId: string }
   | { kind: 'edit'; profile: Profile }
   | { kind: 'create' };
 
-function ProfileManagementSection() {
+function ProfileCard() {
   const t = useT();
-  const profiles = useProfiles();
+  const haptics = useHaptics();
   const active = useActiveProfile();
+  const profiles = useProfiles();
   const [sheet, setSheet] = useState<ProfileSheetMode>({ kind: 'closed' });
+  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const locale = kv.get('locale') ?? 'en-US';
+  const localeName = LOCALES.find((l) => l.code === locale)?.name ?? locale;
 
   return (
-    <View style={{ gap: spacing.md, marginTop: spacing.md, marginBottom: spacing.lg }}>
-      <SectionHeader
-        title={t('me.section.profiles')}
-        onAdd={() => setSheet({ kind: 'create' })}
-        addLabel={t('common.add')}
-      />
-      <View style={{ gap: spacing.sm }}>
-        {profiles.map((p) => (
-          <Pressable
-            key={p.id}
-            onPress={() => setSheet({ kind: 'edit', profile: p })}
-            style={[
-              styles.profileRow,
-              p.id === active.id && { borderColor: p.color },
-            ]}
-            accessibilityRole="button"
-            accessibilityLabel={`${p.name}${p.id === active.id ? ', active' : ''}`}
-          >
-            <View style={[styles.profileIcon, { backgroundColor: `${p.color}22` }]}>
-              <MaterialCommunityIcons name={p.icon as never} size={20} color={p.color} />
-            </View>
-            <Text style={styles.profileName}>{p.name}</Text>
-            {p.id === active.id ? (
-              <Text style={[styles.profileActive, { color: p.color }]}>active</Text>
-            ) : (
-              <Pressable
-                hitSlop={10}
-                onPress={(e) => {
-                  e.stopPropagation();
-                  setSheet({ kind: 'switch', profiles, activeId: active.id });
-                }}
-                accessibilityLabel="Switch"
-              >
-                <MaterialCommunityIcons name="swap-horizontal" size={18} color={theme.text2} />
-              </Pressable>
-            )}
-          </Pressable>
-        ))}
+    <View style={[styles.profileCard, { borderColor: `${active.color}66` }]}>
+      <View style={styles.profileHead}>
+        <View style={[styles.profileIcon, { backgroundColor: `${active.color}22` }]}>
+          <MaterialCommunityIcons name={(active.icon as never) || 'account-circle-outline'} size={24} color={active.color} />
+        </View>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text style={styles.profileName} numberOfLines={1}>{active.name}</Text>
+          <Text style={styles.profileSub} numberOfLines={1}>
+            {CURRENCIES[currency]?.symbolNative ?? ''} {currency} · {localeName}
+          </Text>
+        </View>
+        <Pressable
+          onPress={() => setSheet({ kind: 'edit', profile: active })}
+          style={[styles.editBtn, { borderColor: `${active.color}88` }]}
+          accessibilityRole="button"
+          accessibilityLabel={`${t('common.edit')} ${active.name}`}
+          hitSlop={6}
+        >
+          <MaterialCommunityIcons name="pencil-outline" size={14} color={active.color} />
+          <Text style={[styles.editBtnText, { color: active.color }]}>{t('common.edit')}</Text>
+        </Pressable>
       </View>
-
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
+        {profiles.map((p) => {
+          const isActive = p.id === active.id;
+          return (
+            <Pressable
+              key={p.id}
+              onPress={() => {
+                if (isActive) return;
+                haptics.press();
+                switchActiveProfile(p.id);
+              }}
+              style={[styles.chip, isActive && { backgroundColor: `${p.color}22`, borderColor: p.color }]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: isActive }}
+              accessibilityLabel={isActive ? `${p.name}, ${t('profile.active')}` : `${t('profile.switch')}: ${p.name}`}
+            >
+              <MaterialCommunityIcons name={p.icon as never} size={14} color={isActive ? p.color : theme.text2} />
+              <Text style={[styles.chipText, isActive && { color: p.color }]} numberOfLines={1}>{p.name}</Text>
+            </Pressable>
+          );
+        })}
+        <Pressable
+          onPress={() => setSheet({ kind: 'create' })}
+          style={[styles.chip, styles.chipAdd]}
+          accessibilityRole="button"
+          accessibilityLabel={t('settings.profile.new')}
+        >
+          <MaterialCommunityIcons name="plus" size={14} color={theme.accent} />
+          <Text style={[styles.chipText, { color: theme.accent }]}>{t('settings.profile.new')}</Text>
+        </Pressable>
+      </ScrollView>
       <ProfileSheet
         visible={sheet.kind !== 'closed'}
         mode={sheet.kind === 'closed' ? null : sheet}
@@ -229,79 +251,19 @@ function ProfileManagementSection() {
   );
 }
 
-/** Phase 10w settings split:
- *  Profile settings (per active profile):
- *    - Active profile row (edit / delete)
- *    - Default currency
- *    - Categories link
- *    - Frequent merchant chips toggle
- *    - Islamic mazhab / prayer method (via FeatureSlots.MeTabExtras)
- *  App settings (global):
- *    - Language (+ Arabic-Indic numerals when locale starts with ar)
- *    - Appearance
- *    - Biometric lock
- *    - Notifications (placeholder)
- *    - Export data
- *    - Profile management (switch / add list)
- *    - About
- *
- *  Currency, smart-suggestions, categories, islamic prefs live under
- *  Profile settings because they're conceptually scoped to the active
- *  profile (kv storage is profile-keyed via the profile-scoped SQLite
- *  DB; multi-profile users can have a personal-profile USD + business-
- *  profile EUR setup, for example).
- */
-
-function ActiveProfileRow() {
-  const t = useT();
-  const active = useActiveProfile();
-  const profiles = useProfiles();
-  const [sheet, setSheet] = useState<ProfileSheetMode>({ kind: 'closed' });
-  const hint =
-    profiles.length === 1
-      ? t('profile.active')
-      : t('profile.activeAmong', { count: profiles.length });
-  // Tap → switch picker (or edit when there's only one profile to
-  // switch to). Long-press → edit current profile directly.
-  const onTap = () => {
-    if (profiles.length > 1) {
-      setSheet({ kind: 'switch', profiles, activeId: active.id });
-    } else {
-      setSheet({ kind: 'edit', profile: active });
-    }
-  };
-  const onHold = () => setSheet({ kind: 'edit', profile: active });
-  return (
-    <>
-      <SettingRow
-        label={active.name}
-        hint={hint}
-        icon={(active.icon as never) || 'account-circle-outline'}
-        iconColor={active.color}
-        onPress={onTap}
-        onLongPress={onHold}
-      />
-      <ProfileSheet
-        visible={sheet.kind !== 'closed'}
-        mode={sheet.kind === 'closed' ? null : sheet}
-        onClose={() => setSheet({ kind: 'closed' })}
-      />
-      {/* unused locally, but keep the import alive for t() */}
-      {false && <Text>{t('common.edit')}</Text>}
-    </>
-  );
-}
+// ─────────────────────────── Money ───────────────────────────
 
 function CurrencyRow() {
   const t = useT();
   const [currency, setCurrency] = useState<CurrencyCode>((kv.get('currency') ?? 'USD') as CurrencyCode);
   const [open, setOpen] = useState(false);
-  const label = `${currency} · ${CURRENCIES[currency].symbolNative} ${CURRENCIES[currency].name}`;
+  const def = CURRENCIES[currency];
   return (
     <>
       <SettingRow
         label={t('me.currency')}
-        hint={label}
+        hint={def?.name}
+        value={`${def?.symbolNative ?? ''} ${currency}`}
         icon="currency-usd"
         onPress={() => setOpen(true)}
       />
@@ -313,8 +275,6 @@ function CurrencyRow() {
           const prev = currency;
           kv.set('currency', c);
           setCurrency(c);
-          // Same reason as the format-preset onPick: kv changed but no
-          // hook is watching this key, so visible totals stay stale.
           bumpVersion();
           if (prev !== c) maybeOfferBudgetConversion(prev, c);
         }}
@@ -330,16 +290,16 @@ function CurrencyFormatRow() {
   const [presetId, setPresetId] = useState<string>(kv.get('currencyFormat') ?? '');
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const def = CURRENCIES[currency];
-  // The sample amount that produces a visible difference across all formats.
   const sample = -1234567.9;
-  const hint = presetId
+  const preview = presetId
     ? previewWithPreset(sample, CURRENCY_FORMAT_PRESETS.find((p) => p.id === presetId)!, def.symbolNative, 2)
-    : t('me.currencyFormat.hint');
+    : null;
   return (
     <>
       <SettingRow
         label={t('me.currencyFormat')}
-        hint={hint}
+        hint={preview ? undefined : t('me.currencyFormat.hint')}
+        value={preview ?? undefined}
         icon="numeric"
         onPress={() => setOpen(true)}
       />
@@ -354,11 +314,6 @@ function CurrencyFormatRow() {
         onPick={(id) => {
           setPresetId(id);
           kv.set('currencyFormat', id);
-          // formatMoney reads kv.currencyFormat on every call but no React
-          // state knows it changed — bump the global version so every
-          // useVersion-subscribed view (Home disposable, Accounts list,
-          // Activity, Plan budgets) re-renders against the new preset
-          // immediately instead of waiting for the next unrelated mutation.
           bumpVersion();
         }}
         onClose={() => setOpen(false)}
@@ -367,312 +322,43 @@ function CurrencyFormatRow() {
   );
 }
 
-function LanguageRow() {
-  const t = useT();
-  const [locale, setLocale] = useState<string>(kv.get('locale') ?? 'en-US');
-  const [open, setOpen] = useState(false);
-  const localeLabel = LOCALES.find((l) => l.code === locale)?.name ?? locale;
-  return (
-    <>
-      <SettingRow
-        label={t('me.language')}
-        hint={localeLabel}
-        icon="translate"
-        onPress={() => setOpen(true)}
-      />
-      <PickerSheet
-        visible={open}
-        title={t('me.language')}
-        options={LOCALES.map<PickerOption<string>>((l) => ({
-          value: l.code,
-          label: l.name,
-          hint: l.rtl ? '←' : undefined,
-        }))}
-        selected={locale}
-        onPick={(code) => {
-          setLocale(code);
-          changeLocale(code, t);
-        }}
-        onClose={() => setOpen(false)}
-      />
-    </>
-  );
-}
-
-function ArabicNumeralsRow() {
-  const t = useT();
-  const [on, setOn] = useState<boolean>(kv.getBool('arabicNumerals', true));
-  const locale = kv.get('locale') ?? 'en-US';
-  if (!locale.startsWith('ar')) return null;
-  return (
-    <SettingRow
-      label={t('me.arabicNumerals')}
-      hint={t('me.arabicNumerals.hint')}
-      trailing={
-        <Pressable
-          onPress={() => {
-            const next = !on;
-            setOn(next);
-            kv.setBool('arabicNumerals', next);
-          }}
-          style={[sectionStyles.toggle, on && { backgroundColor: theme.accent }]}
-          accessibilityRole="switch"
-          accessibilityState={{ checked: on }}
-        >
-          <View style={[sectionStyles.toggleKnob, on && { transform: [{ translateX: 18 }] }]} />
-        </Pressable>
-      }
-    />
-  );
-}
-
-function AppearanceRow() {
-  const t = useT();
-  const [themeMode, setThemeModeState] = useState<string>(kv.get('themeMode') ?? 'system');
-  const [open, setOpen] = useState(false);
-  const themeModeLabel = (() => {
-    switch (themeMode) {
-      case 'dark': return t('me.appearance.dark');
-      case 'light': return t('me.appearance.light');
-      default: return t('me.appearance.system');
-    }
-  })();
-  return (
-    <>
-      <SettingRow
-        label={t('me.appearance')}
-        hint={themeModeLabel}
-        icon="palette-outline"
-        onPress={() => setOpen(true)}
-      />
-      <PickerSheet
-        visible={open}
-        title={t('me.appearance')}
-        options={[
-          { value: 'system', label: t('me.appearance.system'), icon: 'theme-light-dark' },
-          { value: 'dark', label: t('me.appearance.dark'), icon: 'weather-night' },
-          { value: 'light', label: t('me.appearance.light'), icon: 'white-balance-sunny' },
-        ]}
-        selected={themeMode}
-        onPick={(mode) => {
-          if (mode === themeMode) return;
-          kv.set('themeMode', mode);
-          setThemeModeState(mode);
-          Alert.alert(
-            t('me.lang.changeTitle'),
-            t('me.lang.changeBody'),
-            [
-              { text: t('common.cancel'), style: 'cancel' },
-              {
-                text: t('me.lang.restart'),
-                style: 'default',
-                onPress: async () => {
-                  if (__DEV__ && DevSettings?.reload) {
-                    DevSettings.reload();
-                    return;
-                  }
-                  try {
-                    // eslint-disable-next-line @typescript-eslint/no-require-imports
-                    const Updates = require('expo-updates');
-                    await Updates.reloadAsync();
-                  } catch {
-                    Alert.alert(t('me.lang.changeTitle'), t('me.lang.restartManual'));
-                  }
-                },
-              },
-            ],
-          );
-        }}
-        onClose={() => setOpen(false)}
-      />
-    </>
-  );
-}
-
-
-function NotificationsRow() {
-  // Phase 10t — bill reminders via expo-notifications. Master toggle +
-  // lead-days picker. Income recurring items are intentionally skipped
-  // by the scheduler; this row controls only the expense alerts.
-  const t = useT();
-  const recurringRows = useRecurring();
-  const [enabled, setEnabled] = useState(false);
-  const [leadDays, setLeadDays] = useState(DEFAULT_LEAD_DAYS);
-  const [pickerOpen, setPickerOpen] = useState(false);
-
-  // Lazy-require so unit-test / web bundles that miss the native module
-  // don't crash importing settings.tsx.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const notif = require('@/utils/notifications') as typeof import('@/utils/notifications');
-
-  useEffect(() => {
-    setEnabled(notif.getRemindersEnabled());
-    setLeadDays(notif.getReminderLeadDays());
-  }, [notif]);
-
-  const toRows = () =>
-    recurringRows.map((r) => ({
-      id: r.id, name: r.name, amount: r.amount, dayOfMonth: r.dayOfMonth, type: r.type,
-    }));
-
-  const onToggle = async () => {
-    const next = !enabled;
-    setEnabled(next);
-    const result = await notif.setRemindersEnabled(next, toRows());
-    if (next && result === 'denied') {
-      // User declined the OS prompt — flip the visible state back off.
-      setEnabled(false);
-      Alert.alert(t('voice.permissionDenied'), t('me.biometric.hintUnsupported'));
-    }
-  };
-
-  const eligible = recurringRows.filter((r) => r.type === 'expense').length;
-  const hint = enabled
-    ? t('notifications.hint.enabled', { lead: leadDays, count: eligible })
-    : t('notifications.hint');
-
-  return (
-    <>
-      <SettingRow
-        label={t('notifications.title')}
-        hint={hint}
-        icon="bell-outline"
-        iconColor={enabled ? theme.accent : theme.text2}
-        trailing={
-          <Pressable
-            onPress={onToggle}
-            style={[sectionStyles.toggle, enabled && { backgroundColor: theme.accent }]}
-            accessibilityRole="switch"
-            accessibilityState={{ checked: enabled }}
-          >
-            <View style={[sectionStyles.toggleKnob, enabled && { transform: [{ translateX: 18 }] }]} />
-          </Pressable>
-        }
-      />
-      {enabled && (
-        <SettingRow
-          label={t('notifications.leadDays')}
-          hint={t('notifications.leadDays.value', { n: leadDays })}
-          icon="clock-outline"
-          iconColor={theme.text2}
-          onPress={() => setPickerOpen(true)}
-        />
-      )}
-      <PickerSheet
-        visible={pickerOpen}
-        title={t('notifications.leadDays')}
-        options={[0, 1, 2, 3, 5, 7].map<PickerOption<string>>((n) => ({
-          value: String(n),
-          label:
-            n === 0
-              ? t('notifications.leadDays.sameDay')
-              : t('notifications.leadDays.value', { n }),
-        }))}
-        selected={String(leadDays)}
-        onPick={async (raw) => {
-          const n = parseInt(raw, 10);
-          setLeadDays(n);
-          await notif.setReminderLeadDays(n, toRows());
-        }}
-        onClose={() => setPickerOpen(false)}
-      />
-    </>
-  );
-}
-
-const settingsTopStyles = StyleSheet.create({
-  groupTitle: {
-    color: theme.text3,
-    fontSize: 11,
-    fontFamily: font.bodySemi,
-    letterSpacing: 1,
-    marginTop: spacing.md,
-    marginBottom: spacing.xs,
-  },
-});
-
-function FabActionRow() {
-  const t = useT();
-  const [swap, setSwap] = useState(kv.getBool('fabSwapAction', false));
-  return (
-    <SettingRow
-      label={t('settings.fabAction.label')}
-      hint={swap ? t('settings.fabAction.bodyOn') : t('settings.fabAction.bodyOff')}
-      icon="gesture-tap-hold"
-      trailing={
-        <Pressable
-          onPress={() => {
-            const next = !swap;
-            kv.setBool('fabSwapAction', next);
-            setSwap(next);
-          }}
-          style={[sectionStyles.toggle, swap && { backgroundColor: theme.accent }]}
-          accessibilityRole="switch"
-          accessibilityState={{ checked: swap }}
-        >
-          <View style={[sectionStyles.toggleKnob, swap && { transform: [{ translateX: 18 }] }]} />
-        </Pressable>
-      }
-    />
-  );
-}
-
-function SmartSuggestionsRow() {
-  const t = useT();
-  const [on, setOn] = useState(kv.getBool('smartSuggestions', false));
-  return (
-    <SettingRow
-      label={t('settings.smartSuggestions.label')}
-      hint={on ? t('settings.smartSuggestions.bodyOn') : t('settings.smartSuggestions.bodyOff')}
-      icon="lightbulb-on-outline"
-      trailing={
-        <Pressable
-          onPress={() => {
-            const next = !on;
-            kv.setBool('smartSuggestions', next);
-            setOn(next);
-          }}
-          style={[sectionStyles.toggle, on && { backgroundColor: theme.accent }]}
-          accessibilityRole="switch"
-          accessibilityState={{ checked: on }}
-        >
-          <View style={[sectionStyles.toggleKnob, on && { transform: [{ translateX: 18 }] }]} />
-        </Pressable>
-      }
-    />
-  );
-}
-
-// ---- FX auto-refresh (Phase 10k) ----
-
-function FxRefreshRow() {
+function FxRow() {
   const t = useT();
   const fx = useFxRates();
-  const fmtAge = (() => {
+  const age = (() => {
     if (!fx.lastFetched) return t('settings.fx.never');
     const diffH = Math.floor((Date.now() - fx.lastFetched) / 3_600_000);
     if (diffH < 1) return t('settings.fx.justNow');
     if (diffH < 24) return t('settings.fx.hoursAgo', { n: diffH });
     return t('settings.fx.daysAgo', { n: Math.floor(diffH / 24) });
   })();
-  // FX is always-on now (multi-source fallback). This row exposes the
-  // cache age + manual refresh — useful when a user just enabled a
-  // foreign-currency account and doesn't want to wait for the daily
-  // window.
   return (
     <SettingRow
       label={t('settings.fx.label')}
-      hint={fx.refreshing ? t('settings.fx.refreshing') : fmtAge}
+      hint={fx.refreshing ? t('settings.fx.refreshing') : age}
       icon="cached"
-      onPress={() => void fx.refresh()}
+      trailing={
+        <Pressable
+          onPress={() => void fx.refresh()}
+          disabled={fx.refreshing}
+          style={styles.iconBtn}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel={t('settings.fx.refresh')}
+        >
+          <MaterialCommunityIcons
+            name="refresh"
+            size={18}
+            color={fx.refreshing ? theme.text3 : theme.accent}
+          />
+        </Pressable>
+      }
     />
   );
 }
 
-/** Phase 10w currency-change side effect: every budget remembers the
- *  currency it was created in. Switching the default currency must NOT
- *  rewrite that — the data is per-budget, locked at creation. Offer a
- *  one-shot opt-in conversion at today's FX rate. */
+/** Switching the default currency must not rewrite per-budget
+ *  currencies (locked at creation). Offer a one-shot conversion. */
 function maybeOfferBudgetConversion(prev: string, next: string) {
   if (prev === next) return;
   const raw = getRawDB();
@@ -709,178 +395,399 @@ function maybeOfferBudgetConversion(prev: string, next: string) {
   );
 }
 
-// ---- Categories (Phase 10w: now a single link row → /categories-manage) ----
+// ─────────────────────────── Look & language ───────────────────────────
 
-function CategoriesSection() {
+function changeLocale(next: string, tFn: (k: string) => string) {
+  const cur = kv.get('locale');
+  if (cur === next) return;
+  Alert.alert(
+    tFn('me.lang.changeTitle'),
+    tFn('me.lang.changeBody'),
+    [
+      { text: tFn('common.cancel'), style: 'cancel' },
+      {
+        text: tFn('me.lang.restart'),
+        style: 'default',
+        onPress: async () => {
+          kv.set('locale', next);
+          setI18nLocale(next as LocaleCode);
+          if (Platform.OS !== 'web') {
+            const shouldBeRTL = next.startsWith('ar');
+            if (shouldBeRTL !== I18nManager.isRTL) {
+              I18nManager.forceRTL(shouldBeRTL);
+              kv.set('rtlSetForLocale', next);
+            }
+            await reloadApp(tFn);
+          }
+        },
+      },
+    ],
+  );
+}
+
+function LanguageRow() {
+  const t = useT();
+  const [locale, setLocale] = useState<string>(kv.get('locale') ?? 'en-US');
+  const [open, setOpen] = useState(false);
+  const localeLabel = LOCALES.find((l) => l.code === locale)?.name ?? locale;
+  return (
+    <>
+      <SettingRow label={t('me.language')} value={localeLabel} icon="translate" onPress={() => setOpen(true)} />
+      <PickerSheet
+        visible={open}
+        title={t('me.language')}
+        options={LOCALES.map<PickerOption<string>>((l) => ({
+          value: l.code,
+          label: l.name,
+          hint: l.rtl ? '←' : undefined,
+        }))}
+        selected={locale}
+        onPick={(code) => {
+          setLocale(code);
+          changeLocale(code, t);
+        }}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
+}
+
+function ArabicNumeralsRow() {
+  const t = useT();
+  const [on, setOn] = useState<boolean>(kv.getBool('arabicNumerals', true));
+  const locale = kv.get('locale') ?? 'en-US';
+  if (!locale.startsWith('ar')) return null;
+  return (
+    <SettingRow
+      label={t('me.arabicNumerals')}
+      hint={t('me.arabicNumerals.hint')}
+      icon="numeric-9-plus-box-multiple-outline"
+      trailing={
+        <Toggle
+          on={on}
+          onToggle={() => {
+            const next = !on;
+            setOn(next);
+            kv.setBool('arabicNumerals', next);
+          }}
+        />
+      }
+    />
+  );
+}
+
+function AppearanceRow() {
+  const t = useT();
+  const [mode, setMode] = useState<string>(kv.get('themeMode') ?? 'system');
+  const options: { value: string; label: string; icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'] }[] = [
+    { value: 'system', label: t('me.appearance.system'), icon: 'theme-light-dark' },
+    { value: 'light', label: t('me.appearance.light'), icon: 'white-balance-sunny' },
+    { value: 'dark', label: t('me.appearance.dark'), icon: 'weather-night' },
+  ];
+  const pick = (next: string) => {
+    if (next === mode) return;
+    const prev = mode;
+    kv.set('themeMode', next);
+    setMode(next);
+    Alert.alert(t('me.lang.changeTitle'), t('me.lang.changeBody'), [
+      {
+        text: t('common.cancel'),
+        style: 'cancel',
+        onPress: () => {
+          kv.set('themeMode', prev);
+          setMode(prev);
+        },
+      },
+      { text: t('me.lang.restart'), style: 'default', onPress: () => void reloadApp(t) },
+    ]);
+  };
+  return (
+    <View style={sectionStyles.settingRow}>
+      <MaterialCommunityIcons name="palette-outline" size={20} color={theme.accent} />
+      <Text style={[sectionStyles.settingLabel, { flex: 1 }]}>{t('me.appearance')}</Text>
+      <View style={styles.segment}>
+        {options.map((o) => {
+          const active = o.value === mode;
+          return (
+            <Pressable
+              key={o.value}
+              onPress={() => pick(o.value)}
+              style={[styles.segBtn, active && styles.segBtnActive]}
+              accessibilityRole="button"
+              accessibilityState={{ selected: active }}
+              accessibilityLabel={o.label}
+            >
+              <MaterialCommunityIcons name={o.icon} size={16} color={active ? theme.bg : theme.text2} />
+            </Pressable>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+// ─────────────────────────── Smart Add ───────────────────────────
+
+function SmartSuggestionsRow() {
+  const t = useT();
+  const [on, setOn] = useState(kv.getBool('smartSuggestions', false));
+  return (
+    <SettingRow
+      label={t('settings.smartSuggestions.label')}
+      hint={on ? t('settings.smartSuggestions.bodyOn') : t('settings.smartSuggestions.bodyOff')}
+      icon="lightbulb-on-outline"
+      trailing={
+        <Toggle
+          on={on}
+          onToggle={() => {
+            const next = !on;
+            kv.setBool('smartSuggestions', next);
+            setOn(next);
+          }}
+        />
+      }
+    />
+  );
+}
+
+function FabActionRow() {
+  const t = useT();
+  const [swap, setSwap] = useState(kv.getBool('fabSwapAction', false));
+  return (
+    <SettingRow
+      label={t('settings.fabAction.label')}
+      hint={swap ? t('settings.fabAction.bodyOn') : t('settings.fabAction.bodyOff')}
+      icon="gesture-tap-hold"
+      trailing={
+        <Toggle
+          on={swap}
+          onToggle={() => {
+            const next = !swap;
+            kv.setBool('fabSwapAction', next);
+            setSwap(next);
+          }}
+        />
+      }
+    />
+  );
+}
+
+// ─────────────────────────── Categories ───────────────────────────
+
+function CategoriesRow() {
   const t = useT();
   const router = useRouter();
   const categories = useCategoriesWithMeta();
   const active = categories.filter((c) => !c.archived && c.id !== 'adjustment');
   const budgetCount = categories.filter((c) => c.monthlyBudget != null && !c.archived).length;
-  const hint =
-    t('categories.count', { n: active.length }) +
-    (budgetCount > 0 ? ` · ${t('categories.withBudget', { n: budgetCount })}` : '');
   return (
-    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <SettingRow
-        label={t('settings.categories.title')}
-        hint={hint}
-        icon="tag-multiple-outline"
-        iconColor={theme.accent}
-        onPress={() => router.push('/categories-manage' as never)}
-      />
-    </View>
+    <SettingRow
+      label={t('settings.categories.title')}
+      hint={budgetCount > 0 ? t('categories.withBudget', { n: budgetCount }) : undefined}
+      value={t('categories.count', { n: active.length })}
+      icon="tag-multiple-outline"
+      onPress={() => router.push('/categories-manage' as never)}
+    />
   );
 }
 
-// ---- Security ----
+// ─────────────────────────── Security & data ───────────────────────────
 
-function SecuritySection() {
+function BiometricRow() {
   const t = useT();
   const supported = useBiometricSupported();
+  const kind = useBiometricKind();
   const [bio, setBio] = useState(isBiometricEnabled());
   return (
-    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <FxRefreshRow />
-
-      <SectionHeader title={t('me.section.security')} />
-      <SettingRow
-        label={t('me.biometric')}
-        hint={
-          supported
-            ? t('me.biometric.hintSupported')
-            : t('me.biometric.hintUnsupported')
-        }
-        icon="fingerprint"
-        iconColor={theme.accent}
-        trailing={
-          <Pressable
-            onPress={() => {
-              if (supported) {
-                setBiometricEnabled(!bio);
-                setBio(!bio);
-              }
-            }}
-            style={[sectionStyles.toggle, bio && { backgroundColor: theme.accent }]}
-            accessibilityRole="switch"
-            accessibilityState={{ checked: bio, disabled: !supported }}
-          >
-            <View style={[sectionStyles.toggleKnob, bio && { transform: [{ translateX: 18 }] }]} />
-          </Pressable>
-        }
-      />
-    </View>
+    <SettingRow
+      label={t('me.biometric')}
+      hint={supported ? t('me.biometric.hintSupported') : t('me.biometric.hintUnsupported')}
+      icon={kind === 'face' ? 'face-recognition' : 'fingerprint'}
+      iconColor={bio ? theme.accent : theme.text2}
+      trailing={
+        <Toggle
+          on={bio}
+          disabled={!supported}
+          onToggle={() => {
+            setBiometricEnabled(!bio);
+            setBio(!bio);
+          }}
+        />
+      }
+    />
   );
 }
 
-// ---- Data ----
-
-function DataSection() {
+function NotificationsRow() {
   const t = useT();
+  const recurringRows = useRecurring();
+  const [enabled, setEnabled] = useState(false);
+  const [leadDays, setLeadDays] = useState(DEFAULT_LEAD_DAYS);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  // Lazy-require so bundles without the native module don't crash here.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const notif = require('@/utils/notifications') as typeof import('@/utils/notifications');
+
+  useEffect(() => {
+    setEnabled(notif.getRemindersEnabled());
+    setLeadDays(notif.getReminderLeadDays());
+  }, [notif]);
+
+  const toRows = () =>
+    recurringRows.map((r) => ({ id: r.id, name: r.name, amount: r.amount, dayOfMonth: r.dayOfMonth, type: r.type }));
+
+  const onToggle = async () => {
+    const next = !enabled;
+    setEnabled(next);
+    const result = await notif.setRemindersEnabled(next, toRows());
+    if (next && result === 'denied') {
+      setEnabled(false);
+      Alert.alert(t('voice.permissionDenied'), t('me.biometric.hintUnsupported'));
+    }
+  };
+
+  const eligible = recurringRows.filter((r) => r.type === 'expense').length;
+  return (
+    <>
+      <SettingRow
+        label={t('notifications.title')}
+        hint={enabled ? t('notifications.hint.enabled', { lead: leadDays, count: eligible }) : t('notifications.hint')}
+        icon="bell-outline"
+        iconColor={enabled ? theme.accent : theme.text2}
+        trailing={<Toggle on={enabled} onToggle={() => void onToggle()} />}
+      />
+      {enabled && (
+        <SettingRow
+          label={t('notifications.leadDays')}
+          value={t('notifications.leadDays.value', { n: leadDays })}
+          icon="clock-outline"
+          iconColor={theme.text2}
+          onPress={() => setPickerOpen(true)}
+        />
+      )}
+      <PickerSheet
+        visible={pickerOpen}
+        title={t('notifications.leadDays')}
+        options={[0, 1, 2, 3, 5, 7].map<PickerOption<string>>((n) => ({
+          value: String(n),
+          label: n === 0 ? t('notifications.leadDays.sameDay') : t('notifications.leadDays.value', { n }),
+        }))}
+        selected={String(leadDays)}
+        onPick={async (raw) => {
+          const n = parseInt(raw, 10);
+          setLeadDays(n);
+          await notif.setReminderLeadDays(n, toRows());
+        }}
+        onClose={() => setPickerOpen(false)}
+      />
+    </>
+  );
+}
+
+function ExportRow() {
+  const t = useT();
+  const [open, setOpen] = useState(false);
+  const [lastExport, setLastExport] = useState<number>(() => Number(kv.get('lastExportAt') ?? 0));
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const now = new Date();
+  const markExported = () => {
+    const ts = Date.now();
+    kv.set('lastExportAt', String(ts));
+    setLastExport(ts);
+  };
+  // Only the JSON dump is a restorable backup; CSV / PDF are reports.
+  const run = (fmt: string) => {
+    if (fmt === 'json') void exportData('json').then(markExported).catch(() => {});
+    else if (fmt === 'csv') void exportData('csv').catch(() => {});
+    else if (fmt === 'pdfMonth') void exportMonthlyPdf(monthKeyOf(now), currency).catch(() => {});
+    else void exportYearlyPdf(now.getFullYear(), currency).catch(() => {});
+  };
+  const lastHint = lastExport
+    ? t('settings.export.lastBackup', { when: new Date(lastExport).toLocaleDateString() })
+    : t('settings.export.never');
   return (
-    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
-      <SectionHeader title={t('me.section.data')} />
+    <>
       <SettingRow
-        label={t('me.export.json')}
+        label={t('settings.export.title')}
+        hint={lastHint}
         icon="export"
-        onPress={() => exportData('json')}
+        onPress={() => setOpen(true)}
       />
-      <SettingRow
-        label={t('me.export.csv')}
-        icon="export"
-        onPress={() => exportData('csv')}
+      <PickerSheet
+        visible={open}
+        title={t('settings.export.title')}
+        options={[
+          { value: 'json', label: t('me.export.json'), hint: t('settings.export.hint.json'), icon: 'code-json' },
+          { value: 'csv', label: t('me.export.csv'), hint: t('settings.export.hint.csv'), icon: 'table' },
+          { value: 'pdfMonth', label: t('me.export.pdfMonth'), hint: formatMonthYear(now), icon: 'file-pdf-box' },
+          { value: 'pdfYear', label: t('me.export.pdfYear'), hint: String(now.getFullYear()), icon: 'file-document-multiple-outline' },
+        ] as PickerOption<string>[]}
+        selected=""
+        onPick={(v) => run(v)}
+        onClose={() => setOpen(false)}
       />
-      <SettingRow
-        label={t('me.export.pdfMonth')}
-        hint={formatMonthYear(now)}
-        icon="file-pdf-box"
-        onPress={() => {
-          void exportMonthlyPdf(monthKeyOf(now), currency);
-        }}
-      />
-      <SettingRow
-        label={t('me.export.pdfYear')}
-        hint={String(now.getFullYear())}
-        icon="file-document-multiple-outline"
-        onPress={() => {
-          void exportYearlyPdf(now.getFullYear(), currency);
-        }}
-      />
-      <SettingRow
-        label={t('me.import.json')}
-        hint={t('me.import.json.hint')}
-        icon="import"
-        onPress={() => {
-          void importData().catch((e: unknown) => {
-            Alert.alert(
-              t('me.import.failed.title'),
-              e instanceof Error ? e.message : String(e),
-            );
-          });
-        }}
-      />
-      <DemoProfileRow />
-    </View>
+    </>
+  );
+}
+
+// ─────────────────────────── Advanced ───────────────────────────
+
+function ImportRow() {
+  const t = useT();
+  return (
+    <SettingRow
+      label={t('me.import.json')}
+      hint={t('me.import.json.hint')}
+      icon="import"
+      iconColor={theme.text2}
+      onPress={() => {
+        void importData().catch((e: unknown) => {
+          Alert.alert(t('me.import.failed.title'), e instanceof Error ? e.message : String(e));
+        });
+      }}
+    />
   );
 }
 
 function DemoProfileRow() {
   const t = useT();
   const onPress = () => {
-    Alert.alert(
-      t('settings.demo.title'),
-      t('settings.demo.body'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('settings.demo.cta'),
-          onPress: () => {
-            try {
-              rebuildDemoProfile();
-            } catch (e) {
-              Alert.alert('Demo profile', e instanceof Error ? e.message : String(e));
-            }
-          },
+    Alert.alert(t('settings.demo.title'), t('settings.demo.body'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      {
+        text: t('settings.demo.cta'),
+        onPress: () => {
+          try {
+            rebuildDemoProfile();
+          } catch (e) {
+            Alert.alert('Demo profile', e instanceof Error ? e.message : String(e));
+          }
         },
-      ],
-    );
+      },
+    ]);
   };
   return (
     <SettingRow
       label={t('settings.demo.label')}
       hint={t('settings.demo.hint')}
       icon="flask-outline"
+      iconColor={theme.text2}
       onPress={onPress}
     />
   );
 }
 
-// ---- About ----
+// ─────────────────────────── About ───────────────────────────
 
 function AboutSection() {
   const t = useT();
   return (
-    <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
+    <View style={styles.group}>
       <SectionHeader title={t('me.section.about')} />
-      <SettingRow label={APP_NAME} hint={t('me.version', { v: Constants.expoConfig?.version ?? '1.0.0' })} />
-      <SettingRow
-        label={t('me.privacyPolicy')}
-        icon="shield-lock-outline"
-        onPress={() => Linking.openURL(PRIVACY_POLICY_URL).catch(() => {})}
-      />
-      <SettingRow
-        label={t('me.terms')}
-        icon="file-document-outline"
-        onPress={() => Linking.openURL(TERMS_URL).catch(() => {})}
-      />
-      <SettingRow
-        label={t('me.support')}
-        hint={SUPPORT_EMAIL}
-        icon="email-outline"
-        onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`).catch(() => {})}
-      />
+      <SettingRow label={APP_NAME} value={t('me.version', { v: Constants.expoConfig?.version ?? '1.0.0' })} icon="information-outline" iconColor={theme.text2} />
+      <SettingRow label={t('me.privacyPolicy')} icon="shield-lock-outline" iconColor={theme.text2} onPress={() => Linking.openURL(PRIVACY_POLICY_URL).catch(() => {})} />
+      <SettingRow label={t('me.terms')} icon="file-document-outline" iconColor={theme.text2} onPress={() => Linking.openURL(TERMS_URL).catch(() => {})} />
+      <SettingRow label={t('me.support')} hint={SUPPORT_EMAIL} icon="email-outline" iconColor={theme.text2} onPress={() => Linking.openURL(`mailto:${SUPPORT_EMAIL}`).catch(() => {})} />
       <Text style={styles.disclaimer}>{t('me.disclaimer')}</Text>
     </View>
   );
@@ -896,30 +803,54 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
   },
   title: { color: theme.text1, fontSize: sizes.xl, fontFamily: font.displayBold },
-  scroll: {
-    paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.xxl,
-    gap: spacing.md,
-  },
-  profileRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.md,
+  scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.xl },
+  group: { gap: spacing.sm },
+  profileCard: {
     padding: spacing.md,
     borderRadius: radii.lg,
     backgroundColor: theme.bg2,
     borderWidth: 1,
-    borderColor: theme.border,
+    gap: spacing.md,
   },
-  profileIcon: {
-    width: 40,
-    height: 40,
-    borderRadius: radii.md,
+  profileHead: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  profileIcon: { width: 44, height: 44, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center' },
+  profileName: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold },
+  profileSub: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
+  editBtn: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    gap: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: radii.pill,
+    borderWidth: 1,
   },
-  profileName: { color: theme.text1, fontSize: sizes.md, flex: 1 },
-  profileActive: { fontSize: sizes.xs, fontFamily: font.bodySemi, textTransform: 'lowercase' },
+  editBtnText: { fontSize: sizes.xs, fontFamily: font.bodySemi },
+  chipRow: { flexDirection: 'row', gap: spacing.sm },
+  chip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg1,
+    maxWidth: 160,
+  },
+  chipAdd: { borderStyle: 'dashed', borderColor: `${theme.accent}66` },
+  chipText: { color: theme.text2, fontSize: sizes.xs, fontFamily: font.bodySemi },
+  iconBtn: { padding: 4 },
+  segment: {
+    flexDirection: 'row',
+    backgroundColor: theme.bg3,
+    borderRadius: radii.pill,
+    padding: 2,
+    gap: 2,
+  },
+  segBtn: { width: 34, height: 28, borderRadius: radii.pill, alignItems: 'center', justifyContent: 'center' },
+  segBtnActive: { backgroundColor: theme.accent },
   disclaimer: {
     color: theme.text3,
     fontSize: sizes.xs,

@@ -586,5 +586,17 @@
   "plan.debts.termsTitle": "Условия погашения",
   "plan.debts.fromAccount": "Текущий баланс счёта «{name}»",
   "plan.debts.removeTerms": "Удалить условия погашения",
-  "plan.debts.emptyLinked": "Добавьте кредит или кредитную карту — они появятся здесь с прогнозом погашения."
+  "plan.debts.emptyLinked": "Добавьте кредит или кредитную карту — они появятся здесь с прогнозом погашения.",
+  "settings.groups.money": "Деньги",
+  "settings.groups.look": "Вид и язык",
+  "settings.groups.smartAdd": "Быстрое добавление",
+  "settings.groups.securityData": "Безопасность и данные",
+  "settings.groups.advanced": "Дополнительно",
+  "settings.profile.new": "Новый профиль",
+  "settings.fx.refresh": "Обновить курсы",
+  "settings.export.title": "Экспорт",
+  "settings.export.lastBackup": "Последняя копия: {when}",
+  "settings.export.never": "Резервная копия ещё не создавалась",
+  "settings.export.hint.json": "Полная копия, которую можно восстановить",
+  "settings.export.hint.csv": "Операции для таблицы"
 }

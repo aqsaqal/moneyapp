@@ -586,5 +586,17 @@
   "plan.debts.termsTitle": "Payoff terms",
   "plan.debts.fromAccount": "Live balance of {name}",
   "plan.debts.removeTerms": "Remove payoff terms",
-  "plan.debts.emptyLinked": "Add a loan or credit account — it shows up here with a payoff projection."
+  "plan.debts.emptyLinked": "Add a loan or credit account — it shows up here with a payoff projection.",
+  "settings.groups.money": "Money",
+  "settings.groups.look": "Look & language",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Security & data",
+  "settings.groups.advanced": "Advanced",
+  "settings.profile.new": "New profile",
+  "settings.fx.refresh": "Refresh rates",
+  "settings.export.title": "Export",
+  "settings.export.lastBackup": "Last backup {when}",
+  "settings.export.never": "Never backed up",
+  "settings.export.hint.json": "Full backup you can restore",
+  "settings.export.hint.csv": "Transactions for a spreadsheet"
 }

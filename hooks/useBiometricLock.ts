@@ -21,6 +21,25 @@ export function useBiometricSupported(): boolean {
   return supported;
 }
 
+/** Which biometric the device offers, for picking the right icon.
+ *  Face wins when both are enrolled (that is what the OS prompts with). */
+export function useBiometricKind(): 'face' | 'fingerprint' | null {
+  const [kind, setKind] = useState<'face' | 'fingerprint' | null>(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        const types = await LocalAuthentication.supportedAuthenticationTypesAsync();
+        if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) setKind('face');
+        else if (types.includes(LocalAuthentication.AuthenticationType.FINGERPRINT)) setKind('fingerprint');
+        else setKind(null);
+      } catch {
+        setKind(null);
+      }
+    })();
+  }, []);
+  return kind;
+}
+
 export function isBiometricEnabled(): boolean {
   return kv.getBool('biometricEnabled', false);
 }

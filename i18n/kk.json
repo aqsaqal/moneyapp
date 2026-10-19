@@ -586,5 +586,17 @@
   "plan.debts.termsTitle": "Өтеу шарттары",
   "plan.debts.fromAccount": "«{name}» шотының ағымдағы балансы",
   "plan.debts.removeTerms": "Өтеу шарттарын жою",
-  "plan.debts.emptyLinked": "Несие немесе несие картасын қосыңыз — олар осында өтеу болжамымен көрсетіледі."
+  "plan.debts.emptyLinked": "Несие немесе несие картасын қосыңыз — олар осында өтеу болжамымен көрсетіледі.",
+  "settings.groups.money": "Ақша",
+  "settings.groups.look": "Көрініс және тіл",
+  "settings.groups.smartAdd": "Жылдам қосу",
+  "settings.groups.securityData": "Қауіпсіздік және деректер",
+  "settings.groups.advanced": "Қосымша",
+  "settings.profile.new": "Жаңа профиль",
+  "settings.fx.refresh": "Бағамдарды жаңарту",
+  "settings.export.title": "Экспорт",
+  "settings.export.lastBackup": "Соңғы сақтық көшірме: {when}",
+  "settings.export.never": "Сақтық көшірме әлі жасалмаған",
+  "settings.export.hint.json": "Қалпына келтіруге болатын толық көшірме",
+  "settings.export.hint.csv": "Кестеге арналған операциялар"
 }
