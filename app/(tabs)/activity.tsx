@@ -446,7 +446,7 @@ export default function Activity() {
             scheduled-but-not-yet-executed rows by definition. */}
         {isCurrentMonth && upcomingTxns.length > 0 && (
           <View style={styles.group}>
-            <Text style={[styles.dayLabel, styles.upcomingLabel]}>UPCOMING</Text>
+            <Text style={[styles.dayLabel, styles.upcomingLabel]}>{t('activity.upcoming').toUpperCase()}</Text>
             <View style={{ gap: 2, opacity: 0.85 }}>
               {upcomingTxns.map((tx) => (
                 <TransactionRow

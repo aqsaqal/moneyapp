@@ -27,6 +27,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import {
   SectionHeader,
@@ -863,7 +864,7 @@ function AboutSection() {
   return (
     <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
       <SectionHeader title={t('me.section.about')} />
-      <SettingRow label={APP_NAME} hint="Version 1.0.0" />
+      <SettingRow label={APP_NAME} hint={t('me.version', { v: Constants.expoConfig?.version ?? '1.0.0' })} />
       <SettingRow
         label={t('me.privacyPolicy')}
         icon="shield-lock-outline"

@@ -62,6 +62,7 @@ import { allExpenseCategories, allIncomeCategories } from '@/constants/categorie
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { useHaptics } from '@/hooks/useHaptics';
+import { t as i18nT } from '@/utils/i18n';
 import type { Transaction } from '@/utils/db/schema';
 
 type Mode = 'expense' | 'income' | 'transfer';
@@ -176,6 +177,17 @@ export default function AddScreen() {
   // line flips back to the live auto conversion. The ref lets the prefill
   // re-sync effect below set amount + override together without this
   // effect immediately wiping the override it just seeded.
+  // Transient "Enter an amount" hint when ✓ is tapped on 0 / an
+  // unparseable expression. Lives in the conversion slot so the
+  // layout doesn't jump.
+  const [amountError, setAmountError] = useState(false);
+  const amountErrorTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const flashAmountError = () => {
+    setAmountError(true);
+    if (amountErrorTimer.current) clearTimeout(amountErrorTimer.current);
+    amountErrorTimer.current = setTimeout(() => setAmountError(false), 1600);
+  };
+  useEffect(() => () => { if (amountErrorTimer.current) clearTimeout(amountErrorTimer.current); }, []);
   const lastAmountRef = React.useRef(amount);
   useEffect(() => {
     if (amount === lastAmountRef.current) return;
@@ -445,7 +457,12 @@ export default function AddScreen() {
     // Amount may be a tiny expression like "100+50*2" when calc mode
     // was used. evalAmount() returns the resolved number or NaN.
     const v = evalAmount(amount);
-    if (!Number.isFinite(v) || v <= 0) return;
+    if (!Number.isFinite(v) || v <= 0) {
+      // Don't fail silently — buzz and show a hint under the amount.
+      haptics.error();
+      flashAmountError();
+      return;
+    }
 
     // For mixed-currency entries: amount the user typed is in
     // entryCurrency; we persist `amount` in account currency. If the
@@ -470,11 +487,11 @@ export default function AddScreen() {
       if (e instanceof AccountValidationError && e.code === 'cash_negative') {
         if (opts.skipCashCheck) return false;
         Alert.alert(
-          'Cash will go negative',
-          `This will make the account go below zero (projected ${e.details.projected.toFixed(2)}). Cash accounts usually can't carry a negative balance — switch to a credit/debt account, or continue anyway?`,
+          t('add.cashNegative.title'),
+          t('add.cashNegative.body', { projected: e.details.projected.toFixed(2) }),
           [
-            { text: 'Cancel', style: 'cancel' },
-            { text: 'Continue', onPress: () => submitInner({ skipCashCheck: true }) },
+            { text: t('common.cancel'), style: 'cancel' },
+            { text: t('add.cashNegative.continue'), onPress: () => submitInner({ skipCashCheck: true }) },
           ],
         );
         return true;
@@ -621,7 +638,7 @@ export default function AddScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.header}>
-        <Pressable onPress={() => router.back()} hitSlop={10}>
+        <Pressable onPress={() => router.back()} hitSlop={10} accessibilityRole="button" accessibilityLabel={t('common.close')}>
           <MaterialCommunityIcons name="close" size={24} color={theme.text1} />
         </Pressable>
         <View style={styles.modeRow}>
@@ -631,11 +648,11 @@ export default function AddScreen() {
               onPress={() => setMode(m)}
               style={[styles.modeTab, mode === m && styles.modeActive]}
             >
-              <Text style={[styles.modeText, mode === m && styles.modeTextActive]}>{t(`add.${m}`)}</Text>
+              <Text style={[styles.modeText, mode === m && styles.modeTextActive]} maxFontSizeMultiplier={1.3}>{t(`add.${m}`)}</Text>
             </Pressable>
           ))}
         </View>
-        <Pressable onPress={submit} hitSlop={10} accessibilityLabel="Submit">
+        <Pressable onPress={submit} hitSlop={10} accessibilityRole="button" accessibilityLabel={t('add.a11y.submit')}>
           <MaterialCommunityIcons name="check" size={24} color={theme.accent} />
         </Pressable>
       </View>
@@ -656,7 +673,7 @@ export default function AddScreen() {
             onPress={() => setCurrencyPickerOpen(true)}
             style={styles.currencyChip}
             accessibilityRole="button"
-            accessibilityLabel={`Currency ${effectiveEntryCurrency}, tap to change`}
+            accessibilityLabel={t('add.a11y.currency', { ccy: effectiveEntryCurrency })}
           >
             <Text style={styles.currencyChipText}>{effectiveEntryCurrency}</Text>
             <MaterialCommunityIcons name="chevron-down" size={14} color={theme.text2} />
@@ -669,6 +686,11 @@ export default function AddScreen() {
             income / matching-side transfer; two lines for a true
             cross-currency transfer. */}
         <View style={styles.conversionSlot}>
+          {amountError && (
+            <Text style={styles.amountError} accessibilityLiveRegion="assertive">
+              {t('add.amountRequired')}
+            </Text>
+          )}
           {showFromConv && Number(amount) > 0 && fromAccountCcy && (
             <ConversionLine
               direction="from"
@@ -1130,7 +1152,7 @@ function ConversionLine({
         <Pressable
           onPress={() => onChange(null)}
           hitSlop={10}
-          accessibilityLabel="Reset to market rate"
+          accessibilityLabel={i18nT('add.a11y.resetRate')}
         >
           <MaterialCommunityIcons name="refresh" size={14} color={theme.text3} />
         </Pressable>
@@ -1307,6 +1329,12 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg2,
   },
   currencyChipText: { color: theme.text1, fontSize: 13, fontFamily: 'PlusJakartaSans_600SemiBold' },
+  amountError: {
+    color: theme.expense,
+    fontFamily: font.bodySemi,
+    fontSize: sizes.sm,
+    textAlign: 'center',
+  },
   conversionSlot: {
     // Reserve enough height for two stacked conversion lines so the
     // layout doesn't jump when transfer currencies straddle both

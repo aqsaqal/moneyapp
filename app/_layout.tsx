@@ -17,6 +17,7 @@ import { bootAppData } from '@/hooks/useAppData';
 import { useAppLock, isBiometricEnabled } from '@/hooks/useBiometricLock';
 import { kv } from '@/utils/kv';
 import { LockScreen } from '@/components/LockScreen';
+import { ToastHost } from '@/components/Toast';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { HomeSkeleton } from '@/components/Skeleton';
 import { setLocale, type LocaleCode } from '@/utils/i18n';
@@ -139,6 +140,7 @@ export default function RootLayout() {
               <Stack.Screen name="categories-manage" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
             </Stack>
+            <ToastHost />
           </LockGate>
         </ErrorBoundary>
       </SafeAreaProvider>

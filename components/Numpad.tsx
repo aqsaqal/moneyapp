@@ -77,7 +77,7 @@ export function Numpad({
       accessibilityRole="button"
       accessibilityLabel={label ?? k}
     >
-      <Text style={styles.keyText}>{k}</Text>
+      <Text style={styles.keyText} maxFontSizeMultiplier={1.3}>{k}</Text>
     </Pressable>
   );
 
@@ -89,7 +89,7 @@ export function Numpad({
       accessibilityRole="button"
       accessibilityLabel={label}
     >
-      <Text style={styles.opText}>{glyph}</Text>
+      <Text style={styles.opText} maxFontSizeMultiplier={1.3}>{glyph}</Text>
     </Pressable>
   );
 
@@ -127,7 +127,7 @@ export function Numpad({
       accessibilityLabel={awaitingEval ? 'Evaluate' : submitLabel}
     >
       {awaitingEval ? (
-        <Text style={styles.equalsText}>=</Text>
+        <Text style={styles.equalsText} maxFontSizeMultiplier={1.3}>=</Text>
       ) : (
         <MaterialCommunityIcons name="check" size={28} color={theme.bg} />
       )}

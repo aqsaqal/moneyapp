@@ -42,6 +42,8 @@ import { NumpadInputSheet } from '@/components/NumpadInputSheet';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { upsertGoal, deleteGoal, useAccounts } from '@/hooks/useAppData';
 import { useT } from '@/hooks/useT';
+import { useHaptics } from '@/hooks/useHaptics';
+import { showToast } from '@/components/Toast';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
@@ -71,6 +73,7 @@ export interface GoalSheetProps {
 
 export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
   const t = useT();
+  const haptics = useHaptics();
   const editing = !!goal;
   const accounts = useAccounts();
 
@@ -115,18 +118,18 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
   const save = () => {
     const t2 = parseFloat(target.replace(',', '.'));
     if (!name.trim() || !Number.isFinite(t2) || t2 <= 0) {
-      Alert.alert(t('common.required'), 'Name + target amount > 0');
+      Alert.alert(t('common.required'), t('goal.required.nameTarget'));
       return;
     }
     if (!accountId) {
-      Alert.alert(t('common.required'), 'Pick an account to track this goal against.');
+      Alert.alert(t('common.required'), t('goal.required.account'));
       return;
     }
     let parsedDate: number | null = null;
     if (targetDate.trim()) {
       const d = new Date(targetDate);
       if (Number.isNaN(d.getTime())) {
-        Alert.alert(t('common.required'), 'Target date must be YYYY-MM-DD or empty.');
+        Alert.alert(t('common.required'), t('goal.required.date'));
         return;
       }
       parsedDate = d.getTime();
@@ -142,6 +145,8 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
       icon,
       createdAt: goal?.createdAt ?? Date.now(),
     });
+    haptics.success();
+    showToast(t('toast.saved.goal'));
     onClose();
   };
 

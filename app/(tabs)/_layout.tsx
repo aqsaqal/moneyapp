@@ -22,7 +22,6 @@ import type {
   BottomTabBarProps,
 } from '@react-navigation/bottom-tabs';
 import { theme } from '@/constants/theme';
-import { PRIMARY_COLOR } from '@/constants/flavor';
 import { FabButton } from '@/components/FabButton';
 import { kv } from '@/utils/kv';
 import { useOncePress } from '@/hooks/useOncePress';
@@ -91,7 +90,9 @@ function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarPr
             emitTabReselect(route.name);
           }
         };
-        const color = focused ? PRIMARY_COLOR : theme.text3;
+        // theme.accent (not raw PRIMARY_COLOR) so light mode gets the
+        // deeper variant that reads on white.
+        const color = focused ? theme.accent : theme.text3;
         const label = t(TAB_LABEL_KEYS[slot]);
         return (
           <Pressable
@@ -103,7 +104,7 @@ function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarPr
             accessibilityLabel={label}
           >
             <MaterialCommunityIcons name={TAB_ICONS[slot]} size={24} color={color} />
-            <Text style={[styles.tabLabel, { color }]}>{label}</Text>
+            <Text style={[styles.tabLabel, { color }]} maxFontSizeMultiplier={1.3}>{label}</Text>
           </Pressable>
         );
       })}

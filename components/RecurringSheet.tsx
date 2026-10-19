@@ -30,6 +30,8 @@ import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { upsertRecurring, deleteRecurring, useAccounts } from '@/hooks/useAppData';
 import { allExpenseCategories, allIncomeCategories, catInfo } from '@/constants/categories';
 import { useT } from '@/hooks/useT';
+import { useHaptics } from '@/hooks/useHaptics';
+import { showToast } from '@/components/Toast';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
@@ -47,6 +49,7 @@ export interface RecurringSheetProps {
 
 export function RecurringSheet({ visible, recurring, defaultType, onClose }: RecurringSheetProps) {
   const t = useT();
+  const haptics = useHaptics();
   const editing = !!recurring;
   const accounts = useAccounts();
   const [type, setType] = useState<Mode>(recurring?.type ?? defaultType ?? 'expense');
@@ -101,6 +104,8 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
       icon: cat.icon,
       color: cat.color,
     });
+    haptics.success();
+    showToast(t('toast.saved.recurring'));
     onClose();
   };
 

@@ -27,6 +27,8 @@ import {
   type CategoryWithMeta,
 } from '@/hooks/useAppData';
 import { useT } from '@/hooks/useT';
+import { useHaptics } from '@/hooks/useHaptics';
+import { showToast } from '@/components/Toast';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { NumpadInputSheet } from '@/components/NumpadInputSheet';
 import { kv } from '@/utils/kv';
@@ -63,6 +65,7 @@ export interface CustomCategorySheetProps {
 
 export function CustomCategorySheet({ visible, category, onClose }: CustomCategorySheetProps) {
   const t = useT();
+  const haptics = useHaptics();
   const editing = !!category;
   const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [name, setName] = useState(category?.name ?? '');
@@ -114,6 +117,8 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
       isPinned: pinned,
       archived,
     });
+    haptics.success();
+    showToast(t('toast.saved.category'));
     onClose();
   };
 

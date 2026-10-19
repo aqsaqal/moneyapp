@@ -22,6 +22,8 @@ import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { kv } from '@/utils/kv';
 import { useT } from '@/hooks/useT';
+import { useHaptics } from '@/hooks/useHaptics';
+import { showToast } from '@/components/Toast';
 import type { CurrencyCode } from '@/constants/currency';
 import type { Debt } from '@/utils/db/schema';
 
@@ -49,6 +51,7 @@ export interface DebtSheetProps {
 
 export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
   const t = useT();
+  const haptics = useHaptics();
   const editing = !!debt;
   const accounts = useAccounts();
   const [name, setName] = useState(debt?.name ?? '');
@@ -100,6 +103,8 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
       icon,
       createdAt: debt?.createdAt ?? Date.now(),
     });
+    haptics.success();
+    showToast(t('toast.saved.debt'));
     onClose();
   };
 

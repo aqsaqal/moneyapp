@@ -47,7 +47,7 @@ function getViewShot() {
   }
 }
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
-import { APP_NAME, PRIMARY_COLOR } from '@/constants/flavor';
+import { APP_NAME } from '@/constants/flavor';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import { catInfo } from '@/constants/categories';
 import {
@@ -104,7 +104,7 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
     if (sharing) return;
     const vs = getViewShot();
     if (!vs) {
-      Alert.alert('Share unavailable', 'Reinstall the app to enable sharing.');
+      Alert.alert(t('recap.share.unavailable'), t('recap.share.reinstall'));
       return;
     }
     setSharing(true);
@@ -112,7 +112,7 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
       const uri = await vs.captureRef(cardRef, { format: 'png', quality: 0.95, result: 'tmpfile' });
       const ok = await Sharing.isAvailableAsync();
       if (!ok) {
-        Alert.alert('Share unavailable', 'Sharing is not available on this device.');
+        Alert.alert(t('recap.share.unavailable'), t('recap.share.device'));
         return;
       }
       await Sharing.shareAsync(uri, {
@@ -121,7 +121,7 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
         UTI: 'public.png',
       });
     } catch (e) {
-      Alert.alert('Could not share', String(e));
+      Alert.alert(t('recap.share.failed'), String(e));
     } finally {
       setSharing(false);
     }
@@ -164,7 +164,7 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
                 <Text
                   style={[
                     styles.netValue,
-                    { color: net >= 0 ? PRIMARY_COLOR : theme.expense },
+                    { color: net >= 0 ? theme.accent : theme.expense },
                   ]}
                   adjustsFontSizeToFit
                   numberOfLines={1}
@@ -192,7 +192,7 @@ export function MonthlyRecap({ visible, month, onClose }: MonthlyRecapProps) {
               </View>
 
               <View style={styles.footer}>
-                <View style={[styles.dot, { backgroundColor: PRIMARY_COLOR }]} />
+                <View style={[styles.dot, { backgroundColor: theme.accent }]} />
                 <Text style={styles.footerText}>{t('recap.footer', { appName: APP_NAME })}</Text>
               </View>
             </View>

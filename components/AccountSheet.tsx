@@ -48,6 +48,8 @@ import {
 } from '@/hooks/useAppData';
 import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
 import { useT } from '@/hooks/useT';
+import { useHaptics } from '@/hooks/useHaptics';
+import { showToast } from '@/components/Toast';
 import { kv } from '@/utils/kv';
 import type { Account } from '@/utils/db/schema';
 
@@ -87,6 +89,13 @@ export interface AccountSheetProps {
 
 export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   const t = useT();
+  const haptics = useHaptics();
+  // Every successful save path ends here: haptic + toast + close.
+  const finishSaved = () => {
+    haptics.success();
+    showToast(t('toast.saved.account'));
+    onClose();
+  };
   const editing = !!account;
   const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [type, setType] = useState<AccountType>(account?.type ?? 'cash');
@@ -216,7 +225,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
                 includeInTotal: includeInTotal ? 1 : 0,
                 archived: archived ? 1 : 0,
               });
-              onClose();
+              finishSaved();
             },
           },
           {
@@ -236,7 +245,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
                 note: t('account.reconcile.note'),
                 date: Date.now(),
               });
-              onClose();
+              finishSaved();
             },
           },
         ],
@@ -245,7 +254,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
     }
 
     writeMeta();
-    onClose();
+    finishSaved();
   };
 
   const save = () => commitSave();
