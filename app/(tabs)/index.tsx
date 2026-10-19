@@ -23,9 +23,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { APP_NAME } from '@/constants/flavor';
 import { FeatureSlots } from '@/features';
-import { DisposableHeroCard, ForecastCard } from '@/components/BalanceCard';
-import { HomeActionCard } from '@/components/HomeActionCard';
-import { MonthGlanceCard } from '@/components/MonthGlanceCard';
+import { DisposableHeroCard } from '@/components/BalanceCard';
+import { SafeToSpendCard } from '@/components/SafeToSpendCard';
+import { HomeActionStrip } from '@/components/HomeActionCard';
+import { MonthStripCard } from '@/components/MonthStripCard';
 import { TransactionRow } from '@/components/TransactionRow';
 import { StreakBadge } from '@/components/StreakBadge';
 import {
@@ -204,6 +205,12 @@ export default function Home() {
       <View style={styles.header}>
         <View style={{ flex: 1 }}>
           <Text style={styles.brand}>{APP_NAME}</Text>
+          {/* Context for every per-day number on the screen. */}
+          <Text style={styles.dateLine} numberOfLines={1}>
+            {now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}
+            {' · '}
+            {t('home.dayOf', { d: daysElapsed, n: dim })}
+          </Text>
           {/* Hijri-first hero (islamic only). Generic: nothing. */}
           <FeatureSlots.HomeHeroExtras />
         </View>
@@ -237,24 +244,33 @@ export default function Home() {
             accounts first (prerequisite for everything else), then no
             income. Sample data is no longer seeded on first install,
             so this path is the actual new-user landing experience. */}
-        <DisposableHeroCard
-          disposable={disposable}
-          income={income}
-          expense={expense}
-          daysLeft={daysLeft}
-          monthLabel={monthLabel}
-          currency={currency}
-          forecast={forecast ?? undefined}
-          emptyKind={accounts.length === 0 ? 'no-accounts' : income <= 0 ? 'no-income' : null}
-          onSetUp={() => {
-            if (accounts.length === 0) router.push('/(tabs)/accounts' as never);
-            else router.push('/(tabs)/plan' as never);
-          }}
-          // fixedExp at this point already filters out paid recurring,
-          // so passing it through gives the user a clear "X already
-          // reserved for upcoming bills" footnote.
-          unpaidBills={fixedExp}
-        />
+        {(accounts.length === 0 || income <= 0) ? (
+          <DisposableHeroCard
+            disposable={disposable}
+            income={income}
+            expense={expense}
+            daysLeft={daysLeft}
+            monthLabel={monthLabel}
+            currency={currency}
+            emptyKind={accounts.length === 0 ? 'no-accounts' : 'no-income'}
+            onSetUp={() => {
+              if (accounts.length === 0) router.push('/(tabs)/accounts' as never);
+              else router.push('/(tabs)/plan' as never);
+            }}
+          />
+        ) : (
+          <SafeToSpendCard
+            disposable={disposable}
+            daysLeft={daysLeft}
+            daysElapsed={daysElapsed}
+            daysInMonth={dim}
+            forecast={forecastBundle?.forecast ?? null}
+            avgDailyVariable={forecastBundle?.avgDailyVariable ?? 0}
+            remainingBills={forecastBundle?.remainingBills ?? fixedExp}
+            currency={currency}
+            onOpenPlan={() => router.push('/(tabs)/plan' as never)}
+          />
+        )}
 
         {/* Second-step card: only shown while accounts are still missing.
             Greyed/disabled so the user sees the progression without
@@ -274,36 +290,14 @@ export default function Home() {
           </View>
         )}
 
-        {/* Phase 10x: forecast moved out of the hero into its own
-            tappable card. Collapsed by default; tap to reveal projected
-            end-of-month + the two contributing numbers. Hidden when
-            income is zero OR there are fewer than 3 days of variable-
-            spend data — projecting from 1 day's spend is noise, not
-            signal. ForecastCard.shouldRender encapsulates the gate. */}
-        {income > 0 &&
-          forecastBundle != null &&
-          ForecastCard.shouldRender(forecastBundle.daysOfData) && (
-            <ForecastCard
-              forecast={forecastBundle.forecast}
-              disposable={disposable}
-              daysLeft={daysLeft}
-              daysOfData={forecastBundle.daysOfData}
-              avgDailyVariable={forecastBundle.avgDailyVariable}
-              remainingBills={forecastBundle.remainingBills}
-              currency={currency}
-              onSeeBreakdown={() => router.push('/(tabs)/plan' as never)}
-            />
-          )}
-
         {/* Islamic flavor: ZakatHomeCard + RamadanHomeCard. Generic: nothing. */}
         <FeatureSlots.HomeExtras />
 
-        {/* Top-1 actionable insight; empty when nothing's wrong. */}
-        <HomeActionCard />
+        {/* Up to three actionable insights, swipeable; empty when nothing's wrong. */}
+        <HomeActionStrip />
 
-        {/* This-month glance: income/spending bars + net diff. Read-only,
-            no period selector, no tap target. */}
-        <MonthGlanceCard income={income} spending={expense} currency={currency} />
+        {/* Where in the month the money went: daily bars + in/out. */}
+        <MonthStripCard monthKey={thisMonth} income={income} spending={expense} currency={currency} />
 
         {/* Recent — 3 rows + "View all" tail link to /activity */}
         {recentTxns.length > 0 && (
@@ -322,9 +316,13 @@ export default function Home() {
               </Pressable>
             </View>
             <View style={{ gap: 4 }}>
-              {recentTxns.map((tx) => (
+              {recentTxns.map((tx, i) => {
+                const label = dayLabel(tx.date, t);
+                const prev = i > 0 ? dayLabel(recentTxns[i - 1].date, t) : null;
+                return (
+                <React.Fragment key={tx.id}>
+                {label !== prev && <Text style={styles.dayLabel}>{label}</Text>}
                 <TransactionRow
-                  key={tx.id}
                   t={tx}
                   currency={currency}
                   accountLabel={labelForTx(tx)}
@@ -339,7 +337,9 @@ export default function Home() {
                     } as never)
                   }
                 />
-              ))}
+                </React.Fragment>
+                );
+              })}
             </View>
           </View>
         )}
@@ -350,9 +350,31 @@ export default function Home() {
   );
 }
 
+/** Today / Yesterday / short date, localized via t(). */
+function dayLabel(ts: number, t: (k: string) => string): string {
+  const d = new Date(ts);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+  if (d.toDateString() === today.toDateString()) return t('home.today');
+  if (d.toDateString() === yesterday.toDateString()) return t('home.yesterday');
+  return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+}
+
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.lg, gap: spacing.lg },
+  dateLine: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
+  dayLabel: {
+    color: theme.text3,
+    fontSize: 10,
+    fontFamily: font.bodySemi,
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
+    marginTop: 6,
+    marginBottom: 2,
+    paddingHorizontal: 4,
+  },
   header: {
     flexDirection: 'row',
     alignItems: 'center',

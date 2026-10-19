@@ -1,21 +1,21 @@
-// HomeActionCard — surfaces top-1 actionable insight on Home, or nothing.
+// HomeActionStrip — up to three actionable insights on Home, as a
+// horizontally swipeable strip; nothing when nothing is actionable.
 //
-// Phase 6 of v2: replaces v1's CategoryGrid + MiniTrendChart density on Home
-// with one decisive card. The card empty-states (returns null) when nothing
-// is actionable — Home shouldn't decorate itself with neutral data.
-//
-// Priority order (first match wins):
+// Priority order (all matches collected, top 3 shown):
 //   1. Over-budget category (most overshot)
 //   2. Bill due in next 3 days (soonest)
 //   3. Recurring not yet paid past due-day this month (oldest first)
+//   4. Category spike vs the rolling 12-month mean
+//   5. (islamic) hawl due / approaching
 //
-// Tap → routes to /plan (recurring + budgets are owned by Plan tab in v2).
+// Each card has one tap target (routes to Plan / Activity) and a dismiss
+// × that hides that card for the rest of today (kv, per profile).
 //
 // Tone: factual + brief. No "great job!" or "keep going!" — those rub
 // against the cultural review checklist (Westernism / gamification).
 
-import React, { useMemo } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo, useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, font, sizes, radii, spacing } from '@/constants/theme';
@@ -32,6 +32,9 @@ import { catInfo } from '@/constants/categories';
 import { monthKey } from '@/utils/format';
 import { kv } from '@/utils/kv';
 
+const DISMISS_KEY = 'homeDismissedActions';
+const MAX_CARDS = 3;
+
 interface Insight {
   kind: 'overbudget' | 'bill-soon' | 'bill-overdue' | 'hawl-approaching' | 'hawl-due' | 'category-spike';
   icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
@@ -43,9 +46,20 @@ interface Insight {
   route?: '/plan' | '/activity' | '/(islamic)/zakat';
 }
 
-export function HomeActionCard() {
+/** Stable id for dismissals: kind + title (title carries the name). */
+function insightId(i: Insight): string {
+  return `${i.kind}|${i.title}`;
+}
+
+function todayKey(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+export function HomeActionStrip() {
   const router = useRouter();
   const t = useT();
+  const { width } = useWindowDimensions();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const key = monthKey();
   const budgets = useBudgets();
@@ -54,7 +68,8 @@ export function HomeActionCard() {
   const paid = usePaidItemsForMonth(key);
   const { spike } = useInsights();
 
-  const insight = useMemo<Insight | null>(() => {
+  const insights = useMemo<Insight[]>(() => {
+    const out: Insight[] = [];
     const today = new Date();
     const dom = today.getDate();
     const totalsMap = new Map(totals.map((tot) => [tot.category, tot.total]));
@@ -72,7 +87,7 @@ export function HomeActionCard() {
       }
     }
     if (topOver) {
-      return {
+      out.push({
         kind: 'overbudget',
         icon: 'alert-circle-outline',
         iconColor: theme.expense,
@@ -82,7 +97,7 @@ export function HomeActionCard() {
           spent: formatMoney(topOver.spent, currency),
           over: formatMoney(topOver.overBy, currency),
         }),
-      };
+      });
     }
 
     // 2. Bills due in the next 3 days (and not yet paid this month).
@@ -100,7 +115,7 @@ export function HomeActionCard() {
           : u.daysUntil === 1
             ? t('homeAction.due.tomorrow')
             : t('homeAction.due.inDays', { n: u.daysUntil });
-      return {
+      out.push({
         kind: 'bill-soon',
         icon: 'calendar-clock',
         iconColor: theme.warning,
@@ -110,7 +125,7 @@ export function HomeActionCard() {
           amount: formatMoney(u.rec.amount, currency),
           dom: u.rec.dayOfMonth,
         }),
-      };
+      });
     }
 
     // 3. Overdue — recurring expenses past their day-of-month and unpaid.
@@ -119,7 +134,7 @@ export function HomeActionCard() {
       .sort((a, b) => a.dayOfMonth - b.dayOfMonth);
     if (overdue.length > 0) {
       const r = overdue[0];
-      return {
+      out.push({
         kind: 'bill-overdue',
         icon: 'alert',
         iconColor: theme.expense,
@@ -129,7 +144,7 @@ export function HomeActionCard() {
           amount: formatMoney(r.amount, currency),
           dom: r.dayOfMonth,
         }),
-      };
+      });
     }
 
     // 4. Category spike — current month >2σ above the rolling 12-month
@@ -137,7 +152,7 @@ export function HomeActionCard() {
     //    already won the slot above (a single-card screen).
     if (spike) {
       const ratio = spike.thisMonth / spike.rolling12Mean;
-      return {
+      out.push({
         kind: 'category-spike',
         icon: 'chart-line-variant',
         iconColor: spike.color,
@@ -148,7 +163,7 @@ export function HomeActionCard() {
           typical: formatMoney(spike.rolling12Mean, currency),
         }),
         route: '/activity',
-      };
+      });
     }
 
     // 5. Islamic only — hawl approaching (≤30 days) or due. Babel inlines
@@ -160,7 +175,7 @@ export function HomeActionCard() {
         const { computeHawlForActiveState } = require('@/features/islamic/zakat/useZakatCalculation');
         const z = computeHawlForActiveState?.();
         if (z?.isComplete) {
-          return {
+          out.push({
             kind: 'hawl-due',
             icon: 'hand-heart',
             iconColor: theme.gold,
@@ -177,10 +192,10 @@ export function HomeActionCard() {
             // Falls back to /plan (the default route below) — zakat
             // budgeting + sadaqa categories live under the Plan tab in
             // v1. A dedicated Zakat Calculator screen ships in v1.1.
-          };
+          });
         }
         if (z && z.daysRemaining > 0 && z.daysRemaining <= 30) {
-          return {
+          out.push({
             kind: 'hawl-approaching',
             icon: 'calendar-clock',
             iconColor: theme.gold,
@@ -189,36 +204,79 @@ export function HomeActionCard() {
             detail: t('homeAction.hawlApproaching.detail', {
               amount: formatMoney(z.zakatDueProjected ?? 0, currency),
             }),
-          };
+          });
         }
       } catch {
         /* swallow — hawl card is best-effort, never block Home rendering. */
       }
     }
 
-    return null;
+    return out.slice(0, MAX_CARDS);
   }, [budgets, totals, recurring, paid, currency, spike, t]);
 
-  if (!insight) return null;
+  // Dismissals live for the current day only — tomorrow the card is
+  // allowed back (the bill is still due, the budget still exceeded).
+  const [dismissed, setDismissed] = useState<string[]>(() => {
+    const saved = kv.getJSON<{ date: string; ids: string[] }>(DISMISS_KEY);
+    return saved && saved.date === todayKey() ? saved.ids : [];
+  });
+  const dismiss = (id: string) => {
+    const next = [...dismissed, id];
+    kv.setJSON(DISMISS_KEY, { date: todayKey(), ids: next });
+    setDismissed(next);
+  };
+
+  const visible = insights.filter((i) => !dismissed.includes(insightId(i)));
+  if (visible.length === 0) return null;
+
+  // One card fills the row; two or more peek the next one so the strip
+  // reads as swipeable without a hint.
+  const cardW = visible.length === 1 ? width - spacing.lg * 2 : Math.round((width - spacing.lg * 2) * 0.86);
 
   return (
-    <Pressable
-      onPress={() => router.push((insight.route ?? '/plan') as never)}
-      style={[styles.card, { borderColor: insight.borderColor }]}
-      accessibilityRole="button"
-      accessibilityLabel={`${insight.title}. ${insight.detail}.`}
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      snapToInterval={cardW + spacing.sm}
+      decelerationRate="fast"
+      contentContainerStyle={styles.strip}
+      style={styles.stripOuter}
     >
-      <MaterialCommunityIcons name={insight.icon} size={22} color={insight.iconColor} />
-      <View style={{ flex: 1 }}>
-        <Text style={styles.title}>{insight.title}</Text>
-        <Text style={styles.detail}>{insight.detail}</Text>
-      </View>
-      <MaterialCommunityIcons name="chevron-right" size={20} color={theme.text3} />
-    </Pressable>
+      {visible.map((insight) => (
+        <Pressable
+          key={insightId(insight)}
+          onPress={() => router.push((insight.route ?? '/plan') as never)}
+          style={[styles.card, { borderColor: insight.borderColor, width: cardW }]}
+          accessibilityRole="button"
+          accessibilityLabel={`${insight.title}. ${insight.detail}.`}
+        >
+          <MaterialCommunityIcons name={insight.icon} size={22} color={insight.iconColor} />
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Text style={styles.title} numberOfLines={1}>{insight.title}</Text>
+            <Text style={styles.detail} numberOfLines={1}>{insight.detail}</Text>
+          </View>
+          <Pressable
+            onPress={() => dismiss(insightId(insight))}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={t('home.actions.dismiss')}
+          >
+            <MaterialCommunityIcons name="close" size={18} color={theme.text3} />
+          </Pressable>
+        </Pressable>
+      ))}
+    </ScrollView>
   );
 }
 
+/** Back-compat alias for any caller still importing the old name. */
+export const HomeActionCard = HomeActionStrip;
+
 const styles = StyleSheet.create({
+  // Bleed the strip to the screen edge so the peeking card isn't clipped
+  // by the ScrollView's padded content box.
+  stripOuter: { marginHorizontal: -spacing.lg },
+  strip: { paddingHorizontal: spacing.lg, gap: spacing.sm },
   card: {
     flexDirection: 'row',
     alignItems: 'center',
