@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Ajastatud",
   "tx.repeat": "Korda",
   "netWorth.face.netWorth": "Netoväärtus",
-  "netWorth.face.cashFlow": "Rahavoog"
+  "netWorth.face.cashFlow": "Rahavoog",
+  "onboarding.account.title": "Sinu esimene konto",
+  "onboarding.account.hint": "Kus su raha on? Alustamiseks piisab ühest — ülejäänud lisa hiljem vahekaardilt Kontod.",
+  "onboarding.account.name": "Nimi",
+  "onboarding.account.balance": "Praegune saldo",
+  "onboarding.account.balanceOwed": "Võlgnetav summa",
+  "onboarding.account.create": "Loo ja alusta",
+  "onboarding.account.skip": "Jäta praegu vahele",
+  "onboarding.account.defaultName": "Sularaha"
 }

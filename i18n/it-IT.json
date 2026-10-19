@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Programmati",
   "tx.repeat": "Ripeti",
   "netWorth.face.netWorth": "Patrimonio netto",
-  "netWorth.face.cashFlow": "Flusso di cassa"
+  "netWorth.face.cashFlow": "Flusso di cassa",
+  "onboarding.account.title": "Il tuo primo conto",
+  "onboarding.account.hint": "Dove tieni i tuoi soldi? Uno basta per iniziare — aggiungi gli altri più tardi dalla scheda Conti.",
+  "onboarding.account.name": "Nome",
+  "onboarding.account.balance": "Saldo attuale",
+  "onboarding.account.balanceOwed": "Importo dovuto",
+  "onboarding.account.create": "Crea e inizia",
+  "onboarding.account.skip": "Salta per ora",
+  "onboarding.account.defaultName": "Contanti"
 }

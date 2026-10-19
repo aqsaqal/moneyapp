@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Ajastetut",
   "tx.repeat": "Toista",
   "netWorth.face.netWorth": "Nettovarallisuus",
-  "netWorth.face.cashFlow": "Kassavirta"
+  "netWorth.face.cashFlow": "Kassavirta",
+  "onboarding.account.title": "Ensimmäinen tilisi",
+  "onboarding.account.hint": "Missä rahasi ovat? Yksi riittää alkuun — lisää loput myöhemmin Tilit-välilehdeltä.",
+  "onboarding.account.name": "Nimi",
+  "onboarding.account.balance": "Nykyinen saldo",
+  "onboarding.account.balanceOwed": "Velan määrä",
+  "onboarding.account.create": "Luo ja aloita",
+  "onboarding.account.skip": "Ohita toistaiseksi",
+  "onboarding.account.defaultName": "Käteinen"
 }

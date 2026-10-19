@@ -624,5 +624,13 @@
   "activity.scheduledSection": "Terjadwal",
   "tx.repeat": "Ulangi",
   "netWorth.face.netWorth": "Kekayaan bersih",
-  "netWorth.face.cashFlow": "Arus kas"
+  "netWorth.face.cashFlow": "Arus kas",
+  "onboarding.account.title": "Akun pertama Anda",
+  "onboarding.account.hint": "Di mana uang Anda disimpan? Satu saja cukup untuk memulai — tambahkan sisanya nanti dari tab Akun.",
+  "onboarding.account.name": "Nama",
+  "onboarding.account.balance": "Saldo saat ini",
+  "onboarding.account.balanceOwed": "Jumlah terutang",
+  "onboarding.account.create": "Buat & mulai",
+  "onboarding.account.skip": "Lewati dulu",
+  "onboarding.account.defaultName": "Tunai"
 }

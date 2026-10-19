@@ -625,5 +625,13 @@
   "activity.scheduledSection": "מתוזמן",
   "tx.repeat": "חזרה",
   "netWorth.face.netWorth": "שווי נקי",
-  "netWorth.face.cashFlow": "תזרים מזומנים"
+  "netWorth.face.cashFlow": "תזרים מזומנים",
+  "onboarding.account.title": "החשבון הראשון שלך",
+  "onboarding.account.hint": "איפה הכסף שלך נמצא? אחד מספיק כדי להתחיל — את השאר אפשר להוסיף אחר כך בלשונית חשבונות.",
+  "onboarding.account.name": "שם",
+  "onboarding.account.balance": "יתרה נוכחית",
+  "onboarding.account.balanceOwed": "סכום החוב",
+  "onboarding.account.create": "צור והתחל",
+  "onboarding.account.skip": "דלג בינתיים",
+  "onboarding.account.defaultName": "מזומן"
 }

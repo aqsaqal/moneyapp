@@ -624,5 +624,13 @@
   "activity.scheduledSection": "Planlı",
   "tx.repeat": "Tekrarla",
   "netWorth.face.netWorth": "Net değer",
-  "netWorth.face.cashFlow": "Nakit akışı"
+  "netWorth.face.cashFlow": "Nakit akışı",
+  "onboarding.account.title": "İlk hesabın",
+  "onboarding.account.hint": "Paran nerede duruyor? Başlamak için bir tane yeter — gerisini sonra Hesaplar sekmesinden ekle.",
+  "onboarding.account.name": "Ad",
+  "onboarding.account.balance": "Mevcut bakiye",
+  "onboarding.account.balanceOwed": "Borç tutarı",
+  "onboarding.account.create": "Oluştur ve başla",
+  "onboarding.account.skip": "Şimdilik atla",
+  "onboarding.account.defaultName": "Nakit"
 }

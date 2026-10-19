@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Zakazano",
   "tx.repeat": "Ponovi",
   "netWorth.face.netWorth": "Neto vrijednost",
-  "netWorth.face.cashFlow": "Novčani tok"
+  "netWorth.face.cashFlow": "Novčani tok",
+  "onboarding.account.title": "Tvoj prvi račun",
+  "onboarding.account.hint": "Gdje ti je novac? Jedan je dovoljan za početak — ostale dodaj kasnije u kartici Računi.",
+  "onboarding.account.name": "Naziv",
+  "onboarding.account.balance": "Trenutno stanje",
+  "onboarding.account.balanceOwed": "Dugovani iznos",
+  "onboarding.account.create": "Stvori i započni",
+  "onboarding.account.skip": "Preskoči za sada",
+  "onboarding.account.defaultName": "Gotovina"
 }

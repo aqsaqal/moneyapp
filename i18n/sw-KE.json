@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Zilizopangwa",
   "tx.repeat": "Rudia",
   "netWorth.face.netWorth": "Thamani halisi",
-  "netWorth.face.cashFlow": "Mtiririko wa pesa"
+  "netWorth.face.cashFlow": "Mtiririko wa pesa",
+  "onboarding.account.title": "Akaunti yako ya kwanza",
+  "onboarding.account.hint": "Pesa zako ziko wapi? Moja inatosha kuanza — ongeza nyingine baadaye kutoka kichupo cha Akaunti.",
+  "onboarding.account.name": "Jina",
+  "onboarding.account.balance": "Salio la sasa",
+  "onboarding.account.balanceOwed": "Kiasi unachodaiwa",
+  "onboarding.account.create": "Unda na uanze",
+  "onboarding.account.skip": "Ruka kwa sasa",
+  "onboarding.account.defaultName": "Fedha taslimu"
 }

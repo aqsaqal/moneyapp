@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Naplánováno",
   "tx.repeat": "Opakovat",
   "netWorth.face.netWorth": "Čisté jmění",
-  "netWorth.face.cashFlow": "Peněžní tok"
+  "netWorth.face.cashFlow": "Peněžní tok",
+  "onboarding.account.title": "Tvůj první účet",
+  "onboarding.account.hint": "Kde máš své peníze? Pro začátek stačí jeden — ostatní přidáš později v záložce Účty.",
+  "onboarding.account.name": "Název",
+  "onboarding.account.balance": "Aktuální zůstatek",
+  "onboarding.account.balanceOwed": "Dlužná částka",
+  "onboarding.account.create": "Vytvořit a začít",
+  "onboarding.account.skip": "Zatím přeskočit",
+  "onboarding.account.defaultName": "Hotovost"
 }

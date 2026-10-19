@@ -624,5 +624,13 @@
   "activity.scheduledSection": "Dijadual",
   "tx.repeat": "Ulang",
   "netWorth.face.netWorth": "Nilai bersih",
-  "netWorth.face.cashFlow": "Aliran tunai"
+  "netWorth.face.cashFlow": "Aliran tunai",
+  "onboarding.account.title": "Akaun pertama anda",
+  "onboarding.account.hint": "Di mana wang anda disimpan? Satu sudah cukup untuk bermula — tambah yang lain kemudian dari tab Akaun.",
+  "onboarding.account.name": "Nama",
+  "onboarding.account.balance": "Baki semasa",
+  "onboarding.account.balanceOwed": "Jumlah terhutang",
+  "onboarding.account.create": "Cipta & mula",
+  "onboarding.account.skip": "Langkau buat masa ini",
+  "onboarding.account.defaultName": "Tunai"
 }

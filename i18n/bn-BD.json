@@ -625,5 +625,13 @@
   "activity.scheduledSection": "নির্ধারিত",
   "tx.repeat": "আবার",
   "netWorth.face.netWorth": "নেট সম্পদ",
-  "netWorth.face.cashFlow": "নগদ প্রবাহ"
+  "netWorth.face.cashFlow": "নগদ প্রবাহ",
+  "onboarding.account.title": "আপনার প্রথম অ্যাকাউন্ট",
+  "onboarding.account.hint": "আপনার টাকা কোথায় থাকে? শুরু করতে একটিই যথেষ্ট — বাকিগুলো পরে অ্যাকাউন্ট ট্যাব থেকে যোগ করুন।",
+  "onboarding.account.name": "নাম",
+  "onboarding.account.balance": "বর্তমান ব্যালেন্স",
+  "onboarding.account.balanceOwed": "বকেয়া পরিমাণ",
+  "onboarding.account.create": "তৈরি করে শুরু করুন",
+  "onboarding.account.skip": "আপাতত এড়িয়ে যান",
+  "onboarding.account.defaultName": "নগদ"
 }

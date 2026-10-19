@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Планирано",
   "tx.repeat": "Повтори",
   "netWorth.face.netWorth": "Нетна стойност",
-  "netWorth.face.cashFlow": "Паричен поток"
+  "netWorth.face.cashFlow": "Паричен поток",
+  "onboarding.account.title": "Вашата първа сметка",
+  "onboarding.account.hint": "Къде са парите Ви? Една е достатъчна за начало — добавете останалите по-късно от раздела „Сметки“.",
+  "onboarding.account.name": "Име",
+  "onboarding.account.balance": "Текущ баланс",
+  "onboarding.account.balanceOwed": "Дължима сума",
+  "onboarding.account.create": "Създай и започни",
+  "onboarding.account.skip": "Пропусни засега",
+  "onboarding.account.defaultName": "В брой"
 }

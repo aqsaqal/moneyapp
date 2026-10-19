@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Geplant",
   "tx.repeat": "Wiederholen",
   "netWorth.face.netWorth": "Nettovermögen",
-  "netWorth.face.cashFlow": "Cashflow"
+  "netWorth.face.cashFlow": "Cashflow",
+  "onboarding.account.title": "Dein erstes Konto",
+  "onboarding.account.hint": "Wo liegt dein Geld? Eins reicht für den Anfang — den Rest fügst du später im Tab „Konten“ hinzu.",
+  "onboarding.account.name": "Name",
+  "onboarding.account.balance": "Aktueller Saldo",
+  "onboarding.account.balanceOwed": "Offener Betrag",
+  "onboarding.account.create": "Erstellen & loslegen",
+  "onboarding.account.skip": "Vorerst überspringen",
+  "onboarding.account.defaultName": "Bar"
 }

@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Προγραμματισμένα",
   "tx.repeat": "Επανάληψη",
   "netWorth.face.netWorth": "Καθαρή θέση",
-  "netWorth.face.cashFlow": "Ταμειακή ροή"
+  "netWorth.face.cashFlow": "Ταμειακή ροή",
+  "onboarding.account.title": "Ο πρώτος σου λογαριασμός",
+  "onboarding.account.hint": "Πού βρίσκονται τα χρήματά σου; Ένας αρκεί για αρχή — πρόσθεσε τους υπόλοιπους αργότερα από την καρτέλα Λογαριασμοί.",
+  "onboarding.account.name": "Όνομα",
+  "onboarding.account.balance": "Τρέχον υπόλοιπο",
+  "onboarding.account.balanceOwed": "Οφειλόμενο ποσό",
+  "onboarding.account.create": "Δημιουργία & έναρξη",
+  "onboarding.account.skip": "Παράλειψη για τώρα",
+  "onboarding.account.defaultName": "Μετρητά"
 }

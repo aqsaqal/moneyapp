@@ -625,5 +625,13 @@
   "activity.scheduledSection": "திட்டமிடப்பட்டவை",
   "tx.repeat": "மீண்டும்",
   "netWorth.face.netWorth": "நிகர மதிப்பு",
-  "netWorth.face.cashFlow": "பணப்புழக்கம்"
+  "netWorth.face.cashFlow": "பணப்புழக்கம்",
+  "onboarding.account.title": "உங்கள் முதல் கணக்கு",
+  "onboarding.account.hint": "உங்கள் பணம் எங்கே இருக்கிறது? தொடங்க ஒன்று போதும் — மற்றவற்றைப் பின்னர் கணக்குகள் தாவலில் சேர்க்கலாம்.",
+  "onboarding.account.name": "பெயர்",
+  "onboarding.account.balance": "தற்போதைய இருப்பு",
+  "onboarding.account.balanceOwed": "செலுத்த வேண்டிய தொகை",
+  "onboarding.account.create": "உருவாக்கி தொடங்கு",
+  "onboarding.account.skip": "இப்போதைக்குத் தவிர்",
+  "onboarding.account.defaultName": "ரொக்கம்"
 }

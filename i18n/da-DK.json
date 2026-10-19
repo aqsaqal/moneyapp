@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Planlagt",
   "tx.repeat": "Gentag",
   "netWorth.face.netWorth": "Nettoformue",
-  "netWorth.face.cashFlow": "Pengestrøm"
+  "netWorth.face.cashFlow": "Pengestrøm",
+  "onboarding.account.title": "Din første konto",
+  "onboarding.account.hint": "Hvor har du dine penge? Én er nok til at starte — tilføj resten senere under fanen Konti.",
+  "onboarding.account.name": "Navn",
+  "onboarding.account.balance": "Nuværende saldo",
+  "onboarding.account.balanceOwed": "Skyldigt beløb",
+  "onboarding.account.create": "Opret og start",
+  "onboarding.account.skip": "Spring over for nu",
+  "onboarding.account.defaultName": "Kontanter"
 }

@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Schemalagt",
   "tx.repeat": "Upprepa",
   "netWorth.face.netWorth": "Nettoförmögenhet",
-  "netWorth.face.cashFlow": "Kassaflöde"
+  "netWorth.face.cashFlow": "Kassaflöde",
+  "onboarding.account.title": "Ditt första konto",
+  "onboarding.account.hint": "Var finns dina pengar? Ett räcker för att komma igång – lägg till resten senare under fliken Konton.",
+  "onboarding.account.name": "Namn",
+  "onboarding.account.balance": "Nuvarande saldo",
+  "onboarding.account.balanceOwed": "Skuldbelopp",
+  "onboarding.account.create": "Skapa och starta",
+  "onboarding.account.skip": "Hoppa över tills vidare",
+  "onboarding.account.defaultName": "Kontant"
 }

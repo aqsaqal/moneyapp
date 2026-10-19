@@ -625,5 +625,13 @@
   "activity.scheduledSection": "زمان‌بندی‌شده",
   "tx.repeat": "تکرار",
   "netWorth.face.netWorth": "ارزش خالص",
-  "netWorth.face.cashFlow": "جریان نقدی"
+  "netWorth.face.cashFlow": "جریان نقدی",
+  "onboarding.account.title": "اولین حساب شما",
+  "onboarding.account.hint": "پول شما کجاست؟ برای شروع یکی کافی است — بقیه را بعداً از تب حساب‌ها اضافه کنید.",
+  "onboarding.account.name": "نام",
+  "onboarding.account.balance": "موجودی فعلی",
+  "onboarding.account.balanceOwed": "مبلغ بدهی",
+  "onboarding.account.create": "ایجاد و شروع",
+  "onboarding.account.skip": "فعلاً رد کنید",
+  "onboarding.account.defaultName": "نقدی"
 }

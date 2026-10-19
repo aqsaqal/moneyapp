@@ -625,5 +625,13 @@
   "activity.scheduledSection": "予定",
   "tx.repeat": "もう一度",
   "netWorth.face.netWorth": "純資産",
-  "netWorth.face.cashFlow": "キャッシュフロー"
+  "netWorth.face.cashFlow": "キャッシュフロー",
+  "onboarding.account.title": "最初の口座",
+  "onboarding.account.hint": "お金はどこにありますか？まずは1つで十分です — 残りは後から「口座」タブで追加できます。",
+  "onboarding.account.name": "名前",
+  "onboarding.account.balance": "現在の残高",
+  "onboarding.account.balanceOwed": "未払い額",
+  "onboarding.account.create": "作成してはじめる",
+  "onboarding.account.skip": "今はスキップ",
+  "onboarding.account.defaultName": "現金"
 }

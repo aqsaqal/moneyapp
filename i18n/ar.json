@@ -624,5 +624,13 @@
   "activity.scheduledSection": "مجدولة",
   "tx.repeat": "تكرار",
   "netWorth.face.netWorth": "صافي الثروة",
-  "netWorth.face.cashFlow": "التدفق النقدي"
+  "netWorth.face.cashFlow": "التدفق النقدي",
+  "onboarding.account.title": "حسابك الأول",
+  "onboarding.account.hint": "أين تحتفظ بأموالك؟ حساب واحد يكفي للبداية — أضف البقية لاحقًا من تبويب الحسابات.",
+  "onboarding.account.name": "الاسم",
+  "onboarding.account.balance": "الرصيد الحالي",
+  "onboarding.account.balanceOwed": "المبلغ المستحق",
+  "onboarding.account.create": "إنشاء والبدء",
+  "onboarding.account.skip": "تخطّ الآن",
+  "onboarding.account.defaultName": "نقدي"
 }

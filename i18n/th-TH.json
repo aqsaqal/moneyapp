@@ -625,5 +625,13 @@
   "activity.scheduledSection": "กำหนดไว้",
   "tx.repeat": "ทำซ้ำ",
   "netWorth.face.netWorth": "มูลค่าสุทธิ",
-  "netWorth.face.cashFlow": "กระแสเงินสด"
+  "netWorth.face.cashFlow": "กระแสเงินสด",
+  "onboarding.account.title": "บัญชีแรกของคุณ",
+  "onboarding.account.hint": "เงินของคุณอยู่ที่ไหน? เริ่มต้นด้วยบัญชีเดียวก็พอ — เพิ่มบัญชีอื่นได้ภายหลังจากแท็บบัญชี",
+  "onboarding.account.name": "ชื่อ",
+  "onboarding.account.balance": "ยอดคงเหลือปัจจุบัน",
+  "onboarding.account.balanceOwed": "ยอดค้างชำระ",
+  "onboarding.account.create": "สร้างและเริ่มต้น",
+  "onboarding.account.skip": "ข้ามไปก่อน",
+  "onboarding.account.defaultName": "เงินสด"
 }

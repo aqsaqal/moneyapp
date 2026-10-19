@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Đã lên lịch",
   "tx.repeat": "Lặp lại",
   "netWorth.face.netWorth": "Giá trị ròng",
-  "netWorth.face.cashFlow": "Dòng tiền"
+  "netWorth.face.cashFlow": "Dòng tiền",
+  "onboarding.account.title": "Tài khoản đầu tiên của bạn",
+  "onboarding.account.hint": "Tiền của bạn đang ở đâu? Một tài khoản là đủ để bắt đầu — thêm các tài khoản khác sau trong tab Tài khoản.",
+  "onboarding.account.name": "Tên",
+  "onboarding.account.balance": "Số dư hiện tại",
+  "onboarding.account.balanceOwed": "Số tiền còn nợ",
+  "onboarding.account.create": "Tạo và bắt đầu",
+  "onboarding.account.skip": "Bỏ qua lúc này",
+  "onboarding.account.defaultName": "Tiền mặt"
 }

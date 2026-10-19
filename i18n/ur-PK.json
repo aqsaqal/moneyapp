@@ -625,5 +625,13 @@
   "activity.scheduledSection": "شیڈولڈ",
   "tx.repeat": "دہرائیں",
   "netWorth.face.netWorth": "مجموعی مالیت",
-  "netWorth.face.cashFlow": "نقد بہاؤ"
+  "netWorth.face.cashFlow": "نقد بہاؤ",
+  "onboarding.account.title": "آپ کا پہلا اکاؤنٹ",
+  "onboarding.account.hint": "آپ کے پیسے کہاں رکھے ہیں؟ شروع کرنے کے لیے ایک کافی ہے — باقی بعد میں اکاؤنٹس ٹیب سے شامل کریں۔",
+  "onboarding.account.name": "نام",
+  "onboarding.account.balance": "موجودہ بیلنس",
+  "onboarding.account.balanceOwed": "واجب الادا رقم",
+  "onboarding.account.create": "بنائیں اور شروع کریں",
+  "onboarding.account.skip": "فی الحال چھوڑ دیں",
+  "onboarding.account.defaultName": "نقد"
 }

@@ -625,5 +625,13 @@
   "activity.scheduledSection": "已排程",
   "tx.repeat": "再記一筆",
   "netWorth.face.netWorth": "淨資產",
-  "netWorth.face.cashFlow": "現金流"
+  "netWorth.face.cashFlow": "現金流",
+  "onboarding.account.title": "你的第一個帳戶",
+  "onboarding.account.hint": "你的錢放在哪裡？先新增一個就夠了——其餘的稍後可在「帳戶」分頁中新增。",
+  "onboarding.account.name": "名稱",
+  "onboarding.account.balance": "目前餘額",
+  "onboarding.account.balanceOwed": "欠款金額",
+  "onboarding.account.create": "建立並開始",
+  "onboarding.account.skip": "暫時略過",
+  "onboarding.account.defaultName": "現金"
 }

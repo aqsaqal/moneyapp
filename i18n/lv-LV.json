@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Ieplānots",
   "tx.repeat": "Atkārtot",
   "netWorth.face.netWorth": "Neto vērtība",
-  "netWorth.face.cashFlow": "Naudas plūsma"
+  "netWorth.face.cashFlow": "Naudas plūsma",
+  "onboarding.account.title": "Jūsu pirmais konts",
+  "onboarding.account.hint": "Kur atrodas jūsu nauda? Sākumam pietiek ar vienu — pārējos pievienojiet vēlāk cilnē „Konti“.",
+  "onboarding.account.name": "Nosaukums",
+  "onboarding.account.balance": "Pašreizējais atlikums",
+  "onboarding.account.balanceOwed": "Parāda summa",
+  "onboarding.account.create": "Izveidot un sākt",
+  "onboarding.account.skip": "Pagaidām izlaist",
+  "onboarding.account.defaultName": "Skaidra nauda"
 }

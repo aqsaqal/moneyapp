@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Planlaşdırılıb",
   "tx.repeat": "Təkrarla",
   "netWorth.face.netWorth": "Xalis sərvət",
-  "netWorth.face.cashFlow": "Pul axını"
+  "netWorth.face.cashFlow": "Pul axını",
+  "onboarding.account.title": "İlk hesabın",
+  "onboarding.account.hint": "Pulun harada saxlanılır? Başlamaq üçün biri kifayətdir — qalanını sonra Hesablar bölməsindən əlavə et.",
+  "onboarding.account.name": "Ad",
+  "onboarding.account.balance": "Cari balans",
+  "onboarding.account.balanceOwed": "Borc məbləği",
+  "onboarding.account.create": "Yarat və başla",
+  "onboarding.account.skip": "Hələlik keç",
+  "onboarding.account.defaultName": "Nağd"
 }

@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Rejalashtirilgan",
   "tx.repeat": "Takrorlash",
   "netWorth.face.netWorth": "Sof boylik",
-  "netWorth.face.cashFlow": "Pul oqimi"
+  "netWorth.face.cashFlow": "Pul oqimi",
+  "onboarding.account.title": "Birinchi hisobingiz",
+  "onboarding.account.hint": "Pulingiz qayerda turadi? Boshlash uchun bittasi yetarli — qolganini keyinroq Hisoblar boʻlimidan qoʻshasiz.",
+  "onboarding.account.name": "Nomi",
+  "onboarding.account.balance": "Joriy balans",
+  "onboarding.account.balanceOwed": "Qarz summasi",
+  "onboarding.account.create": "Yaratish va boshlash",
+  "onboarding.account.skip": "Hozircha oʻtkazib yuborish",
+  "onboarding.account.defaultName": "Naqd pul"
 }

@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Suplanuota",
   "tx.repeat": "Kartoti",
   "netWorth.face.netWorth": "Grynoji vertė",
-  "netWorth.face.cashFlow": "Pinigų srautas"
+  "netWorth.face.cashFlow": "Pinigų srautas",
+  "onboarding.account.title": "Jūsų pirmoji sąskaita",
+  "onboarding.account.hint": "Kur laikote savo pinigus? Pradžiai užtenka vienos — kitas pridėsite vėliau skirtuke „Sąskaitos“.",
+  "onboarding.account.name": "Pavadinimas",
+  "onboarding.account.balance": "Dabartinis likutis",
+  "onboarding.account.balanceOwed": "Skolos suma",
+  "onboarding.account.create": "Sukurti ir pradėti",
+  "onboarding.account.skip": "Kol kas praleisti",
+  "onboarding.account.defaultName": "Grynieji"
 }

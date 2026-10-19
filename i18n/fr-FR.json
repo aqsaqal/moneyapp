@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Planifiés",
   "tx.repeat": "Répéter",
   "netWorth.face.netWorth": "Valeur nette",
-  "netWorth.face.cashFlow": "Flux de trésorerie"
+  "netWorth.face.cashFlow": "Flux de trésorerie",
+  "onboarding.account.title": "Ton premier compte",
+  "onboarding.account.hint": "Où se trouve ton argent ? Un seul suffit pour commencer — ajoute les autres plus tard depuis l'onglet Comptes.",
+  "onboarding.account.name": "Nom",
+  "onboarding.account.balance": "Solde actuel",
+  "onboarding.account.balanceOwed": "Montant dû",
+  "onboarding.account.create": "Créer et commencer",
+  "onboarding.account.skip": "Passer pour l'instant",
+  "onboarding.account.defaultName": "Espèces"
 }

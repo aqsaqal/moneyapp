@@ -625,5 +625,13 @@
   "activity.scheduledSection": "निर्धारित",
   "tx.repeat": "दोहराएँ",
   "netWorth.face.netWorth": "निवल संपत्ति",
-  "netWorth.face.cashFlow": "नकदी प्रवाह"
+  "netWorth.face.cashFlow": "नकदी प्रवाह",
+  "onboarding.account.title": "आपका पहला खाता",
+  "onboarding.account.hint": "आपका पैसा कहाँ रहता है? शुरू करने के लिए एक ही काफ़ी है — बाकी बाद में खाते टैब से जोड़ें।",
+  "onboarding.account.name": "नाम",
+  "onboarding.account.balance": "वर्तमान बैलेंस",
+  "onboarding.account.balanceOwed": "बकाया राशि",
+  "onboarding.account.create": "बनाएं और शुरू करें",
+  "onboarding.account.skip": "अभी छोड़ें",
+  "onboarding.account.defaultName": "नकद"
 }

@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Programate",
   "tx.repeat": "Repetă",
   "netWorth.face.netWorth": "Avere netă",
-  "netWorth.face.cashFlow": "Flux de numerar"
+  "netWorth.face.cashFlow": "Flux de numerar",
+  "onboarding.account.title": "Primul tău cont",
+  "onboarding.account.hint": "Unde îți ții banii? Unul e suficient pentru început — pe restul le adaugi mai târziu din fila Conturi.",
+  "onboarding.account.name": "Nume",
+  "onboarding.account.balance": "Sold curent",
+  "onboarding.account.balanceOwed": "Sumă datorată",
+  "onboarding.account.create": "Creează și începe",
+  "onboarding.account.skip": "Sari peste deocamdată",
+  "onboarding.account.defaultName": "Numerar"
 }

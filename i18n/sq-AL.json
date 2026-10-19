@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Të caktuara",
   "tx.repeat": "Përsërit",
   "netWorth.face.netWorth": "Pasuria neto",
-  "netWorth.face.cashFlow": "Fluksi i parasë"
+  "netWorth.face.cashFlow": "Fluksi i parasë",
+  "onboarding.account.title": "Llogaria jote e parë",
+  "onboarding.account.hint": "Ku i mban paratë? Një mjafton për të filluar — të tjerat shtoji më vonë nga skeda Llogaritë.",
+  "onboarding.account.name": "Emri",
+  "onboarding.account.balance": "Gjendja aktuale",
+  "onboarding.account.balanceOwed": "Shuma e detyruar",
+  "onboarding.account.create": "Krijo & fillo",
+  "onboarding.account.skip": "Kalo për tani",
+  "onboarding.account.defaultName": "Para në dorë"
 }

@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Planlagt",
   "tx.repeat": "Gjenta",
   "netWorth.face.netWorth": "Nettoformue",
-  "netWorth.face.cashFlow": "Kontantstrøm"
+  "netWorth.face.cashFlow": "Kontantstrøm",
+  "onboarding.account.title": "Din første konto",
+  "onboarding.account.hint": "Hvor har du pengene dine? Én er nok til å starte – legg til resten senere fra Kontoer-fanen.",
+  "onboarding.account.name": "Navn",
+  "onboarding.account.balance": "Nåværende saldo",
+  "onboarding.account.balanceOwed": "Skyldig beløp",
+  "onboarding.account.create": "Opprett og start",
+  "onboarding.account.skip": "Hopp over for nå",
+  "onboarding.account.defaultName": "Kontanter"
 }

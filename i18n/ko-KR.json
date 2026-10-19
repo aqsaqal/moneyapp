@@ -625,5 +625,13 @@
   "activity.scheduledSection": "예정",
   "tx.repeat": "반복",
   "netWorth.face.netWorth": "순자산",
-  "netWorth.face.cashFlow": "현금 흐름"
+  "netWorth.face.cashFlow": "현금 흐름",
+  "onboarding.account.title": "첫 번째 계정",
+  "onboarding.account.hint": "돈은 어디에 있나요? 시작하려면 하나면 충분해요 — 나머지는 나중에 계정 탭에서 추가하세요.",
+  "onboarding.account.name": "이름",
+  "onboarding.account.balance": "현재 잔액",
+  "onboarding.account.balanceOwed": "갚을 금액",
+  "onboarding.account.create": "만들고 시작하기",
+  "onboarding.account.skip": "지금은 건너뛰기",
+  "onboarding.account.defaultName": "현금"
 }

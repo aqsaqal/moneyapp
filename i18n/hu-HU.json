@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Ütemezett",
   "tx.repeat": "Ismétlés",
   "netWorth.face.netWorth": "Nettó vagyon",
-  "netWorth.face.cashFlow": "Pénzáramlás"
+  "netWorth.face.cashFlow": "Pénzáramlás",
+  "onboarding.account.title": "Az első számlád",
+  "onboarding.account.hint": "Hol tartod a pénzed? Kezdésnek egy is elég — a többit később a Számlák fülön adhatod hozzá.",
+  "onboarding.account.name": "Név",
+  "onboarding.account.balance": "Jelenlegi egyenleg",
+  "onboarding.account.balanceOwed": "Tartozás összege",
+  "onboarding.account.create": "Létrehozás és kezdés",
+  "onboarding.account.skip": "Kihagyás egyelőre",
+  "onboarding.account.defaultName": "Készpénz"
 }

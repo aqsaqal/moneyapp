@@ -625,5 +625,13 @@
   "activity.scheduledSection": "షెడ్యూల్ చేసినవి",
   "tx.repeat": "మళ్లీ",
   "netWorth.face.netWorth": "నికర సంపద",
-  "netWorth.face.cashFlow": "నగదు ప్రవాహం"
+  "netWorth.face.cashFlow": "నగదు ప్రవాహం",
+  "onboarding.account.title": "మీ మొదటి ఖాతా",
+  "onboarding.account.hint": "మీ డబ్బు ఎక్కడ ఉంది? ప్రారంభించడానికి ఒకటి చాలు — మిగతావి తర్వాత ఖాతాలు ట్యాబ్ నుండి జోడించండి.",
+  "onboarding.account.name": "పేరు",
+  "onboarding.account.balance": "ప్రస్తుత బ్యాలెన్స్",
+  "onboarding.account.balanceOwed": "చెల్లించాల్సిన మొత్తం",
+  "onboarding.account.create": "సృష్టించి ప్రారంభించండి",
+  "onboarding.account.skip": "ప్రస్తుతానికి దాటవేయి",
+  "onboarding.account.defaultName": "నగదు"
 }

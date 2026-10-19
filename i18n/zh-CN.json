@@ -625,5 +625,13 @@
   "activity.scheduledSection": "计划中",
   "tx.repeat": "再记一笔",
   "netWorth.face.netWorth": "净资产",
-  "netWorth.face.cashFlow": "现金流"
+  "netWorth.face.cashFlow": "现金流",
+  "onboarding.account.title": "你的第一个账户",
+  "onboarding.account.hint": "你的钱放在哪里？先添加一个就够了——其余的稍后可在“账户”标签页中添加。",
+  "onboarding.account.name": "名称",
+  "onboarding.account.balance": "当前余额",
+  "onboarding.account.balanceOwed": "欠款金额",
+  "onboarding.account.create": "创建并开始",
+  "onboarding.account.skip": "暂时跳过",
+  "onboarding.account.defaultName": "现金"
 }

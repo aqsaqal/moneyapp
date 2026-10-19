@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Naka-iskedyul",
   "tx.repeat": "Ulitin",
   "netWorth.face.netWorth": "Net na halaga",
-  "netWorth.face.cashFlow": "Cash flow"
+  "netWorth.face.cashFlow": "Cash flow",
+  "onboarding.account.title": "Ang iyong unang account",
+  "onboarding.account.hint": "Saan nakalagay ang pera mo? Sapat na ang isa para magsimula — idagdag ang iba mamaya sa tab na Mga Account.",
+  "onboarding.account.name": "Pangalan",
+  "onboarding.account.balance": "Kasalukuyang balance",
+  "onboarding.account.balanceOwed": "Halagang utang",
+  "onboarding.account.create": "Gumawa at magsimula",
+  "onboarding.account.skip": "Laktawan muna",
+  "onboarding.account.defaultName": "Cash"
 }

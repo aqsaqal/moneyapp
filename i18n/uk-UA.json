@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Заплановано",
   "tx.repeat": "Повторити",
   "netWorth.face.netWorth": "Чиста вартість",
-  "netWorth.face.cashFlow": "Грошовий потік"
+  "netWorth.face.cashFlow": "Грошовий потік",
+  "onboarding.account.title": "Ваш перший рахунок",
+  "onboarding.account.hint": "Де зберігаються ваші гроші? Для початку досить одного — решту додасте пізніше на вкладці Рахунки.",
+  "onboarding.account.name": "Назва",
+  "onboarding.account.balance": "Поточний баланс",
+  "onboarding.account.balanceOwed": "Сума боргу",
+  "onboarding.account.create": "Створити й почати",
+  "onboarding.account.skip": "Поки що пропустити",
+  "onboarding.account.defaultName": "Готівка"
 }

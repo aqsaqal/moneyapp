@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Gepland",
   "tx.repeat": "Herhalen",
   "netWorth.face.netWorth": "Eigen vermogen",
-  "netWorth.face.cashFlow": "Cashflow"
+  "netWorth.face.cashFlow": "Cashflow",
+  "onboarding.account.title": "Je eerste rekening",
+  "onboarding.account.hint": "Waar staat je geld? Eén is genoeg om te beginnen — de rest voeg je later toe via het tabblad Rekeningen.",
+  "onboarding.account.name": "Naam",
+  "onboarding.account.balance": "Huidig saldo",
+  "onboarding.account.balanceOwed": "Openstaand bedrag",
+  "onboarding.account.create": "Aanmaken en starten",
+  "onboarding.account.skip": "Voorlopig overslaan",
+  "onboarding.account.defaultName": "Contant"
 }

@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Agendados",
   "tx.repeat": "Repetir",
   "netWorth.face.netWorth": "Patrimônio líquido",
-  "netWorth.face.cashFlow": "Fluxo de caixa"
+  "netWorth.face.cashFlow": "Fluxo de caixa",
+  "onboarding.account.title": "Sua primeira conta",
+  "onboarding.account.hint": "Onde está o seu dinheiro? Uma já basta para começar — adicione as outras depois na aba Contas.",
+  "onboarding.account.name": "Nome",
+  "onboarding.account.balance": "Saldo atual",
+  "onboarding.account.balanceOwed": "Valor devido",
+  "onboarding.account.create": "Criar e começar",
+  "onboarding.account.skip": "Pular por enquanto",
+  "onboarding.account.defaultName": "Dinheiro"
 }

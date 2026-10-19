@@ -625,5 +625,13 @@
   "activity.scheduledSection": "नियोजित",
   "tx.repeat": "पुन्हा",
   "netWorth.face.netWorth": "निव्वळ संपत्ती",
-  "netWorth.face.cashFlow": "रोख प्रवाह"
+  "netWorth.face.cashFlow": "रोख प्रवाह",
+  "onboarding.account.title": "तुमचे पहिले खाते",
+  "onboarding.account.hint": "तुमचे पैसे कुठे आहेत? सुरुवातीसाठी एक पुरेसे आहे — बाकीची नंतर खाती टॅबमधून जोडा.",
+  "onboarding.account.name": "नाव",
+  "onboarding.account.balance": "सध्याची शिल्लक",
+  "onboarding.account.balanceOwed": "देय रक्कम",
+  "onboarding.account.create": "तयार करा आणि सुरू करा",
+  "onboarding.account.skip": "आत्ता वगळा",
+  "onboarding.account.defaultName": "रोख"
 }

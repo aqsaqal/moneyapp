@@ -625,5 +625,13 @@
   "activity.scheduledSection": "Zaplanowane",
   "tx.repeat": "Powtórz",
   "netWorth.face.netWorth": "Wartość netto",
-  "netWorth.face.cashFlow": "Przepływy"
+  "netWorth.face.cashFlow": "Przepływy",
+  "onboarding.account.title": "Twoje pierwsze konto",
+  "onboarding.account.hint": "Gdzie trzymasz pieniądze? Na start wystarczy jedno — resztę dodasz później w zakładce Konta.",
+  "onboarding.account.name": "Nazwa",
+  "onboarding.account.balance": "Aktualne saldo",
+  "onboarding.account.balanceOwed": "Kwota zadłużenia",
+  "onboarding.account.create": "Utwórz i zacznij",
+  "onboarding.account.skip": "Pomiń na razie",
+  "onboarding.account.defaultName": "Gotówka"
 }
