@@ -523,5 +523,15 @@
   "homeAction.overbudget.detail": "{spent} жұмсалды · {over} артық",
   "homeAction.spike.title": "{name} шығыны {pct}% өсті",
   "homeAction.spike.detail": "Осы айда {thisMonth} · Әдетте {typical}",
-  "account.icon": "Белгіше"
+  "account.icon": "Белгіше",
+  "add.field.paid": "Сіз төледіңіз",
+  "add.field.received": "Сіз алдыңыз",
+  "add.field.send": "Сіз жібересіз",
+  "add.field.charged": "{account} шотынан алынды",
+  "add.field.credited": "{account} шотына түсті",
+  "add.field.debited": "{account} шотынан алынды",
+  "add.field.receives": "{account} шотына түседі",
+  "add.field.a11y": "{label}: {amount}. Өзгерту үшін басыңыз",
+  "add.rate.market": "Нарықтық бағам",
+  "add.rate.bank": "Сіздің бағамыңыз"
 }

@@ -523,5 +523,15 @@
   "homeAction.overbudget.detail": "Потрачено {spent} · Перерасход {over}",
   "homeAction.spike.title": "Траты на {name} выросли на {pct}%",
   "homeAction.spike.detail": "{thisMonth} в этом месяце · Обычно {typical}",
-  "account.icon": "Значок"
+  "account.icon": "Значок",
+  "add.field.paid": "Вы заплатили",
+  "add.field.received": "Вы получили",
+  "add.field.send": "Вы отправляете",
+  "add.field.charged": "Списано с «{account}»",
+  "add.field.credited": "Зачислено на «{account}»",
+  "add.field.debited": "Списано с «{account}»",
+  "add.field.receives": "Поступит на «{account}»",
+  "add.field.a11y": "{label}: {amount}. Нажмите, чтобы изменить",
+  "add.rate.market": "Рыночный курс",
+  "add.rate.bank": "Ваш курс"
 }

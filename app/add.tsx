@@ -197,11 +197,38 @@ export default function AddScreen() {
     setAccountAmountOverride(null);
     setAccountAmountOverrideTo(null);
   };
+  // Wise-style dual amounts: when currencies differ, the converted
+  // account-side amounts render as their own tappable fields and the
+  // numpad edits whichever one is focused. `fresh` = the field was just
+  // focused and the first digit should replace the auto value.
+  type FocusField = 'entry' | 'from' | 'to';
+  const [focus, setFocus] = useState<FocusField>('entry');
+  const freshRef = React.useRef(false);
+  const focusField = (f: FocusField) => {
+    setFocus(f);
+    freshRef.current = f !== 'entry';
+  };
+  // Entry amount changed: a manual account-side amount encodes the
+  // user's bank rate, so rescale it to the new entry amount instead of
+  // throwing it away. Falls back to auto when either side is 0 / NaN
+  // (e.g. the amount was cleared or is mid-expression).
   const lastAmountRef = React.useRef(amount);
   useEffect(() => {
     if (amount === lastAmountRef.current) return;
+    const prev = evalAmount(lastAmountRef.current);
+    const next = evalAmount(amount);
     lastAmountRef.current = amount;
-    resetFxOverrides();
+    if (!(prev > 0) || !(next > 0)) {
+      resetFxOverrides();
+      return;
+    }
+    const rescale = (o: string | null) => {
+      if (o == null) return null;
+      const v = evalAmount(o.replace(',', '.'));
+      return v > 0 ? ((v * next) / prev).toFixed(2) : null;
+    };
+    setAccountAmountOverride(rescale);
+    setAccountAmountOverrideTo(rescale);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount]);
 
@@ -290,80 +317,6 @@ export default function AddScreen() {
     }
   }, [accounts, prefill?.accountId, prefill?.toAccountId]);
 
-  // Phase 10z: calc mode appends operators to the amount string. The
-  // amount field doubles as an expression display.
-  // Phase 10ae: the operators column is always visible, % is now a
-  // numpad key (applied immediately, doesn't enter evaluate mode), and
-  // the primary action key flips between ✓ (submit) and = (evaluate)
-  // based on whether an unevaluated op is in the buffer.
-  const onKey = (k: string) => {
-    if (k === 'C') return setAmount('0');
-    if (k === 'del') return setAmount((a) => (a.length <= 1 ? '0' : a.slice(0, -1)));
-    if (k === '.') {
-      // Don't allow a second dot in the same numeric segment.
-      return setAmount((a) => {
-        const lastOp = Math.max(a.lastIndexOf('+'), a.lastIndexOf('-'), a.lastIndexOf('*'), a.lastIndexOf('/'));
-        const tail = a.slice(lastOp + 1);
-        return tail.includes('.') ? a : a + '.';
-      });
-    }
-    if (k === '%') {
-      // iOS-calculator percent. Resolves the active op against the
-      // preceding operand and collapses the expression to the result.
-      //   500 × 60%  → 300   (60% of 500)
-      //   500 + 30%  → 650   (500 + 30% of 500)
-      //   500 − 20%  → 400   (500 − 20% of 500)
-      //   500 ÷ 50%  → 1000  (500 ÷ 0.5)
-      //   200%       → 2     (no op queued — plain divide by 100)
-      // Always commits a numeric result, never leaves an expression
-      // in the buffer, so the primary key returns to ✓.
-      return setAmount((a) => {
-        if (/[+\-*/]$/.test(a)) return a; // ignore right after an op
-
-        // Find the last binary op (skip a leading sign at index 0).
-        let lastOp = -1;
-        for (let i = a.length - 1; i > 0; i--) {
-          const c = a[i];
-          if (c === '+' || c === '-' || c === '*' || c === '/') {
-            lastOp = i;
-            break;
-          }
-        }
-
-        const fmt = (n: number) => {
-          if (!Number.isFinite(n)) return a;
-          // Trim FP noise + trailing zeros: 0.30000001 → 0.3, 5 → "5".
-          const r = Math.round(n * 1e9) / 1e9;
-          return Number.isInteger(r) ? String(r) : String(r);
-        };
-
-        if (lastOp === -1) {
-          const n = parseFloat(a);
-          return fmt(n / 100);
-        }
-
-        const head = a.slice(0, lastOp);
-        const op = a[lastOp];
-        const tailN = parseFloat(a.slice(lastOp + 1));
-        const headV = evalAmount(head);
-        if (!Number.isFinite(headV) || !Number.isFinite(tailN)) return a;
-
-        if (op === '+') return fmt(headV + headV * (tailN / 100));
-        if (op === '-') return fmt(headV - headV * (tailN / 100));
-        if (op === '*') return fmt(headV * (tailN / 100));
-        return fmt(headV / (tailN / 100)); // '/'
-      });
-    }
-    setAmount((a) => (a === '0' ? k : a + k));
-  };
-  const onCalcOp = (op: '+' | '-' | '*' | '/') => {
-    setAmount((a) => {
-      // Replace a trailing operator instead of stacking — same UX as
-      // every calculator app.
-      if (/[+\-*/]$/.test(a)) return a.slice(0, -1) + op;
-      return a + op;
-    });
-  };
   const evalAmount = (raw: string): number => {
     // Allow only digits, dot, and the four operators. Anything else
     // returns NaN so submit() bails. Tiny shunting-yard parser to
@@ -447,6 +400,128 @@ export default function AddScreen() {
     mode === 'income' ? (toAccountCcy ?? currency) : (fromAccountCcy ?? currency);
   const isMixed = effectiveEntryCurrency !== accountCurrency;
 
+  // Auto (market-rate) strings for the converted fields. Two decimals
+  // regardless of the currency's minor unit so the field is stable
+  // while typing.
+  const entryValue = evalAmount(amount);
+  const entryForConv = Number.isFinite(entryValue) && entryValue > 0 ? entryValue : 0;
+  const hasFromField = showFromConv && !!fromAccountCcy;
+  const hasToField = showToConv && !!toAccountCcy;
+  const autoFromStr = hasFromField ? convert(entryForConv, effectiveEntryCurrency, fromAccountCcy!).toFixed(2) : null;
+  const autoToStr = hasToField ? convert(entryForConv, effectiveEntryCurrency, toAccountCcy!).toFixed(2) : null;
+  // Income has one account side (the To account) but reuses the
+  // From-side override state for the legacy submit math.
+  const toOverride = mode === 'transfer' ? accountAmountOverrideTo : accountAmountOverride;
+  const setToOverride = mode === 'transfer' ? setAccountAmountOverrideTo : setAccountAmountOverride;
+  const focusedString =
+    focus === 'entry' ? amount
+      : focus === 'from' ? (accountAmountOverride ?? autoFromStr ?? '0')
+        : (toOverride ?? autoToStr ?? '0');
+  // Fall back to the entry field when the focused converted field
+  // disappears (mode / account / currency change).
+  useEffect(() => {
+    if ((focus === 'from' && !hasFromField) || (focus === 'to' && !hasToField)) {
+      setFocus('entry');
+      freshRef.current = false;
+    }
+  }, [focus, hasFromField, hasToField]);
+  const setFocusedAmount = (next: string | ((prev: string) => string)) => {
+    const updater = typeof next === 'function' ? next : () => next;
+    if (focus === 'entry') {
+      setAmount(updater);
+      return;
+    }
+    const setter = focus === 'from' ? setAccountAmountOverride : setToOverride;
+    const fresh = freshRef.current;
+    freshRef.current = false;
+    setter((prev) => updater(fresh || prev == null ? '0' : prev));
+  };
+  const clearFocusedOverride = () => {
+    (focus === 'from' ? setAccountAmountOverride : setToOverride)(null);
+    freshRef.current = true;
+  };
+
+  // Phase 10z: calc mode appends operators to the amount string. The
+  // amount field doubles as an expression display.
+  // Phase 10ae: the operators column is always visible, % is now a
+  // numpad key (applied immediately, doesn't enter evaluate mode), and
+  // the primary action key flips between ✓ (submit) and = (evaluate)
+  // based on whether an unevaluated op is in the buffer.
+  const onKey = (k: string) => {
+    // Converted fields: C always returns to the auto rate; del on a
+    // freshly-focused field does the same (nothing typed yet to erase).
+    if (focus !== 'entry' && (k === 'C' || (k === 'del' && freshRef.current))) {
+      clearFocusedOverride();
+      return;
+    }
+    if (k === 'C') return setFocusedAmount('0');
+    if (k === 'del') return setFocusedAmount((a) => (a.length <= 1 ? '0' : a.slice(0, -1)));
+    if (k === '.') {
+      // Don't allow a second dot in the same numeric segment.
+      return setFocusedAmount((a) => {
+        const lastOp = Math.max(a.lastIndexOf('+'), a.lastIndexOf('-'), a.lastIndexOf('*'), a.lastIndexOf('/'));
+        const tail = a.slice(lastOp + 1);
+        return tail.includes('.') ? a : a + '.';
+      });
+    }
+    if (k === '%') {
+      // iOS-calculator percent. Resolves the active op against the
+      // preceding operand and collapses the expression to the result.
+      //   500 × 60%  → 300   (60% of 500)
+      //   500 + 30%  → 650   (500 + 30% of 500)
+      //   500 − 20%  → 400   (500 − 20% of 500)
+      //   500 ÷ 50%  → 1000  (500 ÷ 0.5)
+      //   200%       → 2     (no op queued — plain divide by 100)
+      // Always commits a numeric result, never leaves an expression
+      // in the buffer, so the primary key returns to ✓.
+      return setFocusedAmount((a) => {
+        if (/[+\-*/]$/.test(a)) return a; // ignore right after an op
+
+        // Find the last binary op (skip a leading sign at index 0).
+        let lastOp = -1;
+        for (let i = a.length - 1; i > 0; i--) {
+          const c = a[i];
+          if (c === '+' || c === '-' || c === '*' || c === '/') {
+            lastOp = i;
+            break;
+          }
+        }
+
+        const fmt = (n: number) => {
+          if (!Number.isFinite(n)) return a;
+          // Trim FP noise + trailing zeros: 0.30000001 → 0.3, 5 → "5".
+          const r = Math.round(n * 1e9) / 1e9;
+          return Number.isInteger(r) ? String(r) : String(r);
+        };
+
+        if (lastOp === -1) {
+          const n = parseFloat(a);
+          return fmt(n / 100);
+        }
+
+        const head = a.slice(0, lastOp);
+        const op = a[lastOp];
+        const tailN = parseFloat(a.slice(lastOp + 1));
+        const headV = evalAmount(head);
+        if (!Number.isFinite(headV) || !Number.isFinite(tailN)) return a;
+
+        if (op === '+') return fmt(headV + headV * (tailN / 100));
+        if (op === '-') return fmt(headV - headV * (tailN / 100));
+        if (op === '*') return fmt(headV * (tailN / 100));
+        return fmt(headV / (tailN / 100)); // '/'
+      });
+    }
+    setFocusedAmount((a) => (a === '0' ? k : a + k));
+  };
+  const onCalcOp = (op: '+' | '-' | '*' | '/') => {
+    setFocusedAmount((a) => {
+      // Replace a trailing operator instead of stacking — same UX as
+      // every calculator app.
+      if (/[+\-*/]$/.test(a)) return a.slice(0, -1) + op;
+      return a + op;
+    });
+  };
+
   const doSubmit = (opts: { skipCashCheck?: boolean } = {}) => {
     submitInner(opts);
   };
@@ -478,7 +553,7 @@ export default function AddScreen() {
     // user manually overrode the converted line (e.g. bank used a
     // non-mid-market rate), honor that instead of the FX convert().
     const overrideNum = accountAmountOverride
-      ? parseFloat(accountAmountOverride.replace(',', '.'))
+      ? evalAmount(accountAmountOverride.replace(',', '.'))
       : NaN;
     const accountAmount = isMixed
       ? Number.isFinite(overrideNum) && overrideNum > 0
@@ -518,7 +593,7 @@ export default function AddScreen() {
       // different amount than our cached rate predicts), same as the
       // From side above. Fall back to the live conversion otherwise.
       const overrideToNum = accountAmountOverrideTo
-        ? parseFloat(accountAmountOverrideTo.replace(',', '.'))
+        ? evalAmount(accountAmountOverrideTo.replace(',', '.'))
         : NaN;
       const toAmount =
         fromAccountCcy && toCcy && fromAccountCcy !== toCcy
@@ -670,64 +745,97 @@ export default function AddScreen() {
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-        <View style={styles.amountRow}>
-          <Text
-            style={styles.amount}
-            accessibilityLabel={`Amount ${currencyPrefix(effectiveEntryCurrency)}${formatSmartAddAmount(amount)}`}
-            accessibilityLiveRegion="polite"
-            adjustsFontSizeToFit
-            numberOfLines={1}
-          >
-            {currencyPrefix(effectiveEntryCurrency)}
-            {formatSmartAddAmount(amount)}
-          </Text>
-          <Pressable
-            onPress={() => setCurrencyPickerOpen(true)}
-            style={styles.currencyChip}
-            accessibilityRole="button"
-            accessibilityLabel={t('add.a11y.currency', { ccy: effectiveEntryCurrency })}
-          >
-            <Text style={styles.currencyChipText}>{effectiveEntryCurrency}</Text>
-            <MaterialCommunityIcons name="chevron-down" size={14} color={theme.text2} />
-          </Pressable>
-        </View>
-        {/* Phase 10z: conversion slot — always reserves height so the
-            screen never jumps when the user picks a different currency
-            or swaps accounts. Empty when transaction currency matches
-            both relevant account currencies; one line for expense /
-            income / matching-side transfer; two lines for a true
-            cross-currency transfer. */}
-        <View style={styles.conversionSlot}>
-          {amountError && (
-            <Text style={styles.amountError} accessibilityLiveRegion="assertive">
-              {t('add.amountRequired')}
-            </Text>
-          )}
-          {showFromConv && Number(amount) > 0 && fromAccountCcy && (
-            <ConversionLine
-              direction="from"
-              fromAcctName={accounts.find((a) => a.id === (mode === 'transfer' ? fromAcct : effectiveAcct))?.name ?? ''}
-              srcAmount={parseFloat(amount) || 0}
-              srcCurrency={effectiveEntryCurrency}
-              dstCurrency={fromAccountCcy}
-              override={accountAmountOverride}
-              onChange={setAccountAmountOverride}
-              showAcctName={mode === 'transfer'}
-            />
-          )}
-          {showToConv && Number(amount) > 0 && toAccountCcy && (
-            <ConversionLine
-              direction="to"
-              fromAcctName={accounts.find((a) => a.id === (mode === 'transfer' ? toAcct : effectiveAcct))?.name ?? ''}
-              srcAmount={parseFloat(amount) || 0}
-              srcCurrency={effectiveEntryCurrency}
-              dstCurrency={toAccountCcy}
-              override={mode === 'transfer' ? accountAmountOverrideTo : accountAmountOverride}
-              onChange={mode === 'transfer' ? setAccountAmountOverrideTo : setAccountAmountOverride}
-              showAcctName={mode === 'transfer'}
-            />
-          )}
-        </View>
+        {(() => {
+          const dual = hasFromField || hasToField;
+          const acctName = (id: string) => accounts.find((a) => a.id === id)?.name ?? '';
+          const entryLabel =
+            mode === 'expense' ? t('add.field.paid')
+              : mode === 'income' ? t('add.field.received')
+                : t('add.field.send');
+          return (
+            <View style={styles.amountStack}>
+              {/* Entry amount. Single-currency: the familiar big number.
+                  Cross-currency: becomes the first of 2–3 stacked
+                  fields (Wise pattern) — tap any field and the numpad
+                  edits it; the others follow at the market rate until
+                  the user types their own bank amount. */}
+              <Pressable
+                onPress={() => focusField('entry')}
+                disabled={!dual}
+                style={[
+                  dual && styles.amountFieldCard,
+                  dual && focus === 'entry' && styles.amountFieldFocused,
+                ]}
+                accessibilityRole={dual ? 'button' : undefined}
+                accessibilityState={dual ? { selected: focus === 'entry' } : undefined}
+              >
+                {dual && <Text style={styles.fieldLabel}>{entryLabel}</Text>}
+                <View style={styles.amountRow}>
+                  <Text
+                    style={[styles.amount, dual && styles.amountDual]}
+                    accessibilityLabel={`${entryLabel} ${currencyPrefix(effectiveEntryCurrency)}${formatSmartAddAmount(amount)}`}
+                    accessibilityLiveRegion="polite"
+                    adjustsFontSizeToFit
+                    numberOfLines={1}
+                  >
+                    {currencyPrefix(effectiveEntryCurrency)}
+                    {formatSmartAddAmount(amount)}
+                  </Text>
+                  <Pressable
+                    onPress={() => setCurrencyPickerOpen(true)}
+                    style={styles.currencyChip}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('add.a11y.currency', { ccy: effectiveEntryCurrency })}
+                  >
+                    <Text style={styles.currencyChipText}>{effectiveEntryCurrency}</Text>
+                    <MaterialCommunityIcons name="chevron-down" size={14} color={theme.text2} />
+                  </Pressable>
+                </View>
+              </Pressable>
+              {hasFromField && (
+                <ConvertedAmountField
+                  label={
+                    mode === 'transfer'
+                      ? t('add.field.debited', { account: acctName(fromAcct) })
+                      : t('add.field.charged', { account: acctName(effectiveAcct) })
+                  }
+                  currency={fromAccountCcy!}
+                  srcCurrency={effectiveEntryCurrency}
+                  entryValue={entryForConv}
+                  override={accountAmountOverride}
+                  auto={autoFromStr ?? '0.00'}
+                  focused={focus === 'from'}
+                  onFocus={() => focusField('from')}
+                  onReset={() => setAccountAmountOverride(null)}
+                />
+              )}
+              {hasToField && (
+                <ConvertedAmountField
+                  label={
+                    mode === 'transfer'
+                      ? t('add.field.receives', { account: acctName(toAcct) })
+                      : t('add.field.credited', { account: acctName(effectiveAcct) })
+                  }
+                  currency={toAccountCcy!}
+                  srcCurrency={effectiveEntryCurrency}
+                  entryValue={entryForConv}
+                  override={toOverride}
+                  auto={autoToStr ?? '0.00'}
+                  focused={focus === 'to'}
+                  onFocus={() => focusField('to')}
+                  onReset={() => setToOverride(null)}
+                />
+              )}
+              <View style={styles.errorSlot}>
+                {amountError && (
+                  <Text style={styles.amountError} accessibilityLiveRegion="assertive">
+                    {t('add.amountRequired')}
+                  </Text>
+                )}
+              </View>
+            </View>
+          );
+        })()}
         {/* Date — small grey text directly under the amount. Always
             visible; tap (or the 📅 key in the numpad's right column)
             to open the picker. Day matters for analytics, budgets,
@@ -1052,16 +1160,16 @@ export default function AddScreen() {
           onDate={() => setDatePickerOpen(true)}
           onSubmit={submit}
           onEvaluate={() => {
-            const v = evalAmount(amount);
+            const v = evalAmount(focusedString);
             if (Number.isFinite(v)) {
               // Trim a trailing zero on integers so the buffer reads
               // "150" not "150.0" after an evaluation.
               const s = Number.isInteger(v) ? String(v) : String(v);
-              setAmount(s);
+              setFocusedAmount(s);
             }
           }}
           onCalcOp={onCalcOp}
-          awaitingEval={/[+\-*/]/.test(amount)}
+          awaitingEval={/[+\-*/]/.test(focusedString)}
           submitLabel={isEditing ? t('common.save') : t(`add.cta.${mode}`)}
         />
 
@@ -1123,66 +1231,73 @@ export default function AddScreen() {
  *  Shows label + currently-picked account name. Tap → PickerSheet opens
  *  with all accounts.
  */
-/** One row inside the conversion slot. Shows the FX-converted amount
- *  in the relevant account's currency with an editable field — bank
- *  rates sometimes diverge from mid-market, so the user can override.
- *  Source tag toggles between "auto" (using the cached market rate)
- *  and "edited"; pencil-icon resets back to auto. */
-function ConversionLine({
-  direction,
-  fromAcctName,
-  srcAmount,
+/** One converted-amount field in the Wise-style stack: label, big
+ *  amount in the account's currency, and the rate it implies. Tapping
+ *  focuses it so the numpad edits this amount; the tag flips from
+ *  "market rate" to "your rate" once the user types, and the refresh
+ *  icon returns to the market conversion. */
+function ConvertedAmountField({
+  label,
+  currency,
   srcCurrency,
-  dstCurrency,
+  entryValue,
   override,
-  onChange,
-  showAcctName,
+  auto,
+  focused,
+  onFocus,
+  onReset,
 }: {
-  direction: 'from' | 'to';
-  fromAcctName: string;
-  srcAmount: number;
+  label: string;
+  currency: CurrencyCode;
   srcCurrency: CurrencyCode;
-  dstCurrency: CurrencyCode;
+  entryValue: number;
   override: string | null;
-  onChange: (v: string | null) => void;
-  showAcctName: boolean;
+  auto: string;
+  focused: boolean;
+  onFocus: () => void;
+  onReset: () => void;
 }) {
-  // Always round the converted preview to 2 decimals regardless of the
-  // currency's natural minor unit (KZT has 0, KWD has 3, etc.). Keeps
-  // the conversion strip visually consistent and surfaces sub-unit
-  // precision on currencies that nominally truncate to whole units.
-  const auto = convert(srcAmount, srcCurrency, dstCurrency).toFixed(2);
-  const label = direction === 'from'
-    ? (showAcctName ? `deducted from ${fromAcctName}` : 'will be deducted')
-    : (showAcctName ? `deposited to ${fromAcctName}` : 'will be deposited');
+  const manual = override != null;
+  const value = override ?? auto;
+  const valueNum = parseFloat(value.replace(',', '.'));
+  // Implied rate: the user's own when manual, otherwise the cached
+  // market cross-rate. Precision steps down as the rate grows so
+  // "1 USD = 512.40 KZT" and "1 KZT = 0.0020 USD" both read well.
+  const rate =
+    manual && entryValue > 0 && Number.isFinite(valueNum)
+      ? valueNum / entryValue
+      : convert(1, srcCurrency, currency);
+  const rateText = `1 ${srcCurrency} = ${rate >= 10 ? rate.toFixed(2) : rate >= 1 ? rate.toFixed(3) : rate.toFixed(4)} ${currency}`;
+  const tag = manual ? i18nT('add.rate.bank') : i18nT('add.rate.market');
   return (
-    <View style={styles.fxConvertedRow}>
-      <Text style={styles.fxConvertedPrefix}>
-        {override ? '=' : '≈'} {currencyPrefix(dstCurrency)}
-      </Text>
-      <TextInput
-        value={override ?? auto}
-        onChangeText={(v) => onChange(v === '' ? null : v)}
-        keyboardType="numbers-and-punctuation"
-        style={styles.fxConvertedInput}
-        accessibilityLabel={`Converted amount ${direction === 'from' ? 'deducted' : 'deposited'} in ${dstCurrency}`}
-      />
-      <Text style={styles.fxConvertedSuffix}>
-        {dstCurrency} · {label}
-      </Text>
-      <Text style={styles.fxSourceTag}>
-        {override ? 'manual' : 'auto'}
-      </Text>
-      {override && (
-        <Pressable
-          onPress={() => onChange(null)}
-          hitSlop={10}
-          accessibilityLabel={i18nT('add.a11y.resetRate')}
+    <Pressable
+      onPress={onFocus}
+      style={[styles.amountFieldCard, focused && styles.amountFieldFocused]}
+      accessibilityRole="button"
+      accessibilityState={{ selected: focused }}
+      accessibilityLabel={i18nT('add.field.a11y', { label, amount: `${formatSmartAddAmount(value)} ${currency}` })}
+    >
+      <View style={styles.fieldHead}>
+        <Text style={styles.fieldLabel} numberOfLines={1}>{label}</Text>
+        <Text style={[styles.fxSourceTag, manual && styles.fxSourceTagManual]}>{tag}</Text>
+        {manual && (
+          <Pressable onPress={onReset} hitSlop={10} accessibilityLabel={i18nT('add.a11y.resetRate')}>
+            <MaterialCommunityIcons name="refresh" size={14} color={theme.text3} />
+          </Pressable>
+        )}
+      </View>
+      <View style={styles.amountRow}>
+        <Text
+          style={[styles.amount, styles.amountSecondary, focused && styles.amountSecondaryFocused]}
+          adjustsFontSizeToFit
+          numberOfLines={1}
         >
-          <MaterialCommunityIcons name="refresh" size={14} color={theme.text3} />
-        </Pressable>
-      )}
-    </View>
+          {currencyPrefix(currency)}
+          {formatSmartAddAmount(value)}
+        </Text>
+      </View>
+      <Text style={styles.rateText}>{rateText}</Text>
+    </Pressable>
   );
 }
 
@@ -1360,34 +1475,57 @@ const styles = StyleSheet.create({
     fontSize: sizes.sm,
     textAlign: 'center',
   },
-  conversionSlot: {
-    // Reserve enough height for two stacked conversion lines so the
-    // layout doesn't jump when transfer currencies straddle both
-    // accounts. ~22px per line × 2 + a touch of padding.
-    minHeight: 48,
-    gap: 4,
-    marginTop: -2,
-    justifyContent: 'center',
+  amountStack: {
+    gap: spacing.sm,
   },
-  fxConvertedRow: {
+  amountDual: {
+    fontSize: 40,
+  },
+  amountFieldCard: {
+    borderWidth: 1,
+    borderColor: theme.border,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg1,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    gap: 2,
+  },
+  amountFieldFocused: {
+    borderColor: theme.accent,
+    backgroundColor: theme.accentDim,
+  },
+  fieldHead: {
     flexDirection: 'row',
     alignItems: 'center',
-    alignSelf: 'center',
-    gap: 4,
+    gap: spacing.sm,
   },
-  fxConvertedPrefix: { color: theme.text3, fontSize: 13 },
-  fxConvertedInput: {
+  fieldLabel: {
+    flex: 1,
     color: theme.text2,
-    fontSize: 13,
+    fontSize: sizes.xs,
     fontFamily: font.bodySemi,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-    backgroundColor: theme.bg2,
-    minWidth: 60,
-    textAlign: 'right',
+    textTransform: 'uppercase',
+    letterSpacing: 0.6,
   },
-  fxConvertedSuffix: { color: theme.text3, fontSize: 13 },
+  amountSecondary: {
+    fontSize: 32,
+    color: theme.text2,
+  },
+  amountSecondaryFocused: {
+    color: theme.text1,
+  },
+  rateText: {
+    color: theme.text3,
+    fontSize: sizes.xs,
+    textAlign: 'center',
+  },
+  errorSlot: {
+    minHeight: 18,
+    justifyContent: 'center',
+  },
+  fxSourceTagManual: {
+    color: theme.accent,
+  },
   fxSourceTag: {
     color: theme.text3,
     fontSize: 10,

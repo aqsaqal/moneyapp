@@ -523,5 +523,15 @@
   "toast.saved.debt": "Debt saved",
   "toast.saved.recurring": "Recurring saved",
   "toast.saved.account": "Account saved",
-  "toast.saved.category": "Category saved"
+  "toast.saved.category": "Category saved",
+  "add.field.paid": "You paid",
+  "add.field.received": "You received",
+  "add.field.send": "You send",
+  "add.field.charged": "{account} charged",
+  "add.field.credited": "{account} credited",
+  "add.field.debited": "{account} debited",
+  "add.field.receives": "{account} receives",
+  "add.field.a11y": "{label}: {amount}. Tap to edit",
+  "add.rate.market": "Market rate",
+  "add.rate.bank": "Your rate"
 }
