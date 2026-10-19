@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Mokėjimo sąlygos",
   "plan.debts.fromAccount": "Esamas {name} likutis",
   "plan.debts.removeTerms": "Pašalinti mokėjimo sąlygas",
-  "plan.debts.emptyLinked": "Pridėk paskolos ar kredito sąskaitą — ji atsiras čia su sumokėjimo prognoze."
+  "plan.debts.emptyLinked": "Pridėk paskolos ar kredito sąskaitą — ji atsiras čia su sumokėjimo prognoze.",
+  "settings.groups.money": "Pinigai",
+  "settings.groups.look": "Išvaizda ir kalba",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Saugumas ir duomenys",
+  "settings.groups.advanced": "Išplėstiniai",
+  "settings.profile.new": "Naujas profilis",
+  "settings.fx.refresh": "Atnaujinti kursus",
+  "settings.export.title": "Eksportas",
+  "settings.export.lastBackup": "Paskutinė kopija {when}",
+  "settings.export.never": "Atsarginė kopija nedaryta",
+  "settings.export.hint.json": "Visa kopija, kurią galite atkurti",
+  "settings.export.hint.csv": "Operacijos skaičiuoklei"
 }

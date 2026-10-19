@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Uvjeti otplate",
   "plan.debts.fromAccount": "Trenutno stanje računa {name}",
   "plan.debts.removeTerms": "Ukloni uvjete otplate",
-  "plan.debts.emptyLinked": "Dodaj kredit ili kreditni račun — pojavit će se ovdje s projekcijom otplate."
+  "plan.debts.emptyLinked": "Dodaj kredit ili kreditni račun — pojavit će se ovdje s projekcijom otplate.",
+  "settings.groups.money": "Novac",
+  "settings.groups.look": "Izgled i jezik",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Sigurnost i podaci",
+  "settings.groups.advanced": "Napredno",
+  "settings.profile.new": "Novi profil",
+  "settings.fx.refresh": "Osvježi tečajeve",
+  "settings.export.title": "Izvoz",
+  "settings.export.lastBackup": "Zadnja sigurnosna kopija {when}",
+  "settings.export.never": "Nikad nije napravljena kopija",
+  "settings.export.hint.json": "Potpuna kopija koju možete vratiti",
+  "settings.export.hint.csv": "Transakcije za proračunsku tablicu"
 }

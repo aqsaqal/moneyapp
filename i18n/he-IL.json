@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "תנאי סילוק",
   "plan.debts.fromAccount": "יתרה חיה של {name}",
   "plan.debts.removeTerms": "הסר תנאי סילוק",
-  "plan.debts.emptyLinked": "הוסף חשבון הלוואה או אשראי — הוא יופיע כאן עם תחזית סילוק."
+  "plan.debts.emptyLinked": "הוסף חשבון הלוואה או אשראי — הוא יופיע כאן עם תחזית סילוק.",
+  "settings.groups.money": "כסף",
+  "settings.groups.look": "מראה ושפה",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "אבטחה ונתונים",
+  "settings.groups.advanced": "מתקדם",
+  "settings.profile.new": "פרופיל חדש",
+  "settings.fx.refresh": "רענון שערים",
+  "settings.export.title": "ייצוא",
+  "settings.export.lastBackup": "גיבוי אחרון {when}",
+  "settings.export.never": "לא בוצע גיבוי",
+  "settings.export.hint.json": "גיבוי מלא שניתן לשחזר",
+  "settings.export.hint.csv": "עסקאות לגיליון אלקטרוני"
 }

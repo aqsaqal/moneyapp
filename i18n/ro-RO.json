@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Condiții de achitare",
   "plan.debts.fromAccount": "Soldul curent al {name}",
   "plan.debts.removeTerms": "Elimină condițiile de achitare",
-  "plan.debts.emptyLinked": "Adaugă un cont de credit sau împrumut — apare aici cu o prognoză de achitare."
+  "plan.debts.emptyLinked": "Adaugă un cont de credit sau împrumut — apare aici cu o prognoză de achitare.",
+  "settings.groups.money": "Bani",
+  "settings.groups.look": "Aspect și limbă",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Securitate și date",
+  "settings.groups.advanced": "Avansat",
+  "settings.profile.new": "Profil nou",
+  "settings.fx.refresh": "Reîmprospătează cursurile",
+  "settings.export.title": "Export",
+  "settings.export.lastBackup": "Ultima copie de rezervă {when}",
+  "settings.export.never": "Nicio copie de rezervă încă",
+  "settings.export.hint.json": "Copie de rezervă completă pe care o poți restaura",
+  "settings.export.hint.csv": "Tranzacții pentru o foaie de calcul"
 }

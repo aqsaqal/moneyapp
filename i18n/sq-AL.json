@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Kushtet e shlyerjes",
   "plan.debts.fromAccount": "Bilanci aktual i {name}",
   "plan.debts.removeTerms": "Hiq kushtet e shlyerjes",
-  "plan.debts.emptyLinked": "Shto një llogari kredie ose karte krediti — shfaqet këtu me parashikimin e shlyerjes."
+  "plan.debts.emptyLinked": "Shto një llogari kredie ose karte krediti — shfaqet këtu me parashikimin e shlyerjes.",
+  "settings.groups.money": "Paratë",
+  "settings.groups.look": "Pamja dhe gjuha",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Siguria dhe të dhënat",
+  "settings.groups.advanced": "Të avancuara",
+  "settings.profile.new": "Profil i ri",
+  "settings.fx.refresh": "Rifresko kurset",
+  "settings.export.title": "Eksporto",
+  "settings.export.lastBackup": "Rezerva e fundit {when}",
+  "settings.export.never": "Asnjë rezervë ende",
+  "settings.export.hint.json": "Rezervë e plotë që mund ta rikthesh",
+  "settings.export.hint.csv": "Transaksione për një tabelë llogaritëse"
 }

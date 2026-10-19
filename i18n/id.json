@@ -586,5 +586,17 @@
   "plan.debts.termsTitle": "Ketentuan pelunasan",
   "plan.debts.fromAccount": "Saldo langsung dari {name}",
   "plan.debts.removeTerms": "Hapus ketentuan pelunasan",
-  "plan.debts.emptyLinked": "Tambahkan akun pinjaman atau kredit — akan muncul di sini dengan proyeksi pelunasan."
+  "plan.debts.emptyLinked": "Tambahkan akun pinjaman atau kredit — akan muncul di sini dengan proyeksi pelunasan.",
+  "settings.groups.money": "Uang",
+  "settings.groups.look": "Tampilan & bahasa",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Keamanan & data",
+  "settings.groups.advanced": "Lanjutan",
+  "settings.profile.new": "Profil baru",
+  "settings.fx.refresh": "Perbarui kurs",
+  "settings.export.title": "Ekspor",
+  "settings.export.lastBackup": "Cadangan terakhir {when}",
+  "settings.export.never": "Belum pernah dicadangkan",
+  "settings.export.hint.json": "Cadangan lengkap yang bisa dipulihkan",
+  "settings.export.hint.csv": "Transaksi untuk spreadsheet"
 }

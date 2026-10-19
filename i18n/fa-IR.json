@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "شرایط تسویه",
   "plan.debts.fromAccount": "مانده زندهٔ {name}",
   "plan.debts.removeTerms": "حذف شرایط تسویه",
-  "plan.debts.emptyLinked": "یک حساب وام یا اعتباری اضافه کنید — اینجا با پیش‌بینی تسویه نمایش داده می‌شود."
+  "plan.debts.emptyLinked": "یک حساب وام یا اعتباری اضافه کنید — اینجا با پیش‌بینی تسویه نمایش داده می‌شود.",
+  "settings.groups.money": "پول",
+  "settings.groups.look": "ظاهر و زبان",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "امنیت و داده",
+  "settings.groups.advanced": "پیشرفته",
+  "settings.profile.new": "پروفایل جدید",
+  "settings.fx.refresh": "به‌روزرسانی نرخ‌ها",
+  "settings.export.title": "خروجی",
+  "settings.export.lastBackup": "آخرین پشتیبان {when}",
+  "settings.export.never": "هنوز پشتیبانی گرفته نشده",
+  "settings.export.hint.json": "پشتیبان کامل قابل بازیابی",
+  "settings.export.hint.csv": "تراکنش‌ها برای صفحه‌گسترده"
 }

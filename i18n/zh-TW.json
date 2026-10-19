@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "清償條件",
   "plan.debts.fromAccount": "來自 {name} 的即時餘額",
   "plan.debts.removeTerms": "移除清償條件",
-  "plan.debts.emptyLinked": "新增貸款或信用帳戶——它會顯示在這裡，並附上清償預測。"
+  "plan.debts.emptyLinked": "新增貸款或信用帳戶——它會顯示在這裡，並附上清償預測。",
+  "settings.groups.money": "資金",
+  "settings.groups.look": "外觀與語言",
+  "settings.groups.smartAdd": "智慧新增",
+  "settings.groups.securityData": "安全與資料",
+  "settings.groups.advanced": "進階",
+  "settings.profile.new": "新增檔案",
+  "settings.fx.refresh": "重新整理匯率",
+  "settings.export.title": "匯出",
+  "settings.export.lastBackup": "上次備份 {when}",
+  "settings.export.never": "尚未備份",
+  "settings.export.hint.json": "可還原的完整備份",
+  "settings.export.hint.csv": "供試算表使用的交易"
 }

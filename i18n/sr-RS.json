@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Услови отплате",
   "plan.debts.fromAccount": "Тренутно стање рачуна {name}",
   "plan.debts.removeTerms": "Уклони услове отплате",
-  "plan.debts.emptyLinked": "Додај кредитни рачун или кредитну картицу — појавиће се овде са предвиђањем отплате."
+  "plan.debts.emptyLinked": "Додај кредитни рачун или кредитну картицу — појавиће се овде са предвиђањем отплате.",
+  "settings.groups.money": "Новац",
+  "settings.groups.look": "Изглед и језик",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Безбедност и подаци",
+  "settings.groups.advanced": "Напредно",
+  "settings.profile.new": "Нови профил",
+  "settings.fx.refresh": "Освежи курсеве",
+  "settings.export.title": "Извоз",
+  "settings.export.lastBackup": "Последња резервна копија {when}",
+  "settings.export.never": "Још нема резервне копије",
+  "settings.export.hint.json": "Потпуна резервна копија коју можете вратити",
+  "settings.export.hint.csv": "Трансакције за табелу"
 }

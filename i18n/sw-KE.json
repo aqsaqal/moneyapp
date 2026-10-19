@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Masharti ya ulipaji",
   "plan.debts.fromAccount": "Salio la sasa la {name}",
   "plan.debts.removeTerms": "Ondoa masharti ya ulipaji",
-  "plan.debts.emptyLinked": "Ongeza akaunti ya mkopo au kadi ya mkopo — itaonekana hapa pamoja na utabiri wa ulipaji."
+  "plan.debts.emptyLinked": "Ongeza akaunti ya mkopo au kadi ya mkopo — itaonekana hapa pamoja na utabiri wa ulipaji.",
+  "settings.groups.money": "Pesa",
+  "settings.groups.look": "Muonekano na lugha",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Usalama na data",
+  "settings.groups.advanced": "Ya kina",
+  "settings.profile.new": "Wasifu mpya",
+  "settings.fx.refresh": "Onyesha upya viwango",
+  "settings.export.title": "Hamisha",
+  "settings.export.lastBackup": "Nakala rudufu ya mwisho {when}",
+  "settings.export.never": "Hakuna nakala rudufu bado",
+  "settings.export.hint.json": "Nakala rudufu kamili unayoweza kurejesha",
+  "settings.export.hint.csv": "Miamala kwa ajili ya lahajedwali"
 }

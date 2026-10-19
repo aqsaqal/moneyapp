@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Afbetalingsvilkår",
   "plan.debts.fromAccount": "Aktuel saldo for {name}",
   "plan.debts.removeTerms": "Fjern afbetalingsvilkår",
-  "plan.debts.emptyLinked": "Tilføj en låne- eller kreditkonto — den vises her med en afbetalingsprognose."
+  "plan.debts.emptyLinked": "Tilføj en låne- eller kreditkonto — den vises her med en afbetalingsprognose.",
+  "settings.groups.money": "Penge",
+  "settings.groups.look": "Udseende og sprog",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Sikkerhed og data",
+  "settings.groups.advanced": "Avanceret",
+  "settings.profile.new": "Ny profil",
+  "settings.fx.refresh": "Opdater kurser",
+  "settings.export.title": "Eksport",
+  "settings.export.lastBackup": "Seneste backup {when}",
+  "settings.export.never": "Aldrig sikkerhedskopieret",
+  "settings.export.hint.json": "Fuld backup, du kan gendanne",
+  "settings.export.hint.csv": "Transaktioner til et regneark"
 }

@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Condiciones de pago",
   "plan.debts.fromAccount": "Saldo actual de {name}",
   "plan.debts.removeTerms": "Quitar condiciones de pago",
-  "plan.debts.emptyLinked": "Añade una cuenta de préstamo o crédito — aparecerá aquí con una proyección de pago."
+  "plan.debts.emptyLinked": "Añade una cuenta de préstamo o crédito — aparecerá aquí con una proyección de pago.",
+  "settings.groups.money": "Dinero",
+  "settings.groups.look": "Apariencia e idioma",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Seguridad y datos",
+  "settings.groups.advanced": "Avanzado",
+  "settings.profile.new": "Nuevo perfil",
+  "settings.fx.refresh": "Actualizar tipos",
+  "settings.export.title": "Exportar",
+  "settings.export.lastBackup": "Última copia {when}",
+  "settings.export.never": "Sin copia de seguridad",
+  "settings.export.hint.json": "Copia completa que puedes restaurar",
+  "settings.export.hint.csv": "Transacciones para una hoja de cálculo"
 }

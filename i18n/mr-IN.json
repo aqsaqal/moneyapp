@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "परतफेड अटी",
   "plan.debts.fromAccount": "{name} ची थेट शिल्लक",
   "plan.debts.removeTerms": "परतफेड अटी काढा",
-  "plan.debts.emptyLinked": "कर्ज किंवा क्रेडिट खाते जोडा — ते परतफेड अंदाजासह येथे दिसेल."
+  "plan.debts.emptyLinked": "कर्ज किंवा क्रेडिट खाते जोडा — ते परतफेड अंदाजासह येथे दिसेल.",
+  "settings.groups.money": "पैसे",
+  "settings.groups.look": "दिसणे आणि भाषा",
+  "settings.groups.smartAdd": "स्मार्ट अॅड",
+  "settings.groups.securityData": "सुरक्षा आणि डेटा",
+  "settings.groups.advanced": "प्रगत",
+  "settings.profile.new": "नवीन प्रोफाइल",
+  "settings.fx.refresh": "दर रिफ्रेश करा",
+  "settings.export.title": "निर्यात",
+  "settings.export.lastBackup": "शेवटचा बॅकअप {when}",
+  "settings.export.never": "अद्याप बॅकअप नाही",
+  "settings.export.hint.json": "पुनर्संचयित करता येणारा संपूर्ण बॅकअप",
+  "settings.export.hint.csv": "स्प्रेडशीटसाठी व्यवहार"
 }

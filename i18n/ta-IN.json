@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "திருப்பிச்செலுத்தல் நிபந்தனைகள்",
   "plan.debts.fromAccount": "{name} கணக்கின் நேரடி இருப்பு",
   "plan.debts.removeTerms": "திருப்பிச்செலுத்தல் நிபந்தனைகளை நீக்கு",
-  "plan.debts.emptyLinked": "கடன் அல்லது கிரெடிட் கணக்கைச் சேர் — அது திருப்பிச்செலுத்தல் கணிப்புடன் இங்கே தோன்றும்."
+  "plan.debts.emptyLinked": "கடன் அல்லது கிரெடிட் கணக்கைச் சேர் — அது திருப்பிச்செலுத்தல் கணிப்புடன் இங்கே தோன்றும்.",
+  "settings.groups.money": "பணம்",
+  "settings.groups.look": "தோற்றமும் மொழியும்",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "பாதுகாப்பும் தரவும்",
+  "settings.groups.advanced": "மேம்பட்டவை",
+  "settings.profile.new": "புதிய சுயவிவரம்",
+  "settings.fx.refresh": "விகிதங்களைப் புதுப்பி",
+  "settings.export.title": "ஏற்றுமதி",
+  "settings.export.lastBackup": "கடைசி காப்புப் பிரதி {when}",
+  "settings.export.never": "இன்னும் காப்புப் பிரதி இல்லை",
+  "settings.export.hint.json": "மீட்டெடுக்கக்கூடிய முழு காப்புப் பிரதி",
+  "settings.export.hint.csv": "விரிதாளுக்கான பரிவர்த்தனைகள்"
 }

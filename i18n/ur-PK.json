@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "ادائیگی کی شرائط",
   "plan.debts.fromAccount": "{name} کا موجودہ بیلنس",
   "plan.debts.removeTerms": "ادائیگی کی شرائط ہٹائیں",
-  "plan.debts.emptyLinked": "قرض یا کریڈٹ اکاؤنٹ شامل کریں — یہ یہاں ادائیگی کی پیش گوئی کے ساتھ نظر آئے گا۔"
+  "plan.debts.emptyLinked": "قرض یا کریڈٹ اکاؤنٹ شامل کریں — یہ یہاں ادائیگی کی پیش گوئی کے ساتھ نظر آئے گا۔",
+  "settings.groups.money": "رقم",
+  "settings.groups.look": "ظہور اور زبان",
+  "settings.groups.smartAdd": "اسمارٹ ایڈ",
+  "settings.groups.securityData": "سیکیورٹی اور ڈیٹا",
+  "settings.groups.advanced": "ایڈوانسڈ",
+  "settings.profile.new": "نیا پروفائل",
+  "settings.fx.refresh": "شرحیں ریفریش کریں",
+  "settings.export.title": "برآمد",
+  "settings.export.lastBackup": "آخری بیک اپ {when}",
+  "settings.export.never": "ابھی تک بیک اپ نہیں ہوا",
+  "settings.export.hint.json": "مکمل بیک اپ جسے آپ بحال کر سکتے ہیں",
+  "settings.export.hint.csv": "اسپریڈ شیٹ کے لیے لین دین"
 }

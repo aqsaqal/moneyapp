@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Takaisinmaksuehdot",
   "plan.debts.fromAccount": "Tilin {name} ajantasainen saldo",
   "plan.debts.removeTerms": "Poista takaisinmaksuehdot",
-  "plan.debts.emptyLinked": "Lisää laina- tai luottotili — se näkyy täällä takaisinmaksuennusteen kanssa."
+  "plan.debts.emptyLinked": "Lisää laina- tai luottotili — se näkyy täällä takaisinmaksuennusteen kanssa.",
+  "settings.groups.money": "Raha",
+  "settings.groups.look": "Ulkoasu ja kieli",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Suojaus ja tiedot",
+  "settings.groups.advanced": "Lisäasetukset",
+  "settings.profile.new": "Uusi profiili",
+  "settings.fx.refresh": "Päivitä kurssit",
+  "settings.export.title": "Vienti",
+  "settings.export.lastBackup": "Viimeisin varmuuskopio {when}",
+  "settings.export.never": "Ei varmuuskopiota",
+  "settings.export.hint.json": "Täysi varmuuskopio, jonka voit palauttaa",
+  "settings.export.hint.csv": "Tapahtumat taulukkolaskentaan"
 }

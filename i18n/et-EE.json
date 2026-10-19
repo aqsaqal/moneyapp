@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Tagasimakse tingimused",
   "plan.debts.fromAccount": "{name} reaalajas saldo",
   "plan.debts.removeTerms": "Eemalda tagasimakse tingimused",
-  "plan.debts.emptyLinked": "Lisa laenu- või krediidikonto — see ilmub siia koos tagasimakse prognoosiga."
+  "plan.debts.emptyLinked": "Lisa laenu- või krediidikonto — see ilmub siia koos tagasimakse prognoosiga.",
+  "settings.groups.money": "Raha",
+  "settings.groups.look": "Välimus ja keel",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Turvalisus ja andmed",
+  "settings.groups.advanced": "Täpsemalt",
+  "settings.profile.new": "Uus profiil",
+  "settings.fx.refresh": "Värskenda kursse",
+  "settings.export.title": "Eksport",
+  "settings.export.lastBackup": "Viimane varukoopia {when}",
+  "settings.export.never": "Varukoopiat pole tehtud",
+  "settings.export.hint.json": "Täielik varukoopia, mida saab taastada",
+  "settings.export.hint.csv": "Tehingud tabelarvutuse jaoks"
 }

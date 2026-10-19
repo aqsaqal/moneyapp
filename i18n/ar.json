@@ -586,5 +586,17 @@
   "plan.debts.termsTitle": "شروط السداد",
   "plan.debts.fromAccount": "الرصيد الحي لحساب {name}",
   "plan.debts.removeTerms": "إزالة شروط السداد",
-  "plan.debts.emptyLinked": "أضف حساب قرض أو ائتمان — سيظهر هنا مع توقّع للسداد."
+  "plan.debts.emptyLinked": "أضف حساب قرض أو ائتمان — سيظهر هنا مع توقّع للسداد.",
+  "settings.groups.money": "المال",
+  "settings.groups.look": "المظهر واللغة",
+  "settings.groups.smartAdd": "الإضافة الذكية",
+  "settings.groups.securityData": "الأمان والبيانات",
+  "settings.groups.advanced": "متقدم",
+  "settings.profile.new": "ملف شخصي جديد",
+  "settings.fx.refresh": "تحديث الأسعار",
+  "settings.export.title": "تصدير",
+  "settings.export.lastBackup": "آخر نسخة احتياطية {when}",
+  "settings.export.never": "لم يتم النسخ الاحتياطي بعد",
+  "settings.export.hint.json": "نسخة احتياطية كاملة يمكنك استعادتها",
+  "settings.export.hint.csv": "المعاملات لجدول بيانات"
 }

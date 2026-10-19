@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Nedbetalingsvilkår",
   "plan.debts.fromAccount": "Løpende saldo for {name}",
   "plan.debts.removeTerms": "Fjern nedbetalingsvilkår",
-  "plan.debts.emptyLinked": "Legg til en låne- eller kredittkonto — den vises her med en nedbetalingsprognose."
+  "plan.debts.emptyLinked": "Legg til en låne- eller kredittkonto — den vises her med en nedbetalingsprognose.",
+  "settings.groups.money": "Penger",
+  "settings.groups.look": "Utseende og språk",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Sikkerhet og data",
+  "settings.groups.advanced": "Avansert",
+  "settings.profile.new": "Ny profil",
+  "settings.fx.refresh": "Oppdater kurser",
+  "settings.export.title": "Eksporter",
+  "settings.export.lastBackup": "Siste sikkerhetskopi {when}",
+  "settings.export.never": "Aldri sikkerhetskopiert",
+  "settings.export.hint.json": "Full sikkerhetskopi du kan gjenopprette",
+  "settings.export.hint.csv": "Transaksjoner for et regneark"
 }

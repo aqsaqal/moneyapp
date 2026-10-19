@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Mga tuntunin ng payoff",
   "plan.debts.fromAccount": "Live na balanse ng {name}",
   "plan.debts.removeTerms": "Alisin ang mga tuntunin ng payoff",
-  "plan.debts.emptyLinked": "Magdagdag ng loan o credit account — lalabas ito rito na may payoff projection."
+  "plan.debts.emptyLinked": "Magdagdag ng loan o credit account — lalabas ito rito na may payoff projection.",
+  "settings.groups.money": "Pera",
+  "settings.groups.look": "Hitsura at wika",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Seguridad at data",
+  "settings.groups.advanced": "Advanced",
+  "settings.profile.new": "Bagong profile",
+  "settings.fx.refresh": "I-refresh ang mga rate",
+  "settings.export.title": "I-export",
+  "settings.export.lastBackup": "Huling backup {when}",
+  "settings.export.never": "Hindi pa na-backup",
+  "settings.export.hint.json": "Buong backup na maaari mong i-restore",
+  "settings.export.hint.csv": "Mga transaksyon para sa spreadsheet"
 }

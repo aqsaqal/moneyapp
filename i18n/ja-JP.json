@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "返済条件",
   "plan.debts.fromAccount": "{name} の現在残高",
   "plan.debts.removeTerms": "返済条件を削除",
-  "plan.debts.emptyLinked": "ローンやクレジット口座を追加すると、完済の試算とともにここに表示されます。"
+  "plan.debts.emptyLinked": "ローンやクレジット口座を追加すると、完済の試算とともにここに表示されます。",
+  "settings.groups.money": "お金",
+  "settings.groups.look": "外観と言語",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "セキュリティとデータ",
+  "settings.groups.advanced": "詳細",
+  "settings.profile.new": "新しいプロフィール",
+  "settings.fx.refresh": "レートを更新",
+  "settings.export.title": "エクスポート",
+  "settings.export.lastBackup": "最終バックアップ {when}",
+  "settings.export.never": "バックアップ未実行",
+  "settings.export.hint.json": "復元できる完全バックアップ",
+  "settings.export.hint.csv": "スプレッドシート用の取引"
 }

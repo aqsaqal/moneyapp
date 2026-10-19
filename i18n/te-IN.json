@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "చెల్లింపు షరతులు",
   "plan.debts.fromAccount": "{name} ఖాతా ప్రస్తుత బ్యాలెన్స్",
   "plan.debts.removeTerms": "చెల్లింపు షరతులను తొలగించు",
-  "plan.debts.emptyLinked": "రుణం లేదా క్రెడిట్ ఖాతా జోడించండి — అది చెల్లింపు అంచనాతో ఇక్కడ కనిపిస్తుంది."
+  "plan.debts.emptyLinked": "రుణం లేదా క్రెడిట్ ఖాతా జోడించండి — అది చెల్లింపు అంచనాతో ఇక్కడ కనిపిస్తుంది.",
+  "settings.groups.money": "డబ్బు",
+  "settings.groups.look": "ప్రదర్శన మరియు భాష",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "భద్రత మరియు డేటా",
+  "settings.groups.advanced": "అధునాతన",
+  "settings.profile.new": "కొత్త ప్రొఫైల్",
+  "settings.fx.refresh": "రేట్లను రిఫ్రెష్ చేయి",
+  "settings.export.title": "ఎగుమతి",
+  "settings.export.lastBackup": "చివరి బ్యాకప్ {when}",
+  "settings.export.never": "ఇంకా బ్యాకప్ చేయలేదు",
+  "settings.export.hint.json": "పునరుద్ధరించగల పూర్తి బ్యాకప్",
+  "settings.export.hint.csv": "స్ప్రెడ్‌షీట్ కోసం లావాదేవీలు"
 }

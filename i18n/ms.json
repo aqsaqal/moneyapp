@@ -586,5 +586,17 @@
   "plan.debts.termsTitle": "Terma pelunasan",
   "plan.debts.fromAccount": "Baki semasa {name}",
   "plan.debts.removeTerms": "Buang terma pelunasan",
-  "plan.debts.emptyLinked": "Tambah akaun pinjaman atau kredit — ia akan muncul di sini dengan unjuran pelunasan."
+  "plan.debts.emptyLinked": "Tambah akaun pinjaman atau kredit — ia akan muncul di sini dengan unjuran pelunasan.",
+  "settings.groups.money": "Wang",
+  "settings.groups.look": "Paparan & bahasa",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Keselamatan & data",
+  "settings.groups.advanced": "Lanjutan",
+  "settings.profile.new": "Profil baharu",
+  "settings.fx.refresh": "Segarkan kadar",
+  "settings.export.title": "Eksport",
+  "settings.export.lastBackup": "Sandaran terakhir {when}",
+  "settings.export.never": "Belum pernah disandarkan",
+  "settings.export.hint.json": "Sandaran penuh yang boleh dipulihkan",
+  "settings.export.hint.csv": "Transaksi untuk hamparan"
 }

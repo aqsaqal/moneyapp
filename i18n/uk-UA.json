@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Умови погашення",
   "plan.debts.fromAccount": "Поточний залишок рахунку {name}",
   "plan.debts.removeTerms": "Видалити умови погашення",
-  "plan.debts.emptyLinked": "Додай кредитний рахунок або кредитку — він з'явиться тут із прогнозом погашення."
+  "plan.debts.emptyLinked": "Додай кредитний рахунок або кредитку — він з'явиться тут із прогнозом погашення.",
+  "settings.groups.money": "Гроші",
+  "settings.groups.look": "Вигляд і мова",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Безпека й дані",
+  "settings.groups.advanced": "Додатково",
+  "settings.profile.new": "Новий профіль",
+  "settings.fx.refresh": "Оновити курси",
+  "settings.export.title": "Експорт",
+  "settings.export.lastBackup": "Остання резервна копія {when}",
+  "settings.export.never": "Резервної копії ще немає",
+  "settings.export.hint.json": "Повна резервна копія, яку можна відновити",
+  "settings.export.hint.csv": "Операції для таблиці"
 }

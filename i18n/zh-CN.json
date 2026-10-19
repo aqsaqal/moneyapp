@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "还款条件",
   "plan.debts.fromAccount": "来自 {name} 的实时余额",
   "plan.debts.removeTerms": "移除还款条件",
-  "plan.debts.emptyLinked": "添加贷款或信用账户——它会显示在这里，并附带还清预估。"
+  "plan.debts.emptyLinked": "添加贷款或信用账户——它会显示在这里，并附带还清预估。",
+  "settings.groups.money": "资金",
+  "settings.groups.look": "外观与语言",
+  "settings.groups.smartAdd": "智能添加",
+  "settings.groups.securityData": "安全与数据",
+  "settings.groups.advanced": "高级",
+  "settings.profile.new": "新建档案",
+  "settings.fx.refresh": "刷新汇率",
+  "settings.export.title": "导出",
+  "settings.export.lastBackup": "上次备份 {when}",
+  "settings.export.never": "尚未备份",
+  "settings.export.hint.json": "可恢复的完整备份",
+  "settings.export.hint.csv": "用于电子表格的交易记录"
 }

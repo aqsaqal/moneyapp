@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Toʻlov shartlari",
   "plan.debts.fromAccount": "{name} hisobining joriy balansi",
   "plan.debts.removeTerms": "Toʻlov shartlarini olib tashlash",
-  "plan.debts.emptyLinked": "Kredit yoki kredit karta hisobini qoʻshing — u bu yerda toʻlov prognozi bilan koʻrinadi."
+  "plan.debts.emptyLinked": "Kredit yoki kredit karta hisobini qoʻshing — u bu yerda toʻlov prognozi bilan koʻrinadi.",
+  "settings.groups.money": "Pul",
+  "settings.groups.look": "Koʻrinish va til",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Xavfsizlik va maʼlumotlar",
+  "settings.groups.advanced": "Kengaytirilgan",
+  "settings.profile.new": "Yangi profil",
+  "settings.fx.refresh": "Kurslarni yangilash",
+  "settings.export.title": "Eksport",
+  "settings.export.lastBackup": "Oxirgi zaxira {when}",
+  "settings.export.never": "Hali zaxiralanmagan",
+  "settings.export.hint.json": "Tiklash mumkin boʻlgan toʻliq zaxira",
+  "settings.export.hint.csv": "Jadval uchun tranzaksiyalar"
 }

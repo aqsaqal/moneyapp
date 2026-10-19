@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "상환 조건",
   "plan.debts.fromAccount": "{name}의 실시간 잔액",
   "plan.debts.removeTerms": "상환 조건 제거",
-  "plan.debts.emptyLinked": "대출 또는 신용 계정을 추가하면 상환 예측과 함께 여기에 표시됩니다."
+  "plan.debts.emptyLinked": "대출 또는 신용 계정을 추가하면 상환 예측과 함께 여기에 표시됩니다.",
+  "settings.groups.money": "돈",
+  "settings.groups.look": "외관 및 언어",
+  "settings.groups.smartAdd": "스마트 추가",
+  "settings.groups.securityData": "보안 및 데이터",
+  "settings.groups.advanced": "고급",
+  "settings.profile.new": "새 프로필",
+  "settings.fx.refresh": "환율 새로고침",
+  "settings.export.title": "내보내기",
+  "settings.export.lastBackup": "마지막 백업 {when}",
+  "settings.export.never": "백업 기록 없음",
+  "settings.export.hint.json": "복원 가능한 전체 백업",
+  "settings.export.hint.csv": "스프레드시트용 거래 내역"
 }

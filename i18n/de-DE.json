@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Tilgungsbedingungen",
   "plan.debts.fromAccount": "Aktueller Saldo von {name}",
   "plan.debts.removeTerms": "Tilgungsbedingungen entfernen",
-  "plan.debts.emptyLinked": "Füge ein Kredit- oder Kreditkartenkonto hinzu — es erscheint hier mit einer Tilgungsprognose."
+  "plan.debts.emptyLinked": "Füge ein Kredit- oder Kreditkartenkonto hinzu — es erscheint hier mit einer Tilgungsprognose.",
+  "settings.groups.money": "Geld",
+  "settings.groups.look": "Darstellung & Sprache",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Sicherheit & Daten",
+  "settings.groups.advanced": "Erweitert",
+  "settings.profile.new": "Neues Profil",
+  "settings.fx.refresh": "Kurse aktualisieren",
+  "settings.export.title": "Export",
+  "settings.export.lastBackup": "Letztes Backup {when}",
+  "settings.export.never": "Noch kein Backup",
+  "settings.export.hint.json": "Vollständiges Backup zum Wiederherstellen",
+  "settings.export.hint.csv": "Buchungen für eine Tabelle"
 }

@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Ödəniş şərtləri",
   "plan.debts.fromAccount": "{name} hesabının cari balansı",
   "plan.debts.removeTerms": "Ödəniş şərtlərini sil",
-  "plan.debts.emptyLinked": "Kredit və ya kredit kartı hesabı əlavə et — burada ödəniş proqnozu ilə görünəcək."
+  "plan.debts.emptyLinked": "Kredit və ya kredit kartı hesabı əlavə et — burada ödəniş proqnozu ilə görünəcək.",
+  "settings.groups.money": "Pul",
+  "settings.groups.look": "Görünüş və dil",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Təhlükəsizlik və məlumatlar",
+  "settings.groups.advanced": "Ətraflı",
+  "settings.profile.new": "Yeni profil",
+  "settings.fx.refresh": "Məzənnələri yenilə",
+  "settings.export.title": "İxrac",
+  "settings.export.lastBackup": "Son ehtiyat nüsxə {when}",
+  "settings.export.never": "Ehtiyat nüsxə heç çıxarılmayıb",
+  "settings.export.hint.json": "Bərpa edə biləcəyiniz tam ehtiyat nüsxə",
+  "settings.export.hint.csv": "Cədvəl üçün əməliyyatlar"
 }

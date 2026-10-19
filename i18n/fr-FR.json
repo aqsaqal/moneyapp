@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Conditions de remboursement",
   "plan.debts.fromAccount": "Solde en direct de {name}",
   "plan.debts.removeTerms": "Supprimer les conditions de remboursement",
-  "plan.debts.emptyLinked": "Ajoute un compte de prêt ou de crédit — il apparaîtra ici avec une projection de remboursement."
+  "plan.debts.emptyLinked": "Ajoute un compte de prêt ou de crédit — il apparaîtra ici avec une projection de remboursement.",
+  "settings.groups.money": "Argent",
+  "settings.groups.look": "Apparence et langue",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Sécurité et données",
+  "settings.groups.advanced": "Avancé",
+  "settings.profile.new": "Nouveau profil",
+  "settings.fx.refresh": "Actualiser les taux",
+  "settings.export.title": "Exporter",
+  "settings.export.lastBackup": "Dernière sauvegarde {when}",
+  "settings.export.never": "Aucune sauvegarde",
+  "settings.export.hint.json": "Sauvegarde complète que vous pouvez restaurer",
+  "settings.export.hint.csv": "Transactions pour un tableur"
 }

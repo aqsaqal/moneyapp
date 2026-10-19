@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "পরিশোধের শর্ত",
   "plan.debts.fromAccount": "{name}-এর লাইভ ব্যালেন্স",
   "plan.debts.removeTerms": "পরিশোধের শর্ত সরান",
-  "plan.debts.emptyLinked": "একটি ঋণ বা ক্রেডিট অ্যাকাউন্ট যোগ করুন — এটি পরিশোধের পূর্বাভাসসহ এখানে দেখাবে।"
+  "plan.debts.emptyLinked": "একটি ঋণ বা ক্রেডিট অ্যাকাউন্ট যোগ করুন — এটি পরিশোধের পূর্বাভাসসহ এখানে দেখাবে।",
+  "settings.groups.money": "টাকা",
+  "settings.groups.look": "চেহারা ও ভাষা",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "নিরাপত্তা ও ডেটা",
+  "settings.groups.advanced": "উন্নত",
+  "settings.profile.new": "নতুন প্রোফাইল",
+  "settings.fx.refresh": "হার রিফ্রেশ করুন",
+  "settings.export.title": "রপ্তানি",
+  "settings.export.lastBackup": "শেষ ব্যাকআপ {when}",
+  "settings.export.never": "কখনো ব্যাকআপ হয়নি",
+  "settings.export.hint.json": "পুনরুদ্ধারযোগ্য সম্পূর্ণ ব্যাকআপ",
+  "settings.export.hint.csv": "স্প্রেডশিটের জন্য লেনদেন"
 }

@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Condições de quitação",
   "plan.debts.fromAccount": "Saldo atual de {name}",
   "plan.debts.removeTerms": "Remover condições de quitação",
-  "plan.debts.emptyLinked": "Adicione uma conta de empréstimo ou crédito — ela aparece aqui com uma projeção de quitação."
+  "plan.debts.emptyLinked": "Adicione uma conta de empréstimo ou crédito — ela aparece aqui com uma projeção de quitação.",
+  "settings.groups.money": "Dinheiro",
+  "settings.groups.look": "Aparência e idioma",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Segurança e dados",
+  "settings.groups.advanced": "Avançado",
+  "settings.profile.new": "Novo perfil",
+  "settings.fx.refresh": "Atualizar taxas",
+  "settings.export.title": "Exportar",
+  "settings.export.lastBackup": "Último backup {when}",
+  "settings.export.never": "Nenhum backup ainda",
+  "settings.export.hint.json": "Backup completo que você pode restaurar",
+  "settings.export.hint.csv": "Transações para uma planilha"
 }

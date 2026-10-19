@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Điều khoản tất toán",
   "plan.debts.fromAccount": "Số dư hiện tại của {name}",
   "plan.debts.removeTerms": "Xoá điều khoản tất toán",
-  "plan.debts.emptyLinked": "Thêm tài khoản vay hoặc tín dụng — nó sẽ hiện ở đây kèm dự kiến tất toán."
+  "plan.debts.emptyLinked": "Thêm tài khoản vay hoặc tín dụng — nó sẽ hiện ở đây kèm dự kiến tất toán.",
+  "settings.groups.money": "Tiền",
+  "settings.groups.look": "Giao diện & ngôn ngữ",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Bảo mật & dữ liệu",
+  "settings.groups.advanced": "Nâng cao",
+  "settings.profile.new": "Hồ sơ mới",
+  "settings.fx.refresh": "Làm mới tỷ giá",
+  "settings.export.title": "Xuất",
+  "settings.export.lastBackup": "Sao lưu gần nhất {when}",
+  "settings.export.never": "Chưa từng sao lưu",
+  "settings.export.hint.json": "Bản sao lưu đầy đủ có thể khôi phục",
+  "settings.export.hint.csv": "Giao dịch cho bảng tính"
 }

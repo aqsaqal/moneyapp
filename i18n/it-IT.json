@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Condizioni di estinzione",
   "plan.debts.fromAccount": "Saldo in tempo reale di {name}",
   "plan.debts.removeTerms": "Rimuovi condizioni di estinzione",
-  "plan.debts.emptyLinked": "Aggiungi un conto prestito o credito — comparirà qui con una proiezione di estinzione."
+  "plan.debts.emptyLinked": "Aggiungi un conto prestito o credito — comparirà qui con una proiezione di estinzione.",
+  "settings.groups.money": "Denaro",
+  "settings.groups.look": "Aspetto e lingua",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Sicurezza e dati",
+  "settings.groups.advanced": "Avanzate",
+  "settings.profile.new": "Nuovo profilo",
+  "settings.fx.refresh": "Aggiorna i cambi",
+  "settings.export.title": "Esporta",
+  "settings.export.lastBackup": "Ultimo backup {when}",
+  "settings.export.never": "Nessun backup",
+  "settings.export.hint.json": "Backup completo che puoi ripristinare",
+  "settings.export.hint.csv": "Transazioni per un foglio di calcolo"
 }

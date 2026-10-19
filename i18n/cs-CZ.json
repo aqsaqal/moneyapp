@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Podmínky splácení",
   "plan.debts.fromAccount": "Aktuální zůstatek účtu {name}",
   "plan.debts.removeTerms": "Odebrat podmínky splácení",
-  "plan.debts.emptyLinked": "Přidej úvěrový nebo kreditní účet — zobrazí se tady s prognózou splacení."
+  "plan.debts.emptyLinked": "Přidej úvěrový nebo kreditní účet — zobrazí se tady s prognózou splacení.",
+  "settings.groups.money": "Peníze",
+  "settings.groups.look": "Vzhled a jazyk",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Zabezpečení a data",
+  "settings.groups.advanced": "Pokročilé",
+  "settings.profile.new": "Nový profil",
+  "settings.fx.refresh": "Obnovit kurzy",
+  "settings.export.title": "Export",
+  "settings.export.lastBackup": "Poslední záloha {when}",
+  "settings.export.never": "Zatím nezálohováno",
+  "settings.export.hint.json": "Úplná záloha, kterou lze obnovit",
+  "settings.export.hint.csv": "Transakce pro tabulkový procesor"
 }

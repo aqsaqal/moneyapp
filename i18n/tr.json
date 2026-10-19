@@ -586,5 +586,17 @@
   "plan.debts.termsTitle": "Kapanış koşulları",
   "plan.debts.fromAccount": "{name} hesabının güncel bakiyesi",
   "plan.debts.removeTerms": "Kapanış koşullarını kaldır",
-  "plan.debts.emptyLinked": "Bir kredi veya kredi kartı hesabı ekle — burada kapanış tahminiyle görünür."
+  "plan.debts.emptyLinked": "Bir kredi veya kredi kartı hesabı ekle — burada kapanış tahminiyle görünür.",
+  "settings.groups.money": "Para",
+  "settings.groups.look": "Görünüm ve dil",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Güvenlik ve veri",
+  "settings.groups.advanced": "Gelişmiş",
+  "settings.profile.new": "Yeni profil",
+  "settings.fx.refresh": "Kurları yenile",
+  "settings.export.title": "Dışa aktar",
+  "settings.export.lastBackup": "Son yedek {when}",
+  "settings.export.never": "Henüz yedeklenmedi",
+  "settings.export.hint.json": "Geri yükleyebileceğin tam yedek",
+  "settings.export.hint.csv": "Hesap tablosu için işlemler"
 }

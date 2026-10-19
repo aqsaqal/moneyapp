@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Όροι αποπληρωμής",
   "plan.debts.fromAccount": "Τρέχον υπόλοιπο του {name}",
   "plan.debts.removeTerms": "Αφαίρεση όρων αποπληρωμής",
-  "plan.debts.emptyLinked": "Πρόσθεσε λογαριασμό δανείου ή πίστωσης — θα εμφανιστεί εδώ με πρόβλεψη αποπληρωμής."
+  "plan.debts.emptyLinked": "Πρόσθεσε λογαριασμό δανείου ή πίστωσης — θα εμφανιστεί εδώ με πρόβλεψη αποπληρωμής.",
+  "settings.groups.money": "Χρήματα",
+  "settings.groups.look": "Εμφάνιση & γλώσσα",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Ασφάλεια & δεδομένα",
+  "settings.groups.advanced": "Για προχωρημένους",
+  "settings.profile.new": "Νέο προφίλ",
+  "settings.fx.refresh": "Ανανέωση ισοτιμιών",
+  "settings.export.title": "Εξαγωγή",
+  "settings.export.lastBackup": "Τελευταίο αντίγραφο {when}",
+  "settings.export.never": "Κανένα αντίγραφο ασφαλείας",
+  "settings.export.hint.json": "Πλήρες αντίγραφο που μπορείτε να επαναφέρετε",
+  "settings.export.hint.csv": "Συναλλαγές για υπολογιστικό φύλλο"
 }

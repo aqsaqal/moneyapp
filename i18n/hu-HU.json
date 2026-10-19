@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Törlesztési feltételek",
   "plan.debts.fromAccount": "{name} aktuális egyenlege",
   "plan.debts.removeTerms": "Törlesztési feltételek eltávolítása",
-  "plan.debts.emptyLinked": "Adj hozzá hitel- vagy kölcsönszámlát — itt jelenik meg a kifizetés előrejelzésével."
+  "plan.debts.emptyLinked": "Adj hozzá hitel- vagy kölcsönszámlát — itt jelenik meg a kifizetés előrejelzésével.",
+  "settings.groups.money": "Pénz",
+  "settings.groups.look": "Megjelenés és nyelv",
+  "settings.groups.smartAdd": "Okos hozzáadás",
+  "settings.groups.securityData": "Biztonság és adatok",
+  "settings.groups.advanced": "Haladó",
+  "settings.profile.new": "Új profil",
+  "settings.fx.refresh": "Árfolyamok frissítése",
+  "settings.export.title": "Exportálás",
+  "settings.export.lastBackup": "Utolsó mentés {when}",
+  "settings.export.never": "Még nincs mentés",
+  "settings.export.hint.json": "Teljes mentés, amely visszaállítható",
+  "settings.export.hint.csv": "Tranzakciók táblázatkezelőhöz"
 }

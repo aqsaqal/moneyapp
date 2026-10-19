@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "เงื่อนไขการปลดหนี้",
   "plan.debts.fromAccount": "ยอดปัจจุบันจาก {name}",
   "plan.debts.removeTerms": "ลบเงื่อนไขการปลดหนี้",
-  "plan.debts.emptyLinked": "เพิ่มบัญชีเงินกู้หรือบัตรเครดิต — จะแสดงที่นี่พร้อมการคำนวณปลดหนี้"
+  "plan.debts.emptyLinked": "เพิ่มบัญชีเงินกู้หรือบัตรเครดิต — จะแสดงที่นี่พร้อมการคำนวณปลดหนี้",
+  "settings.groups.money": "เงิน",
+  "settings.groups.look": "ลักษณะและภาษา",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "ความปลอดภัยและข้อมูล",
+  "settings.groups.advanced": "ขั้นสูง",
+  "settings.profile.new": "โปรไฟล์ใหม่",
+  "settings.fx.refresh": "รีเฟรชอัตรา",
+  "settings.export.title": "ส่งออก",
+  "settings.export.lastBackup": "สำรองข้อมูลล่าสุด {when}",
+  "settings.export.never": "ยังไม่เคยสำรองข้อมูล",
+  "settings.export.hint.json": "ข้อมูลสำรองฉบับเต็มที่กู้คืนได้",
+  "settings.export.hint.csv": "ธุรกรรมสำหรับสเปรดชีต"
 }

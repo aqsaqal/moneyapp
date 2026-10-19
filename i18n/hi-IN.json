@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "चुकौती शर्तें",
   "plan.debts.fromAccount": "{name} का लाइव शेष",
   "plan.debts.removeTerms": "चुकौती शर्तें हटाएं",
-  "plan.debts.emptyLinked": "ऋण या क्रेडिट खाता जोड़ें — यह यहां चुकौती अनुमान के साथ दिखेगा।"
+  "plan.debts.emptyLinked": "ऋण या क्रेडिट खाता जोड़ें — यह यहां चुकौती अनुमान के साथ दिखेगा।",
+  "settings.groups.money": "पैसा",
+  "settings.groups.look": "स्वरूप और भाषा",
+  "settings.groups.smartAdd": "स्मार्ट ऐड",
+  "settings.groups.securityData": "सुरक्षा और डेटा",
+  "settings.groups.advanced": "उन्नत",
+  "settings.profile.new": "नई प्रोफ़ाइल",
+  "settings.fx.refresh": "दरें रीफ़्रेश करें",
+  "settings.export.title": "निर्यात",
+  "settings.export.lastBackup": "अंतिम बैकअप {when}",
+  "settings.export.never": "अभी तक बैकअप नहीं",
+  "settings.export.hint.json": "पूरा बैकअप जिसे आप पुनर्स्थापित कर सकते हैं",
+  "settings.export.hint.csv": "स्प्रेडशीट के लिए लेन-देन"
 }

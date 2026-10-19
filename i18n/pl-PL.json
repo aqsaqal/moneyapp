@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Warunki spłaty",
   "plan.debts.fromAccount": "Bieżące saldo konta {name}",
   "plan.debts.removeTerms": "Usuń warunki spłaty",
-  "plan.debts.emptyLinked": "Dodaj konto pożyczki lub kredytu — pojawi się tutaj z prognozą spłaty."
+  "plan.debts.emptyLinked": "Dodaj konto pożyczki lub kredytu — pojawi się tutaj z prognozą spłaty.",
+  "settings.groups.money": "Pieniądze",
+  "settings.groups.look": "Wygląd i język",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Bezpieczeństwo i dane",
+  "settings.groups.advanced": "Zaawansowane",
+  "settings.profile.new": "Nowy profil",
+  "settings.fx.refresh": "Odśwież kursy",
+  "settings.export.title": "Eksport",
+  "settings.export.lastBackup": "Ostatnia kopia zapasowa {when}",
+  "settings.export.never": "Brak kopii zapasowej",
+  "settings.export.hint.json": "Pełna kopia zapasowa, którą można przywrócić",
+  "settings.export.hint.csv": "Transakcje do arkusza kalkulacyjnego"
 }

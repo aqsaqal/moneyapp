@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Условия за изплащане",
   "plan.debts.fromAccount": "Текущо салдо на {name}",
   "plan.debts.removeTerms": "Премахни условията за изплащане",
-  "plan.debts.emptyLinked": "Добавете сметка за заем или кредит — тя ще се появи тук с прогноза за изплащане."
+  "plan.debts.emptyLinked": "Добавете сметка за заем или кредит — тя ще се появи тук с прогноза за изплащане.",
+  "settings.groups.money": "Пари",
+  "settings.groups.look": "Изглед и език",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Сигурност и данни",
+  "settings.groups.advanced": "Разширени",
+  "settings.profile.new": "Нов профил",
+  "settings.fx.refresh": "Обнови курсовете",
+  "settings.export.title": "Експорт",
+  "settings.export.lastBackup": "Последно архивиране {when}",
+  "settings.export.never": "Няма архивиране досега",
+  "settings.export.hint.json": "Пълен архив, който можете да възстановите",
+  "settings.export.hint.csv": "Транзакции за електронна таблица"
 }

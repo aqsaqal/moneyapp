@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Podmienky splácania",
   "plan.debts.fromAccount": "Aktuálny zostatok účtu {name}",
   "plan.debts.removeTerms": "Odstrániť podmienky splácania",
-  "plan.debts.emptyLinked": "Pridaj úverový alebo kreditný účet — zobrazí sa tu s prognózou splatenia."
+  "plan.debts.emptyLinked": "Pridaj úverový alebo kreditný účet — zobrazí sa tu s prognózou splatenia.",
+  "settings.groups.money": "Peniaze",
+  "settings.groups.look": "Vzhľad a jazyk",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Zabezpečenie a dáta",
+  "settings.groups.advanced": "Rozšírené",
+  "settings.profile.new": "Nový profil",
+  "settings.fx.refresh": "Obnoviť kurzy",
+  "settings.export.title": "Export",
+  "settings.export.lastBackup": "Posledná záloha {when}",
+  "settings.export.never": "Zatiaľ bez zálohy",
+  "settings.export.hint.json": "Úplná záloha, ktorú môžete obnoviť",
+  "settings.export.hint.csv": "Transakcie pre tabuľku"
 }

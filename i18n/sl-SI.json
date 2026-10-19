@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Pogoji odplačila",
   "plan.debts.fromAccount": "Trenutno stanje računa {name}",
   "plan.debts.removeTerms": "Odstrani pogoje odplačila",
-  "plan.debts.emptyLinked": "Dodaj posojilni ali kreditni račun — tu se prikaže z napovedjo odplačila."
+  "plan.debts.emptyLinked": "Dodaj posojilni ali kreditni račun — tu se prikaže z napovedjo odplačila.",
+  "settings.groups.money": "Denar",
+  "settings.groups.look": "Videz in jezik",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Varnost in podatki",
+  "settings.groups.advanced": "Napredno",
+  "settings.profile.new": "Nov profil",
+  "settings.fx.refresh": "Osveži tečaje",
+  "settings.export.title": "Izvoz",
+  "settings.export.lastBackup": "Zadnja varnostna kopija {when}",
+  "settings.export.never": "Še ni varnostne kopije",
+  "settings.export.hint.json": "Popolna varnostna kopija, ki jo lahko obnovite",
+  "settings.export.hint.csv": "Transakcije za preglednico"
 }

@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Aflossingsvoorwaarden",
   "plan.debts.fromAccount": "Actueel saldo van {name}",
   "plan.debts.removeTerms": "Aflossingsvoorwaarden verwijderen",
-  "plan.debts.emptyLinked": "Voeg een lening- of kredietrekening toe — die verschijnt hier met een aflossingsprognose."
+  "plan.debts.emptyLinked": "Voeg een lening- of kredietrekening toe — die verschijnt hier met een aflossingsprognose.",
+  "settings.groups.money": "Geld",
+  "settings.groups.look": "Weergave en taal",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Beveiliging en gegevens",
+  "settings.groups.advanced": "Geavanceerd",
+  "settings.profile.new": "Nieuw profiel",
+  "settings.fx.refresh": "Koersen verversen",
+  "settings.export.title": "Exporteren",
+  "settings.export.lastBackup": "Laatste back-up {when}",
+  "settings.export.never": "Nog geen back-up gemaakt",
+  "settings.export.hint.json": "Volledige back-up die je kunt herstellen",
+  "settings.export.hint.csv": "Transacties voor een spreadsheet"
 }

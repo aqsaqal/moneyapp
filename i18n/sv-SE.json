@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Avbetalningsvillkor",
   "plan.debts.fromAccount": "Aktuellt saldo för {name}",
   "plan.debts.removeTerms": "Ta bort avbetalningsvillkor",
-  "plan.debts.emptyLinked": "Lägg till ett lån eller kreditkonto — det visas här med en avbetalningsprognos."
+  "plan.debts.emptyLinked": "Lägg till ett lån eller kreditkonto — det visas här med en avbetalningsprognos.",
+  "settings.groups.money": "Pengar",
+  "settings.groups.look": "Utseende och språk",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Säkerhet och data",
+  "settings.groups.advanced": "Avancerat",
+  "settings.profile.new": "Ny profil",
+  "settings.fx.refresh": "Uppdatera kurser",
+  "settings.export.title": "Exportera",
+  "settings.export.lastBackup": "Senaste säkerhetskopia {when}",
+  "settings.export.never": "Ingen säkerhetskopia ännu",
+  "settings.export.hint.json": "Fullständig säkerhetskopia som du kan återställa",
+  "settings.export.hint.csv": "Transaktioner för ett kalkylblad"
 }

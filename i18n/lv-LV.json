@@ -587,5 +587,17 @@
   "plan.debts.termsTitle": "Atmaksas nosacījumi",
   "plan.debts.fromAccount": "{name} pašreizējais atlikums",
   "plan.debts.removeTerms": "Noņemt atmaksas nosacījumus",
-  "plan.debts.emptyLinked": "Pievieno aizdevuma vai kredīta kontu — tas parādīsies šeit ar atmaksas prognozi."
+  "plan.debts.emptyLinked": "Pievieno aizdevuma vai kredīta kontu — tas parādīsies šeit ar atmaksas prognozi.",
+  "settings.groups.money": "Nauda",
+  "settings.groups.look": "Izskats un valoda",
+  "settings.groups.smartAdd": "Smart Add",
+  "settings.groups.securityData": "Drošība un dati",
+  "settings.groups.advanced": "Papildu",
+  "settings.profile.new": "Jauns profils",
+  "settings.fx.refresh": "Atsvaidzināt kursus",
+  "settings.export.title": "Eksports",
+  "settings.export.lastBackup": "Pēdējā dublējumkopija {when}",
+  "settings.export.never": "Nav dublējumkopijas",
+  "settings.export.hint.json": "Pilna kopija, ko var atjaunot",
+  "settings.export.hint.csv": "Darījumi izklājlapai"
 }
