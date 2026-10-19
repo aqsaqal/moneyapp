@@ -390,7 +390,7 @@
   "account.delete.title": "Xoá hay lưu trữ?",
   "account.delete.body": "\"{name}\" — số dư {balance} {currency}\n{directCount} giao dịch trực tiếp, {transferCount} chuyển.",
   "account.deleteConfirm.title": "Thực sự xoá?",
-  "account.deleteConfirm.body": "Sẽ xoá \"{name}\" và {directCount} giao dịch. Không thể hoàn tác.",
+  "account.deleteConfirm.body": "Sẽ xoá \"{name}\" và XOÁ {directCount} giao dịch trực tiếp. {transferCount} giao dịch chuyển khoản sẽ được giữ lại ở tài khoản bên kia. Không thể hoàn tác.",
   "me.import.json": "Khôi phục từ bản sao lưu (JSON)",
   "me.import.json.hint": "Thay thế toàn bộ dữ liệu trong hồ sơ đang hoạt động",
   "me.import.confirm.title": "Khôi phục từ bản sao lưu?",

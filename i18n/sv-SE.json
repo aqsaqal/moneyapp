@@ -390,7 +390,7 @@
   "account.delete.title": "Ta bort eller arkivera?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} direkta, {transferCount} överföringar.",
   "account.deleteConfirm.title": "Verkligen ta bort?",
-  "account.deleteConfirm.body": "\"{name}\" och {directCount} transaktioner tas bort. Kan inte ångras.",
+  "account.deleteConfirm.body": "\"{name}\" tas bort och {directCount} direkta transaktioner RADERAS. {transferCount} överföringar behålls på det andra kontot. Kan inte ångras.",
   "me.import.json": "Återställ från säkerhetskopia (JSON)",
   "me.import.json.hint": "Ersätter all data i den aktiva profilen",
   "me.import.confirm.title": "Återställ från säkerhetskopia?",

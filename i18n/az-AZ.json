@@ -390,7 +390,7 @@
   "account.delete.title": "Silmək ya da arxivləmək?",
   "account.delete.body": "\"{name}\" — balans {balance} {currency}\n{directCount} birbaşa, {transferCount} köçürmə.",
   "account.deleteConfirm.title": "Həqiqətən silmək?",
-  "account.deleteConfirm.body": "\"{name}\" və {directCount} əməliyyat siləcək. Geri qaytarmaq olmaz.",
+  "account.deleteConfirm.body": "\"{name}\" silinəcək və {directCount} birbaşa əməliyyat SİLİNƏCƏK. {transferCount} köçürmə qarşı tərəfdə saxlanılacaq. Geri qaytarmaq olmaz.",
   "me.import.json": "Yedəkdən bərpa et (JSON)",
   "me.import.json.hint": "Aktiv profildəki bütün məlumatları əvəz edir",
   "me.import.confirm.title": "Yedəkdən bərpa edilsin?",

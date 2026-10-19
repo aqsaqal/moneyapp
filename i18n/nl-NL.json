@@ -390,7 +390,7 @@
   "account.delete.title": "Verwijderen of archiveren?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} directe transacties, {transferCount} overboekingen.",
   "account.deleteConfirm.title": "Echt verwijderen?",
-  "account.deleteConfirm.body": "\"{name}\" en {directCount} transacties worden verwijderd. Niet herstelbaar.",
+  "account.deleteConfirm.body": "\"{name}\" wordt verwijderd en {directCount} directe transacties worden VERWIJDERD. {transferCount} overboekingen blijven bewaard op de andere rekening. Niet herstelbaar.",
   "me.import.json": "Herstellen vanuit back-up (JSON)",
   "me.import.json.hint": "Vervangt alle gegevens in het actieve profiel",
   "me.import.confirm.title": "Herstellen vanuit back-up?",

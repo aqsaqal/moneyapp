@@ -390,7 +390,7 @@
   "account.delete.title": "למחוק או לארכב?",
   "account.delete.body": "\"{name}\" — יתרה {balance} {currency}\n{directCount} ישירות, {transferCount} העברות.",
   "account.deleteConfirm.title": "באמת למחוק?",
-  "account.deleteConfirm.body": "\"{name}\" ו-{directCount} עסקאות יימחקו. אין חזרה.",
+  "account.deleteConfirm.body": "\"{name}\" יוסר ו-{directCount} עסקאות ישירות יימחקו. {transferCount} העברות יישמרו בצד השני. אין חזרה.",
   "me.import.json": "שחזור מגיבוי (JSON)",
   "me.import.json.hint": "מחליף את כל הנתונים בפרופיל הפעיל",
   "me.import.confirm.title": "שחזור מגיבוי?",

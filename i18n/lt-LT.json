@@ -390,7 +390,7 @@
   "account.delete.title": "Ištrinti ar archyvuoti?",
   "account.delete.body": "\"{name}\" — likutis {balance} {currency}\n{directCount} tiesioginių, {transferCount} pavedimų.",
   "account.deleteConfirm.title": "Tikrai ištrinti?",
-  "account.deleteConfirm.body": "\"{name}\" ir {directCount} operacijų bus ištrinta. Negrįžtama.",
+  "account.deleteConfirm.body": "\"{name}\" bus pašalinta ir {directCount} tiesioginių operacijų bus IŠTRINTA. {transferCount} pervedimų išliks kitoje pusėje. Negrįžtama.",
   "me.import.json": "Atkurti iš atsarginės kopijos (JSON)",
   "me.import.json.hint": "Pakeičia visus aktyvaus profilio duomenis",
   "me.import.confirm.title": "Atkurti iš atsarginės kopijos?",

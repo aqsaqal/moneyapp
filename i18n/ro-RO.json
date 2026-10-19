@@ -390,7 +390,7 @@
   "account.delete.title": "Șterge sau arhivează?",
   "account.delete.body": "\"{name}\" — sold {balance} {currency}\n{directCount} directe, {transferCount} transferuri.",
   "account.deleteConfirm.title": "Chiar ștergi?",
-  "account.deleteConfirm.body": "\"{name}\" și {directCount} tranzacții vor fi șterse. Ireversibil.",
+  "account.deleteConfirm.body": "\"{name}\" va fi eliminat și {directCount} tranzacții directe vor fi ȘTERSE. {transferCount} transferuri vor fi păstrate pe celălalt cont. Ireversibil.",
   "me.import.json": "Restaurare din copie de rezervă (JSON)",
   "me.import.json.hint": "Înlocuiește toate datele din profilul activ",
   "me.import.confirm.title": "Restaurați din copia de rezervă?",

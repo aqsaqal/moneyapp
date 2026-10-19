@@ -390,7 +390,7 @@
   "account.delete.title": "తొలగించు లేదా ఆర్కైవ్?",
   "account.delete.body": "\"{name}\" — బ్యాలెన్స్ {balance} {currency}\n{directCount} ప్రత్యక్ష, {transferCount} బదిలీలు.",
   "account.deleteConfirm.title": "నిజంగా తొలగించాలా?",
-  "account.deleteConfirm.body": "\"{name}\" మరియు {directCount} లావాదేవీలు తొలగించబడతాయి. తిరిగి తీసుకోలేరు.",
+  "account.deleteConfirm.body": "\"{name}\" తీసివేయబడి, {directCount} ప్రత్యక్ష లావాదేవీలు తొలగించబడతాయి. {transferCount} బదిలీలు మరో ఖాతాలో అలాగే ఉంటాయి. తిరిగి తీసుకోలేరు.",
   "me.import.json": "బ్యాకప్ నుండి పునరుద్ధరించండి (JSON)",
   "me.import.json.hint": "క్రియాశీల ప్రొఫైల్‌లోని మొత్తం డేటాను భర్తీ చేస్తుంది",
   "me.import.confirm.title": "బ్యాకప్ నుండి పునరుద్ధరించాలా?",

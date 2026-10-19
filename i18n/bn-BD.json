@@ -390,7 +390,7 @@
   "account.delete.title": "মুছবেন না সংরক্ষণ?",
   "account.delete.body": "\"{name}\" — ব্যালেন্স {balance} {currency}\n{directCount} সরাসরি, {transferCount} স্থানান্তর।",
   "account.deleteConfirm.title": "সত্যিই মুছবেন?",
-  "account.deleteConfirm.body": "\"{name}\" এবং {directCount} লেনদেন মুছে যাবে। ফেরানো যাবে না।",
+  "account.deleteConfirm.body": "\"{name}\" সরানো হবে এবং {directCount} সরাসরি লেনদেন মুছে ফেলা হবে। {transferCount} স্থানান্তর অন্য পাশে সংরক্ষিত থাকবে। ফেরানো যাবে না।",
   "me.import.json": "ব্যাকআপ থেকে পুনরুদ্ধার (JSON)",
   "me.import.json.hint": "সক্রিয় প্রোফাইলের সব ডেটা প্রতিস্থাপন করে",
   "me.import.confirm.title": "ব্যাকআপ থেকে পুনরুদ্ধার?",

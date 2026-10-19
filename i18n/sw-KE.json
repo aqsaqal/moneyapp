@@ -390,7 +390,7 @@
   "account.delete.title": "Futa au hifadhi?",
   "account.delete.body": "\"{name}\" — salio {balance} {currency}\n{directCount} ya moja kwa moja, {transferCount} uhamishaji.",
   "account.deleteConfirm.title": "Kweli kufuta?",
-  "account.deleteConfirm.body": "\"{name}\" na miamala {directCount} itafutwa. Haiwezi kurudishwa.",
+  "account.deleteConfirm.body": "\"{name}\" itaondolewa na miamala {directCount} ya moja kwa moja ITAFUTWA. Uhamisho {transferCount} utahifadhiwa kwenye akaunti nyingine. Haiwezi kurudishwa.",
   "me.import.json": "Rejesha kutoka nakala rudufu (JSON)",
   "me.import.json.hint": "Inabadilisha data yote katika wasifu hai",
   "me.import.confirm.title": "Rejesha kutoka nakala rudufu?",

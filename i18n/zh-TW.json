@@ -390,7 +390,7 @@
   "account.delete.title": "刪除或封存？",
   "account.delete.body": "\"{name}\" — 餘額 {balance} {currency}\n{directCount} 筆直接交易，{transferCount} 筆轉帳。",
   "account.deleteConfirm.title": "確認刪除？",
-  "account.deleteConfirm.body": "\"{name}\" 與 {directCount} 筆交易將被刪除。無法復原。",
+  "account.deleteConfirm.body": "\"{name}\" 將被移除，{directCount} 筆直接交易將被刪除。{transferCount} 筆轉帳將保留在另一個帳戶。無法復原。",
   "me.import.json": "從備份還原 (JSON)",
   "me.import.json.hint": "取代當前作用中設定檔的所有資料",
   "me.import.confirm.title": "從備份還原？",

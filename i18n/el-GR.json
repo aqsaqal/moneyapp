@@ -390,7 +390,7 @@
   "account.delete.title": "Διαγραφή ή αρχειοθέτηση;",
   "account.delete.body": "\"{name}\" — υπόλοιπο {balance} {currency}\n{directCount} άμεσες, {transferCount} μεταφορές.",
   "account.deleteConfirm.title": "Σίγουρα διαγραφή;",
-  "account.deleteConfirm.body": "\"{name}\" και {directCount} συναλλαγές θα διαγραφούν. Μη αναστρέψιμο.",
+  "account.deleteConfirm.body": "Το \"{name}\" θα αφαιρεθεί και {directCount} άμεσες συναλλαγές θα ΔΙΑΓΡΑΦΟΥΝ. {transferCount} μεταφορές θα διατηρηθούν στην άλλη πλευρά. Μη αναστρέψιμο.",
   "me.import.json": "Επαναφορά από αντίγραφο ασφαλείας (JSON)",
   "me.import.json.hint": "Αντικαθιστά όλα τα δεδομένα στο ενεργό προφίλ",
   "me.import.confirm.title": "Επαναφορά από αντίγραφο ασφαλείας;",

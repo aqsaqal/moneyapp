@@ -390,7 +390,7 @@
   "account.delete.title": "Izbriši ali arhiviraj?",
   "account.delete.body": "\"{name}\" — stanje {balance} {currency}\n{directCount} neposrednih, {transferCount} prenosov.",
   "account.deleteConfirm.title": "Res izbrišem?",
-  "account.deleteConfirm.body": "\"{name}\" in {directCount} transakcij bo izbrisanih. Nepovratno.",
+  "account.deleteConfirm.body": "\"{name}\" bo odstranjen in {directCount} neposrednih transakcij bo IZBRISANIH. {transferCount} prenosov bo ohranjenih na drugem računu. Nepovratno.",
   "me.import.json": "Obnovi iz varnostne kopije (JSON)",
   "me.import.json.hint": "Zamenja vse podatke v aktivnem profilu",
   "me.import.confirm.title": "Obnovi iz varnostne kopije?",

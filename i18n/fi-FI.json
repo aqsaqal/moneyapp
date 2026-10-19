@@ -390,7 +390,7 @@
   "account.delete.title": "Poistetaanko vai arkistoidaan?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} suoraa, {transferCount} siirtoa.",
   "account.deleteConfirm.title": "Poistetaanko todella?",
-  "account.deleteConfirm.body": "\"{name}\" ja {directCount} tapahtumaa poistetaan. Ei voi peruuttaa.",
+  "account.deleteConfirm.body": "\"{name}\" poistetaan ja {directCount} suoraa tapahtumaa POISTETAAN pysyvästi. {transferCount} siirtoa säilyy toisella puolella. Ei voi peruuttaa.",
   "me.import.json": "Palauta varmuuskopiosta (JSON)",
   "me.import.json.hint": "Korvaa kaikki aktiivisen profiilin tiedot",
   "me.import.confirm.title": "Palauta varmuuskopiosta?",

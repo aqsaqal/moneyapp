@@ -390,7 +390,7 @@
   "account.delete.title": "Видалити чи в архів?",
   "account.delete.body": "\"{name}\" — баланс {balance} {currency}\n{directCount} прямих, {transferCount} переказів.",
   "account.deleteConfirm.title": "Точно видалити?",
-  "account.deleteConfirm.body": "Буде видалено \"{name}\" і {directCount} прямих операцій. Незворотньо.",
+  "account.deleteConfirm.body": "Буде видалено \"{name}\" і ВИДАЛЕНО {directCount} прямих операцій. {transferCount} переказів збережуться на іншому рахунку. Незворотньо.",
   "me.import.json": "Відновити з резервної копії (JSON)",
   "me.import.json.hint": "Замінює всі дані в активному профілі",
   "me.import.confirm.title": "Відновити з резервної копії?",

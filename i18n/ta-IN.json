@@ -390,7 +390,7 @@
   "account.delete.title": "அழி அல்லது காப்பகப்படுத்து?",
   "account.delete.body": "\"{name}\" — இருப்பு {balance} {currency}\n{directCount} நேரடி, {transferCount} பரிமாற்றங்கள்.",
   "account.deleteConfirm.title": "உண்மையில் அழிக்க?",
-  "account.deleteConfirm.body": "\"{name}\" மற்றும் {directCount} பரிவர்த்தனைகள் அழிக்கப்படும். மீள இயலாது.",
+  "account.deleteConfirm.body": "\"{name}\" நீக்கப்பட்டு, {directCount} நேரடிப் பரிவர்த்தனைகள் அழிக்கப்படும். {transferCount} பரிமாற்றங்கள் மற்ற கணக்கில் அப்படியே இருக்கும். மீள இயலாது.",
   "me.import.json": "காப்புப் பிரதியிலிருந்து மீட்டெடு (JSON)",
   "me.import.json.hint": "செயலில் உள்ள சுயவிவரத்தில் உள்ள அனைத்து தரவையும் மாற்றுகிறது",
   "me.import.confirm.title": "காப்புப் பிரதியிலிருந்து மீட்டெடுக்கவா?",

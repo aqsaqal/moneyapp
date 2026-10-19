@@ -390,7 +390,7 @@
   "account.delete.title": "Slet eller arkivér?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} direkte, {transferCount} overførsler.",
   "account.deleteConfirm.title": "Virkelig slette?",
-  "account.deleteConfirm.body": "\"{name}\" og {directCount} transaktioner slettes. Kan ikke fortrydes.",
+  "account.deleteConfirm.body": "\"{name}\" fjernes, og {directCount} direkte transaktioner SLETTES. {transferCount} overførsler bevares på den anden side. Kan ikke fortrydes.",
   "me.import.json": "Gendan fra backup (JSON)",
   "me.import.json.hint": "Erstatter alle data i den aktive profil",
   "me.import.confirm.title": "Gendan fra backup?",

@@ -390,7 +390,7 @@
   "account.delete.title": "Vymazať alebo archivovať?",
   "account.delete.body": "\"{name}\" — zostatok {balance} {currency}\n{directCount} priamych, {transferCount} prevodov.",
   "account.deleteConfirm.title": "Naozaj vymazať?",
-  "account.deleteConfirm.body": "\"{name}\" a {directCount} transakcií bude vymazaných. Nezvratné.",
+  "account.deleteConfirm.body": "\"{name}\" bude odstránený a {directCount} priamych transakcií bude VYMAZANÝCH. {transferCount} prevodov zostane zachovaných na druhom účte. Nezvratné.",
   "me.import.json": "Obnoviť zo zálohy (JSON)",
   "me.import.json.hint": "Nahradí všetky údaje v aktívnom profile",
   "me.import.confirm.title": "Obnoviť zo zálohy?",

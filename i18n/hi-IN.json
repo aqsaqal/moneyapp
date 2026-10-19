@@ -390,7 +390,7 @@
   "account.delete.title": "हटाएँ या संग्रहित?",
   "account.delete.body": "\"{name}\" — शेष {balance} {currency}\n{directCount} सीधे लेन-देन, {transferCount} स्थानांतरण।",
   "account.deleteConfirm.title": "वाकई हटाएँ?",
-  "account.deleteConfirm.body": "\"{name}\" हटेगा और {directCount} सीधे लेन-देन भी। पूर्ववत नहीं।",
+  "account.deleteConfirm.body": "\"{name}\" हटेगा और {directCount} सीधे लेन-देन मिटा दिए जाएँगे। {transferCount} ट्रांसफ़र दूसरी ओर सुरक्षित रहेंगे। पूर्ववत नहीं।",
   "me.import.json": "बैकअप से पुनर्स्थापित करें (JSON)",
   "me.import.json.hint": "सक्रिय प्रोफ़ाइल के सभी डेटा को बदल देता है",
   "me.import.confirm.title": "बैकअप से पुनर्स्थापित करें?",

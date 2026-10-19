@@ -390,7 +390,7 @@
   "account.delete.title": "Obriši ili arhiviraj?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} izravnih, {transferCount} prijenosa.",
   "account.deleteConfirm.title": "Stvarno obrisati?",
-  "account.deleteConfirm.body": "\"{name}\" i {directCount} transakcija bit će obrisane. Nepovratno.",
+  "account.deleteConfirm.body": "\"{name}\" bit će uklonjen i {directCount} izravnih transakcija bit će OBRISANO. {transferCount} prijenosa ostat će sačuvano na drugoj strani. Nepovratno.",
   "me.import.json": "Vrati iz sigurnosne kopije (JSON)",
   "me.import.json.hint": "Zamjenjuje sve podatke u aktivnom profilu",
   "me.import.confirm.title": "Vrati iz sigurnosne kopije?",

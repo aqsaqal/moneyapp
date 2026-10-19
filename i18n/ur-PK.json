@@ -390,7 +390,7 @@
   "account.delete.title": "حذف یا آرکائیو؟",
   "account.delete.body": "\"{name}\" — بیلنس {balance} {currency}\n{directCount} براہ راست، {transferCount} منتقلیاں۔",
   "account.deleteConfirm.title": "واقعی حذف؟",
-  "account.deleteConfirm.body": "\"{name}\" اور {directCount} ٹرانزیکشنز حذف ہوں گی۔ واپس نہیں ہوگا۔",
+  "account.deleteConfirm.body": "\"{name}\" ہٹا دیا جائے گا اور {directCount} براہِ راست ٹرانزیکشنز حذف ہوں گی۔ {transferCount} ٹرانسفرز دوسرے اکاؤنٹ میں محفوظ رہیں گی۔ واپس نہیں ہوگا۔",
   "me.import.json": "بیک اپ سے بحال کریں (JSON)",
   "me.import.json.hint": "فعال پروفائل کا تمام ڈیٹا تبدیل کرتا ہے",
   "me.import.confirm.title": "بیک اپ سے بحال کریں؟",

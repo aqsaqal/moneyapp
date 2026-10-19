@@ -390,7 +390,7 @@
   "account.delete.title": "Törlés vagy archiválás?",
   "account.delete.body": "\"{name}\" — egyenleg {balance} {currency}\n{directCount} közvetlen, {transferCount} átutalás.",
   "account.deleteConfirm.title": "Valóban törlöd?",
-  "account.deleteConfirm.body": "\"{name}\" és {directCount} tranzakció törölve. Nem vonható vissza.",
+  "account.deleteConfirm.body": "A(z) \"{name}\" eltávolításra kerül, és {directCount} közvetlen tranzakció TÖRLŐDIK. {transferCount} átutalás megmarad a másik oldalon. Nem vonható vissza.",
   "me.import.json": "Visszaállítás biztonsági mentésből (JSON)",
   "me.import.json.hint": "Lecseréli az aktív profil összes adatát",
   "me.import.confirm.title": "Visszaállítás biztonsági mentésből?",

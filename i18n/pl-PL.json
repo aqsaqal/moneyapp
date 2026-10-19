@@ -390,7 +390,7 @@
   "account.delete.title": "Usuń czy archiwizuj?",
   "account.delete.body": "\"{name}\" — saldo {balance} {currency}\n{directCount} bezpośrednich, {transferCount} przelewów.",
   "account.deleteConfirm.title": "Naprawdę usunąć?",
-  "account.deleteConfirm.body": "\"{name}\" i {directCount} transakcji zostaną usunięte. Nieodwracalne.",
+  "account.deleteConfirm.body": "\"{name}\" zostanie usunięte, a {directCount} bezpośrednich transakcji zostanie USUNIĘTYCH. {transferCount} przelewów pozostanie na drugim koncie. Nieodwracalne.",
   "me.import.json": "Przywróć z kopii zapasowej (JSON)",
   "me.import.json.hint": "Zastępuje wszystkie dane w aktywnym profilu",
   "me.import.confirm.title": "Przywrócić z kopii zapasowej?",

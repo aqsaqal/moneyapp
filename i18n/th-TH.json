@@ -390,7 +390,7 @@
   "account.delete.title": "ลบหรือเก็บ?",
   "account.delete.body": "\"{name}\" — ยอด {balance} {currency}\n{directCount} รายการตรง, {transferCount} โอน",
   "account.deleteConfirm.title": "ลบจริง?",
-  "account.deleteConfirm.body": "จะลบ \"{name}\" และ {directCount} รายการ ไม่สามารถยกเลิกได้",
+  "account.deleteConfirm.body": "จะลบ \"{name}\" และลบ {directCount} รายการโดยตรง ส่วนการโอน {transferCount} รายการจะยังคงอยู่ในบัญชีอีกฝั่ง ไม่สามารถยกเลิกได้",
   "me.import.json": "กู้คืนจากข้อมูลสำรอง (JSON)",
   "me.import.json.hint": "แทนที่ข้อมูลทั้งหมดในโปรไฟล์ที่ใช้งานอยู่",
   "me.import.confirm.title": "กู้คืนจากข้อมูลสำรอง?",

@@ -390,7 +390,7 @@
   "account.delete.title": "Fshi apo arkivo?",
   "account.delete.body": "\"{name}\" — gjendja {balance} {currency}\n{directCount} direkte, {transferCount} transferta.",
   "account.deleteConfirm.title": "Të fshihet vërtet?",
-  "account.deleteConfirm.body": "\"{name}\" dhe {directCount} transaksione do të fshihen. E pakthyeshme.",
+  "account.deleteConfirm.body": "\"{name}\" do të hiqet dhe {directCount} transaksione direkte do të FSHIHEN. {transferCount} transferta do të ruhen në llogarinë tjetër. E pakthyeshme.",
   "me.import.json": "Rikthe nga rezerva (JSON)",
   "me.import.json.hint": "Zëvendëson të gjitha të dhënat në profilin aktiv",
   "me.import.confirm.title": "Rikthe nga rezerva?",

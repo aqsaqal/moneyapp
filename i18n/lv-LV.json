@@ -390,7 +390,7 @@
   "account.delete.title": "Dzēst vai arhivēt?",
   "account.delete.body": "\"{name}\" — atlikums {balance} {currency}\n{directCount} tiešie, {transferCount} pārskaitījumi.",
   "account.deleteConfirm.title": "Tiešām dzēst?",
-  "account.deleteConfirm.body": "\"{name}\" un {directCount} darījumi tiks dzēsti. Neatgriezeniski.",
+  "account.deleteConfirm.body": "\"{name}\" tiks noņemts un {directCount} tiešie darījumi tiks DZĒSTI. {transferCount} pārskaitījumi tiks saglabāti otrā pusē. Neatgriezeniski.",
   "me.import.json": "Atjaunot no dublējuma (JSON)",
   "me.import.json.hint": "Aizstāj visus aktīvā profila datus",
   "me.import.confirm.title": "Atjaunot no dublējuma?",

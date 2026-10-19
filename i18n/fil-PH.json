@@ -390,7 +390,7 @@
   "account.delete.title": "Tanggalin o i-archive?",
   "account.delete.body": "\"{name}\" — balanse {balance} {currency}\n{directCount} direkta, {transferCount} transfer.",
   "account.deleteConfirm.title": "Talagang tanggalin?",
-  "account.deleteConfirm.body": "\"{name}\" at {directCount} transaksyon ay matatanggal. Hindi maibabalik.",
+  "account.deleteConfirm.body": "Aalisin ang \"{name}\" at TATANGGALIN ang {directCount} direktang transaksyon. {transferCount} paglilipat ang mananatili sa kabilang panig. Hindi maibabalik.",
   "me.import.json": "I-restore mula sa backup (JSON)",
   "me.import.json.hint": "Papalitan ang lahat ng data sa aktibong profile",
   "me.import.confirm.title": "I-restore mula sa backup?",
