@@ -105,6 +105,10 @@ export function bootAppData(): Promise<void> {
       // Flip any positive 'debt' balance negative (and any negative
       // 'receivable' positive). Gated per profile by kv flag.
       try { repairLiabilitySigns(); } catch { /* best-effort */ }
+      // One-time: Plan → Debts now reads loan / credit ACCOUNTS; a
+      // standalone `debts` row (no accountId) gets linked to an account
+      // with the same name, or a loan account is created for it.
+      try { linkStandaloneDebts(); } catch { /* best-effort */ }
       // Phase 10z: settle any scheduled transactions whose date has
       // passed since the last launch. Idempotent, fast (single SELECT
       // + per-row UPDATE inside a transaction).
@@ -1081,6 +1085,54 @@ function migrateBudgetsToCategories() {
 /** Reorder accounts. Caller passes the IDs in the new display order;
  *  we batch-update sort_order to N×10 so future inserts have room
  *  between existing rows without renumbering. */
+/** Plan's Debts segment treats loan / credit accounts as the single
+ *  source of truth; `debts` rows only carry APR + minimum keyed by
+ *  accountId. Rows created before that (no accountId) are linked here:
+ *  same-name loan/credit account → link; otherwise create a loan
+ *  account carrying the row's balance (negative). Runs once per
+ *  profile (kv is profile-scoped). */
+export function linkStandaloneDebts(): void {
+  if (kv.getBool('debtsLinkedToAccounts_v1', false)) return;
+  const db = getDB();
+  const defaultCurrency = kv.get('currency') ?? 'USD';
+  const rows = db.select().from(debts).all().filter((d) => !d.accountId);
+  const accts = db.select().from(accounts).all();
+  const norm = (s: string) => s.trim().toLowerCase();
+  let changed = false;
+  for (const d of rows) {
+    let target = accts.find(
+      (a) => (a.type === 'debt' || a.type === 'credit') && norm(a.name) === norm(d.name),
+    );
+    if (!target) {
+      const id = `acct_debt_${d.id}`;
+      db.insert(accounts).values({
+        id,
+        name: d.name,
+        type: 'debt',
+        balance: -Math.abs(d.balance),
+        creditLimit: null,
+        icon: 'CreditCard',
+        color: d.color,
+        sortOrder: Date.now(),
+        currency: d.currency && d.currency !== defaultCurrency ? d.currency : null,
+        isRiba: null,
+        includeInTotal: 1,
+        archived: 0,
+      }).run();
+      target = db.select().from(accounts).where(eq(accounts.id, id)).get();
+    }
+    if (target) {
+      db.update(debts).set({ accountId: target.id }).where(eq(debts.id, d.id)).run();
+      changed = true;
+    }
+  }
+  kv.setBool('debtsLinkedToAccounts_v1', true);
+  if (changed) {
+    try { refreshTodaySnapshot(); } catch { /* best-effort */ }
+    bump();
+  }
+}
+
 /** Loans must be ≤ 0 and receivables ≥ 0 in storage. Fixes rows written
  *  before the account sheet applied the sign. Idempotent; runs once per
  *  profile (kv is profile-scoped). */

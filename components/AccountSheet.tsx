@@ -98,10 +98,12 @@ export interface AccountSheetProps {
   visible: boolean;
   /** When editing, pass the existing Account; when creating, omit. */
   account?: Account;
+  /** Type preselected on create (e.g. Plan → "Add debt" opens as a loan). */
+  initialType?: AccountType;
   onClose: () => void;
 }
 
-export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
+export function AccountSheet({ visible, account, initialType: initialTypeProp, onClose }: AccountSheetProps) {
   const t = useT();
   const haptics = useHaptics();
   // Every successful save path ends here: haptic + toast + close.
@@ -112,7 +114,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   };
   const editing = !!account;
   const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
-  const [type, setType] = useState<AccountType>(account?.type ?? 'cash');
+  const [type, setType] = useState<AccountType>(account?.type ?? initialTypeProp ?? 'cash');
   const [name, setName] = useState(account?.name ?? '');
   const [balance, setBalance] = useState(
     account ? String(displayBalance(account.type as AccountType, account.balance)) : '',
@@ -152,7 +154,7 @@ export function AccountSheet({ visible, account, onClose }: AccountSheetProps) {
   // Reset form when the sheet opens for a different account.
   useEffect(() => {
     if (visible) {
-      const initialType = account?.type ?? 'cash';
+      const initialType = account?.type ?? initialTypeProp ?? 'cash';
       setType(initialType);
       setName(account?.name ?? '');
       setBalance(account ? String(displayBalance(account.type as AccountType, account.balance)) : '');

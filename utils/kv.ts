@@ -136,6 +136,8 @@ export interface KVSchema {
   demoProfileAttempted: string;   // '1' once the boot path has tried to create the Demo profile; prevents re-creation after the user deletes it
   liabilitySignsRepaired_v1: string; // '1' once positive loan / negative receivable balances were sign-fixed for this profile
   accountsOverviewHidden: string;    // '1' = Accounts tab hides the net-worth Overview (chart + tiles); header chart button toggles it
+  planSegment: string;               // 'bills' | 'budgets' | 'goals' | 'debts' — last Plan segment the user viewed
+  debtsLinkedToAccounts_v1: string;  // '1' once standalone `debts` rows were linked to / converted into loan accounts
 }
 
 export const kv = {

@@ -25,7 +25,7 @@ import { useT } from '@/hooks/useT';
 import { useHaptics } from '@/hooks/useHaptics';
 import { showToast } from '@/components/Toast';
 import type { CurrencyCode } from '@/constants/currency';
-import type { Debt } from '@/utils/db/schema';
+import type { Account, Debt } from '@/utils/db/schema';
 
 const PALETTE = [
   '#EF4444', '#F97316', '#EAB308', '#10B981',
@@ -46,55 +46,64 @@ const ICONS: Array<React.ComponentProps<typeof MaterialCommunityIcons>['name']> 
 export interface DebtSheetProps {
   visible: boolean;
   debt?: Debt;
+  /** Plan → Debts: the loan / credit account these payoff terms belong
+   *  to. Balance and currency come from the account (read-only here);
+   *  the sheet only edits name / APR / minimum / colour / icon. */
+  account?: Account;
   onClose: () => void;
 }
 
-export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
+export function DebtSheet({ visible, debt, account, onClose }: DebtSheetProps) {
   const t = useT();
   const haptics = useHaptics();
   const editing = !!debt;
+  const linkedMode = !!account;
   const accounts = useAccounts();
-  const [name, setName] = useState(debt?.name ?? '');
+  const [name, setName] = useState(debt?.name ?? account?.name ?? '');
   const [balance, setBalance] = useState(String(debt?.balance ?? ''));
   const [apr, setApr] = useState(String(debt?.apr ?? ''));
   const [minPayment, setMinPayment] = useState(String(debt?.minPayment ?? ''));
-  const [color, setColor] = useState(debt?.color ?? PALETTE[0]);
+  const [color, setColor] = useState(debt?.color ?? account?.color ?? PALETTE[0]);
   const [icon, setIcon] = useState<string>(debt?.icon ?? ICONS[0]);
-  const [accountId, setAccountId] = useState<string | null>(debt?.accountId ?? null);
+  const [accountId, setAccountId] = useState<string | null>(debt?.accountId ?? account?.id ?? null);
   const [accountPicker, setAccountPicker] = useState(false);
   const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [currency, setCurrency] = useState<CurrencyCode>(
-    (debt?.currency as CurrencyCode | undefined) ?? defaultCurrency,
+    (debt?.currency as CurrencyCode | undefined) ?? (account?.currency as CurrencyCode | undefined) ?? defaultCurrency,
   );
   const [currencyPickerOpen, setCurrencyPickerOpen] = useState(false);
 
   useEffect(() => {
     if (!visible) return;
-    setName(debt?.name ?? '');
+    setName(debt?.name ?? account?.name ?? '');
     setBalance(String(debt?.balance ?? ''));
     setApr(String(debt?.apr ?? ''));
     setMinPayment(String(debt?.minPayment ?? ''));
-    setColor(debt?.color ?? PALETTE[0]);
+    setColor(debt?.color ?? account?.color ?? PALETTE[0]);
     setIcon(debt?.icon ?? ICONS[0]);
-    setAccountId(debt?.accountId ?? null);
-    setCurrency((debt?.currency as CurrencyCode | undefined) ?? defaultCurrency);
+    setAccountId(debt?.accountId ?? account?.id ?? null);
+    setCurrency(
+      (debt?.currency as CurrencyCode | undefined) ?? (account?.currency as CurrencyCode | undefined) ?? defaultCurrency,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visible, debt]);
+  }, [visible, debt, account]);
 
   const linkedAcct = accountId ? accounts.find((a) => a.id === accountId) : null;
 
   const save = () => {
-    const b = parseFloat(balance.replace(',', '.'));
+    // Linked mode: the account's live balance is the debt balance.
+    const b = linkedMode ? Math.abs(account!.balance) : parseFloat(balance.replace(',', '.'));
     const a = parseFloat(apr.replace(',', '.'));
     const m = parseFloat(minPayment.replace(',', '.'));
-    if (!name.trim() || !Number.isFinite(b) || b <= 0 || !Number.isFinite(a) || a < 0 || !Number.isFinite(m) || m < 0) {
+    const balanceOk = linkedMode || (Number.isFinite(b) && b > 0);
+    if (!name.trim() || !balanceOk || !Number.isFinite(a) || a < 0 || !Number.isFinite(m) || m < 0) {
       Alert.alert(t('common.required'), t('debt.required'));
       return;
     }
     upsertDebt({
       id: debt?.id ?? `d${Date.now()}${Math.floor(Math.random() * 1000)}`,
       name: name.trim(),
-      balance: b,
+      balance: Number.isFinite(b) ? b : 0,
       apr: a,
       minPayment: m,
       accountId,
@@ -141,7 +150,9 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
           <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
             <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
           </Pressable>
-          <Text style={styles.title}>{editing ? t('common.edit') : t('plan.debts.add')}</Text>
+          <Text style={styles.title}>
+            {linkedMode ? t('plan.debts.termsTitle') : editing ? t('common.edit') : t('plan.debts.add')}
+          </Text>
           <Pressable onPress={save} hitSlop={10} accessibilityLabel={t('common.save')}>
             <MaterialCommunityIcons name="check" size={22} color={theme.accent} />
           </Pressable>
@@ -158,17 +169,26 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
               style={styles.input}
             />
           </View>
-          <View style={styles.field}>
-            <Text style={styles.fieldLabel}>{t('debt.field.balance')}</Text>
-            <TextInput
-              value={balance}
-              onChangeText={setBalance}
-              keyboardType="numbers-and-punctuation"
-              placeholder="0"
-              placeholderTextColor={theme.text3}
-              style={styles.input}
+          {linkedMode ? (
+            <SettingRow
+              label={t('debt.field.balance')}
+              hint={t('plan.debts.fromAccount', { name: account!.name })}
+              icon="link-variant"
+              iconColor={account!.color}
             />
-          </View>
+          ) : (
+            <View style={styles.field}>
+              <Text style={styles.fieldLabel}>{t('debt.field.balance')}</Text>
+              <TextInput
+                value={balance}
+                onChangeText={setBalance}
+                keyboardType="numbers-and-punctuation"
+                placeholder="0"
+                placeholderTextColor={theme.text3}
+                style={styles.input}
+              />
+            </View>
+          )}
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>{t('debt.field.apr')}</Text>
             <TextInput
@@ -192,21 +212,25 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
             />
           </View>
 
-          <SettingRow
-            label={t('debt.linkedAccount')}
-            hint={linkedAcct ? t('debt.linkedAccount.hint', { name: linkedAcct.name }) : t('debt.manualBalance')}
-            icon="link-variant"
-            iconColor={linkedAcct?.color ?? theme.text3}
-            onPress={() => setAccountPicker(true)}
-          />
+          {!linkedMode && (
+            <SettingRow
+              label={t('debt.linkedAccount')}
+              hint={linkedAcct ? t('debt.linkedAccount.hint', { name: linkedAcct.name }) : t('debt.manualBalance')}
+              icon="link-variant"
+              iconColor={linkedAcct?.color ?? theme.text3}
+              onPress={() => setAccountPicker(true)}
+            />
+          )}
 
-          <SettingRow
-            label={t('debt.currency')}
-            hint={currency}
-            icon="currency-usd"
-            iconColor={theme.accent}
-            onPress={() => setCurrencyPickerOpen(true)}
-          />
+          {!linkedMode && (
+            <SettingRow
+              label={t('debt.currency')}
+              hint={currency}
+              icon="currency-usd"
+              iconColor={theme.accent}
+              onPress={() => setCurrencyPickerOpen(true)}
+            />
+          )}
 
           <PickerSheet
             visible={accountPicker}
@@ -259,7 +283,7 @@ export function DebtSheet({ visible, debt, onClose }: DebtSheetProps) {
           {editing && (
             <Pressable onPress={askDelete} style={styles.deleteRow} accessibilityRole="button">
               <MaterialCommunityIcons name="trash-can-outline" size={18} color={theme.expense} />
-              <Text style={styles.deleteText}>{t('common.delete')}</Text>
+              <Text style={styles.deleteText}>{linkedMode ? t('plan.debts.removeTerms') : t('common.delete')}</Text>
             </Pressable>
           )}
 
