@@ -134,6 +134,9 @@ export function bootAppData(): Promise<void> {
       // version so the React caches that didn't depend on the profile
       // counter (useAccounts, useMonthlyNetWorth, etc.) re-fetch.
       const offProfile = (await import('@/utils/profiles')).onProfileChange(() => {
+        // Same one-shot repairs as boot — flags are profile-scoped.
+        try { repairLiabilitySigns(); } catch { /* */ }
+        try { linkStandaloneDebts(); } catch { /* */ }
         try { snapshotTodayIfMissing(); } catch { /* */ }
         try { backfillNetWorthHistory(); } catch { /* */ }
         bump();
@@ -150,7 +153,14 @@ export function bootAppData(): Promise<void> {
         const lastFetched = oldestFetchedAt();
         const stale = lastFetched === 0 || Date.now() - lastFetched > FX_TTL_MS;
         if (stale) {
-          void refreshRates().catch(() => { /* offline / all sources down */ });
+          void refreshRates()
+            .then(() => {
+              // Rates just arrived — today's snapshot may have been
+              // written with identity conversions; recompute it.
+              try { refreshTodaySnapshot(); } catch { /* */ }
+              bump();
+            })
+            .catch(() => { /* offline / all sources down */ });
         }
       } catch { /* never block boot */ }
       // Phase 10q.2: islamic-only metals refresh when the toggle is on
@@ -1091,8 +1101,8 @@ function migrateBudgetsToCategories() {
  *  same-name loan/credit account → link; otherwise create a loan
  *  account carrying the row's balance (negative). Runs once per
  *  profile (kv is profile-scoped). */
-export function linkStandaloneDebts(): void {
-  if (kv.getBool('debtsLinkedToAccounts_v1', false)) return;
+export function linkStandaloneDebts(opts: { force?: boolean } = {}): void {
+  if (!opts.force && kv.getBool('debtsLinkedToAccounts_v1', false)) return;
   const db = getDB();
   const defaultCurrency = kv.get('currency') ?? 'USD';
   const rows = db.select().from(debts).all().filter((d) => !d.accountId);
@@ -1136,8 +1146,8 @@ export function linkStandaloneDebts(): void {
 /** Loans must be ≤ 0 and receivables ≥ 0 in storage. Fixes rows written
  *  before the account sheet applied the sign. Idempotent; runs once per
  *  profile (kv is profile-scoped). */
-export function repairLiabilitySigns(): void {
-  if (kv.getBool('liabilitySignsRepaired_v1', false)) return;
+export function repairLiabilitySigns(opts: { force?: boolean } = {}): void {
+  if (!opts.force && kv.getBool('liabilitySignsRepaired_v1', false)) return;
   const raw = getRawDB();
   raw.withTransactionSync(() => {
     raw.runSync(`UPDATE accounts SET balance = -ABS(balance) WHERE type = 'debt' AND balance > 0`);

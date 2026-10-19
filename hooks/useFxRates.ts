@@ -13,6 +13,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { kv } from '@/utils/kv';
 import { FX_TTL_MS, oldestFetchedAt, refreshRates } from '@/utils/fx';
+import { refreshTodaySnapshot } from '@/utils/netWorthSnapshot';
+import { bumpVersion } from '@/hooks/useAppData';
 
 type Listener = () => void;
 const listeners = new Set<Listener>();
@@ -59,6 +61,10 @@ export function useFxRates(): FxState {
     try {
       await refreshRates();
       setLastFetched(Date.now());
+      // New rates change every converted total; recompute today's
+      // net-worth snapshot and re-render the version-subscribed views.
+      try { refreshTodaySnapshot(); } catch { /* best-effort */ }
+      bumpVersion();
       bumpFx();
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));

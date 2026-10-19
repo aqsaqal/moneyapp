@@ -33,6 +33,15 @@ const PROFILE_SCOPED_KEYS_INHERIT = new Set<string>([
 const PROFILE_SCOPED_KEYS_FRESH = new Set<string>([
   'smartSuggestions',
   'fabSwapAction',
+  // UI state + one-shot data repairs are per profile too: each profile
+  // has its own SQLite file, so a repair that ran on one must still run
+  // on the others.
+  'planSegment',
+  'planDismissedSuggestions',
+  'accountsOverviewHidden',
+  'lastExportAt',
+  'liabilitySignsRepaired_v1',
+  'debtsLinkedToAccounts_v1',
 ]);
 const PROFILE_SCOPED_KEYS = new Set<string>([
   ...PROFILE_SCOPED_KEYS_INHERIT,
@@ -138,6 +147,7 @@ export interface KVSchema {
   accountsOverviewHidden: string;    // '1' = Accounts tab hides the net-worth Overview (chart + tiles); header chart button toggles it
   planSegment: string;               // 'bills' | 'budgets' | 'goals' | 'debts' — last Plan segment the user viewed
   debtsLinkedToAccounts_v1: string;  // '1' once standalone `debts` rows were linked to / converted into loan accounts
+  lastExportAt: string;              // unix ms of the last successful export from Settings (shown as "Last backup")
 }
 
 export const kv = {

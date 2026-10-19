@@ -5,16 +5,21 @@
 // active. To back up a different profile, switch to it in Me → Profiles
 // first, then re-run export. Same applies to import.
 //
-// The JSON payload covers every user-authored table. Cache tables that
-// regenerate themselves (e.g. fx_rates) are intentionally excluded so
-// a restore doesn't pin a user to stale FX from when the backup was taken.
+// The JSON payload covers every user-authored table plus the FX rate
+// cache: without rates, the first net-worth snapshot after a restore
+// counts foreign balances 1:1 (a $40k account became 40k KZT). The
+// 24h TTL still refreshes the restored rates on the next launch.
 
 import { Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import { getRawDB } from '@/utils/db/client';
-import { bumpVersion } from '@/hooks/useAppData';
+import { bumpVersion, repairLiabilitySigns, linkStandaloneDebts } from '@/hooks/useAppData';
+import { refreshTodaySnapshot } from '@/utils/netWorthSnapshot';
+import { kv, type KVSchema } from '@/utils/kv';
+import { getActiveProfile } from '@/utils/profiles';
+import { APP_NAME } from '@/constants/flavor';
 import { t } from '@/utils/i18n';
 
 export type ExportFormat = 'json' | 'csv';
@@ -22,11 +27,25 @@ export type ExportFormat = 'json' | 'csv';
 /** JSON-export schema version. Bump when the on-disk shape changes.
  *  Import checks this for forward-compat — older payloads are upcast,
  *  newer ones are rejected with a clear error. */
-const EXPORT_SCHEMA_VERSION = 2;
+const EXPORT_SCHEMA_VERSION = 3;
+
+/** Profile-scoped preferences that travel with the data. Without these a
+ *  restore onto a fresh install lands KZT data under the USD default.
+ *  Device / app-level keys (locale, theme, biometrics) are NOT included. */
+const BACKUP_SETTINGS: (keyof KVSchema)[] = [
+  'currency',
+  'currencyFormat',
+  'defaultAccountId',
+  'smartSuggestions',
+  'fabSwapAction',
+  'planSegment',
+  'accountsOverviewHidden',
+];
 
 /** Tables included in the JSON dump, in dependency-safe insert order
  *  (accounts before transactions, recurring before paid_items). */
 const BACKUP_TABLES = [
+  'fx_rates',
   'accounts',
   'custom_categories',
   'transactions',
@@ -46,20 +65,47 @@ export async function exportData(format: ExportFormat = 'json'): Promise<void> {
   let mime: string;
 
   if (format === 'csv') {
+    // Spreadsheet-friendly: account names + currencies joined in, the
+    // entry-currency original and the To-side credit for transfers, and
+    // an ISO date next to the raw timestamp.
     const rows = raw.getAllSync<Record<string, unknown>>(
-      `SELECT * FROM transactions ORDER BY date DESC`,
+      `SELECT t.id, t.type, t.amount,
+              a.currency AS account_currency, a.name AS account_name,
+              t.category, t.account_id, t.to_account_id, b.name AS to_account_name,
+              t.to_amount, b.currency AS to_account_currency,
+              t.original_amount, t.original_currency,
+              t.note, t.date, t.recurring_id, t.halal_status, t.applied
+         FROM transactions t
+         LEFT JOIN accounts a ON a.id = t.account_id
+         LEFT JOIN accounts b ON b.id = t.to_account_id
+        ORDER BY t.date DESC`,
     );
+    const defaultCcy = kv.get('currency') ?? 'USD';
+    for (const r of rows) {
+      r.account_currency = r.account_currency ?? defaultCcy;
+      if (r.to_account_id) r.to_account_currency = r.to_account_currency ?? defaultCcy;
+      r.date_iso = typeof r.date === 'number' ? new Date(r.date).toISOString() : '';
+    }
     const cols = [
       'id',
       'type',
       'amount',
+      'account_currency',
+      'account_name',
       'category',
       'account_id',
       'to_account_id',
+      'to_account_name',
+      'to_amount',
+      'to_account_currency',
+      'original_amount',
+      'original_currency',
       'note',
+      'date_iso',
       'date',
       'recurring_id',
       'halal_status',
+      'applied',
     ];
     const header = cols.join(',');
     const lines = rows.map((r) => cols.map((c) => csvEscape(r[c])).join(','));
@@ -74,12 +120,23 @@ export async function exportData(format: ExportFormat = 'json'): Promise<void> {
     for (const table of BACKUP_TABLES) {
       dump[table] = raw.getAllSync(`SELECT * FROM ${table}`);
     }
+    const settings: Record<string, string> = {};
+    for (const k of BACKUP_SETTINGS) {
+      const v = kv.get(k);
+      if (v !== undefined) settings[k] = v;
+    }
+    dump.settings = settings;
+    dump.profile = { name: getActiveProfile().name };
     payload = JSON.stringify(dump, null, 2);
     ext = 'json';
     mime = 'application/json';
   }
 
-  const file = `${FileSystem.cacheDirectory}moneyflow-${Date.now()}.${ext}`;
+  // Keep letters in any script; only strip characters that are unsafe
+  // in file names (avoids Unicode-property regexes for Hermes' sake).
+  const profileSlug = getActiveProfile().name.replace(/[\s\/\\:*?"<>|.,;]+/g, '-').replace(/^-+|-+$/g, '').toLowerCase() || 'profile';
+  const stamp = new Date().toISOString().slice(0, 10);
+  const file = `${FileSystem.cacheDirectory}${APP_NAME.toLowerCase()}-${format === 'json' ? 'backup' : 'transactions'}-${profileSlug}-${stamp}.${ext}`;
   await FileSystem.writeAsStringAsync(file, payload);
   if (await Sharing.isAvailableAsync()) {
     await Sharing.shareAsync(file, { mimeType: mime });
@@ -125,6 +182,18 @@ export async function importData(): Promise<'ok' | 'cancelled'> {
   if (!confirmed) return 'cancelled';
 
   applyImport(parsed);
+  // Preferences that came with the backup (v3+). Older dumps keep
+  // whatever the profile already had.
+  for (const k of BACKUP_SETTINGS) {
+    const v = parsed.settings[k];
+    if (typeof v === 'string') kv.set(k, v);
+  }
+  // Restored rows may predate today's data repairs (positive loan
+  // balances, standalone debt rows) — the per-profile flags are already
+  // set on this profile, so run them unconditionally.
+  try { repairLiabilitySigns({ force: true }); } catch { /* best-effort */ }
+  try { linkStandaloneDebts({ force: true }); } catch { /* best-effort */ }
+  try { refreshTodaySnapshot(); } catch { /* best-effort */ }
   bumpVersion();
   return 'ok';
 }
@@ -132,6 +201,7 @@ export async function importData(): Promise<'ok' | 'cancelled'> {
 interface ParsedDump {
   schemaVersion: number;
   tables: Partial<Record<typeof BACKUP_TABLES[number], Record<string, unknown>[]>>;
+  settings: Partial<Record<keyof KVSchema, string>>;
 }
 
 function parseAndValidate(raw: string): ParsedDump {
@@ -173,7 +243,14 @@ function parseAndValidate(raw: string): ParsedDump {
   if (found === 0) {
     throw new Error(t('me.import.error.noTables'));
   }
-  return { schemaVersion, tables };
+  const settings: ParsedDump['settings'] = {};
+  if (typeof obj.settings === 'object' && obj.settings !== null) {
+    for (const k of BACKUP_SETTINGS) {
+      const v = (obj.settings as Record<string, unknown>)[k];
+      if (typeof v === 'string') settings[k] = v;
+    }
+  }
+  return { schemaVersion, tables, settings };
 }
 
 function countRows(p: ParsedDump): number {
@@ -211,10 +288,16 @@ function applyImport(p: ParsedDump): void {
 
 function insertRows(table: string, rows: Record<string, unknown>[]): void {
   const raw = getRawDB();
-  // Use the column set from the FIRST row — assumes the export is
-  // internally consistent (every row has the same keys). Build one
-  // parameterised statement and reuse it.
-  const cols = Object.keys(rows[0]);
+  // Columns = union of the dump's keys ∩ the live table's columns, so a
+  // backup from a slightly different build still restores (unknown
+  // columns are dropped, missing ones take the table default).
+  const live = new Set(
+    raw.getAllSync<{ name: string }>(`PRAGMA table_info(${table})`).map((c) => c.name),
+  );
+  const seen = new Set<string>();
+  for (const r of rows) for (const k of Object.keys(r)) if (live.has(k)) seen.add(k);
+  const cols = Array.from(seen);
+  if (cols.length === 0) return;
   const placeholders = cols.map(() => '?').join(', ');
   const sql = `INSERT INTO ${table} (${cols.map((c) => `"${c}"`).join(', ')}) VALUES (${placeholders})`;
   const stmt = raw.prepareSync(sql);
