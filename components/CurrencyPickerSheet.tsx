@@ -17,6 +17,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { useT } from '@/hooks/useT';
+import { kv } from '@/utils/kv';
 import {
   CURRENCIES,
   MAIN_CURRENCIES,
@@ -44,14 +45,18 @@ export function CurrencyPickerSheet({
   onClose,
 }: CurrencyPickerSheetProps) {
   const t = useT();
+  // The app's main currency always leads the Main tab, whatever tier
+  // it belongs to (KZT lives in "other" but is the main currency for
+  // a Kazakh user). The sheet also opens on Main when it's selected.
+  const appCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [tab, setTab] = useState<Tab>(
-    (CURRENCIES[selected]?.tier as Tab) ?? 'main',
+    selected === appCurrency ? 'main' : ((CURRENCIES[selected]?.tier as Tab) ?? 'main'),
   );
   const [query, setQuery] = useState('');
 
   const list = useMemo(() => {
     const base =
-      tab === 'main' ? MAIN_CURRENCIES
+      tab === 'main' ? [appCurrency, ...MAIN_CURRENCIES.filter((c) => c !== appCurrency)]
       : tab === 'other' ? OTHER_CURRENCIES
       : tab === 'crypto' ? CRYPTO_CURRENCIES
       : METAL_CURRENCIES;
@@ -61,7 +66,7 @@ export function CurrencyPickerSheet({
       const d = CURRENCIES[c];
       return c.toLowerCase().includes(q) || d.name.toLowerCase().includes(q);
     });
-  }, [tab, query]);
+  }, [tab, query, appCurrency]);
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
