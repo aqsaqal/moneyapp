@@ -39,6 +39,9 @@ const config: ExpoConfig = {
   },
   ios: {
     bundleIdentifier: process.env.APP_BUNDLE_ID ?? 'com.moneyflow.generic',
+    // Signing team for automatic signing — prebuild writes it into the
+    // Xcode project so `xcodebuild archive` works from a clean regen.
+    appleTeamId: '7WFPU5WEG7',
     // Increment monotonically per upload to App Store Connect — see the
     // checklist in v2-features.md §1.1. version stays the marketing
     // string ('1.0.0'); buildNumber is what Apple uniques on.
