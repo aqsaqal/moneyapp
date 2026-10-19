@@ -15,7 +15,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import { getRawDB } from '@/utils/db/client';
-import { bumpVersion, repairLiabilitySigns, linkStandaloneDebts } from '@/hooks/useAppData';
+import { bumpVersion, repairLiabilitySigns, linkStandaloneDebts, backfillAmountMain } from '@/hooks/useAppData';
 import { refreshTodaySnapshot } from '@/utils/netWorthSnapshot';
 import { kv, type KVSchema } from '@/utils/kv';
 import { getActiveProfile } from '@/utils/profiles';
@@ -46,6 +46,7 @@ const BACKUP_SETTINGS: (keyof KVSchema)[] = [
  *  (accounts before transactions, recurring before paid_items). */
 const BACKUP_TABLES = [
   'fx_rates',
+  'fx_history',
   'accounts',
   'custom_categories',
   'transactions',
@@ -193,6 +194,9 @@ export async function importData(): Promise<'ok' | 'cancelled'> {
   // set on this profile, so run them unconditionally.
   try { repairLiabilitySigns({ force: true }); } catch { /* best-effort */ }
   try { linkStandaloneDebts({ force: true }); } catch { /* best-effort */ }
+  // Rows from an older backup have no amount_main yet; fill only those
+  // so values fixed at their own day's rate are kept.
+  try { backfillAmountMain({ ignoreFlag: true }); } catch { /* best-effort */ }
   try { refreshTodaySnapshot(); } catch { /* best-effort */ }
   bumpVersion();
   return 'ok';

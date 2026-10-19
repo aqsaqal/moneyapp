@@ -37,7 +37,7 @@ import { seedIfEmpty } from '@/utils/db/seed';
 import { onProfileChange } from '@/utils/profiles';
 import { snapshotTodayIfMissing, refreshTodaySnapshot, backfillNetWorthHistory } from '@/utils/netWorthSnapshot';
 import { ensureDemoProfile } from '@/utils/db/demoSeed';
-import { FX_TTL_MS, convert as fxConvert, oldestFetchedAt, refreshRates } from '@/utils/fx';
+import { FX_TTL_MS, convert as fxConvert, convertAt as fxConvertAt, oldestFetchedAt, refreshRates } from '@/utils/fx';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, localizedSeededName } from '@/constants/categories';
 import { kv } from '@/utils/kv';
 import { getLocale, tForLocale } from '@/utils/i18n';
@@ -109,6 +109,8 @@ export function bootAppData(): Promise<void> {
       // standalone `debts` row (no accountId) gets linked to an account
       // with the same name, or a loan account is created for it.
       try { linkStandaloneDebts(); } catch { /* best-effort */ }
+      // Stored main-currency amounts for rows written before the column.
+      try { backfillAmountMain(); } catch { /* best-effort */ }
       // Phase 10z: settle any scheduled transactions whose date has
       // passed since the last launch. Idempotent, fast (single SELECT
       // + per-row UPDATE inside a transaction).
@@ -137,6 +139,7 @@ export function bootAppData(): Promise<void> {
         // Same one-shot repairs as boot — flags are profile-scoped.
         try { repairLiabilitySigns(); } catch { /* */ }
         try { linkStandaloneDebts(); } catch { /* */ }
+        try { backfillAmountMain(); } catch { /* */ }
         try { snapshotTodayIfMissing(); } catch { /* */ }
         try { backfillNetWorthHistory(); } catch { /* */ }
         bump();
@@ -624,33 +627,22 @@ export function useMonthFlow(key: string, dateLte: number = Date.now()): { incom
   const raw = getRawDB();
   return useMemo(() => {
     const [s, e] = monthRange(key);
-    // Amounts live in each account's currency — sum per account currency
-    // and fold into the default currency so a CAD card and a KZT wallet
-    // don't get added unit-for-unit. Result is in the default currency.
-    const defaultCcy = kv.get('currency') ?? 'USD';
-    const rows = raw.getAllSync<{ ccy: string | null; income: number; expense: number }>(
+    // amount_main = the row's value in the main currency at the rate of
+    // its day (backfilled at boot). Sum it directly; fall back to the raw
+    // amount only for rows that somehow still lack it.
+    const row = raw.getFirstSync<{ income: number; expense: number }>(
       `SELECT
-         a.currency AS ccy,
-         COALESCE(SUM(CASE WHEN t.type = 'income'  THEN t.amount END), 0) AS income,
-         COALESCE(SUM(CASE WHEN t.type = 'expense' THEN t.amount END), 0) AS expense
-       FROM transactions t
-       LEFT JOIN accounts a ON a.id = t.account_id
-       WHERE t.date >= ?
-         AND t.date <  ?
-         AND t.date <= ?
-         AND (t.category IS NULL OR t.category != 'adjustment')
-         AND (t.applied IS NULL OR t.applied = 1)
-       GROUP BY a.currency`,
+         COALESCE(SUM(CASE WHEN type = 'income'  THEN COALESCE(amount_main, amount) END), 0) AS income,
+         COALESCE(SUM(CASE WHEN type = 'expense' THEN COALESCE(amount_main, amount) END), 0) AS expense
+       FROM transactions
+       WHERE date >= ?
+         AND date <  ?
+         AND date <= ?
+         AND (category IS NULL OR category != 'adjustment')
+         AND (applied IS NULL OR applied = 1)`,
       [s, e, dateLte],
     );
-    let income = 0;
-    let expense = 0;
-    for (const r of rows) {
-      const from = r.ccy ?? defaultCcy;
-      income += fxConvert(r.income ?? 0, from, defaultCcy);
-      expense += fxConvert(r.expense ?? 0, from, defaultCcy);
-    }
-    return { income, expense };
+    return { income: row?.income ?? 0, expense: row?.expense ?? 0 };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version, key, dateLte]);
 }
@@ -679,31 +671,18 @@ export function useMonthTotalsByCategory(key: string, type: 'expense' | 'income'
     // inflate the category bar before it actually fires. The upper
     // bound is whichever is smaller — end-of-month or right-now.
     const cap = Math.min(e, Date.now());
-    // `amount` is stored in each ACCOUNT's currency. Summing raw amounts
-    // across a CAD card and a KZT wallet mixes units, so group per
-    // (category, account currency) and convert each bucket into the
-    // user's default currency before folding. Result is always in the
-    // default currency — budgets / grid / action card rely on that.
-    const defaultCcy = kv.get('currency') ?? 'USD';
-    const rows = db
+    // amount_main is the row's value in the main currency at the rate of
+    // its day; totals are always in the main currency.
+    return db
       .select({
         category: transactions.category,
-        acctCurrency: accounts.currency,
-        total: sql<number>`SUM(${transactions.amount})`.as('total'),
+        total: sql<number>`SUM(COALESCE(${transactions.amountMain}, ${transactions.amount}))`.as('total'),
       })
       .from(transactions)
-      .leftJoin(accounts, eq(transactions.accountId, accounts.id))
       .where(and(eq(transactions.type, type), gte(transactions.date, s), lt(transactions.date, cap)))
-      .groupBy(transactions.category, accounts.currency)
-      .all();
-    const byCat = new Map<string, number>();
-    for (const r of rows) {
-      if (!r.category) continue;
-      const from = r.acctCurrency ?? defaultCcy;
-      const v = fxConvert(r.total ?? 0, from, defaultCcy);
-      byCat.set(r.category, (byCat.get(r.category) ?? 0) + v);
-    }
-    return Array.from(byCat, ([category, total]) => ({ category, total }));
+      .groupBy(transactions.category)
+      .all()
+      .filter((r): r is CategoryTotal => !!r.category) as CategoryTotal[];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version, key, type]);
 }
@@ -719,27 +698,18 @@ export function useDailySpend(key: string): DayTotal[] {
     const [s, e] = monthRange(key);
     const raw = getRawDB();
     // strftime works on unix seconds; we store ms.
-    // Per (day, account currency) so each bucket converts into the
-    // default currency before folding into the day total.
-    const defaultCcy = kv.get('currency') ?? 'USD';
-    const rows = raw.getAllSync<{ day: number; ccy: string | null; amount: number }>(
-      `SELECT CAST(strftime('%d', t.date/1000, 'unixepoch') AS INTEGER) AS day,
-              a.currency AS ccy,
-              SUM(t.amount) AS amount
-         FROM transactions t
-         LEFT JOIN accounts a ON a.id = t.account_id
-        WHERE t.type = 'expense' AND t.date >= ? AND t.date < ?
-        GROUP BY day, a.currency
+    const rows = raw.getAllSync<{ day: number; amount: number }>(
+      `SELECT CAST(strftime('%d', date/1000, 'unixepoch') AS INTEGER) AS day,
+              SUM(COALESCE(amount_main, amount)) AS amount
+         FROM transactions
+        WHERE type = 'expense' AND date >= ? AND date < ?
+        GROUP BY day
         ORDER BY day`,
       [s, e],
     );
     // Fill missing days with 0.
     const dim = new Date(new Date(s).getFullYear(), new Date(s).getMonth() + 1, 0).getDate();
-    const map = new Map<number, number>();
-    for (const r of rows) {
-      const v = fxConvert(r.amount ?? 0, r.ccy ?? defaultCcy, defaultCcy);
-      map.set(r.day, (map.get(r.day) ?? 0) + v);
-    }
+    const map = new Map<number, number>(rows.map((r) => [r.day, r.amount ?? 0]));
     return Array.from({ length: dim }, (_, i) => ({ day: i + 1, amount: map.get(i + 1) ?? 0 }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version, key]);
@@ -749,8 +719,13 @@ export function useNetBalance(): number {
   useVersion();
   const db = getDB();
   return useMemo(() => {
-    const rows = db.select({ s: sql<number>`SUM(${accounts.balance})` }).from(accounts).all();
-    return rows[0]?.s ?? 0;
+    const main = kv.get('currency') ?? 'USD';
+    return db
+      .select({ balance: accounts.balance, currency: accounts.currency, archived: accounts.archived, inc: accounts.includeInTotal })
+      .from(accounts)
+      .all()
+      .filter((a) => a.archived !== 1 && a.inc !== 0)
+      .reduce((s, a) => s + fxConvert(a.balance, a.currency ?? main, main), 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [version]);
 }
@@ -845,6 +820,7 @@ export function addTransaction(
     date: txDate,
     createdAt: now,
     applied: isFuture ? 0 : 1,
+    amountMain: mainAmountFor(input.type, input.amount, input.accountId, txDate),
   };
   raw.withTransactionSync(() => {
     db.insert(transactions).values(row).run();
@@ -992,6 +968,12 @@ export function updateTransaction(id: string, patch: Partial<Transaction>): void
   if (!existing) return;
 
   const next = { ...existing, ...patch };
+  if (
+    patch.amount !== undefined || patch.type !== undefined ||
+    patch.accountId !== undefined || patch.date !== undefined
+  ) {
+    patch = { ...patch, amountMain: mainAmountFor(next.type, next.amount, next.accountId, next.date) };
+  }
   const balanceTouched =
     patch.amount !== undefined && patch.amount !== existing.amount ||
     patch.type !== undefined && patch.type !== existing.type ||
@@ -1143,6 +1125,58 @@ export function linkStandaloneDebts(opts: { force?: boolean } = {}): void {
   }
 }
 
+/** Main-currency amount for a non-transfer row, using the rate of the
+ *  row's day. Null for transfers (they net to zero across accounts). */
+function mainAmountFor(
+  type: string,
+  amount: number,
+  accountId: string,
+  dateMs: number,
+  accountCcyById?: Map<string, string | null>,
+): number | null {
+  if (type === 'transfer') return null;
+  const main = kv.get('currency') ?? 'USD';
+  let acctCcy: string | null | undefined = accountCcyById?.get(accountId);
+  if (acctCcy === undefined) {
+    const a = getDB().select({ currency: accounts.currency }).from(accounts).where(eq(accounts.id, accountId)).get();
+    acctCcy = a?.currency ?? null;
+  }
+  return fxConvertAt(amount, acctCcy ?? main, main, dateMs);
+}
+
+/** Fill / recompute `amount_main`. `onlyMissing` (default) touches rows
+ *  that have no value yet (pre-column rows, imported backups); with
+ *  force=true every non-transfer row is recomputed — used when the main
+ *  currency changes or an account's currency is edited (scope it with
+ *  `accountId`). Per-profile kv flag gates the boot run. */
+export function backfillAmountMain(opts: { force?: boolean; accountId?: string; ignoreFlag?: boolean } = {}): number {
+  if (!opts.force && !opts.accountId && !opts.ignoreFlag && kv.getBool('amountMainBackfilled_v1', false)) return 0;
+  const raw = getRawDB();
+  const db = getDB();
+  const ccyById = new Map<string, string | null>(
+    db.select({ id: accounts.id, currency: accounts.currency }).from(accounts).all().map((a) => [a.id, a.currency]),
+  );
+  const where = [`type != 'transfer'`];
+  const args: (string | number)[] = [];
+  if (!opts.force) where.push(`amount_main IS NULL`);
+  if (opts.accountId) { where.push(`account_id = ?`); args.push(opts.accountId); }
+  const rows = raw.getAllSync(
+    `SELECT id, type, amount, account_id, date FROM transactions WHERE ${where.join(' AND ')}`,
+    args,
+  ) as Array<{ id: string; type: string; amount: number; account_id: string; date: number }>;
+  if (rows.length > 0) {
+    raw.withTransactionSync(() => {
+      for (const r of rows) {
+        const v = mainAmountFor(r.type, r.amount, r.account_id, r.date, ccyById);
+        raw.runSync(`UPDATE transactions SET amount_main = ? WHERE id = ?`, [v, r.id]);
+      }
+    });
+  }
+  if (!opts.accountId) kv.setBool('amountMainBackfilled_v1', true);
+  if (rows.length > 0) bump();
+  return rows.length;
+}
+
 /** Loans must be ≤ 0 and receivables ≥ 0 in storage. Fixes rows written
  *  before the account sheet applied the sign. Idempotent; runs once per
  *  profile (kv is profile-scoped). */
@@ -1192,6 +1226,10 @@ export function upsertAccount(a: typeof accounts.$inferInsert): void {
       : a;
   if (existing) db.update(accounts).set(next).where(eq(accounts.id, a.id)).run();
   else db.insert(accounts).values(next).run();
+  // Account currency changed → every row on it converts differently.
+  if (existing && (existing.currency ?? null) !== (a.currency ?? null)) {
+    try { backfillAmountMain({ force: true, accountId: a.id }); } catch { /* best-effort */ }
+  }
   try { refreshTodaySnapshot(); } catch { /* never block account write */ }
   bump();
 }

@@ -115,6 +115,14 @@ function createTables(db: SQLite.SQLiteDatabase) {
       rate REAL NOT NULL,
       fetched_at INTEGER NOT NULL
     );
+    -- Daily snapshots of the USD-anchored rates, one row per quote per
+    -- day, so a transaction can be converted with the rate of ITS day.
+    CREATE TABLE IF NOT EXISTS fx_history (
+      date TEXT NOT NULL,
+      quote TEXT NOT NULL,
+      rate REAL NOT NULL,
+      PRIMARY KEY (date, quote)
+    );
 
     -- Phase 10l: savings goals anchored to an account.
     CREATE TABLE IF NOT EXISTS goals (
@@ -230,6 +238,9 @@ function createTables(db: SQLite.SQLiteDatabase) {
     }
     if (!cols.some((c) => c.name === 'to_amount')) {
       db.execSync(`ALTER TABLE transactions ADD COLUMN to_amount REAL;`);
+    }
+    if (!cols.some((c) => c.name === 'amount_main')) {
+      db.execSync(`ALTER TABLE transactions ADD COLUMN amount_main REAL;`);
     }
   } catch {
     /* swallow — fresh DB will already have the column from CREATE TABLE if we add it there in a future major. */

@@ -47,6 +47,12 @@ export const transactions = sqliteTable(
     // Null on non-transfer rows AND on same-currency transfers — the
     // apply/reverse code treats null as "same as amount".
     toAmount: real('to_amount'),
+    // Amount in the user's MAIN currency, fixed at save time with the
+    // rate for the transaction's date (fx_history; today's rate when no
+    // history covers that day). Totals sum this column directly, so a
+    // later rate change never rewrites history. Null on transfers and
+    // on rows written before the column existed (backfilled at boot).
+    amountMain: real('amount_main'),
   },
   (t) => ({
     dateIdx: index('tx_date_idx').on(t.date),

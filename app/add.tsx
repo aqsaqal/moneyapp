@@ -739,9 +739,8 @@ export default function AddScreen() {
             </Pressable>
           ))}
         </View>
-        <Pressable onPress={submit} hitSlop={10} accessibilityRole="button" accessibilityLabel={t('add.a11y.submit')}>
-          <MaterialCommunityIcons name="check" size={24} color={theme.accent} />
-        </Pressable>
+        {/* The numpad's ✓ is the single submit; this keeps the title centred. */}
+        <View style={{ width: 24 }} />
       </View>
 
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">

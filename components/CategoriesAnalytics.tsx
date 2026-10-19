@@ -109,7 +109,7 @@ export function CategoriesAnalytics({
       if (x.type === 'transfer') continue;
       if (x.category === 'adjustment') continue;
       const txCcy = accountCcy.get(x.accountId ?? '') ?? currency;
-      const inDisplay = convert(x.amount, txCcy, currency);
+      const inDisplay = x.amountMain ?? convert(x.amount, txCcy, currency);
       if (x.type === type) {
         const key = x.category ?? (type === 'expense' ? 'other' : 'other_in');
         sums.set(key, (sums.get(key) ?? 0) + inDisplay);

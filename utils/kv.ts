@@ -43,6 +43,7 @@ const PROFILE_SCOPED_KEYS_FRESH = new Set<string>([
   'lastExportAt',
   'liabilitySignsRepaired_v1',
   'debtsLinkedToAccounts_v1',
+  'amountMainBackfilled_v1',
 ]);
 const PROFILE_SCOPED_KEYS = new Set<string>([
   ...PROFILE_SCOPED_KEYS_INHERIT,
@@ -150,6 +151,7 @@ export interface KVSchema {
   debtsLinkedToAccounts_v1: string;  // '1' once standalone `debts` rows were linked to / converted into loan accounts
   lastExportAt: string;              // unix ms of the last successful export from Settings (shown as "Last backup")
   accountsOverviewFace: string;      // 'net' | 'flow' — which face of the Accounts overview card is showing
+  amountMainBackfilled_v1: string;   // '1' once transactions.amount_main was filled for this profile
 }
 
 export const kv = {

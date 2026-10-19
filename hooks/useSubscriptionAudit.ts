@@ -20,6 +20,8 @@
 // the audit completes in a single render frame even on large ledgers.
 
 import { useMemo } from 'react';
+import { convert as fxConvert } from '@/utils/fx';
+import { kv } from '@/utils/kv';
 import { sql } from 'drizzle-orm';
 import { getRawDB } from '@/utils/db/client';
 import { useRecurring, useTransactions } from './useAppData';
@@ -216,10 +218,14 @@ export function useSubscriptionAudit(): SubscriptionAudit {
     stale.sort((a, b) => (b.daysSinceLastSeen ?? 1e9) - (a.daysSinceLastSeen ?? 1e9));
 
     // 3. Annual burn --------------------------------------------------
+    // Recurring items carry their own currency; fold into the main one.
+    const main = kv.get('currency') ?? 'USD';
+    const inMain = (r: Recurring) =>
+      r.currency && r.currency !== main ? fxConvert(r.amount, r.currency, main) : r.amount;
     const expenseRecurring = recurring.filter((r) => r.type === 'expense');
-    const annualBurn = expenseRecurring.reduce((s, r) => s + r.amount * 12, 0);
+    const annualBurn = expenseRecurring.reduce((s, r) => s + inMain(r) * 12, 0);
     const perItemAnnual = expenseRecurring
-      .map((r) => ({ recurring: r, annual: r.amount * 12 }))
+      .map((r) => ({ recurring: r, annual: inMain(r) * 12 }))
       .sort((a, b) => b.annual - a.annual);
 
     void sql; // ensure import is retained when the query falls back to raw

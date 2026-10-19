@@ -55,11 +55,12 @@ export function useMonthlyIncomeSpending(monthsBack: number): MonthlyFlow[] {
     const rows = raw.getAllSync<{
       type: string;
       amount: number;
+      amount_main: number | null;
       account_id: string;
       category: string | null;
       date: number;
     }>(
-      `SELECT type, amount, account_id, category, date
+      `SELECT type, amount, amount_main, account_id, category, date
          FROM transactions
         WHERE date >= ?
           AND type != 'transfer'
@@ -72,8 +73,10 @@ export function useMonthlyIncomeSpending(monthsBack: number): MonthlyFlow[] {
     for (const r of rows) {
       const d = new Date(r.date);
       const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      // Stored main-currency value (rate of the row's day); convert
+      // only rows that predate the column.
       const cc = accountCcy.get(r.account_id) ?? displayCcy;
-      const v = fxConvert(r.amount, cc, displayCcy);
+      const v = r.amount_main ?? fxConvert(r.amount, cc, displayCcy);
       let b = buckets.get(key);
       if (!b) {
         b = { income: 0, spending: 0 };

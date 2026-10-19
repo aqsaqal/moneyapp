@@ -1,8 +1,9 @@
-// First-launch onboarding: language picker (step 1) → currency picker
-// (step 2). Both steps pre-select a detected default plus 3-6 regional
-// alternatives, with a "More" affordance that opens a searchable list
-// covering the full set. Selecting an RTL language flips layout before
-// advancing to step 2. Both selections are required.
+// First-launch onboarding: language (step 1) → currency (step 2) →
+// first account (step 3, skippable). Steps 1-2 pre-select a detected
+// default plus 3-6 regional alternatives, with a "More" affordance that
+// opens a searchable list covering the full set. Selecting an RTL
+// language flips layout before advancing. Step 3 creates one account so
+// Home, predictions and the first Smart Add work from minute one.
 
 import React, { useMemo, useState } from 'react';
 import {
@@ -41,6 +42,16 @@ import {
 import { kv } from '@/utils/kv';
 import { setLocale as setI18nLocale, type LocaleCode } from '@/utils/i18n';
 import { useT } from '@/hooks/useT';
+import { upsertAccount } from '@/hooks/useAppData';
+
+type FirstAccountType = 'cash' | 'bank' | 'credit' | 'savings';
+const FIRST_ACCOUNT_TYPES: { value: FirstAccountType; icon: string; color: string; mci: React.ComponentProps<typeof MaterialCommunityIcons>['name'] }[] = [
+  { value: 'cash', icon: 'Wallet', color: '#00E09E', mci: 'wallet-outline' },
+  { value: 'bank', icon: 'Banknote', color: '#818CF8', mci: 'bank-outline' },
+  { value: 'credit', icon: 'CreditCard', color: '#FF6B8A', mci: 'credit-card-outline' },
+  { value: 'savings', icon: 'PiggyBank', color: '#FFBE44', mci: 'piggy-bank-outline' },
+];
+interface FirstAccount { name: string; type: FirstAccountType; balance: number }
 
 // Pick the closest supported locale for a system locale. Exact match
 // first, then region-driven, then language-prefix, finally en-US.
@@ -85,7 +96,7 @@ export default function Onboarding() {
   }, []);
   const [locale, setLocale] = useState<LocaleCode>(initialLocale);
   const [currency, setCurrency] = useState<CurrencyCode>(() => detectCurrency(initialLocale));
-  const [step, setStep] = useState<'language' | 'currency'>('language');
+  const [step, setStep] = useState<'language' | 'currency' | 'account'>('language');
 
   const region = Localization.getLocales()[0]?.regionCode ?? null;
 
@@ -106,9 +117,29 @@ export default function Onboarding() {
     setStep('currency');
   }
 
-  async function finish() {
+  async function finish(account: FirstAccount | null) {
     kv.set('locale', locale);
     kv.set('currency', currency);
+    if (account) {
+      const meta = FIRST_ACCOUNT_TYPES.find((x) => x.value === account.type) ?? FIRST_ACCOUNT_TYPES[0];
+      try {
+        upsertAccount({
+          id: `acct_${Date.now()}`,
+          name: account.name.trim(),
+          type: account.type,
+          // Credit cards: the user typed what they owe.
+          balance: account.type === 'credit' ? -Math.abs(account.balance) : account.balance,
+          creditLimit: null,
+          icon: meta.icon,
+          color: meta.color,
+          sortOrder: Date.now(),
+          currency: null, // inherit the main currency just chosen
+          isRiba: null,
+          includeInTotal: 1,
+          archived: 0,
+        });
+      } catch { /* never block finishing onboarding */ }
+    }
     kv.setBool('onboardingCompleted', true);
     // RTL was already committed when the user picked the language at
     // step 1 — but if Updates.reloadAsync was not available then, we
@@ -141,14 +172,129 @@ export default function Onboarding() {
     );
   }
 
+  if (step === 'currency') {
+    return (
+      <CurrencyStep
+        currency={currency}
+        onChangeCurrency={setCurrency}
+        onBack={() => setStep('language')}
+        onFinish={() => setStep('account')}
+        t={t}
+      />
+    );
+  }
+
   return (
-    <CurrencyStep
+    <AccountStep
       currency={currency}
-      onChangeCurrency={setCurrency}
-      onBack={() => setStep('language')}
-      onFinish={finish}
+      onBack={() => setStep('currency')}
+      onCreate={(a) => void finish(a)}
+      onSkip={() => void finish(null)}
       t={t}
     />
+  );
+}
+
+// ────────────────────────────────────────────────────────────────────
+// Step 3 — First account (skippable)
+// ────────────────────────────────────────────────────────────────────
+
+function AccountStep({
+  currency,
+  onBack,
+  onCreate,
+  onSkip,
+  t,
+}: {
+  currency: CurrencyCode;
+  onBack: () => void;
+  onCreate: (a: FirstAccount) => void;
+  onSkip: () => void;
+  t: (k: string, v?: Record<string, string | number>) => string;
+}) {
+  const [name, setName] = useState(() => t('onboarding.account.defaultName'));
+  const [type, setType] = useState<FirstAccountType>('cash');
+  const [balance, setBalance] = useState('');
+  const def = CURRENCIES[currency];
+  const balanceNum = parseFloat(balance.replace(',', '.'));
+  const canCreate = name.trim().length > 0 && (balance.trim() === '' || Number.isFinite(balanceNum));
+
+  return (
+    <SafeAreaView style={styles.safe}>
+      <View style={styles.scroll}>
+        <Pressable onPress={onBack} hitSlop={10} style={styles.backBtn} accessibilityRole="button">
+          <MaterialCommunityIcons name="arrow-left" size={22} color={theme.text1} />
+          <Text style={styles.backText}>{t('common.back')}</Text>
+        </Pressable>
+
+        <Text style={styles.section}>{t('onboarding.account.title')}</Text>
+        <Text style={styles.hint}>{t('onboarding.account.hint')}</Text>
+
+        <View style={styles.typeRow}>
+          {FIRST_ACCOUNT_TYPES.map((o) => {
+            const active = o.value === type;
+            return (
+              <Pressable
+                key={o.value}
+                onPress={() => {
+                  setType(o.value);
+                  // Keep the default name in step with the type until the
+                  // user types their own.
+                  const defaults = FIRST_ACCOUNT_TYPES.map((x) => t(`accountType.${x.value}`));
+                  if (!name.trim() || defaults.includes(name) || name === t('onboarding.account.defaultName')) {
+                    setName(o.value === 'cash' ? t('onboarding.account.defaultName') : t(`accountType.${o.value}`));
+                  }
+                }}
+                style={[styles.typeChip, active && { borderColor: o.color, backgroundColor: `${o.color}22` }]}
+                accessibilityRole="button"
+                accessibilityState={{ selected: active }}
+              >
+                <MaterialCommunityIcons name={o.mci} size={18} color={active ? o.color : theme.text2} />
+                <Text style={[styles.typeChipText, active && { color: o.color }]}>{t(`accountType.${o.value}`)}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <Text style={styles.fieldLabel}>{t('onboarding.account.name')}</Text>
+        <TextInput
+          value={name}
+          onChangeText={setName}
+          style={styles.input}
+          placeholder={t('account.namePlaceholder')}
+          placeholderTextColor={theme.text3}
+          autoCorrect={false}
+        />
+
+        <Text style={styles.fieldLabel}>
+          {type === 'credit' ? t('onboarding.account.balanceOwed') : t('onboarding.account.balance')}
+        </Text>
+        <View style={styles.balanceRow}>
+          <Text style={styles.balanceSymbol}>{def.symbolNative}</Text>
+          <TextInput
+            value={balance}
+            onChangeText={setBalance}
+            style={[styles.input, { flex: 1 }]}
+            placeholder="0"
+            placeholderTextColor={theme.text3}
+            keyboardType="decimal-pad"
+          />
+          <Text style={styles.balanceCode}>{currency}</Text>
+        </View>
+
+        <Pressable
+          onPress={() => onCreate({ name, type, balance: Number.isFinite(balanceNum) ? balanceNum : 0 })}
+          style={[styles.cta, !canCreate && { opacity: 0.5 }]}
+          disabled={!canCreate}
+          accessibilityRole="button"
+        >
+          <Text style={styles.ctaText}>{t('onboarding.account.create')}</Text>
+        </Pressable>
+        <Pressable onPress={onSkip} style={styles.skipLink} accessibilityRole="button" hitSlop={8}>
+          <Text style={styles.skipLinkText}>{t('onboarding.account.skip')}</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -376,7 +522,7 @@ function CurrencyStep({
         </Pressable>
 
         <Pressable onPress={onFinish} style={styles.cta} accessibilityRole="button">
-          <Text style={styles.ctaText}>{t('onboarding.getStarted')}</Text>
+          <Text style={styles.ctaText}>{t('common.next')}</Text>
         </Pressable>
       </View>
 
@@ -538,6 +684,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   ctaText: { color: theme.bg, fontSize: sizes.lg, fontWeight: '700' },
+  hint: { color: theme.text3, fontSize: sizes.sm, lineHeight: 20, marginTop: -spacing.sm, marginBottom: spacing.md },
+  typeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginBottom: spacing.lg },
+  typeChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg2,
+  },
+  typeChipText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  fieldLabel: { color: theme.text2, fontSize: sizes.xs, textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 },
+  input: {
+    backgroundColor: theme.bg2,
+    color: theme.text1,
+    fontFamily: font.body,
+    fontSize: sizes.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderColor: theme.border,
+    marginBottom: spacing.lg,
+  },
+  balanceRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  balanceSymbol: { color: theme.text2, fontSize: sizes.lg, fontFamily: font.bodySemi, marginBottom: spacing.lg },
+  balanceCode: { color: theme.text3, fontSize: sizes.sm, marginBottom: spacing.lg },
+  skipLink: { alignItems: 'center', paddingVertical: spacing.sm, marginBottom: spacing.md },
+  skipLinkText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.bodySemi },
   // search modal
   modalSafe: { flex: 1, backgroundColor: theme.bg },
   modalHeader: {

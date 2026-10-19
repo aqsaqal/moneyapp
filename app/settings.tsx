@@ -59,7 +59,7 @@ import { exportData, importData } from '@/utils/dataExport';
 import { exportMonthlyPdf, exportYearlyPdf } from '@/utils/pdfReport';
 import { monthKey as monthKeyOf, formatMonthYear } from '@/utils/format';
 import { useFxRates } from '@/hooks/useFxRates';
-import { useCategoriesWithMeta, setCategoryMeta, useRecurring, bumpVersion } from '@/hooks/useAppData';
+import { useCategoriesWithMeta, setCategoryMeta, useRecurring, bumpVersion, backfillAmountMain } from '@/hooks/useAppData';
 import { DEFAULT_LEAD_DAYS } from '@/utils/notifications';
 import { convert } from '@/utils/fx';
 import { getRawDB } from '@/utils/db/client';
@@ -275,6 +275,8 @@ function CurrencyRow() {
           const prev = currency;
           kv.set('currency', c);
           setCurrency(c);
+          // Every stored main-currency amount is in the old unit.
+          if (prev !== c) backfillAmountMain({ force: true });
           bumpVersion();
           if (prev !== c) maybeOfferBudgetConversion(prev, c);
         }}

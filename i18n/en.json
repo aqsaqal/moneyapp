@@ -624,5 +624,13 @@
   "activity.scheduledSection": "Scheduled",
   "tx.repeat": "Repeat",
   "netWorth.face.netWorth": "Net worth",
-  "netWorth.face.cashFlow": "Cash flow"
+  "netWorth.face.cashFlow": "Cash flow",
+  "onboarding.account.title": "Your first account",
+  "onboarding.account.hint": "Where does your money live? One is enough to start — add the rest later from the Accounts tab.",
+  "onboarding.account.name": "Name",
+  "onboarding.account.balance": "Current balance",
+  "onboarding.account.balanceOwed": "Amount owed",
+  "onboarding.account.create": "Create & start",
+  "onboarding.account.skip": "Skip for now",
+  "onboarding.account.defaultName": "Cash"
 }

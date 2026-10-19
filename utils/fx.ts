@@ -138,6 +138,7 @@ export async function refreshRates(): Promise<{ updated: number; source: string 
   const { rates, source } = await fetchWithFallback();
   const now = Date.now();
   const raw = getRawDB();
+  const day = dayKey(now);
   raw.withTransactionSync(() => {
     for (const [quote, rate] of Object.entries(rates)) {
       raw.runSync(
@@ -148,7 +149,54 @@ export async function refreshRates(): Promise<{ updated: number; source: string 
            fetched_at = excluded.fetched_at`,
         [quote, rate, now],
       );
+      // Daily history so convertAt() can use the rate of a past day.
+      raw.runSync(
+        `INSERT OR REPLACE INTO fx_history (date, quote, rate) VALUES (?, ?, ?)`,
+        [day, quote, rate],
+      );
     }
   });
+  historyCache.clear();
   return { updated: Object.keys(rates).length, source };
+}
+
+function dayKey(ms: number): string {
+  const d = new Date(ms);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+/** Per-day rate table cache: day → Map(quote → rate). Cleared on refresh. */
+const historyCache = new Map<string, Map<string, number> | null>();
+
+/** Rates in force on `day`: the newest fx_history snapshot dated on or
+ *  before it. null when no snapshot exists that early. */
+function ratesOn(day: string): Map<string, number> | null {
+  if (historyCache.has(day)) return historyCache.get(day) ?? null;
+  const raw = getRawDB();
+  let result: Map<string, number> | null = null;
+  try {
+    const rows = raw.getAllSync(
+      `SELECT quote, rate FROM fx_history
+        WHERE date = (SELECT MAX(date) FROM fx_history WHERE date <= ?)`,
+      [day],
+    ) as Array<{ quote: string; rate: number }>;
+    if (rows.length > 0) result = new Map(rows.map((r) => [r.quote, r.rate]));
+  } catch { /* table missing on a very old DB — fall through */ }
+  historyCache.set(day, result);
+  return result;
+}
+
+/** Convert with the rate that applied on the transaction's day. Falls
+ *  back to the current cache when no history covers that day (rows
+ *  older than the first snapshot, or a fresh install). Same currency is
+ *  a no-op. */
+export function convertAt(amount: number, from: string, to: string, dateMs: number): number {
+  if (from === to) return amount;
+  const hist = ratesOn(dayKey(dateMs));
+  if (hist) {
+    const fromRate = from === 'USD' ? 1 : hist.get(from);
+    const toRate = to === 'USD' ? 1 : hist.get(to);
+    if (fromRate && toRate) return (amount / fromRate) * toRate;
+  }
+  return convert(amount, from, to);
 }

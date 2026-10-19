@@ -21,8 +21,6 @@ import { useMemo } from 'react';
 import { getRawDB } from '@/utils/db/client';
 import { useTransactions } from './useAppData';
 import { catInfo } from '@/constants/categories';
-import { convert as fxConvert } from '@/utils/fx';
-import { kv } from '@/utils/kv';
 
 export interface CategoryDelta {
   /** Stable category id (matches categories.ts ids). */
@@ -82,22 +80,19 @@ export function useInsights(): Insights {
 
     // strftime works on unix seconds; we store ms — divide by 1000.
     // 'YYYY-MM' grouping per category gives us a sparse matrix.
-    // Grouped per account currency too, so each bucket can be folded
-    // into the default currency before the month-over-month math.
-    const defaultCcy = kv.get('currency') ?? 'USD';
+    // amount_main = main-currency value at the rate of the row's day.
     const rows = raw.getAllSync(
       `SELECT
-         t.category,
-         strftime('%Y-%m', t.date/1000, 'unixepoch') AS yyyymm,
-         a.currency AS ccy,
-         SUM(t.amount) AS total
-       FROM transactions t
-       LEFT JOIN accounts a ON a.id = t.account_id
-       WHERE t.type = 'expense'
-         AND t.category IS NOT NULL
-         AND t.date >= ?
-         AND t.date <  ?
-       GROUP BY t.category, yyyymm, a.currency`,
+         category,
+         strftime('%Y-%m', date/1000, 'unixepoch') AS yyyymm,
+         NULL AS ccy,
+         SUM(COALESCE(amount_main, amount)) AS total
+       FROM transactions
+       WHERE type = 'expense'
+         AND category IS NOT NULL
+         AND date >= ?
+         AND date <  ?
+       GROUP BY category, yyyymm`,
       [window12Start, nextMonthStart],
     ) as CategoryMonthRow[];
 
@@ -115,7 +110,7 @@ export function useInsights(): Insights {
     // default-currency total, then bucket per category as before.
     const perCatMonth = new Map<string, Map<string, number>>();
     for (const r of rows) {
-      const v = fxConvert(r.total ?? 0, r.ccy ?? defaultCcy, defaultCcy);
+      const v = r.total ?? 0;
       let months = perCatMonth.get(r.category);
       if (!months) {
         months = new Map();

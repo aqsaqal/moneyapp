@@ -624,5 +624,13 @@
   "activity.scheduledSection": "Жоспарланған",
   "tx.repeat": "Қайталау",
   "netWorth.face.netWorth": "Таза капитал",
-  "netWorth.face.cashFlow": "Ақша ағыны"
+  "netWorth.face.cashFlow": "Ақша ағыны",
+  "onboarding.account.title": "Алғашқы шотыңыз",
+  "onboarding.account.hint": "Ақшаңыз қайда сақталады? Бастау үшін біреуі жеткілікті — қалғанын кейін «Шоттар» қойындысынан қосасыз.",
+  "onboarding.account.name": "Атауы",
+  "onboarding.account.balance": "Ағымдағы баланс",
+  "onboarding.account.balanceOwed": "Қарыз сомасы",
+  "onboarding.account.create": "Құру және бастау",
+  "onboarding.account.skip": "Әзірге өткізіп жіберу",
+  "onboarding.account.defaultName": "Қолма-қол"
 }

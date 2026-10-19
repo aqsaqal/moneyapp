@@ -258,7 +258,7 @@ function TransactionRowInner({ t, currency = 'USD', onPressMore, onRepeat, tag, 
                       {formatMoney(t.amount, rowCcy)}
                     </Text>
                     <Text style={styles.amountSub}>
-                      ≈ {formatMoney(convert(t.amount, rowCcy, currency), currency)}
+                      ≈ {formatMoney(t.amountMain ?? convert(t.amount, rowCcy, currency), currency)}
                     </Text>
                   </>
                 );

@@ -151,7 +151,7 @@ export default function Home() {
     () => thisMoTxns
       .filter((t) => t.type === 'expense' && !t.recurringId)
       .reduce(
-        (s, t) => s + fxConvert(t.amount, accountCcyMap.get(t.accountId ?? '') ?? currency, currency),
+        (s, t) => s + (t.amountMain ?? fxConvert(t.amount, accountCcyMap.get(t.accountId ?? '') ?? currency, currency)),
         0,
       ),
     [thisMoTxns, accountCcyMap, currency],

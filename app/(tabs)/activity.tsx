@@ -184,7 +184,7 @@ export default function Activity() {
       let net = 0;
       ts.forEach((tx) => {
         if (tx.type === 'transfer') return;
-        const v = fxConvert(tx.amount, accountCcy.get(tx.accountId ?? '') ?? currency, currency);
+        const v = tx.amountMain ?? fxConvert(tx.amount, accountCcy.get(tx.accountId ?? '') ?? currency, currency);
         net += tx.type === 'income' ? v : -v;
       });
       return { title: day, net, data: ts };

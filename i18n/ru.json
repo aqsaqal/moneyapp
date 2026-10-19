@@ -624,5 +624,13 @@
   "activity.scheduledSection": "Запланировано",
   "tx.repeat": "Повторить",
   "netWorth.face.netWorth": "Капитал",
-  "netWorth.face.cashFlow": "Денежный поток"
+  "netWorth.face.cashFlow": "Денежный поток",
+  "onboarding.account.title": "Ваш первый счёт",
+  "onboarding.account.hint": "Где лежат ваши деньги? Для начала достаточно одного — остальные добавите позже во вкладке «Счета».",
+  "onboarding.account.name": "Название",
+  "onboarding.account.balance": "Текущий баланс",
+  "onboarding.account.balanceOwed": "Сумма долга",
+  "onboarding.account.create": "Создать и начать",
+  "onboarding.account.skip": "Пока пропустить",
+  "onboarding.account.defaultName": "Наличные"
 }
