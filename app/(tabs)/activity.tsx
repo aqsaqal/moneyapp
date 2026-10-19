@@ -1,187 +1,169 @@
-// Activity — backward-looking money. Search + category/halal filters +
-// day-grouped list with swipe-to-delete + analytics-on-scroll header.
+// Activity — backward-looking money, one scroll.
 //
-// v2 IA: this is v1's history.tsx + v1's more.tsx → Analytics sub-tab folded
-// in as a collapsible header. Plan owns "what's coming"; Activity owns
-// "what already happened."
+//   Month header   ‹ October 2026 ›  (tap label → picker; swipe the
+//                  totals card left/right → previous / next month)
+//   Totals card    Expenses big · Income small · "−12% vs last month ·
+//                  ₸103k/day · ₸3.1M projected" · share-month button
+//   Chips          All · top categories with amounts · More… · account
+//                  · (islamic) halal · search · clear
+//   See breakdown  → modal with the full category table (CategoriesAnalytics)
+//   List           SectionList, sticky day headers with the day's net,
+//                  swipe left = delete, swipe right = Repeat (Smart Add
+//                  prefilled with category / account / note, no amount)
+//   Scheduled      future-dated rows as the LAST section (current month)
+//
+// Replaces the Categories | Transactions segmented control, the hidden
+// tab-reselect flip, the chart button and the glance modal. Long-range
+// charts (net worth, income vs spending) live on the Accounts tab.
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { useFocusEffect } from 'expo-router';
-import { useOncePress } from '@/hooks/useOncePress';
-import { InteractionManager, Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect, useRouter } from 'expo-router';
+import { Modal, Pressable, ScrollView, SectionList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { TransactionRow } from '@/components/TransactionRow';
 import { SearchBar } from '@/components/SearchBar';
-import { StatCard, sectionStyles } from '@/components/Sections';
 import { MonthlyRecap } from '@/components/MonthlyRecap';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
-import { NetWorthChart } from '@/components/NetWorthChart';
+import { CategoriesAnalytics } from '@/components/CategoriesAnalytics';
+import { CategoryPicker } from '@/components/CategoryPicker';
+import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
 import { useT } from '@/hooks/useT';
-import { useRouter } from 'expo-router';
-import { buildEditPrefill } from '@/utils/prefill';
+import { useHaptics } from '@/hooks/useHaptics';
+import { buildEditPrefill, encodePrefill } from '@/utils/prefill';
 import {
   useTransactions,
-  useDailySpend,
   useMonthTotalsByCategory,
-  useToDefaultCurrency,
+  useMonthFlow,
   useAccounts,
+  useCategoriesWithMeta,
 } from '@/hooks/useAppData';
 import { convert as fxConvert } from '@/utils/fx';
 import { catInfo } from '@/constants/categories';
-import { useCategoriesWithMeta } from '@/hooks/useAppData';
-import { CategoryPicker } from '@/components/CategoryPicker';
-import { dayStr, monthKey, formatMoney, formatMonthYear } from '@/utils/format';
+import { dayStr, formatMoney, formatMonthYear } from '@/utils/format';
+import { formatMoneyShort, type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
-import { onTabReselect } from '@/utils/tabReselect';
-import type { CurrencyCode } from '@/constants/currency';
-import { CategoriesAnalytics } from '@/components/CategoriesAnalytics';
-import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import type { Transaction } from '@/utils/db/schema';
+
+type Section = { title: string; net: number; scheduled?: boolean; data: Transaction[] };
 
 export default function Activity() {
   const t = useT();
   const router = useRouter();
+  const haptics = useHaptics();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
-  // List | Categories segmented control. Defaults to whatever the user
-  // saw last in this session (kv-backed so a profile switch reset
-  // doesn't accidentally drop the user back to List). Spec calls it
-  // "per session" so we don't sync across devices either way.
-  const [view, setView] = useState<'list' | 'categories'>(
-    () => (kv.get('activityView') as 'list' | 'categories' | undefined) ?? 'categories',
-  );
-  // Month anchor for the Categories view. Step ±1 with the arrows;
-  // the label opens a placeholder picker (TODO: wire to existing
-  // PickerSheet once we add Day/Week/Year/Range presets).
-  const [analyticsMonth, setAnalyticsMonth] = useState(() => {
+
+  // ── Month anchor ─────────────────────────────────────────────────
+  const [month, setMonth] = useState(() => {
     const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); return d;
   });
   const [monthPickerOpen, setMonthPickerOpen] = useState(false);
-  // Insights / Home drop the user back here anchored to a chosen
-  // month + view via kv handoff keys. Use useFocusEffect (not a
-  // mount-only useEffect) because Activity is a tab screen: the
-  // first mount handles the cold-launch case, but every subsequent
-  // tap from Home / Insights re-focuses the same instance and the
-  // handoff would otherwise be silently dropped.
+  const stepMonth = (delta: number) => {
+    haptics.tap();
+    setMonth((d) => new Date(d.getFullYear(), d.getMonth() + delta, 1));
+  };
+  const monthLabel = useMemo(() => formatMonthYear(month), [month]);
+  const listMonthKey = useMemo(
+    () => `${month.getFullYear()}-${String(month.getMonth() + 1).padStart(2, '0')}`,
+    [month],
+  );
+  const now = new Date();
+  const isCurrentMonth = month.getFullYear() === now.getFullYear() && month.getMonth() === now.getMonth();
+  const dim = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
+  const elapsedDays = isCurrentMonth ? Math.max(1, now.getDate()) : dim;
+
+  // ── Filters ──────────────────────────────────────────────────────
+  const [filterCat, setFilterCat] = useState<string | null>(null);
+  const [filterAccount, setFilterAccount] = useState<string | null>(null);
+  const [search, setSearch] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [halalFilter, setHalalFilter] = useState<string | null>(null);
+  const [filterMoreOpen, setFilterMoreOpen] = useState(false);
+  const [accountPickerOpen, setAccountPickerOpen] = useState(false);
+  const [breakdownOpen, setBreakdownOpen] = useState(false);
+  const [recapOpen, setRecapOpen] = useState(false);
+  const [pageLimit, setPageLimit] = useState(200);
+  const anyFilter = !!(filterCat || filterAccount || search || halalFilter);
+  const clearFilters = () => {
+    setFilterCat(null); setFilterAccount(null); setSearch(''); setSearchOpen(false); setHalalFilter(null);
+  };
+
+  // Home / Insights hand off a month (and formerly a view) via kv.
   useFocusEffect(useCallback(() => {
     const jump = kv.get('activityJumpToMonth');
     const v = kv.get('activityJumpToView');
     if (typeof jump === 'string' && /^\d{4}-\d{2}$/.test(jump)) {
       const [y, m] = jump.split('-').map(Number);
-      setAnalyticsMonth(new Date(y, m - 1, 1));
+      setMonth(new Date(y, m - 1, 1));
       kv.delete('activityJumpToMonth');
     }
-    if (v === 'categories' || v === 'list') {
-      setView(v);
-      kv.delete('activityJumpToView');
-    }
+    if (v === 'categories') setBreakdownOpen(true);
+    if (v) kv.delete('activityJumpToView');
   }, []));
-  // List-view filter drawer: collapsed by default so the top of the
-  // tab is just the title + segmented control. Tap the filter icon
-  // to reveal the search bar + category chip row. The auto-open-on-
-  // filter-already-active case is wired below via useEffect once the
-  // filter states have been declared.
-  const [filtersOpen, setFiltersOpen] = useState(false);
-  const [filterCat, setFilterCat] = useState<string | null>(null);
-  // Filter chip strip: same pattern as the Smart Add chip row —
-  // "All" + top 5 by THIS MONTH spend + "More". The full picker
-  // (everything non-archived, including income categories) lives
-  // behind the "More" chip.
-  const allCategories = useCategoriesWithMeta();
-  const monthTotalsForFilter = useMonthTotalsByCategory(monthKey(), 'expense');
-  const top5Categories = useMemo(() => {
-    const spendById = new Map(monthTotalsForFilter.map((m) => [m.category, m.total]));
-    return allCategories
-      .filter((c) => !c.archived && (spendById.get(c.id) ?? 0) > 0)
-      .sort((a, b) => (spendById.get(b.id) ?? 0) - (spendById.get(a.id) ?? 0))
-      .slice(0, 5);
-  }, [allCategories, monthTotalsForFilter]);
-  const allFilterCategories = useMemo(
-    () => allCategories.filter((c) => !c.archived).sort((a, b) => a.name.localeCompare(b.name)),
-    [allCategories],
-  );
-  const [filterMoreOpen, setFilterMoreOpen] = useState(false);
-  const [search, setSearch] = useState('');
-  const [halalFilter, setHalalFilter] = useState<string | null>(null);
-  // One-shot: if Activity mounts with any list filter already active
-  // (e.g. user tapped a category from the analytics view), open the
-  // filter drawer so the chip row is visible.
-  React.useEffect(() => {
-    if (filterCat || search.length > 0 || halalFilter) setFiltersOpen(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterCat, halalFilter]);
-  // chartOpen drives the "Month at a glance" popup (was inline AnalyticsHeader).
-  const [chartOpen, setChartOpen] = useState(false);
-  const [recapOpen, setRecapOpen] = useState(false);
-  const [pageLimit, setPageLimit] = useState(200);
 
-  // End-of-today as the boundary between Upcoming and history. Only
-  // relevant when the user is browsing the current month — past months
-  // can't have future-dated rows still classed as "upcoming."
-  const endOfToday = useMemo(() => {
-    const d = new Date(); d.setHours(23, 59, 59, 999); return d.getTime();
-  }, []);
-  const isCurrentMonth = useMemo(() => {
-    const now = new Date();
-    return (
-      analyticsMonth.getFullYear() === now.getFullYear() &&
-      analyticsMonth.getMonth() === now.getMonth()
-    );
-  }, [analyticsMonth]);
-  const upcomingTxns = useTransactions({
-    category: filterCat,
-    search: search || undefined,
-    halalStatus: halalFilter,
-    dateGt: endOfToday,
-    limit: 100,
-  });
-  // List view now month-scoped: the carousel at the top of the tab
-  // anchors which month's transactions are shown. monthKey reads
-  // analyticsMonth so the date range mirrors the Categories view.
-  const listMonthKey = useMemo(
-    () => `${analyticsMonth.getFullYear()}-${String(analyticsMonth.getMonth() + 1).padStart(2, '0')}`,
-    [analyticsMonth],
-  );
+  // ── Data ─────────────────────────────────────────────────────────
+  const endOfToday = useMemo(() => { const d = new Date(); d.setHours(23, 59, 59, 999); return d.getTime(); }, []);
   const txns = useTransactions({
     monthKey: listMonthKey,
     category: filterCat,
+    accountId: filterAccount,
     search: search || undefined,
     halalStatus: halalFilter,
     dateLte: endOfToday,
     limit: pageLimit,
   });
+  const upcomingTxns = useTransactions({
+    category: filterCat,
+    accountId: filterAccount,
+    search: search || undefined,
+    halalStatus: halalFilter,
+    dateGt: endOfToday,
+    limit: 100,
+  });
   const reachedLimit = txns.length >= pageLimit;
-  // Distinguish "no rows in THIS month" from "no rows at all". Cheap:
-  // single-row lifetime probe re-uses the version listener.
   const hasAnyTxns = useTransactions({ limit: 1 }).length > 0;
 
-  // Accounts map keyed by id — used to resolve each txn's source
-  // currency when computing the per-day net sum below, AND to surface
-  // the account name on each row. Includes archived so historical
-  // transactions still display their account context after the user
-  // has retired the wallet.
+  // Totals for the header: this month up to "now" (or the whole month
+  // when browsing the past) and the previous month cut at the same day
+  // so the comparison is like-for-like.
+  const thisCutoff = isCurrentMonth ? Date.now() : new Date(month.getFullYear(), month.getMonth() + 1, 0, 23, 59, 59).getTime();
+  const flow = useMonthFlow(listMonthKey, thisCutoff);
+  const prevMonth = new Date(month.getFullYear(), month.getMonth() - 1, 1);
+  const prevKey = `${prevMonth.getFullYear()}-${String(prevMonth.getMonth() + 1).padStart(2, '0')}`;
+  const prevDim = new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate();
+  const prevCutoff = new Date(prevMonth.getFullYear(), prevMonth.getMonth(), Math.min(elapsedDays, prevDim), 23, 59, 59).getTime();
+  const prevFlow = useMonthFlow(prevKey, prevCutoff);
+  const vsPrev = prevFlow.expense > 0 ? ((flow.expense - prevFlow.expense) / prevFlow.expense) * 100 : null;
+  const perDay = flow.expense / elapsedDays;
+  const projected = isCurrentMonth ? perDay * dim : null;
+
+  // Category chips: top 5 by spend in the VIEWED month.
+  const allCategories = useCategoriesWithMeta();
+  const monthTotals = useMonthTotalsByCategory(listMonthKey, 'expense');
+  const topCategories = useMemo(() => {
+    const spend = new Map(monthTotals.map((m) => [m.category, m.total]));
+    return allCategories
+      .filter((c) => !c.archived && (spend.get(c.id) ?? 0) > 0)
+      .sort((a, b) => (spend.get(b.id) ?? 0) - (spend.get(a.id) ?? 0))
+      .slice(0, 5)
+      .map((c) => ({ ...c, total: spend.get(c.id) ?? 0 }));
+  }, [allCategories, monthTotals]);
+
   const accounts = useAccounts({ includeArchived: true });
   const accountCcy = useMemo(() => {
     const m = new Map<string, CurrencyCode>();
-    accounts.forEach((a) => {
-      m.set(a.id, ((a.currency ?? currency) as CurrencyCode));
-    });
+    accounts.forEach((a) => m.set(a.id, ((a.currency ?? currency) as CurrencyCode)));
     return m;
   }, [accounts, currency]);
-  const accountName = useMemo(() => {
-    const m = new Map<string, string>();
-    accounts.forEach((a) => m.set(a.id, a.name));
-    return m;
-  }, [accounts]);
-  // Icon + brand color keyed by id so rows can render a tiny chip next
-  // to the account-label line. Built once per render — rows stay dumb.
-  const accountMeta = useMemo(() => {
-    const m = new Map<string, { icon: string; color: string }>();
-    accounts.forEach((a) => m.set(a.id, { icon: a.icon, color: a.color }));
-    return m;
-  }, [accounts]);
-  const labelFor = (tx: typeof txns[number]): string | undefined => {
+  const accountName = useMemo(() => new Map(accounts.map((a) => [a.id, a.name])), [accounts]);
+  const accountMeta = useMemo(
+    () => new Map(accounts.map((a) => [a.id, { icon: a.icon, color: a.color }])),
+    [accounts],
+  );
+  const labelFor = (tx: Transaction): string | undefined => {
     if (tx.type === 'transfer') {
       const from = accountName.get(tx.accountId ?? '');
       const to = accountName.get(tx.toAccountId ?? '');
@@ -190,627 +172,343 @@ export default function Activity() {
     return accountName.get(tx.accountId ?? '');
   };
 
-  const grouped = useMemo(() => {
-    const g = new Map<string, typeof txns>();
-    txns.forEach((t) => {
-      const k = dayStr(t.date);
+  const sections = useMemo<Section[]>(() => {
+    const g = new Map<string, Transaction[]>();
+    txns.forEach((tx) => {
+      const k = dayStr(tx.date);
       const arr = g.get(k) ?? [];
-      arr.push(t);
+      arr.push(tx);
       g.set(k, arr);
     });
-    // Net for the day = income − expense, transfers excluded (they net
-    // to zero across the user's own accounts). Each leg is converted
-    // from its account currency to the display currency via the cached
-    // FX rates; missing rates fall back to a 1:1 no-op upstream.
-    return Array.from(g.entries()).map(([day, ts]) => {
+    const out: Section[] = Array.from(g.entries()).map(([day, ts]) => {
       let net = 0;
-      ts.forEach((t) => {
-        if (t.type === 'transfer') return;
-        const from = (accountCcy.get(t.accountId ?? '') ?? currency) as string;
-        const v = fxConvert(t.amount, from, currency);
-        net += t.type === 'income' ? v : -v;
+      ts.forEach((tx) => {
+        if (tx.type === 'transfer') return;
+        const v = fxConvert(tx.amount, accountCcy.get(tx.accountId ?? '') ?? currency, currency);
+        net += tx.type === 'income' ? v : -v;
       });
-      return [day, ts, net] as const;
+      return { title: day, net, data: ts };
     });
-  }, [txns, accountCcy, currency]);
+    if (isCurrentMonth && upcomingTxns.length > 0) {
+      out.push({ title: t('activity.scheduledSection'), net: 0, scheduled: true, data: upcomingTxns });
+    }
+    return out;
+  }, [txns, upcomingTxns, isCurrentMonth, accountCcy, currency, t]);
 
-  // Progressive render — paint the first few day-groups synchronously
-  // so nav-in is instant, then mount the rest after the interaction
-  // settles. Resets whenever the visible slice changes (month, filter,
-  // search, halal filter) so each new view also paints fast.
-  const INITIAL_GROUP_COUNT = 3;
-  const [showAllGroups, setShowAllGroups] = React.useState(false);
-  React.useEffect(() => {
-    setShowAllGroups(false);
-    const handle = InteractionManager.runAfterInteractions(() =>
-      setShowAllGroups(true),
+  // ── Actions ──────────────────────────────────────────────────────
+  const edit = (tx: Transaction) =>
+    router.push({ pathname: '/add', params: { prefill: buildEditPrefill(tx) } } as never);
+  const repeat = (tx: Transaction) =>
+    router.push({
+      pathname: '/add',
+      params: {
+        prefill: encodePrefill({
+          type: tx.type,
+          category: tx.category ?? undefined,
+          accountId: tx.accountId,
+          toAccountId: tx.toAccountId ?? undefined,
+          note: tx.note ?? undefined,
+          originalCurrency: tx.originalCurrency ?? undefined,
+        }),
+      },
+    } as never);
+
+  // Swipe the totals card to change month.
+  const monthSwipe = Gesture.Pan()
+    .runOnJS(true)
+    .activeOffsetX([-24, 24])
+    .failOffsetY([-12, 12])
+    .onEnd((e) => {
+      if (e.translationX < -60) stepMonth(1);
+      else if (e.translationX > 60) stepMonth(-1);
+    });
+
+  const Header = (
+    <View style={styles.headerBlock}>
+      <View style={styles.periodRow}>
+        <Pressable onPress={() => stepMonth(-1)} hitSlop={8} style={styles.periodArrow} accessibilityRole="button" accessibilityLabel={t('activity.month.prev')}>
+          <MaterialCommunityIcons name="chevron-left" size={22} color={theme.text2} />
+        </Pressable>
+        <Pressable onPress={() => setMonthPickerOpen(true)} style={styles.periodLabel} accessibilityRole="button" accessibilityLabel={t('activity.month.pick')} accessibilityValue={{ text: monthLabel }}>
+          <Text style={styles.periodLabelText}>{monthLabel}</Text>
+          <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text2} />
+        </Pressable>
+        <Pressable onPress={() => stepMonth(1)} hitSlop={8} style={styles.periodArrow} accessibilityRole="button" accessibilityLabel={t('activity.month.next')}>
+          <MaterialCommunityIcons name="chevron-right" size={22} color={theme.text2} />
+        </Pressable>
+      </View>
+
+      <GestureDetector gesture={monthSwipe}>
+        <View style={styles.totalsCard} accessible accessibilityLabel={`${t('analytics.expense')} ${formatMoney(flow.expense, currency)}, ${t('analytics.income')} ${formatMoney(flow.income, currency)}`}>
+          <View style={styles.totalsHead}>
+            <View style={{ flex: 1, minWidth: 0 }}>
+              <Text style={styles.totalsLabel}>{t('analytics.expense').toUpperCase()}</Text>
+              <Text style={styles.totalsValue} adjustsFontSizeToFit numberOfLines={1}>
+                {formatMoney(flow.expense, currency)}
+              </Text>
+              <Text style={styles.totalsIncome}>
+                {t('analytics.income')} · {formatMoney(flow.income, currency)}
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => setRecapOpen(true)}
+              style={styles.iconBtn}
+              hitSlop={8}
+              accessibilityRole="button"
+              accessibilityLabel={t('activity.shareMonth')}
+            >
+              <MaterialCommunityIcons name="share-variant" size={18} color={theme.text2} />
+            </Pressable>
+          </View>
+          <Text style={styles.compareLine} numberOfLines={2}>
+            {vsPrev != null
+              ? `${vsPrev >= 0 ? '+' : '−'}${Math.abs(Math.round(vsPrev))}% ${t('activity.vsLastMonth')}`
+              : ''}
+            {vsPrev != null && flow.expense > 0 ? ' · ' : ''}
+            {flow.expense > 0 ? t('activity.perDay', { amount: formatMoneyShort(perDay, currency) }) : ''}
+            {projected != null && flow.expense > 0 ? ` · ${t('activity.projectedShort', { amount: formatMoneyShort(projected, currency) })}` : ''}
+          </Text>
+        </View>
+      </GestureDetector>
+
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow} keyboardShouldPersistTaps="handled">
+        <Chip label={t('activity.allChip')} active={!filterCat} onPress={() => setFilterCat(null)} />
+        {topCategories.map((c) => (
+          <Chip
+            key={c.id}
+            label={`${c.name} ${formatMoneyShort(c.total, currency)}`}
+            active={filterCat === c.id}
+            color={c.color}
+            onPress={() => setFilterCat(filterCat === c.id ? null : c.id)}
+          />
+        ))}
+        {filterCat && !topCategories.some((c) => c.id === filterCat) && (
+          <Chip label={catInfo(filterCat).name} active color={catInfo(filterCat).color} onPress={() => setFilterCat(null)} />
+        )}
+        <Chip label={t('smartAdd.more')} active={false} icon="dots-horizontal" onPress={() => setFilterMoreOpen(true)} />
+        <Chip
+          label={filterAccount ? (accountName.get(filterAccount) ?? '') : t('activity.filter.allAccounts')}
+          active={!!filterAccount}
+          icon="wallet-outline"
+          onPress={() => setAccountPickerOpen(true)}
+        />
+        <FeatureSlots.HistoryFilterExtras value={halalFilter} onChange={setHalalFilter} />
+        <Chip label={t('activity.search')} active={searchOpen || !!search} icon="magnify" onPress={() => setSearchOpen((v) => !v)} />
+        {anyFilter && (
+          <Chip label={t('activity.filter.clear')} active={false} icon="close" onPress={clearFilters} />
+        )}
+      </ScrollView>
+      {(searchOpen || !!search) && (
+        <SearchBar value={search} onChange={setSearch} placeholder={t('activity.searchPlaceholder')} />
+      )}
+
+      <Pressable onPress={() => setBreakdownOpen(true)} style={styles.breakdownLink} accessibilityRole="button" accessibilityLabel={t('activity.seeBreakdown')} hitSlop={6}>
+        <MaterialCommunityIcons name="chart-bar" size={16} color={theme.accent} />
+        <Text style={styles.breakdownLinkText}>{t('activity.seeBreakdown')}</Text>
+      </Pressable>
+      <FeatureSlots.ActivityHeaderExtras />
+    </View>
+  );
+
+  const Empty = (() => {
+    const variant = anyFilter ? 'filtered' : hasAnyTxns ? 'period' : 'fresh';
+    const iconName = variant === 'filtered' ? 'filter-off-outline' : variant === 'period' ? 'chart-bar' : 'inbox-outline';
+    return (
+      <View style={styles.emptyWrap}>
+        <MaterialCommunityIcons name={iconName} size={48} color={theme.text3} />
+        <Text style={styles.emptyTitle}>{t(`activity.empty.${variant}.title`)}</Text>
+        <Text style={styles.emptyHint}>{t(`activity.empty.${variant}.hint`)}</Text>
+      </View>
     );
-    return () => handle.cancel();
-  }, [listMonthKey, filterCat, search, halalFilter]);
-  const visibleGroups = React.useMemo(
-    () => (showAllGroups ? grouped : grouped.slice(0, INITIAL_GROUP_COUNT)),
-    [grouped, showAllGroups],
-  );
-
-  // ─── Categories analytics period range ────────────────────────────
-  // For Month view: [first of month, first of next month).
-  const analyticsRange = useMemo(() => {
-    const start = analyticsMonth.getTime();
-    const end = new Date(
-      analyticsMonth.getFullYear(),
-      analyticsMonth.getMonth() + 1,
-      1,
-    ).getTime();
-    return { start, end };
-  }, [analyticsMonth]);
-  const analyticsLabel = useMemo(
-    () => formatMonthYear(analyticsMonth),
-    [analyticsMonth],
-  );
-
-  const setViewPersist = (v: 'list' | 'categories') => {
-    setView(v);
-    kv.set('activityView', v);
-  };
-
-  // Tapping the Activity tab while it's already focused flips the
-  // segmented view — quick way to peek between Transactions and
-  // Categories without aiming at the segmented control.
-  React.useEffect(() => {
-    return onTabReselect('activity', () => {
-      setView((v) => {
-        const next = v === 'list' ? 'categories' : 'list';
-        kv.set('activityView', next);
-        return next;
-      });
-    });
-  }, []);
+  })();
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.top}>
-        <View style={styles.titleRow}>
-          <Text style={styles.title}>{t('activity.title')}</Text>
-          <HeaderSettingsButton />
-        </View>
-        {/* Segmented control + filter toggle on one line. The filter
-            toggle is visible only in List mode (Categories view has its
-            own period nav) and shows a green dot when any list filter is
-            active so the user knows the chip row exists. */}
-        <View style={styles.segmentedRow}>
-          <View style={styles.segmented}>
-            {(['categories', 'list'] as const).map((v) => (
-              <Pressable
-                key={v}
-                onPress={() => setViewPersist(v)}
-                style={[styles.segmentedBtn, view === v && styles.segmentedBtnActive]}
-                accessibilityRole="button"
-                accessibilityState={{ selected: view === v }}
-              >
-                <Text style={[styles.segmentedText, view === v && styles.segmentedTextActive]}>
-                  {t(v === 'list' ? 'activity.view.list' : 'activity.view.categories')}
-                </Text>
-              </Pressable>
-            ))}
+        <Text style={styles.title}>{t('activity.title')}</Text>
+        <HeaderSettingsButton />
+      </View>
+      <SectionList
+        sections={sections}
+        keyExtractor={(tx) => tx.id}
+        stickySectionHeadersEnabled
+        initialNumToRender={12}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.scroll}
+        ListHeaderComponent={Header}
+        ListEmptyComponent={Empty}
+        renderSectionHeader={({ section }) => (
+          <View style={styles.dayHeader}>
+            <Text style={[styles.dayLabel, section.scheduled && styles.scheduledLabel]}>{section.title}</Text>
+            {section.net !== 0 && (
+              <Text style={[styles.dayTotal, { color: section.net > 0 ? theme.accent : theme.text2 }]}>
+                {section.net > 0 ? '+' : '−'}{formatMoney(Math.abs(section.net), currency)}
+              </Text>
+            )}
           </View>
-          <View style={styles.iconBtnRow}>
-            {view === 'list' && (
-              <Pressable
-                onPress={() => setFiltersOpen((v) => !v)}
-                style={[styles.filterToggle, filtersOpen && styles.filterToggleActive]}
-                accessibilityRole="button"
-                accessibilityLabel={t('activity.filterToggle')}
-                accessibilityState={{ expanded: filtersOpen }}
-                hitSlop={6}
-              >
-                <MaterialCommunityIcons
-                  name={filtersOpen ? 'filter' : 'filter-outline'}
-                  size={18}
-                  color={filtersOpen ? theme.bg : theme.text2}
-                />
-                {(Boolean(filterCat) || search.length > 0 || Boolean(halalFilter)) && !filtersOpen && (
-                  <View style={styles.filterToggleBadge} />
-                )}
+        )}
+        renderItem={({ item: tx, section }) => (
+          <View style={{ paddingBottom: 2, opacity: section.scheduled ? 0.85 : 1 }}>
+            <TransactionRow
+              t={tx}
+              currency={currency}
+              accountLabel={labelFor(tx)}
+              fromCurrency={accountCcy.get(tx.accountId ?? '')}
+              toCurrency={tx.toAccountId ? accountCcy.get(tx.toAccountId) : undefined}
+              accountIcon={accountMeta.get(tx.accountId ?? '')?.icon}
+              accountColor={accountMeta.get(tx.accountId ?? '')?.color}
+              tag={section.scheduled ? { text: t('activity.scheduled'), color: '#F59E0B' } : undefined}
+              onPressMore={() => edit(tx)}
+              onRepeat={() => repeat(tx)}
+            />
+          </View>
+        )}
+        ListFooterComponent={
+          <View>
+            {reachedLimit && (
+              <Pressable onPress={() => setPageLimit((n) => n + 200)} style={({ pressed }) => [styles.loadMore, pressed && { opacity: 0.7 }]} accessibilityRole="button" accessibilityLabel={t('activity.loadMore')}>
+                <Text style={styles.loadMoreText}>{t('activity.loadMore')}</Text>
               </Pressable>
             )}
-            <Pressable
-              onPress={useOncePress(() => router.push('/insights' as never))}
-              style={styles.filterToggle}
-              accessibilityRole="button"
-              accessibilityLabel={t('insights.title')}
-              hitSlop={6}
-            >
-              <MaterialCommunityIcons name="chart-line" size={18} color={theme.text2} />
+            <View style={{ height: 100 }} />
+          </View>
+        }
+      />
+
+      {/* Full category table — the old Categories view, now on demand. */}
+      <Modal visible={breakdownOpen} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setBreakdownOpen(false)}>
+        <SafeAreaView style={styles.safe} edges={['top']}>
+          <View style={styles.modalHead}>
+            <Text style={styles.modalTitle}>{t('analytics.breakdown')}</Text>
+            <Pressable onPress={() => setBreakdownOpen(false)} hitSlop={10} accessibilityRole="button" accessibilityLabel={t('common.close')}>
+              <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
             </Pressable>
           </View>
-        </View>
-        {view === 'list' && filtersOpen && (
-          <>
-        <SearchBar value={search} onChange={setSearch} placeholder={t('activity.searchPlaceholder')} />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
-          <FilterChip label={t('activity.allChip')} active={!filterCat} onPress={() => setFilterCat(null)} />
-          {top5Categories.map((c) => (
-            <FilterChip
-              key={c.id}
-              label={c.name}
-              active={filterCat === c.id}
-              onPress={() => setFilterCat(filterCat === c.id ? null : c.id)}
-              color={c.color}
-            />
-          ))}
-          {/* "More" only renders if the selected filter is hidden from
-              the top-5, OR if there are more than 5 categories with any
-              activity this month — otherwise it's noise. */}
-          {(allFilterCategories.length > top5Categories.length || (filterCat && !top5Categories.some((c) => c.id === filterCat))) && (
-            <FilterChip
-              label={
-                filterCat && !top5Categories.some((c) => c.id === filterCat)
-                  ? `${t('smartAdd.more')} · ${catInfo(filterCat).name}`
-                  : t('smartAdd.more')
-              }
-              active={Boolean(filterCat && !top5Categories.some((c) => c.id === filterCat))}
-              onPress={() => setFilterMoreOpen(true)}
-            />
-          )}
-          <FeatureSlots.HistoryFilterExtras value={halalFilter} onChange={setHalalFilter} />
-        </ScrollView>
-          </>
-        )}
-      </View>
-      {view === 'categories' ? (
-        <CategoriesAnalytics
-          rangeStart={analyticsRange.start}
-          rangeEnd={analyticsRange.end}
-          periodLabel={analyticsLabel}
-          onPrevPeriod={() =>
-            setAnalyticsMonth((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))
-          }
-          onNextPeriod={() =>
-            setAnalyticsMonth((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))
-          }
-          onPickPeriod={() => setMonthPickerOpen(true)}
-          accountId={null}
-          currency={currency}
-          onSelectCategory={(catId) => {
-            setFilterCat(catId);
-            setViewPersist('list');
-          }}
-        />
-      ) : (
-      <ScrollView contentContainerStyle={styles.scroll}>
-        {/* Month carousel — mirrors the one in the Categories view so
-            switching segments keeps the user's mental anchor. Tap the
-            label to open the month picker; arrows step ±1. */}
-        <View style={styles.periodRow}>
-          <Pressable
-            onPress={() =>
-              setAnalyticsMonth((d) => new Date(d.getFullYear(), d.getMonth() - 1, 1))
-            }
-            hitSlop={8}
-            style={styles.periodArrow}
-            accessibilityRole="button"
-            accessibilityLabel={t('activity.month.prev')}
-          >
-            <MaterialCommunityIcons name="chevron-left" size={22} color={theme.text2} />
-          </Pressable>
-          <Pressable
-            onPress={() => setMonthPickerOpen(true)}
-            style={styles.periodLabel}
-            accessibilityRole="button"
-            accessibilityLabel={t('activity.month.pick')}
-            accessibilityValue={{ text: analyticsLabel }}
-          >
-            <Text style={styles.periodLabelText}>{analyticsLabel}</Text>
-            <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text2} />
-          </Pressable>
-          <Pressable
-            onPress={() =>
-              setAnalyticsMonth((d) => new Date(d.getFullYear(), d.getMonth() + 1, 1))
-            }
-            hitSlop={8}
-            style={styles.periodArrow}
-            accessibilityRole="button"
-            accessibilityLabel={t('activity.month.next')}
-          >
-            <MaterialCommunityIcons name="chevron-right" size={22} color={theme.text2} />
-          </Pressable>
-        </View>
-        <FeatureSlots.ActivityHeaderExtras />
-        {grouped.length === 0 && (() => {
-          // Three-way empty state:
-          //   - filtered (search / category / halal filter active)
-          //   - month-empty (user has txns in other months)
-          //   - fresh install
-          const isFiltered = !!(search || filterCat || halalFilter);
-          const variant = isFiltered
-            ? 'filtered'
-            : hasAnyTxns
-              ? 'period'
-              : 'fresh';
-          const iconName =
-            variant === 'filtered'
-              ? 'filter-off-outline'
-              : variant === 'period'
-                ? 'chart-bar'
-                : 'inbox-outline';
-          return (
-            <View style={styles.emptyWrap}>
-              <MaterialCommunityIcons name={iconName} size={48} color={theme.text3} />
-              <Text style={styles.emptyTitle}>{t(`activity.empty.${variant}.title`)}</Text>
-              <Text style={styles.emptyHint}>{t(`activity.empty.${variant}.hint`)}</Text>
-            </View>
-          );
-        })()}
-        {/* Upcoming — future-dated transactions. Only shown when the
-            user is viewing the current month; past months can't have
-            scheduled-but-not-yet-executed rows by definition. */}
-        {isCurrentMonth && upcomingTxns.length > 0 && (
-          <View style={styles.group}>
-            <Text style={[styles.dayLabel, styles.upcomingLabel]}>{t('activity.upcoming').toUpperCase()}</Text>
-            <View style={{ gap: 2, opacity: 0.85 }}>
-              {upcomingTxns.map((tx) => (
-                <TransactionRow
-                  key={tx.id}
-                  t={tx}
-                  currency={currency}
-                  accountLabel={labelFor(tx)}
-                  fromCurrency={accountCcy.get(tx.accountId ?? '')}
-                  toCurrency={tx.toAccountId ? accountCcy.get(tx.toAccountId) : undefined}
-                  accountIcon={accountMeta.get(tx.accountId ?? '')?.icon}
-                  accountColor={accountMeta.get(tx.accountId ?? '')?.color}
-                  tag={{ text: 'scheduled', color: '#F59E0B' }}
-                  onPressMore={() =>
-                    router.push({
-                      pathname: '/add',
-                      params: { prefill: buildEditPrefill(tx) },
-                    } as never)
-                  }
-                />
-              ))}
-            </View>
-          </View>
-        )}
-        {visibleGroups.map(([day, ts, net]) => (
-          <View key={day} style={styles.group}>
-            <View style={styles.dayHeader}>
-              <Text style={styles.dayLabel}>{day}</Text>
-              {net !== 0 && (
-                <Text
-                  style={[
-                    styles.dayTotal,
-                    { color: net > 0 ? theme.accent : theme.text2 },
-                  ]}
-                >
-                  {net > 0 ? '+' : '−'}
-                  {formatMoney(Math.abs(net), currency)}
-                </Text>
-              )}
-            </View>
-            <View style={{ gap: 2 }}>
-              {ts.map((tx) => (
-                <TransactionRow
-                  key={tx.id}
-                  t={tx}
-                  currency={currency}
-                  accountLabel={labelFor(tx)}
-                  fromCurrency={accountCcy.get(tx.accountId ?? '')}
-                  toCurrency={tx.toAccountId ? accountCcy.get(tx.toAccountId) : undefined}
-                  accountIcon={accountMeta.get(tx.accountId ?? '')?.icon}
-                  accountColor={accountMeta.get(tx.accountId ?? '')?.color}
-                  onPressMore={() =>
-                    router.push({
-                      pathname: '/add',
-                      params: { prefill: buildEditPrefill(tx) },
-                    } as never)
-                  }
-                />
-              ))}
-            </View>
-          </View>
-        ))}
-        {reachedLimit && (
-          <Pressable
-            onPress={() => setPageLimit((n) => n + 200)}
-            style={({ pressed }) => [styles.loadMore, pressed && { opacity: 0.7 }]}
-            accessibilityRole="button"
-            accessibilityLabel={t('activity.loadMore')}
-          >
-            <Text style={styles.loadMoreText}>{t('activity.loadMore')}</Text>
-          </Pressable>
-        )}
-        <View style={{ height: 100 }} />
-      </ScrollView>
-      )}
+          <CategoriesAnalytics
+            rangeStart={month.getTime()}
+            rangeEnd={new Date(month.getFullYear(), month.getMonth() + 1, 1).getTime()}
+            periodLabel={monthLabel}
+            onPrevPeriod={() => stepMonth(-1)}
+            onNextPeriod={() => stepMonth(1)}
+            onPickPeriod={() => { setBreakdownOpen(false); setMonthPickerOpen(true); }}
+            accountId={filterAccount}
+            currency={currency}
+            onSelectCategory={(id) => { setFilterCat(id); setBreakdownOpen(false); }}
+          />
+        </SafeAreaView>
+      </Modal>
+
       <MonthlyRecap visible={recapOpen} onClose={() => setRecapOpen(false)} />
-      <ChartModal
-        visible={chartOpen}
-        currency={currency}
-        onClose={() => setChartOpen(false)}
-        onShareRecap={() => {
-          setChartOpen(false);
-          setRecapOpen(true);
-        }}
-      />
-      {/* Month picker for Categories view — 24 entries (this month +
-          previous 23) is a usable window without dragging in a real
-          date picker dependency. Wider ranges can land alongside the
-          Day/Week/Year/All-time presets in a follow-up. */}
       <PickerSheet
         visible={monthPickerOpen}
-        title={t('activity.view.categories')}
-        selected={analyticsMonth.toISOString().slice(0, 7)}
+        title={t('activity.month.pick')}
+        selected={listMonthKey}
         options={Array.from({ length: 24 }, (_, i) => {
-          const d = new Date();
-          d.setDate(1); d.setHours(0, 0, 0, 0);
-          d.setMonth(d.getMonth() - i);
-          return {
-            value: d.toISOString().slice(0, 7),
-            label: formatMonthYear(d),
-          } as PickerOption<string>;
+          const d = new Date(); d.setDate(1); d.setHours(0, 0, 0, 0); d.setMonth(d.getMonth() - i);
+          return { value: `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`, label: formatMonthYear(d) } as PickerOption<string>;
         })}
-        onPick={(iso) => {
-          const [y, m] = iso.split('-').map(Number);
-          setAnalyticsMonth(new Date(y, m - 1, 1));
-        }}
+        onPick={(iso) => { const [y, m] = iso.split('-').map(Number); setMonth(new Date(y, m - 1, 1)); }}
         onClose={() => setMonthPickerOpen(false)}
+      />
+      <PickerSheet
+        visible={accountPickerOpen}
+        title={t('activity.filter.account')}
+        selected={filterAccount ?? ''}
+        options={[
+          { value: '', label: t('activity.filter.allAccounts'), icon: 'wallet-outline' },
+          ...accounts.filter((a) => a.archived !== 1).map<PickerOption<string>>((a) => ({ value: a.id, label: a.name, icon: 'wallet-outline', iconColor: a.color })),
+        ]}
+        onPick={(id) => setFilterAccount(id || null)}
+        onClose={() => setAccountPickerOpen(false)}
       />
       <CategoryPicker
         visible={filterMoreOpen}
         mode="select"
         headerText={t('picker.filterByCategory')}
-        onSelect={(id) => {
-          setFilterCat(id);
-          setFilterMoreOpen(false);
-        }}
+        onSelect={(id) => { setFilterCat(id); setFilterMoreOpen(false); }}
         onClose={() => setFilterMoreOpen(false)}
       />
     </SafeAreaView>
   );
 }
 
-// ---- Chart modal (formerly inline "Month at a glance" header) ----
-//
-// Same numbers as before — avg/day, projected, total, category count,
-// net-worth chart, share-recap — but now lives in a chart-icon popup
-// instead of an always-visible collapsible at the top of List view.
-// The popup is reachable from BOTH segmented modes (List + Categories)
-// via the chart button next to the filter toggle.
-
-function ChartModal({
-  visible,
-  currency,
-  onClose,
-  onShareRecap,
-}: {
-  visible: boolean;
-  currency: CurrencyCode;
-  onClose: () => void;
-  onShareRecap: () => void;
-}) {
-  const t = useT();
-  const key = monthKey();
-  const monthTxns = useTransactions({ monthKey: key });
-  const daily = useDailySpend(key);
-  const totals = useMonthTotalsByCategory(key);
-  const toDefault = useToDefaultCurrency();
-
-  const expenses = monthTxns.filter((t) => t.type === 'expense');
-  // Each row is in its account's currency — fold into the display
-  // currency before summing.
-  const totalSpend = expenses.reduce((s, t) => s + toDefault(t.amount, t.accountId), 0);
-  const today = new Date();
-  const dim = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
-  // Avg/Day = total spend ÷ elapsed calendar days. Using elapsed days
-  // (not days-with-spending) keeps Avg × DaysInMonth ≈ projected, so
-  // the three numbers reconcile against each other.
-  const elapsedDays = Math.max(1, today.getDate());
-  const avgDaily = totalSpend / elapsedDays;
-  const projected = avgDaily * dim;
-  void daily;
-
-  return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      presentationStyle="pageSheet"
-      onRequestClose={onClose}
-    >
-      <SafeAreaView style={styles.safe} edges={['top']}>
-        <View style={styles.modalHead}>
-          <Text style={styles.modalTitle}>{t('activity.glance')}</Text>
-          <Pressable onPress={onClose} hitSlop={10} accessibilityLabel={t('common.close')}>
-            <MaterialCommunityIcons name="close" size={22} color={theme.text2} />
-          </Pressable>
-        </View>
-        <ScrollView contentContainerStyle={styles.modalBody}>
-          <View style={sectionStyles.statGrid}>
-            <StatCard label={t('activity.stat.avgDay')} value={formatMoney(avgDaily, currency)} />
-            <StatCard label={t('activity.stat.projected')} value={formatMoney(projected, currency)} />
-            <StatCard label={t('activity.stat.total')} value={formatMoney(totalSpend, currency)} />
-            <StatCard label={t('activity.stat.categories')} value={String(totals.length)} />
-          </View>
-          <NetWorthChart />
-          <Pressable
-            onPress={onShareRecap}
-            style={({ pressed }) => [styles.recapBtn, pressed && { opacity: 0.7 }]}
-            accessibilityRole="button"
-            accessibilityLabel="Open monthly recap"
-          >
-            <MaterialCommunityIcons name="share-variant" size={16} color={theme.accent} />
-            <Text style={styles.recapText}>{t('activity.shareMonth')}</Text>
-          </Pressable>
-        </ScrollView>
-      </SafeAreaView>
-    </Modal>
-  );
-}
-
-// ---- Filter chip ----
-
-function FilterChip({
-  label,
-  active,
-  onPress,
-  color,
-}: {
+function Chip({ label, active, onPress, color, icon }: {
   label: string;
   active: boolean;
   onPress: () => void;
   color?: string;
+  icon?: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 }) {
   return (
     <Pressable
       onPress={onPress}
-      style={[
-        styles.chip,
-        active && { backgroundColor: color ?? theme.accent, borderColor: 'transparent' },
-      ]}
+      style={[styles.chip, active && { backgroundColor: color ?? theme.accent, borderColor: 'transparent' }]}
       accessibilityRole="button"
       accessibilityState={{ selected: active }}
+      accessibilityLabel={label}
     >
-      <Text style={[styles.chipText, active && { color: theme.bg }]}>{label}</Text>
+      {icon && <MaterialCommunityIcons name={icon} size={14} color={active ? theme.bg : theme.text2} />}
+      <Text style={[styles.chipText, active && { color: theme.bg }]} numberOfLines={1}>{label}</Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: theme.bg },
-  top: { padding: spacing.lg, gap: spacing.md },
-  titleRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  segmentedRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: spacing.sm,
-    marginBottom: spacing.xs,
-  },
-  segmented: {
-    flexDirection: 'row',
-    backgroundColor: theme.bg2,
-    borderRadius: radii.pill,
-    padding: 3,
-    alignSelf: 'flex-start',
-  },
-  filterToggle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: theme.bg2,
-    borderWidth: 1,
-    borderColor: theme.border,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  filterToggleActive: {
-    backgroundColor: theme.accent,
-    borderColor: 'transparent',
-  },
-  filterToggleBadge: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: theme.accent,
-    borderWidth: 2,
-    borderColor: theme.bg,
-  },
-  iconBtnRow: { flexDirection: 'row', gap: 8 },
-  periodRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    // The List view's ScrollView already pads spacing.lg horizontally;
-    // cancel that here so the carousel hits the same screen-edge inset
-    // as the Categories view (which renders without an outer pad).
-    marginHorizontal: -spacing.lg,
-  },
-  periodArrow: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.bg2,
-  },
-  periodLabel: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: spacing.md,
-    paddingVertical: 8,
-    borderRadius: radii.md,
-    backgroundColor: theme.bg2,
-  },
-  periodLabelText: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi },
-  modalHead: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: spacing.lg,
-    paddingVertical: spacing.md,
-  },
-  modalTitle: { color: theme.text1, fontSize: sizes.xl, fontFamily: font.displayBold },
-  modalBody: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
-  segmentedBtn: {
-    paddingHorizontal: spacing.md,
-    paddingVertical: 6,
-    borderRadius: radii.pill,
-  },
-  segmentedBtnActive: { backgroundColor: theme.accent },
-  segmentedText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.bodySemi },
-  segmentedTextActive: { color: theme.bg },
+  top: { paddingHorizontal: spacing.lg, paddingTop: spacing.lg, paddingBottom: spacing.sm, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   title: { color: theme.text1, fontSize: sizes.xxxl, fontFamily: font.displayBold },
-  chipRow: { gap: 8, paddingVertical: 4 },
+  scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl },
+  headerBlock: { gap: spacing.md, paddingBottom: spacing.sm },
+  periodRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  periodArrow: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.bg2 },
+  periodLabel: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: spacing.md, paddingVertical: 8, borderRadius: radii.md, backgroundColor: theme.bg2 },
+  periodLabelText: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi },
+  totalsCard: {
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+    gap: 6,
+  },
+  totalsHead: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.sm },
+  totalsLabel: { color: theme.text2, fontSize: sizes.xs, letterSpacing: 0.6 },
+  totalsValue: { color: theme.expense, fontSize: sizes.xxxl, fontFamily: font.displayBold, marginTop: 2 },
+  totalsIncome: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi, marginTop: 2 },
+  compareLine: { color: theme.text3, fontSize: sizes.xs },
+  iconBtn: { width: 32, height: 32, borderRadius: 16, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.bg3 },
+  chipRow: { gap: 8, paddingVertical: 2 },
   chip: {
-    paddingHorizontal: 14,
-    paddingVertical: 10, // a11y: ≥44pt with the line-height; bumped from v1's 6
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 12,
+    paddingVertical: 9,
     borderRadius: radii.pill,
     borderWidth: 1,
     borderColor: theme.border,
     backgroundColor: theme.bg2,
+    maxWidth: 200,
   },
   chipText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body },
-  upcomingLabel: { color: '#F59E0B' },
-  scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
-  group: { gap: spacing.sm },
-  dayHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  dayLabel: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body, textTransform: 'uppercase' },
-  dayTotal: { fontSize: sizes.sm, fontFamily: font.bodySemi },
-  empty: { color: theme.text3, textAlign: 'center', marginTop: spacing.xxl },
-  emptyWrap: {
-    alignItems: 'center',
-    gap: 6,
-    marginTop: spacing.xxl,
-    paddingHorizontal: spacing.lg,
-  },
-  emptyTitle: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi, textAlign: 'center' },
-  emptyHint: { color: theme.text3, fontSize: sizes.sm, textAlign: 'center' },
-  recapBtn: {
+  breakdownLink: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', paddingVertical: 2 },
+  breakdownLinkText: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  dayHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    marginTop: spacing.sm,
-    paddingVertical: 10,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: theme.border,
-    backgroundColor: `${theme.accent}11`,
+    justifyContent: 'space-between',
+    backgroundColor: theme.bg,
+    paddingTop: spacing.md,
+    paddingBottom: spacing.sm,
   },
-  recapText: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },
-  loadMore: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: spacing.md,
-    marginTop: spacing.md,
-    borderRadius: radii.md,
-    borderWidth: 1,
-    borderColor: theme.border,
-    backgroundColor: theme.bg2,
-  },
+  dayLabel: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body, textTransform: 'uppercase' },
+  scheduledLabel: { color: '#F59E0B' },
+  dayTotal: { fontSize: sizes.sm, fontFamily: font.bodySemi },
+  emptyWrap: { alignItems: 'center', gap: 6, marginTop: spacing.xxl, paddingHorizontal: spacing.lg },
+  emptyTitle: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi, textAlign: 'center' },
+  emptyHint: { color: theme.text3, fontSize: sizes.sm, textAlign: 'center' },
+  modalHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: spacing.lg, paddingVertical: spacing.md },
+  modalTitle: { color: theme.text1, fontSize: sizes.xl, fontFamily: font.displayBold },
+  loadMore: { alignItems: 'center', justifyContent: 'center', paddingVertical: spacing.md, marginTop: spacing.md, borderRadius: radii.md, borderWidth: 1, borderColor: theme.border, backgroundColor: theme.bg2 },
   loadMoreText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.bodySemi },
 });

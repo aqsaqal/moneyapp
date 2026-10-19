@@ -20,6 +20,9 @@ export interface TransactionRowProps {
   t: Transaction;
   currency?: CurrencyCode;
   onPressMore?: () => void;
+  /** Swipe right → open Smart Add with this row's category / account /
+   *  note prefilled and the amount empty ("same again, new amount"). */
+  onRepeat?: () => void;
   /** Optional inline tag — used for "scheduled" on future-dated rows
    *  in the Upcoming section. Renders as a small colored pill next to
    *  the name. */
@@ -41,7 +44,7 @@ export interface TransactionRowProps {
   accountColor?: string;
 }
 
-function TransactionRowInner({ t, currency = 'USD', onPressMore, tag, accountLabel, fromCurrency, toCurrency, accountIcon, accountColor }: TransactionRowProps) {
+function TransactionRowInner({ t, currency = 'USD', onPressMore, onRepeat, tag, accountLabel, fromCurrency, toCurrency, accountIcon, accountColor }: TransactionRowProps) {
   const [sheetOpen, setSheetOpen] = useState(false);
   // `t.amount` is stored in the ACCOUNT's currency (balance math), not the
   // app's display currency. Non-transfer rows must format with the account
@@ -107,6 +110,19 @@ function TransactionRowInner({ t, currency = 'USD', onPressMore, tag, accountLab
     </Pressable>
   );
 
+  const renderLeftActions = onRepeat
+    ? () => (
+        <Pressable
+          style={[styles.swipeAction, styles.repeatAction]}
+          onPress={onRepeat}
+          accessibilityRole="button"
+          accessibilityLabel={i18nT('tx.repeat')}
+        >
+          <MaterialCommunityIcons name="repeat" size={22} color="#fff" />
+        </Pressable>
+      )
+    : undefined;
+
   // Aggregated screen-reader label: name, sign + amount, day, halal if set.
   const a11yLabel = [
     name,
@@ -119,7 +135,7 @@ function TransactionRowInner({ t, currency = 'USD', onPressMore, tag, accountLab
 
   return (
     <>
-      <Swipeable renderRightActions={renderRightActions}>
+      <Swipeable renderRightActions={renderRightActions} renderLeftActions={renderLeftActions}>
         <Pressable
           onLongPress={() => setSheetOpen(true)}
           // Wrap the caller's onPress so a double-tap can't trigger
@@ -344,6 +360,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: 64,
   },
+  repeatAction: { backgroundColor: theme.accent },
   sheet: {
     backgroundColor: theme.bg2,
     borderRadius: radii.md,

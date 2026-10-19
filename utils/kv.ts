@@ -39,6 +39,7 @@ const PROFILE_SCOPED_KEYS_FRESH = new Set<string>([
   'planSegment',
   'planDismissedSuggestions',
   'accountsOverviewHidden',
+  'accountsOverviewFace',
   'lastExportAt',
   'liabilitySignsRepaired_v1',
   'debtsLinkedToAccounts_v1',
@@ -148,6 +149,7 @@ export interface KVSchema {
   planSegment: string;               // 'bills' | 'budgets' | 'goals' | 'debts' — last Plan segment the user viewed
   debtsLinkedToAccounts_v1: string;  // '1' once standalone `debts` rows were linked to / converted into loan accounts
   lastExportAt: string;              // unix ms of the last successful export from Settings (shown as "Last backup")
+  accountsOverviewFace: string;      // 'net' | 'flow' — which face of the Accounts overview card is showing
 }
 
 export const kv = {
