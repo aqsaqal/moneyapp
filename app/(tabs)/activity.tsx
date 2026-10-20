@@ -17,7 +17,7 @@
 // charts (net worth, income vs spending) live on the Accounts tab.
 
 import React, { useCallback, useMemo, useState } from 'react';
-import { useFocusEffect, useRouter } from 'expo-router';
+import { useFocusEffect, useRouter, useLocalSearchParams } from 'expo-router';
 import { Modal, Pressable, ScrollView, SectionList, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -91,6 +91,12 @@ export default function Activity() {
     setFilterCat(null); setFilterAccount(null); setSearch(''); setSearchOpen(false); setHalalFilter(null);
   };
 
+  // Deep link: flow://activity?view=categories opens the breakdown sheet.
+  const params = useLocalSearchParams<{ view?: string }>();
+  React.useEffect(() => {
+    if (params.view === 'categories') setBreakdownOpen(true);
+    else if (params.view === 'list') setBreakdownOpen(false);
+  }, [params.view]);
   // Home / Insights hand off a month (and formerly a view) via kv.
   useFocusEffect(useCallback(() => {
     const jump = kv.get('activityJumpToMonth');

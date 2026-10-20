@@ -17,7 +17,7 @@
 import React, { useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { RecurringRow } from '@/components/RecurringRow';
 import { SectionHeader } from '@/components/Sections';
@@ -83,6 +83,13 @@ export default function PlanScreen() {
     kv.set('planSegment', s);
     setSegment(s);
   };
+  // Deep link / handoff: flow://plan?segment=goals
+  const params = useLocalSearchParams<{ segment?: string }>();
+  React.useEffect(() => {
+    const s = params.segment;
+    if (s && (SEGMENTS as string[]).includes(s)) pick(s as Segment);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.segment]);
 
   // Counts for the chips — cheap reads, all already cached by version.
   const recurring = useRecurring();

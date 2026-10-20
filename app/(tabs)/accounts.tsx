@@ -22,7 +22,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Swipeable } from 'react-native-gesture-handler';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import {
   NestableScrollContainer,
@@ -76,6 +76,9 @@ export default function AccountsScreen() {
       return !v;
     });
   };
+  // Deep link / handoff: flow://accounts?face=flow
+  const params = useLocalSearchParams<{ face?: string }>();
+  const face = params.face === 'flow' || params.face === 'net' ? params.face : undefined;
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <View style={styles.top}>
@@ -102,7 +105,7 @@ export default function AccountsScreen() {
           <HeaderSettingsButton />
         </View>
       </View>
-      <OverviewAndAccounts overviewHidden={overviewHidden} />
+      <OverviewAndAccounts overviewHidden={overviewHidden} face={face} />
     </SafeAreaView>
   );
 }
@@ -112,7 +115,7 @@ interface AccountStats {
   delta: number;
 }
 
-function OverviewAndAccounts({ overviewHidden }: { overviewHidden: boolean }) {
+function OverviewAndAccounts({ overviewHidden, face }: { overviewHidden: boolean; face?: 'net' | 'flow' }) {
   const t = useT();
   const router = useRouter();
   // Debounced row open — a quick double-tap must not push two detail
@@ -252,7 +255,7 @@ function OverviewAndAccounts({ overviewHidden }: { overviewHidden: boolean }) {
         {!overviewHidden && (
           <>
         <SectionHeader title={t('me.section.overview')} />
-        <MeNetWorthCard />
+        <MeNetWorthCard initialFace={face} />
         {foreignCount > 0 && (
           <Text style={styles.foreignNote}>
             {t('accounts.foreignNote', { n: foreignCount })}

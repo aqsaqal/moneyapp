@@ -13,7 +13,7 @@
 // snapshot writer (refreshTodaySnapshot).
 
 import React, { useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { CartesianChart, Line, Area } from 'victory-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -36,13 +36,18 @@ const PERIOD_OPTIONS: { value: Period; labelKey: string }[] = [
   { value: 96, labelKey: 'netWorth.period.all' },
 ];
 
-export function MeNetWorthCard() {
+export function MeNetWorthCard({ initialFace }: { initialFace?: Face } = {}) {
   const t = useT();
   const router = useRouter();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const [period, setPeriod] = useState<Period>(6);
+  const { width: winW } = useWindowDimensions();
   const [face, setFace] = useState<Face>(() => (kv.get('accountsOverviewFace') === 'flow' ? 'flow' : 'net'));
   const pickFace = (f: Face) => { kv.set('accountsOverviewFace', f); setFace(f); };
+  React.useEffect(() => {
+    if (initialFace) pickFace(initialFace);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialFace]);
   const data = useMonthlyNetWorth(period);
   const flow = useMonthlyIncomeSpending(period);
 
@@ -110,7 +115,7 @@ export function MeNetWorthCard() {
         {months.length === 0 ? (
           <Text style={styles.empty}>{t('insights.spending.empty')}</Text>
         ) : (
-          <IncomeVsSpendingChart data={flow} currency={currency} />
+          <IncomeVsSpendingChart data={flow} currency={currency} width={winW - 2 * spacing.lg - 2 * spacing.md} />
         )}
       </Pressable>
     );

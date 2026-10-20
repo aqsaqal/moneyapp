@@ -6,7 +6,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { I18nManager, View, Text, StyleSheet, Platform } from 'react-native';
+import { I18nManager, View, Text, StyleSheet, Platform, LogBox } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Outfit_700Bold, Outfit_800ExtraBold } from '@expo-google-fonts/outfit';
@@ -18,10 +18,43 @@ import { useAppLock, isBiometricEnabled } from '@/hooks/useBiometricLock';
 import { kv } from '@/utils/kv';
 import { LockScreen } from '@/components/LockScreen';
 import { ToastHost } from '@/components/Toast';
+import { useRouter } from 'expo-router';
+
+/** Dev-only screenshot driver. With EXPO_PUBLIC_SCREENSHOT_CTL=1 the app
+ *  polls http://localhost:8090/route.txt and navigates to whatever path
+ *  it finds ("dismiss" closes modals). Lets a shell script walk every
+ *  screen on the simulator without the iOS "Open in Flow?" prompt that
+ *  `simctl openurl` triggers. Dead-code-eliminated in production. */
+function ScreenshotController() {
+  const router = useRouter();
+  React.useEffect(() => {
+    if (!(__DEV__ && process.env.EXPO_PUBLIC_SCREENSHOT_CTL === '1')) return;
+    // No yellow "Open debugger" toast in captures.
+    LogBox.ignoreAllLogs(true);
+    let alive = true;
+    let last = '';
+    const tick = async () => {
+      try {
+        const r = await fetch('http://localhost:8090/route.txt', { cache: 'no-store' });
+        const txt = (await r.text()).trim();
+        if (txt && txt !== last) {
+          last = txt;
+          if (txt === 'dismiss') router.dismissAll();
+          else router.push(txt as never);
+        }
+      } catch { /* server not up yet */ }
+      if (alive) setTimeout(tick, 600);
+    };
+    void tick();
+    return () => { alive = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return null;
+}
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { HomeSkeleton } from '@/components/Skeleton';
 import { setLocale, type LocaleCode } from '@/utils/i18n';
-import { ensureDefaultProfile } from '@/utils/profiles';
+import { ensureDefaultProfile, listProfiles, switchActiveProfile, getActiveProfileId } from '@/utils/profiles';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
 
@@ -66,6 +99,13 @@ export default function RootLayout() {
           kv.setBool('onboardingCompleted', true);
           if (!kv.get('locale')) kv.set('locale', 'en-US');
           if (!kv.get('currency')) kv.set('currency', 'USD');
+        }
+        // EXPO_PUBLIC_DEV_PROFILE=<name> → start in that profile (e.g.
+        // "Demo" for store screenshots). Dev-only, same DCE as above.
+        const wanted = process.env.EXPO_PUBLIC_DEV_PROFILE;
+        if (wanted) {
+          const target = listProfiles().find((p) => p.name.toLowerCase() === wanted.toLowerCase());
+          if (target && target.id !== getActiveProfileId()) switchActiveProfile(target.id);
         }
       }
       setDbReady(true);
@@ -141,6 +181,7 @@ export default function RootLayout() {
               <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
             </Stack>
             <ToastHost />
+            <ScreenshotController />
           </LockGate>
         </ErrorBoundary>
       </SafeAreaProvider>

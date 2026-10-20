@@ -17,6 +17,9 @@ import type { MonthlyFlow } from '@/hooks/useMonthlyIncomeSpending';
 interface Props {
   data: MonthlyFlow[];
   currency: CurrencyCode;
+  /** Available width for the whole chart card. Defaults to the Insights
+   *  screen layout; the Accounts overview card passes its narrower box. */
+  width?: number;
   /** Tap handler invoked with the month key — caller can drill into
    *  the Activity tab filtered to that month. Optional. */
   onPressMonth?: (monthKey: string) => void;
@@ -40,7 +43,7 @@ const SCREEN_W = Dimensions.get('window').width;
 const CHART_INNER_W =
   SCREEN_W - 2 * spacing.lg - 2 * spacing.md - Y_AXIS_W;
 
-export function IncomeVsSpendingChart({ data, currency, onPressMonth }: Props) {
+export function IncomeVsSpendingChart({ data, currency, onPressMonth, width }: Props) {
   const t = useT();
   const max = Math.max(1, ...data.flatMap((d) => [d.income, d.spending]));
 
@@ -63,7 +66,8 @@ export function IncomeVsSpendingChart({ data, currency, onPressMonth }: Props) {
   // to MIN_COL_WIDTH when long so columns stay readable and the chart
   // overflows into a horizontal scroll.
   const totalGaps = Math.max(0, data.length - 1) * COL_GAP;
-  const idealCol = (CHART_INNER_W - totalGaps) / Math.max(1, data.length);
+  const innerW = width != null ? width - 2 * spacing.md - Y_AXIS_W : CHART_INNER_W;
+  const idealCol = (innerW - totalGaps) / Math.max(1, data.length);
   const colW = Math.max(MIN_COL_WIDTH, idealCol);
 
   const totalIncome = data.reduce((s, d) => s + d.income, 0);
