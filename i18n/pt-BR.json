@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Valor devido",
   "onboarding.account.create": "Criar e começar",
   "onboarding.account.skip": "Pular por enquanto",
-  "onboarding.account.defaultName": "Dinheiro"
+  "onboarding.account.defaultName": "Dinheiro",
+  "plan.bills.future.label": "A pagar em {month}",
+  "plan.bills.past.missed": "Não pagas em {month}",
+  "plan.bills.past.allPaid": "Tudo quitado em {month}",
+  "plan.bills.group.due": "A vencer",
+  "plan.bills.group.missed": "Não pagas",
+  "plan.budgets.overBudget": "{n} acima do orçamento",
+  "plan.budgets.plannedFor": "Planejado para {month}",
+  "plan.budgets.pace.under": "Dentro do orçamento"
 }

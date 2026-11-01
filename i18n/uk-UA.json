@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Сума боргу",
   "onboarding.account.create": "Створити й почати",
   "onboarding.account.skip": "Поки що пропустити",
-  "onboarding.account.defaultName": "Готівка"
+  "onboarding.account.defaultName": "Готівка",
+  "plan.bills.future.label": "До сплати за {month}",
+  "plan.bills.past.missed": "Не сплачено за {month}",
+  "plan.bills.past.allPaid": "Усе сплачено за {month}",
+  "plan.bills.group.due": "До сплати",
+  "plan.bills.group.missed": "Пропущено",
+  "plan.budgets.overBudget": "Перевищено: {n}",
+  "plan.budgets.plannedFor": "Заплановано на {month}",
+  "plan.budgets.pace.under": "У межах бюджету"
 }

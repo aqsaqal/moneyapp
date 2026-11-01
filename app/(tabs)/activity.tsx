@@ -72,6 +72,7 @@ export default function Activity() {
   );
   const now = new Date();
   const isCurrentMonth = month.getFullYear() === now.getFullYear() && month.getMonth() === now.getMonth();
+  const isFutureMonth = month.getTime() > now.getTime();
   const dim = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate();
   const elapsedDays = isCurrentMonth ? Math.max(1, now.getDate()) : dim;
 
@@ -112,13 +113,16 @@ export default function Activity() {
 
   // ── Data ─────────────────────────────────────────────────────────
   const endOfToday = useMemo(() => { const d = new Date(); d.setHours(23, 59, 59, 999); return d.getTime(); }, []);
+  // The list stops at today, except when browsing a future month: there
+  // every row is a scheduled transaction (e.g. a bill paid early from the
+  // Plan tab and dated to its due day), so show them grouped by day.
   const txns = useTransactions({
     monthKey: listMonthKey,
     category: filterCat,
     accountId: filterAccount,
     search: search || undefined,
     halalStatus: halalFilter,
-    dateLte: endOfToday,
+    dateLte: isFutureMonth ? undefined : endOfToday,
     limit: pageLimit,
   });
   const upcomingTxns = useTransactions({
@@ -136,7 +140,9 @@ export default function Activity() {
   // when browsing the past) and the previous month cut at the same day
   // so the comparison is like-for-like.
   const thisCutoff = isCurrentMonth ? Date.now() : new Date(month.getFullYear(), month.getMonth() + 1, 0, 23, 59, 59).getTime();
-  const flow = useMonthFlow(listMonthKey, thisCutoff);
+  // A future month has no applied rows yet, so its totals count the
+  // scheduled ones — that is what the month is planned to look like.
+  const flow = useMonthFlow(listMonthKey, thisCutoff, isFutureMonth);
   const prevMonth = new Date(month.getFullYear(), month.getMonth() - 1, 1);
   const prevKey = `${prevMonth.getFullYear()}-${String(prevMonth.getMonth() + 1).padStart(2, '0')}`;
   const prevDim = new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate();
@@ -193,13 +199,16 @@ export default function Activity() {
         const v = tx.amountMain ?? fxConvert(tx.amount, accountCcy.get(tx.accountId ?? '') ?? currency, currency);
         net += tx.type === 'income' ? v : -v;
       });
-      return { title: day, net, data: ts };
+      // Days after today only occur when browsing a future month; tag
+      // them so rows carry the amber "scheduled" marker.
+      const scheduled = ts.some((tx) => tx.date > endOfToday);
+      return { title: day, net, data: ts, scheduled };
     });
     if (isCurrentMonth && upcomingTxns.length > 0) {
       out.push({ title: t('activity.scheduledSection'), net: 0, scheduled: true, data: upcomingTxns });
     }
     return out;
-  }, [txns, upcomingTxns, isCurrentMonth, accountCcy, currency, t]);
+  }, [txns, upcomingTxns, isCurrentMonth, endOfToday, accountCcy, currency, t]);
 
   // ── Actions ──────────────────────────────────────────────────────
   const edit = (tx: Transaction) =>

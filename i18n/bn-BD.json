@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "বকেয়া পরিমাণ",
   "onboarding.account.create": "তৈরি করে শুরু করুন",
   "onboarding.account.skip": "আপাতত এড়িয়ে যান",
-  "onboarding.account.defaultName": "নগদ"
+  "onboarding.account.defaultName": "নগদ",
+  "plan.bills.future.label": "{month}-এ পরিশোধ করতে হবে",
+  "plan.bills.past.missed": "{month}-এ পরিশোধ করা হয়নি",
+  "plan.bills.past.allPaid": "{month}-এ সব পরিশোধিত",
+  "plan.bills.group.due": "পরিশোধ বাকি",
+  "plan.bills.group.missed": "অপরিশোধিত",
+  "plan.budgets.overBudget": "{n}টি বাজেট ছাড়িয়েছে",
+  "plan.budgets.plannedFor": "{month}-এর জন্য পরিকল্পিত",
+  "plan.budgets.pace.under": "বাজেটের মধ্যে"
 }

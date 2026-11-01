@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Дуговани износ",
   "onboarding.account.create": "Направи и почни",
   "onboarding.account.skip": "Прескочи за сада",
-  "onboarding.account.defaultName": "Готовина"
+  "onboarding.account.defaultName": "Готовина",
+  "plan.bills.future.label": "Платити за {month}",
+  "plan.bills.past.missed": "Неплаћено за {month}",
+  "plan.bills.past.allPaid": "Све измирено за {month}",
+  "plan.bills.group.due": "Доспева",
+  "plan.bills.group.missed": "Пропуштено",
+  "plan.budgets.overBudget": "{n} преко буџета",
+  "plan.budgets.plannedFor": "Планирано за {month}",
+  "plan.budgets.pace.under": "У оквиру буџета"
 }

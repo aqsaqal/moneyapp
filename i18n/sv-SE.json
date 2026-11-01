@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Skuldbelopp",
   "onboarding.account.create": "Skapa och starta",
   "onboarding.account.skip": "Hoppa över tills vidare",
-  "onboarding.account.defaultName": "Kontant"
+  "onboarding.account.defaultName": "Kontant",
+  "plan.bills.future.label": "Att betala i {month}",
+  "plan.bills.past.missed": "Ej betalt i {month}",
+  "plan.bills.past.allPaid": "Allt betalt i {month}",
+  "plan.bills.group.due": "Förfaller",
+  "plan.bills.group.missed": "Missade",
+  "plan.budgets.overBudget": "{n} över budget",
+  "plan.budgets.plannedFor": "Planerat för {month}",
+  "plan.budgets.pace.under": "Inom budget"
 }

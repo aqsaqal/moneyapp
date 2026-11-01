@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Skolos suma",
   "onboarding.account.create": "Sukurti ir pradėti",
   "onboarding.account.skip": "Kol kas praleisti",
-  "onboarding.account.defaultName": "Grynieji"
+  "onboarding.account.defaultName": "Grynieji",
+  "plan.bills.future.label": "Sumokėti – {month}",
+  "plan.bills.past.missed": "Nesumokėta – {month}",
+  "plan.bills.past.allPaid": "Viskas apmokėta – {month}",
+  "plan.bills.group.due": "Mokėtina",
+  "plan.bills.group.missed": "Praleista",
+  "plan.budgets.overBudget": "{n} virš biudžeto",
+  "plan.budgets.plannedFor": "Suplanuota – {month}",
+  "plan.budgets.pace.under": "Biudžeto ribose"
 }

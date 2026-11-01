@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Skyldig beløp",
   "onboarding.account.create": "Opprett og start",
   "onboarding.account.skip": "Hopp over for nå",
-  "onboarding.account.defaultName": "Kontanter"
+  "onboarding.account.defaultName": "Kontanter",
+  "plan.bills.future.label": "Å betale i {month}",
+  "plan.bills.past.missed": "Ikke betalt i {month}",
+  "plan.bills.past.allPaid": "Alt betalt i {month}",
+  "plan.bills.group.due": "Forfaller",
+  "plan.bills.group.missed": "Ubetalt",
+  "plan.budgets.overBudget": "{n} over budsjett",
+  "plan.budgets.plannedFor": "Planlagt for {month}",
+  "plan.budgets.pace.under": "Innenfor budsjett"
 }

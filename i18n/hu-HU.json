@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Tartozás összege",
   "onboarding.account.create": "Létrehozás és kezdés",
   "onboarding.account.skip": "Kihagyás egyelőre",
-  "onboarding.account.defaultName": "Készpénz"
+  "onboarding.account.defaultName": "Készpénz",
+  "plan.bills.future.label": "Fizetendő: {month}",
+  "plan.bills.past.missed": "Kifizetetlen: {month}",
+  "plan.bills.past.allPaid": "Minden rendezve: {month}",
+  "plan.bills.group.due": "Esedékes",
+  "plan.bills.group.missed": "Kimaradt",
+  "plan.budgets.overBudget": "{n} túllépve",
+  "plan.budgets.plannedFor": "Tervezve: {month}",
+  "plan.budgets.pace.under": "Kereten belül"
 }

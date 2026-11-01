@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Velan määrä",
   "onboarding.account.create": "Luo ja aloita",
   "onboarding.account.skip": "Ohita toistaiseksi",
-  "onboarding.account.defaultName": "Käteinen"
+  "onboarding.account.defaultName": "Käteinen",
+  "plan.bills.future.label": "Maksettavaa: {month}",
+  "plan.bills.past.missed": "Maksamatta: {month}",
+  "plan.bills.past.allPaid": "Kaikki maksettu: {month}",
+  "plan.bills.group.due": "Erääntyvät",
+  "plan.bills.group.missed": "Maksamatta",
+  "plan.budgets.overBudget": "{n} yli budjetin",
+  "plan.budgets.plannedFor": "Suunniteltu: {month}",
+  "plan.budgets.pace.under": "Budjetissa"
 }

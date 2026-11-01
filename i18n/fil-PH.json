@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Halagang utang",
   "onboarding.account.create": "Gumawa at magsimula",
   "onboarding.account.skip": "Laktawan muna",
-  "onboarding.account.defaultName": "Cash"
+  "onboarding.account.defaultName": "Cash",
+  "plan.bills.future.label": "Babayaran sa {month}",
+  "plan.bills.past.missed": "Hindi nabayaran sa {month}",
+  "plan.bills.past.allPaid": "Bayad na lahat sa {month}",
+  "plan.bills.group.due": "Dapat bayaran",
+  "plan.bills.group.missed": "Hindi nabayaran",
+  "plan.budgets.overBudget": "{n} lampas sa budget",
+  "plan.budgets.plannedFor": "Nakaplano para sa {month}",
+  "plan.budgets.pace.under": "Nasa budget"
 }

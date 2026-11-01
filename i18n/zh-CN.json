@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "欠款金额",
   "onboarding.account.create": "创建并开始",
   "onboarding.account.skip": "暂时跳过",
-  "onboarding.account.defaultName": "现金"
+  "onboarding.account.defaultName": "现金",
+  "plan.bills.future.label": "{month}待付",
+  "plan.bills.past.missed": "{month}未付",
+  "plan.bills.past.allPaid": "{month}已全部结清",
+  "plan.bills.group.due": "待付",
+  "plan.bills.group.missed": "未付",
+  "plan.budgets.overBudget": "{n} 个超支",
+  "plan.budgets.plannedFor": "{month}计划预算",
+  "plan.budgets.pace.under": "预算内"
 }

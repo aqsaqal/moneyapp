@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "देय रक्कम",
   "onboarding.account.create": "तयार करा आणि सुरू करा",
   "onboarding.account.skip": "आत्ता वगळा",
-  "onboarding.account.defaultName": "रोख"
+  "onboarding.account.defaultName": "रोख",
+  "plan.bills.future.label": "{month} मध्ये भरायचे",
+  "plan.bills.past.missed": "{month} मध्ये भरले नाही",
+  "plan.bills.past.allPaid": "{month} मध्ये सर्व भरले",
+  "plan.bills.group.due": "देय",
+  "plan.bills.group.missed": "चुकलेली",
+  "plan.budgets.overBudget": "{n} बजेट ओलांडले",
+  "plan.budgets.plannedFor": "{month} साठी नियोजित",
+  "plan.budgets.pace.under": "बजेटमध्ये"
 }

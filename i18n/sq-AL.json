@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Shuma e detyruar",
   "onboarding.account.create": "Krijo & fillo",
   "onboarding.account.skip": "Kalo për tani",
-  "onboarding.account.defaultName": "Para në dorë"
+  "onboarding.account.defaultName": "Para në dorë",
+  "plan.bills.future.label": "Për t'u paguar në {month}",
+  "plan.bills.past.missed": "Të papaguara në {month}",
+  "plan.bills.past.allPaid": "Gjithçka e shlyer në {month}",
+  "plan.bills.group.due": "Për pagesë",
+  "plan.bills.group.missed": "Të humbura",
+  "plan.budgets.overBudget": "{n} mbi buxhet",
+  "plan.budgets.plannedFor": "Planifikuar për {month}",
+  "plan.budgets.pace.under": "Brenda buxhetit"
 }

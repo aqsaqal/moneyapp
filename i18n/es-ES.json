@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Importe adeudado",
   "onboarding.account.create": "Crear y empezar",
   "onboarding.account.skip": "Omitir por ahora",
-  "onboarding.account.defaultName": "Efectivo"
+  "onboarding.account.defaultName": "Efectivo",
+  "plan.bills.future.label": "A pagar en {month}",
+  "plan.bills.past.missed": "Sin pagar en {month}",
+  "plan.bills.past.allPaid": "Todo pagado en {month}",
+  "plan.bills.group.due": "Pendientes",
+  "plan.bills.group.missed": "No pagadas",
+  "plan.budgets.overBudget": "{n} excedidos",
+  "plan.budgets.plannedFor": "Planificado para {month}",
+  "plan.budgets.pace.under": "Dentro del presupuesto"
 }

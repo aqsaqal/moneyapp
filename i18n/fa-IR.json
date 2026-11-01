@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "مبلغ بدهی",
   "onboarding.account.create": "ایجاد و شروع",
   "onboarding.account.skip": "فعلاً رد کنید",
-  "onboarding.account.defaultName": "نقدی"
+  "onboarding.account.defaultName": "نقدی",
+  "plan.bills.future.label": "برای پرداخت در {month}",
+  "plan.bills.past.missed": "پرداخت‌نشده در {month}",
+  "plan.bills.past.allPaid": "همه قبض‌های {month} تسویه شده",
+  "plan.bills.group.due": "سررسید",
+  "plan.bills.group.missed": "پرداخت‌نشده",
+  "plan.budgets.overBudget": "{n} فراتر از بودجه",
+  "plan.budgets.plannedFor": "برنامه‌ریزی‌شده برای {month}",
+  "plan.budgets.pace.under": "در حد بودجه"
 }

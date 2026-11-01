@@ -632,5 +632,13 @@
   "onboarding.account.balanceOwed": "Jumlah terutang",
   "onboarding.account.create": "Buat & mulai",
   "onboarding.account.skip": "Lewati dulu",
-  "onboarding.account.defaultName": "Tunai"
+  "onboarding.account.defaultName": "Tunai",
+  "plan.bills.future.label": "Harus dibayar pada {month}",
+  "plan.bills.past.missed": "Tidak dibayar pada {month}",
+  "plan.bills.past.allPaid": "Semua lunas pada {month}",
+  "plan.bills.group.due": "Jatuh tempo",
+  "plan.bills.group.missed": "Terlewat",
+  "plan.budgets.overBudget": "{n} melebihi anggaran",
+  "plan.budgets.plannedFor": "Direncanakan untuk {month}",
+  "plan.budgets.pace.under": "Dalam anggaran"
 }

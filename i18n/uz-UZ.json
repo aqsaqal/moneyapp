@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Qarz summasi",
   "onboarding.account.create": "Yaratish va boshlash",
   "onboarding.account.skip": "Hozircha oʻtkazib yuborish",
-  "onboarding.account.defaultName": "Naqd pul"
+  "onboarding.account.defaultName": "Naqd pul",
+  "plan.bills.future.label": "{month} uchun toʻlash kerak",
+  "plan.bills.past.missed": "{month} uchun toʻlanmagan",
+  "plan.bills.past.allPaid": "{month} uchun hammasi toʻlangan",
+  "plan.bills.group.due": "Toʻlanishi kerak",
+  "plan.bills.group.missed": "Oʻtkazib yuborilgan",
+  "plan.budgets.overBudget": "{n} ta byudjetdan oshdi",
+  "plan.budgets.plannedFor": "{month} uchun rejalashtirilgan",
+  "plan.budgets.pace.under": "Byudjet doirasida"
 }

@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "செலுத்த வேண்டிய தொகை",
   "onboarding.account.create": "உருவாக்கி தொடங்கு",
   "onboarding.account.skip": "இப்போதைக்குத் தவிர்",
-  "onboarding.account.defaultName": "ரொக்கம்"
+  "onboarding.account.defaultName": "ரொக்கம்",
+  "plan.bills.future.label": "{month}-இல் செலுத்த வேண்டியது",
+  "plan.bills.past.missed": "{month}-இல் செலுத்தப்படாதவை",
+  "plan.bills.past.allPaid": "{month}-இல் அனைத்தும் செலுத்தப்பட்டன",
+  "plan.bills.group.due": "செலுத்த வேண்டியவை",
+  "plan.bills.group.missed": "தவறவிட்டவை",
+  "plan.budgets.overBudget": "{n} பட்ஜெட் மீறல்",
+  "plan.budgets.plannedFor": "{month}-க்கு திட்டமிடப்பட்டது",
+  "plan.budgets.pace.under": "பட்ஜெட்டுக்குள்"
 }

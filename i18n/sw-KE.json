@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Kiasi unachodaiwa",
   "onboarding.account.create": "Unda na uanze",
   "onboarding.account.skip": "Ruka kwa sasa",
-  "onboarding.account.defaultName": "Fedha taslimu"
+  "onboarding.account.defaultName": "Fedha taslimu",
+  "plan.bills.future.label": "Za kulipa {month}",
+  "plan.bills.past.missed": "Hazikulipwa {month}",
+  "plan.bills.past.allPaid": "Zote zimelipwa {month}",
+  "plan.bills.group.due": "Zinazodaiwa",
+  "plan.bills.group.missed": "Hazikulipwa",
+  "plan.budgets.overBudget": "{n} zimezidi bajeti",
+  "plan.budgets.plannedFor": "Imepangwa kwa {month}",
+  "plan.budgets.pace.under": "Ndani ya bajeti"
 }

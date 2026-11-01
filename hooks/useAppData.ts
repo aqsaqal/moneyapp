@@ -622,7 +622,13 @@ export interface CategoryTotal {
  *  result set on day 21 of a busy month. Excludes 'adjustment'
  *  category (manual balance reconciliation, not real flow) and
  *  scheduled-but-not-yet-applied transactions. */
-export function useMonthFlow(key: string, dateLte: number = Date.now()): { income: number; expense: number } {
+export function useMonthFlow(
+  key: string,
+  dateLte: number = Date.now(),
+  /** Count scheduled (not yet applied) rows too — used when the Activity
+   *  tab browses a future month, where nothing has been applied yet. */
+  includeScheduled = false,
+): { income: number; expense: number } {
   useVersion();
   const raw = getRawDB();
   return useMemo(() => {
@@ -639,12 +645,12 @@ export function useMonthFlow(key: string, dateLte: number = Date.now()): { incom
          AND date <  ?
          AND date <= ?
          AND (category IS NULL OR category != 'adjustment')
-         AND (applied IS NULL OR applied = 1)`,
+         ${includeScheduled ? '' : 'AND (applied IS NULL OR applied = 1)'}`,
       [s, e, dateLte],
     );
     return { income: row?.income ?? 0, expense: row?.expense ?? 0 };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [version, key, dateLte]);
+  }, [version, key, dateLte, includeScheduled]);
 }
 
 /** Returns a converter that folds an account-currency amount into the

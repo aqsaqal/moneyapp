@@ -12,10 +12,15 @@
 //            table keyed by accountId.
 //
 // One segment is visible at a time; the choice persists per profile.
+// Bills and Budgets are scoped to a selectable month (‹ › arrows, swipe,
+// or pick): paying a bill from another month dates the transaction to
+// that month's due day, so an early salary logged against November lands
+// on Nov 1 as a scheduled transaction and ticks November's plan.
 // Islamic flavour appends Zakat / Sadaqa rows via FeatureSlots.
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
@@ -52,7 +57,9 @@ import { projectPayoff, type Strategy } from '@/utils/debtPayoff';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import type { Account, Goal, Debt, Recurring } from '@/utils/db/schema';
 import { catInfo } from '@/constants/categories';
-import { monthKey, formatMoney } from '@/utils/format';
+import { monthKey, formatMoney, formatMonthYear } from '@/utils/format';
+import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import { useHaptics } from '@/hooks/useHaptics';
 import { convert } from '@/utils/fx';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
@@ -67,14 +74,23 @@ function buildPrefill(data: Record<string, unknown>): string {
   return encodePrefill(data);
 }
 
-function daysInThisMonth(): number {
-  const n = new Date();
-  return new Date(n.getFullYear(), n.getMonth() + 1, 0).getDate();
+type MonthKind = 'past' | 'current' | 'future';
+
+function startOfMonth(d: Date = new Date()): Date {
+  return new Date(d.getFullYear(), d.getMonth(), 1);
+}
+function monthKind(m: Date): MonthKind {
+  const cur = startOfMonth().getTime();
+  return m.getTime() === cur ? 'current' : m.getTime() < cur ? 'past' : 'future';
+}
+function daysInMonth(m: Date): number {
+  return new Date(m.getFullYear(), m.getMonth() + 1, 0).getDate();
 }
 
 export default function PlanScreen() {
   const router = useRouter();
   const t = useT();
+  const haptics = useHaptics();
   const [segment, setSegment] = useState<Segment>(() => {
     const s = kv.get('planSegment');
     return (SEGMENTS as string[]).includes(s ?? '') ? (s as Segment) : 'bills';
@@ -91,9 +107,36 @@ export default function PlanScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.segment]);
 
+  // Month anchor for Bills / Budgets. Session-scoped: reopening the app
+  // lands on the current month again.
+  const [month, setMonth] = useState<Date>(() => startOfMonth());
+  const [monthPickerOpen, setMonthPickerOpen] = useState(false);
+  const stepMonth = (delta: number) => {
+    haptics.tap();
+    setMonth((d) => new Date(d.getFullYear(), d.getMonth() + delta, 1));
+  };
+  const kind = monthKind(month);
+  const monthLabel = formatMonthYear(month);
+  const monthly = segment === 'bills' || segment === 'budgets';
+  const monthSwipe = Gesture.Pan()
+    .runOnJS(true)
+    .activeOffsetX([-24, 24])
+    .failOffsetY([-12, 12])
+    .onEnd((e) => {
+      if (e.translationX < -60) stepMonth(1);
+      else if (e.translationX > 60) stepMonth(-1);
+    });
+  const monthOptions = useMemo<PickerOption<string>[]>(() => {
+    const base = startOfMonth();
+    return Array.from({ length: 25 }, (_, i) => {
+      const d = new Date(base.getFullYear(), base.getMonth() - 12 + i, 1);
+      return { value: monthKey(d), label: formatMonthYear(d) };
+    });
+  }, []);
+
   // Counts for the chips — cheap reads, all already cached by version.
   const recurring = useRecurring();
-  const paid = usePaidItemsForMonth(monthKey());
+  const paid = usePaidItemsForMonth(monthKey(month));
   const categories = useCategoriesWithMeta();
   const goals = useGoals();
   const accounts = useAccounts();
@@ -132,15 +175,56 @@ export default function PlanScreen() {
           );
         })}
       </View>
+      {monthly && (
+        <View style={styles.periodRow}>
+          <Pressable onPress={() => stepMonth(-1)} hitSlop={8} style={styles.periodArrow} accessibilityRole="button" accessibilityLabel={t('activity.month.prev')}>
+            <MaterialCommunityIcons name="chevron-left" size={22} color={theme.text2} />
+          </Pressable>
+          <View style={styles.periodMid}>
+            <Pressable onPress={() => setMonthPickerOpen(true)} style={styles.periodLabel} accessibilityRole="button" accessibilityLabel={t('activity.month.pick')} accessibilityValue={{ text: monthLabel }}>
+              <Text style={[styles.periodLabelText, kind !== 'current' && { color: theme.accent }]} numberOfLines={1}>{monthLabel}</Text>
+              <MaterialCommunityIcons name="chevron-down" size={16} color={theme.text2} />
+            </Pressable>
+            {kind !== 'current' && (
+              <Pressable
+                onPress={() => { haptics.tap(); setMonth(startOfMonth()); }}
+                hitSlop={6}
+                style={styles.todayPill}
+                accessibilityRole="button"
+                accessibilityLabel={t('date.today')}
+              >
+                <Text style={styles.todayPillText}>{t('date.today')}</Text>
+              </Pressable>
+            )}
+          </View>
+          <Pressable onPress={() => stepMonth(1)} hitSlop={8} style={styles.periodArrow} accessibilityRole="button" accessibilityLabel={t('activity.month.next')}>
+            <MaterialCommunityIcons name="chevron-right" size={22} color={theme.text2} />
+          </Pressable>
+        </View>
+      )}
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
-        {segment === 'bills' && <BillsSegment />}
-        {segment === 'budgets' && <BudgetsSegment />}
+        {monthly && (
+          <GestureDetector gesture={monthSwipe}>
+            <View>
+              {segment === 'bills' && <BillsSegment month={month} />}
+              {segment === 'budgets' && <BudgetsSegment month={month} />}
+            </View>
+          </GestureDetector>
+        )}
         {segment === 'goals' && <GoalsSegment />}
         {segment === 'debts' && <DebtsSegment />}
         {/* Islamic: Zakat + Sadaqa nav rows. Generic: renders nothing. */}
         <FeatureSlots.PlanTabExtras onNavigate={(p) => router.push(p as never)} />
         <View style={{ height: 100 }} />
       </ScrollView>
+      <PickerSheet
+        visible={monthPickerOpen}
+        title={t('activity.month.pick')}
+        selected={monthKey(month)}
+        options={monthOptions}
+        onPick={(iso) => { const [y, m] = iso.split('-').map(Number); setMonth(new Date(y, m - 1, 1)); }}
+        onClose={() => setMonthPickerOpen(false)}
+      />
     </SafeAreaView>
   );
 }
@@ -166,12 +250,14 @@ function buildRecurringMenuOptions(args: {
   ];
 }
 
-function BillsSegment() {
+function BillsSegment({ month }: { month: Date }) {
   const t = useT();
   const router = useRouter();
   const recurring = useRecurring();
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
-  const key = monthKey();
+  const key = monthKey(month);
+  const kind = monthKind(month);
+  const monthLabel = formatMonthYear(month);
   const paid = usePaidItemsForMonth(key);
   const paidIds = useMemo(() => new Set(paid.map((p) => p.recurringId)), [paid]);
   const skippedIds = useMemo(
@@ -181,7 +267,10 @@ function BillsSegment() {
   const audit = useSubscriptionAudit();
   const [sheet, setSheet] = useState<RecurringSheetState>({ kind: 'closed' });
   const [menuFor, setMenuFor] = useState<Recurring | null>(null);
-  const [showPaid, setShowPaid] = useState(false);
+  // Paid rows are the main content of a past month, so they start open
+  // there and collapsed everywhere else.
+  const [showPaid, setShowPaid] = useState(kind === 'past');
+  useEffect(() => setShowPaid(kind === 'past'), [key, kind]);
   // Dismissed suggestion ids persist per profile so a rejected candidate
   // doesn't come back every month.
   const [dismissed, setDismissed] = useState<string[]>(
@@ -224,19 +313,40 @@ function BillsSegment() {
   const unpaidExp = exp.filter((r) => !paidIds.has(r.id));
   const remaining = unpaidExp.reduce((s, r) => s + toDefault(r), 0);
 
-  // Agenda buckets by due day this month.
+  // Agenda buckets by due day. Current month splits around today; a
+  // future month is all "Due"; a past month's unpaid rows are "Missed".
   const today = new Date().getDate();
-  const dim = daysInThisMonth();
+  const dim = daysInMonth(month);
   const dueDay = (r: Recurring) => Math.min(r.dayOfMonth, dim);
-  const overdue = unpaidExp.filter((r) => dueDay(r) < today);
-  const thisWeek = unpaidExp.filter((r) => dueDay(r) >= today && dueDay(r) <= today + 6);
-  const later = unpaidExp.filter((r) => dueDay(r) > today + 6);
+  const overdue = kind === 'current' ? unpaidExp.filter((r) => dueDay(r) < today) : [];
+  const thisWeek = kind === 'current' ? unpaidExp.filter((r) => dueDay(r) >= today && dueDay(r) <= today + 6) : [];
+  const later = kind === 'current' ? unpaidExp.filter((r) => dueDay(r) > today + 6) : kind === 'future' ? unpaidExp : [];
+  const missed = kind === 'past' ? unpaidExp : [];
   const paidExp = exp.filter((r) => paidIds.has(r.id));
   const lastDue = unpaidExp.reduce((m, r) => Math.max(m, dueDay(r)), 0);
   const nextIncome =
-    inc.find((r) => !paidIds.has(r.id) && dueDay(r) >= today) ?? inc[0] ?? null;
+    kind === 'past'
+      ? null
+      : kind === 'future'
+        ? inc.find((r) => !paidIds.has(r.id)) ?? inc[0] ?? null
+        : inc.find((r) => !paidIds.has(r.id) && dueDay(r) >= today) ?? inc[0] ?? null;
+  // A payment logged from another month is dated to that month's due
+  // day; the current month keeps "today" (Smart Add's default).
+  const payDate = (r: Recurring) =>
+    kind === 'current' ? undefined : new Date(month.getFullYear(), month.getMonth(), dueDay(r), 12).getTime();
+  const heroLabel =
+    kind === 'current'
+      ? unpaidExp.length === 0 && exp.length > 0 ? t('plan.bills.allPaid') : t('plan.bills.leftToPay')
+      : kind === 'future'
+        ? t('plan.bills.future.label', { month: monthLabel })
+        : unpaidExp.length === 0
+          ? t('plan.bills.past.allPaid', { month: monthLabel })
+          : t('plan.bills.past.missed', { month: monthLabel });
+  const heroColor = remaining <= 0 ? theme.accent : kind === 'past' ? theme.expense : theme.warning;
 
-  const suggestions = audit.detected.filter((c) => !dismissed.includes(c.id)).slice(0, 3);
+  // Subscription suggestions and stale hints are about "now"; keep them
+  // off other months.
+  const suggestions = kind === 'current' ? audit.detected.filter((c) => !dismissed.includes(c.id)).slice(0, 3) : [];
 
   const openPay = (r: Recurring) =>
     router.push({
@@ -250,13 +360,14 @@ function BillsSegment() {
           note: r.name,
           recurringId: r.id,
           markMonth: key,
+          date: payDate(r),
           originalCurrency: r.currency ?? undefined,
         }),
       },
     } as never);
 
   const renderRow = (r: Recurring) => {
-    const stale = audit.stale.find((s) => s.recurring.id === r.id);
+    const stale = kind === 'current' ? audit.stale.find((s) => s.recurring.id === r.id) : undefined;
     const staleDays = stale && !paidIds.has(r.id) ? stale.daysSinceLastSeen : null;
     return (
       <View key={r.id}>
@@ -293,17 +404,17 @@ function BillsSegment() {
     <View style={{ gap: spacing.lg }}>
       {/* Hero */}
       <View style={styles.hero}>
-        <Text style={styles.heroLabel}>
-          {unpaidExp.length === 0 && exp.length > 0 ? t('plan.bills.allPaid') : t('plan.bills.leftToPay')}
-        </Text>
-        <Text style={[styles.heroValue, { color: remaining > 0 ? theme.warning : theme.accent }]} adjustsFontSizeToFit numberOfLines={1}>
+        <Text style={styles.heroLabel}>{heroLabel}</Text>
+        <Text style={[styles.heroValue, { color: heroColor }]} adjustsFontSizeToFit numberOfLines={1}>
           {formatMoney(remaining, currency)}
         </Text>
-        <Text style={styles.heroSub}>
-          {lastDue > 0 ? t('plan.bills.byDay', { n: lastDue }) : ''}
-          {lastDue > 0 && nextIncome ? ' · ' : ''}
-          {nextIncome ? t('plan.bills.nextIncome', { n: dueDay(nextIncome) }) : ''}
-        </Text>
+        {kind !== 'past' && (
+          <Text style={styles.heroSub}>
+            {lastDue > 0 ? t('plan.bills.byDay', { n: lastDue }) : ''}
+            {lastDue > 0 && nextIncome ? ' · ' : ''}
+            {nextIncome ? t('plan.bills.nextIncome', { n: dueDay(nextIncome) }) : ''}
+          </Text>
+        )}
         <Text style={styles.heroFoot}>
           {t('plan.fixedOut')} {formatMoney(totalFixedExp, currency)} · {t('plan.fixedIn')}{' '}
           {formatMoney(totalFixedInc, currency)}
@@ -351,14 +462,15 @@ function BillsSegment() {
 
       {/* Agenda */}
       <SectionHeader
-        title={t('plan.bills.upcoming')}
+        title={kind === 'past' ? t('plan.seg.bills') : t('plan.bills.upcoming')}
         onAdd={() => setSheet({ kind: 'create', type: 'expense' })}
         addLabel={t('common.add')}
       />
       {exp.length === 0 && <Text style={styles.emptyHint}>{t('plan.empty.expenses')}</Text>}
       <Group label={t('plan.bills.group.overdue')} items={overdue} tone={theme.expense} />
+      <Group label={t('plan.bills.group.missed')} items={missed} tone={theme.expense} />
       <Group label={t('plan.bills.group.week')} items={thisWeek} tone={theme.warning} />
-      <Group label={t('plan.bills.group.later')} items={later} />
+      <Group label={kind === 'future' ? t('plan.bills.group.due') : t('plan.bills.group.later')} items={later} />
       {paidExp.length > 0 && (
         <View style={{ gap: spacing.sm }}>
           <Pressable
@@ -452,11 +564,13 @@ function buildBudgetMenuOptions(args: {
   ];
 }
 
-function BudgetsSegment() {
+function BudgetsSegment({ month }: { month: Date }) {
   const t = useT();
   const defaultCurrency = (kv.get('currency') ?? 'USD') as CurrencyCode;
   const categories = useCategoriesWithMeta();
-  const key = monthKey();
+  const key = monthKey(month);
+  const kind = monthKind(month);
+  const monthLabel = formatMonthYear(month);
   const totals = useMonthTotalsByCategory(key, 'expense');
   const totalsMap = useMemo(() => new Map(totals.map((x) => [x.category, x.total])), [totals]);
   const [editing, setEditing] = useState<CategoryWithMeta | null | undefined>(undefined);
@@ -480,7 +594,9 @@ function BudgetsSegment() {
 
   const budgeted = categories.filter((c) => c.monthlyBudget != null && !c.archived);
   // Pace: where spend "should" be given how far into the month we are.
-  const elapsedPct = new Date().getDate() / daysInThisMonth();
+  // Only meaningful for the current month — a past month is final
+  // (within / over budget) and a future month has nothing spent yet.
+  const elapsedPct = new Date().getDate() / daysInMonth(month);
   const rows = budgeted
     .map((c) => {
       const budget = c.monthlyBudget ?? 0;
@@ -488,13 +604,17 @@ function BudgetsSegment() {
       const spentInDefault = totalsMap.get(c.id) ?? 0;
       const spent = ccy === defaultCurrency ? spentInDefault : convert(spentInDefault, defaultCurrency, ccy);
       const pct = budget > 0 ? spent / budget : 0;
-      const pace: 'on' | 'over' | 'exceeded' =
-        pct >= 1 ? 'exceeded' : pct > elapsedPct + 0.05 ? 'over' : 'on';
+      const pace: 'on' | 'over' | 'exceeded' | 'under' =
+        pct >= 1 ? 'exceeded'
+        : kind === 'past' ? 'under'
+        : kind === 'current' && pct > elapsedPct + 0.05 ? 'over'
+        : 'on';
       const urgency = pace === 'exceeded' ? 2 : pace === 'over' ? 1 : 0;
       return { c, ccy, spent, budget, pct, pace, urgency, spentInDefault, budgetInDefault: ccy === defaultCurrency ? budget : convert(budget, ccy, defaultCurrency) };
     })
     .sort((a, b) => b.urgency - a.urgency || b.pct - a.pct);
-  const offPace = rows.filter((r) => r.pace !== 'on').length;
+  const offPace = rows.filter((r) => r.pace === 'over' || r.pace === 'exceeded').length;
+  const exceeded = rows.filter((r) => r.pace === 'exceeded').length;
   const sumSpent = rows.reduce((s, r) => s + r.spentInDefault, 0);
   const sumBudget = rows.reduce((s, r) => s + r.budgetInDefault, 0);
 
@@ -502,16 +622,28 @@ function BudgetsSegment() {
     <View style={{ gap: spacing.md }}>
       {rows.length > 0 && (
         <View style={styles.hero}>
-          <Text style={styles.heroLabel}>{t('plan.budgets.count', { n: rows.length })}</Text>
-          <Text style={[styles.heroValue, { color: offPace > 0 ? theme.warning : theme.accent }]} adjustsFontSizeToFit numberOfLines={1}>
-            {t('plan.budgets.overPace', { n: offPace })}
+          <Text style={styles.heroLabel}>
+            {kind === 'future' ? t('plan.budgets.plannedFor', { month: monthLabel }) : t('plan.budgets.count', { n: rows.length })}
           </Text>
-          <Text style={styles.heroSub}>
-            {t('plan.budgets.spentOf', {
-              spent: formatMoney(sumSpent, defaultCurrency),
-              total: formatMoney(sumBudget, defaultCurrency),
-            })}
+          <Text
+            style={[styles.heroValue, { color: kind === 'future' ? theme.text1 : offPace > 0 ? theme.warning : theme.accent }]}
+            adjustsFontSizeToFit
+            numberOfLines={1}
+          >
+            {kind === 'future'
+              ? formatMoney(sumBudget, defaultCurrency)
+              : kind === 'past'
+                ? t('plan.budgets.overBudget', { n: exceeded })
+                : t('plan.budgets.overPace', { n: offPace })}
           </Text>
+          {kind !== 'future' && (
+            <Text style={styles.heroSub}>
+              {t('plan.budgets.spentOf', {
+                spent: formatMoney(sumSpent, defaultCurrency),
+                total: formatMoney(sumBudget, defaultCurrency),
+              })}
+            </Text>
+          )}
         </View>
       )}
       <SectionHeader title={t('plan.budgets')} onAdd={() => setPickerOpen(true)} addLabel={t('common.add')} />
@@ -536,9 +668,11 @@ function BudgetsSegment() {
                   <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={14} color={c.color} />
                 </View>
                 <Text style={styles.budgetName} numberOfLines={1}>{c.name}</Text>
-                <Text style={[styles.paceTag, { color: paceColor, borderColor: `${paceColor}66` }]}>
-                  {t(`plan.budgets.pace.${pace}`)}
-                </Text>
+                {kind !== 'future' && (
+                  <Text style={[styles.paceTag, { color: paceColor, borderColor: `${paceColor}66` }]}>
+                    {t(`plan.budgets.pace.${pace}`)}
+                  </Text>
+                )}
               </View>
               <Text style={[styles.budgetAmt, pace === 'exceeded' && { color: theme.expense }]}>
                 {formatMoney(spent, ccy)} / {formatMoney(budget, ccy)}
@@ -923,6 +1057,35 @@ const styles = StyleSheet.create({
   },
   segCountActive: { color: theme.accent, backgroundColor: theme.bg },
   scroll: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl, gap: spacing.lg },
+  periodRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: spacing.lg,
+    paddingBottom: spacing.sm,
+  },
+  periodMid: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.sm, minWidth: 0 },
+  periodArrow: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center', backgroundColor: theme.bg2 },
+  periodLabel: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: spacing.md,
+    paddingVertical: 8,
+    borderRadius: radii.md,
+    backgroundColor: theme.bg2,
+    flexShrink: 1,
+  },
+  periodLabelText: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi, flexShrink: 1 },
+  todayPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: `${theme.accent}66`,
+    backgroundColor: `${theme.accent}14`,
+  },
+  todayPillText: { color: theme.accent, fontSize: sizes.xs, fontFamily: font.bodySemi },
   hero: {
     padding: spacing.md,
     borderRadius: radii.lg,

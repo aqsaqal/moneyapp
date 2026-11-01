@@ -632,5 +632,13 @@
   "onboarding.account.balanceOwed": "Қарыз сомасы",
   "onboarding.account.create": "Құру және бастау",
   "onboarding.account.skip": "Әзірге өткізіп жіберу",
-  "onboarding.account.defaultName": "Қолма-қол"
+  "onboarding.account.defaultName": "Қолма-қол",
+  "plan.bills.future.label": "{month} айында төлеу керек",
+  "plan.bills.past.missed": "{month} айында төленбеген",
+  "plan.bills.past.allPaid": "{month} айында бәрі төленді",
+  "plan.bills.group.due": "Төлеу мерзімі",
+  "plan.bills.group.missed": "Төленбеген",
+  "plan.budgets.overBudget": "Бюджеттен асқаны: {n}",
+  "plan.budgets.plannedFor": "{month} айына жоспарланған",
+  "plan.budgets.pace.under": "Бюджет шегінде"
 }

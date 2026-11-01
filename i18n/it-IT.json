@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Importo dovuto",
   "onboarding.account.create": "Crea e inizia",
   "onboarding.account.skip": "Salta per ora",
-  "onboarding.account.defaultName": "Contanti"
+  "onboarding.account.defaultName": "Contanti",
+  "plan.bills.future.label": "Da pagare a {month}",
+  "plan.bills.past.missed": "Non pagate a {month}",
+  "plan.bills.past.allPaid": "Tutto saldato a {month}",
+  "plan.bills.group.due": "In scadenza",
+  "plan.bills.group.missed": "Non pagate",
+  "plan.budgets.overBudget": "{n} oltre il budget",
+  "plan.budgets.plannedFor": "Pianificato per {month}",
+  "plan.budgets.pace.under": "Nel budget"
 }

@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Dugovani iznos",
   "onboarding.account.create": "Stvori i započni",
   "onboarding.account.skip": "Preskoči za sada",
-  "onboarding.account.defaultName": "Gotovina"
+  "onboarding.account.defaultName": "Gotovina",
+  "plan.bills.future.label": "Za platiti – {month}",
+  "plan.bills.past.missed": "Neplaćeno – {month}",
+  "plan.bills.past.allPaid": "Sve podmireno – {month}",
+  "plan.bills.group.due": "Dospijeva",
+  "plan.bills.group.missed": "Propušteno",
+  "plan.budgets.overBudget": "{n} iznad proračuna",
+  "plan.budgets.plannedFor": "Planirano za {month}",
+  "plan.budgets.pace.under": "Unutar proračuna"
 }

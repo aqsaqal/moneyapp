@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "갚을 금액",
   "onboarding.account.create": "만들고 시작하기",
   "onboarding.account.skip": "지금은 건너뛰기",
-  "onboarding.account.defaultName": "현금"
+  "onboarding.account.defaultName": "현금",
+  "plan.bills.future.label": "{month} 납부 예정",
+  "plan.bills.past.missed": "{month} 미납",
+  "plan.bills.past.allPaid": "{month} 모두 납부 완료",
+  "plan.bills.group.due": "납부 예정",
+  "plan.bills.group.missed": "미납",
+  "plan.budgets.overBudget": "{n}개 예산 초과",
+  "plan.budgets.plannedFor": "{month} 예산 계획",
+  "plan.budgets.pace.under": "예산 내"
 }

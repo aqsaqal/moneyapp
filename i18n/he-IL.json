@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "סכום החוב",
   "onboarding.account.create": "צור והתחל",
   "onboarding.account.skip": "דלג בינתיים",
-  "onboarding.account.defaultName": "מזומן"
+  "onboarding.account.defaultName": "מזומן",
+  "plan.bills.future.label": "לתשלום ב{month}",
+  "plan.bills.past.missed": "לא שולמו ב{month}",
+  "plan.bills.past.allPaid": "הכול שולם ב{month}",
+  "plan.bills.group.due": "לתשלום",
+  "plan.bills.group.missed": "לא שולמו",
+  "plan.budgets.overBudget": "{n} מעל התקציב",
+  "plan.budgets.plannedFor": "מתוכנן ל{month}",
+  "plan.budgets.pace.under": "במסגרת התקציב"
 }

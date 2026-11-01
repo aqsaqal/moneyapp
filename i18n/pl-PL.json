@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Kwota zadłużenia",
   "onboarding.account.create": "Utwórz i zacznij",
   "onboarding.account.skip": "Pomiń na razie",
-  "onboarding.account.defaultName": "Gotówka"
+  "onboarding.account.defaultName": "Gotówka",
+  "plan.bills.future.label": "Do zapłaty: {month}",
+  "plan.bills.past.missed": "Nieopłacone: {month}",
+  "plan.bills.past.allPaid": "Wszystko opłacone: {month}",
+  "plan.bills.group.due": "Do zapłaty",
+  "plan.bills.group.missed": "Nieopłacone",
+  "plan.budgets.overBudget": "{n} ponad budżet",
+  "plan.budgets.plannedFor": "Zaplanowano: {month}",
+  "plan.budgets.pace.under": "W budżecie"
 }

@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Offener Betrag",
   "onboarding.account.create": "Erstellen & loslegen",
   "onboarding.account.skip": "Vorerst überspringen",
-  "onboarding.account.defaultName": "Bar"
+  "onboarding.account.defaultName": "Bar",
+  "plan.bills.future.label": "Zu zahlen im {month}",
+  "plan.bills.past.missed": "Nicht bezahlt im {month}",
+  "plan.bills.past.allPaid": "Alles bezahlt im {month}",
+  "plan.bills.group.due": "Fällig",
+  "plan.bills.group.missed": "Nicht bezahlt",
+  "plan.budgets.overBudget": "{n} über Budget",
+  "plan.budgets.plannedFor": "Geplant für {month}",
+  "plan.budgets.pace.under": "Im Budget"
 }

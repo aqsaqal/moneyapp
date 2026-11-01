@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Võlgnetav summa",
   "onboarding.account.create": "Loo ja alusta",
   "onboarding.account.skip": "Jäta praegu vahele",
-  "onboarding.account.defaultName": "Sularaha"
+  "onboarding.account.defaultName": "Sularaha",
+  "plan.bills.future.label": "Maksta: {month}",
+  "plan.bills.past.missed": "Maksmata: {month}",
+  "plan.bills.past.allPaid": "Kõik makstud: {month}",
+  "plan.bills.group.due": "Maksta",
+  "plan.bills.group.missed": "Maksmata",
+  "plan.budgets.overBudget": "{n} üle eelarve",
+  "plan.budgets.plannedFor": "Planeeritud: {month}",
+  "plan.budgets.pace.under": "Eelarves"
 }

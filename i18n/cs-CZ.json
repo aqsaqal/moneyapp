@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Dlužná částka",
   "onboarding.account.create": "Vytvořit a začít",
   "onboarding.account.skip": "Zatím přeskočit",
-  "onboarding.account.defaultName": "Hotovost"
+  "onboarding.account.defaultName": "Hotovost",
+  "plan.bills.future.label": "K zaplacení za {month}",
+  "plan.bills.past.missed": "Nezaplaceno za {month}",
+  "plan.bills.past.allPaid": "Vše uhrazeno za {month}",
+  "plan.bills.group.due": "K zaplacení",
+  "plan.bills.group.missed": "Nezaplaceno",
+  "plan.budgets.overBudget": "{n} přes rozpočet",
+  "plan.budgets.plannedFor": "Naplánováno na {month}",
+  "plan.budgets.pace.under": "V rozpočtu"
 }

@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "واجب الادا رقم",
   "onboarding.account.create": "بنائیں اور شروع کریں",
   "onboarding.account.skip": "فی الحال چھوڑ دیں",
-  "onboarding.account.defaultName": "نقد"
+  "onboarding.account.defaultName": "نقد",
+  "plan.bills.future.label": "{month} میں ادا کرنا ہے",
+  "plan.bills.past.missed": "{month} میں ادا نہیں ہوئے",
+  "plan.bills.past.allPaid": "{month} میں سب ادا ہو گئے",
+  "plan.bills.group.due": "واجب الادا",
+  "plan.bills.group.missed": "ادا نہ ہوئے",
+  "plan.budgets.overBudget": "{n} بجٹ سے زیادہ",
+  "plan.budgets.plannedFor": "{month} کے لیے منصوبہ",
+  "plan.budgets.pace.under": "بجٹ کے اندر"
 }

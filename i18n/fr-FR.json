@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Montant dû",
   "onboarding.account.create": "Créer et commencer",
   "onboarding.account.skip": "Passer pour l'instant",
-  "onboarding.account.defaultName": "Espèces"
+  "onboarding.account.defaultName": "Espèces",
+  "plan.bills.future.label": "À payer en {month}",
+  "plan.bills.past.missed": "Impayés en {month}",
+  "plan.bills.past.allPaid": "Tout réglé en {month}",
+  "plan.bills.group.due": "À payer",
+  "plan.bills.group.missed": "Impayées",
+  "plan.budgets.overBudget": "{n} dépassés",
+  "plan.budgets.plannedFor": "Prévu pour {month}",
+  "plan.budgets.pace.under": "Dans le budget"
 }

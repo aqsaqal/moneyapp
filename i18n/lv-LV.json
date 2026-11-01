@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Parāda summa",
   "onboarding.account.create": "Izveidot un sākt",
   "onboarding.account.skip": "Pagaidām izlaist",
-  "onboarding.account.defaultName": "Skaidra nauda"
+  "onboarding.account.defaultName": "Skaidra nauda",
+  "plan.bills.future.label": "Jāmaksā – {month}",
+  "plan.bills.past.missed": "Nesamaksāts – {month}",
+  "plan.bills.past.allPaid": "Viss nokārtots – {month}",
+  "plan.bills.group.due": "Jāmaksā",
+  "plan.bills.group.missed": "Nesamaksāts",
+  "plan.budgets.overBudget": "{n} virs budžeta",
+  "plan.budgets.plannedFor": "Plānots – {month}",
+  "plan.budgets.pace.under": "Budžeta robežās"
 }

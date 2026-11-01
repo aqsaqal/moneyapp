@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Borc məbləği",
   "onboarding.account.create": "Yarat və başla",
   "onboarding.account.skip": "Hələlik keç",
-  "onboarding.account.defaultName": "Nağd"
+  "onboarding.account.defaultName": "Nağd",
+  "plan.bills.future.label": "{month} üçün ödəniləcək",
+  "plan.bills.past.missed": "{month} ayında ödənilməyib",
+  "plan.bills.past.allPaid": "{month} ayında hər şey ödənilib",
+  "plan.bills.group.due": "Ödənilməli",
+  "plan.bills.group.missed": "Ödənilməmiş",
+  "plan.budgets.overBudget": "{n} büdcəni aşıb",
+  "plan.budgets.plannedFor": "{month} üçün planlaşdırılıb",
+  "plan.budgets.pace.under": "Büdcə daxilində"
 }

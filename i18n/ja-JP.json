@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "未払い額",
   "onboarding.account.create": "作成してはじめる",
   "onboarding.account.skip": "今はスキップ",
-  "onboarding.account.defaultName": "現金"
+  "onboarding.account.defaultName": "現金",
+  "plan.bills.future.label": "{month}の支払い予定",
+  "plan.bills.past.missed": "{month}の未払い",
+  "plan.bills.past.allPaid": "{month}はすべて支払済み",
+  "plan.bills.group.due": "支払い予定",
+  "plan.bills.group.missed": "未払い",
+  "plan.budgets.overBudget": "{n} 件予算超過",
+  "plan.budgets.plannedFor": "{month}の予算計画",
+  "plan.budgets.pace.under": "予算内"
 }

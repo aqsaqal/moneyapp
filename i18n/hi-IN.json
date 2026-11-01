@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "बकाया राशि",
   "onboarding.account.create": "बनाएं और शुरू करें",
   "onboarding.account.skip": "अभी छोड़ें",
-  "onboarding.account.defaultName": "नकद"
+  "onboarding.account.defaultName": "नकद",
+  "plan.bills.future.label": "{month} में भुगतान करना है",
+  "plan.bills.past.missed": "{month} में भुगतान नहीं हुआ",
+  "plan.bills.past.allPaid": "{month} में सब चुकाया गया",
+  "plan.bills.group.due": "देय",
+  "plan.bills.group.missed": "नहीं चुकाए गए",
+  "plan.budgets.overBudget": "{n} बजट से ज़्यादा",
+  "plan.budgets.plannedFor": "{month} के लिए योजना",
+  "plan.budgets.pace.under": "बजट के भीतर"
 }

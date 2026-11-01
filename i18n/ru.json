@@ -632,5 +632,13 @@
   "onboarding.account.balanceOwed": "Сумма долга",
   "onboarding.account.create": "Создать и начать",
   "onboarding.account.skip": "Пока пропустить",
-  "onboarding.account.defaultName": "Наличные"
+  "onboarding.account.defaultName": "Наличные",
+  "plan.bills.future.label": "К оплате за {month}",
+  "plan.bills.past.missed": "Не оплачено за {month}",
+  "plan.bills.past.allPaid": "Всё оплачено за {month}",
+  "plan.bills.group.due": "К оплате",
+  "plan.bills.group.missed": "Пропущено",
+  "plan.budgets.overBudget": "Превышено: {n}",
+  "plan.budgets.plannedFor": "Запланировано на {month}",
+  "plan.budgets.pace.under": "В рамках бюджета"
 }

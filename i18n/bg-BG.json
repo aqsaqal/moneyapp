@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Дължима сума",
   "onboarding.account.create": "Създай и започни",
   "onboarding.account.skip": "Пропусни засега",
-  "onboarding.account.defaultName": "В брой"
+  "onboarding.account.defaultName": "В брой",
+  "plan.bills.future.label": "За плащане през {month}",
+  "plan.bills.past.missed": "Неплатени през {month}",
+  "plan.bills.past.allPaid": "Всичко уредено през {month}",
+  "plan.bills.group.due": "За плащане",
+  "plan.bills.group.missed": "Пропуснати",
+  "plan.budgets.overBudget": "{n} над бюджета",
+  "plan.budgets.plannedFor": "Планирано за {month}",
+  "plan.budgets.pace.under": "В рамките на бюджета"
 }

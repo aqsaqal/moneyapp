@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Οφειλόμενο ποσό",
   "onboarding.account.create": "Δημιουργία & έναρξη",
   "onboarding.account.skip": "Παράλειψη για τώρα",
-  "onboarding.account.defaultName": "Μετρητά"
+  "onboarding.account.defaultName": "Μετρητά",
+  "plan.bills.future.label": "Προς πληρωμή: {month}",
+  "plan.bills.past.missed": "Απλήρωτα: {month}",
+  "plan.bills.past.allPaid": "Όλα εξοφλημένα: {month}",
+  "plan.bills.group.due": "Προς πληρωμή",
+  "plan.bills.group.missed": "Απλήρωτα",
+  "plan.budgets.overBudget": "{n} σε υπέρβαση",
+  "plan.budgets.plannedFor": "Προγραμματισμένα: {month}",
+  "plan.budgets.pace.under": "Εντός ορίου"
 }

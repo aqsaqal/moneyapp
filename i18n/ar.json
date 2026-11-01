@@ -632,5 +632,13 @@
   "onboarding.account.balanceOwed": "المبلغ المستحق",
   "onboarding.account.create": "إنشاء والبدء",
   "onboarding.account.skip": "تخطّ الآن",
-  "onboarding.account.defaultName": "نقدي"
+  "onboarding.account.defaultName": "نقدي",
+  "plan.bills.future.label": "للدفع في {month}",
+  "plan.bills.past.missed": "لم تُدفع في {month}",
+  "plan.bills.past.allPaid": "تمت تسوية كل فواتير {month}",
+  "plan.bills.group.due": "مستحقّة",
+  "plan.bills.group.missed": "غير مدفوعة",
+  "plan.budgets.overBudget": "{n} تجاوزت الميزانية",
+  "plan.budgets.plannedFor": "المخطّط لشهر {month}",
+  "plan.budgets.pace.under": "ضمن الميزانية"
 }

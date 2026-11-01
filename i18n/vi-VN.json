@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Số tiền còn nợ",
   "onboarding.account.create": "Tạo và bắt đầu",
   "onboarding.account.skip": "Bỏ qua lúc này",
-  "onboarding.account.defaultName": "Tiền mặt"
+  "onboarding.account.defaultName": "Tiền mặt",
+  "plan.bills.future.label": "Cần trả trong {month}",
+  "plan.bills.past.missed": "Chưa trả trong {month}",
+  "plan.bills.past.allPaid": "Đã trả hết trong {month}",
+  "plan.bills.group.due": "Đến hạn",
+  "plan.bills.group.missed": "Bỏ lỡ",
+  "plan.budgets.overBudget": "{n} vượt ngân sách",
+  "plan.budgets.plannedFor": "Kế hoạch cho {month}",
+  "plan.budgets.pace.under": "Trong ngân sách"
 }

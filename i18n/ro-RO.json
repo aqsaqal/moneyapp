@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Sumă datorată",
   "onboarding.account.create": "Creează și începe",
   "onboarding.account.skip": "Sari peste deocamdată",
-  "onboarding.account.defaultName": "Numerar"
+  "onboarding.account.defaultName": "Numerar",
+  "plan.bills.future.label": "De plătit în {month}",
+  "plan.bills.past.missed": "Neplătite în {month}",
+  "plan.bills.past.allPaid": "Totul achitat în {month}",
+  "plan.bills.group.due": "Scadente",
+  "plan.bills.group.missed": "Neplătite",
+  "plan.budgets.overBudget": "{n} peste buget",
+  "plan.budgets.plannedFor": "Planificat pentru {month}",
+  "plan.budgets.pace.under": "În buget"
 }

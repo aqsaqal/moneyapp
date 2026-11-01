@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "Openstaand bedrag",
   "onboarding.account.create": "Aanmaken en starten",
   "onboarding.account.skip": "Voorlopig overslaan",
-  "onboarding.account.defaultName": "Contant"
+  "onboarding.account.defaultName": "Contant",
+  "plan.bills.future.label": "Te betalen in {month}",
+  "plan.bills.past.missed": "Niet betaald in {month}",
+  "plan.bills.past.allPaid": "Alles betaald in {month}",
+  "plan.bills.group.due": "Te betalen",
+  "plan.bills.group.missed": "Gemist",
+  "plan.budgets.overBudget": "{n} over budget",
+  "plan.budgets.plannedFor": "Gepland voor {month}",
+  "plan.budgets.pace.under": "Binnen budget"
 }

@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "欠款金額",
   "onboarding.account.create": "建立並開始",
   "onboarding.account.skip": "暫時略過",
-  "onboarding.account.defaultName": "現金"
+  "onboarding.account.defaultName": "現金",
+  "plan.bills.future.label": "{month}待付",
+  "plan.bills.past.missed": "{month}未付",
+  "plan.bills.past.allPaid": "{month}已全部結清",
+  "plan.bills.group.due": "待付",
+  "plan.bills.group.missed": "未付",
+  "plan.budgets.overBudget": "{n} 個超支",
+  "plan.budgets.plannedFor": "{month}計畫預算",
+  "plan.budgets.pace.under": "預算內"
 }

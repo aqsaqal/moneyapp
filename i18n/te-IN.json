@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "చెల్లించాల్సిన మొత్తం",
   "onboarding.account.create": "సృష్టించి ప్రారంభించండి",
   "onboarding.account.skip": "ప్రస్తుతానికి దాటవేయి",
-  "onboarding.account.defaultName": "నగదు"
+  "onboarding.account.defaultName": "నగదు",
+  "plan.bills.future.label": "{month}లో చెల్లించాల్సినది",
+  "plan.bills.past.missed": "{month}లో చెల్లించనివి",
+  "plan.bills.past.allPaid": "{month}లో అన్నీ చెల్లించారు",
+  "plan.bills.group.due": "చెల్లించాల్సినవి",
+  "plan.bills.group.missed": "తప్పిపోయినవి",
+  "plan.budgets.overBudget": "{n} బడ్జెట్ మించాయి",
+  "plan.budgets.plannedFor": "{month}కి ప్రణాళిక",
+  "plan.budgets.pace.under": "బడ్జెట్‌లోపు"
 }

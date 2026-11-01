@@ -633,5 +633,13 @@
   "onboarding.account.balanceOwed": "ยอดค้างชำระ",
   "onboarding.account.create": "สร้างและเริ่มต้น",
   "onboarding.account.skip": "ข้ามไปก่อน",
-  "onboarding.account.defaultName": "เงินสด"
+  "onboarding.account.defaultName": "เงินสด",
+  "plan.bills.future.label": "ต้องจ่ายใน {month}",
+  "plan.bills.past.missed": "ไม่ได้จ่ายใน {month}",
+  "plan.bills.past.allPaid": "จ่ายครบแล้วใน {month}",
+  "plan.bills.group.due": "ถึงกำหนด",
+  "plan.bills.group.missed": "ไม่ได้จ่าย",
+  "plan.budgets.overBudget": "{n} เกินงบ",
+  "plan.budgets.plannedFor": "วางแผนไว้สำหรับ {month}",
+  "plan.budgets.pace.under": "ไม่เกินงบ"
 }
