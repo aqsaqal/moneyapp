@@ -25,7 +25,7 @@ import {
   getActiveProfileId,
 } from '@/utils/profiles';
 import { getDB, getRawDB } from './client';
-import { accounts, recurring, transactions, goals, debts, paidItems } from './schema';
+import { accounts, recurring, transactions, goals, debts, paidItems, events } from './schema';
 import { refreshTodaySnapshot, backfillNetWorthHistory } from '@/utils/netWorthSnapshot';
 
 const DEMO_NAME = 'Demo';
@@ -85,6 +85,7 @@ function seedAll(): void {
   seedGoalsAndDebts();
   seedBudgets();
   seedTransactions();
+  seedEvents();
   // The profile-switch boot listener ran backfill before transactions
   // existed, so net_worth_snapshots is empty for this profile. Clear
   // the per-profile "done" gate and force a backfill now that all
@@ -98,6 +99,40 @@ function seedAll(): void {
     refreshTodaySnapshot();
     backfillNetWorthHistory();
   } catch { /* best-effort */ }
+}
+
+/** Events / trips: a running trip with tagged spending (store screenshots
+ *  show the Home card + event screen) and a finished renovation. */
+function seedEvents(): void {
+  const db = getDB();
+  const now = new Date();
+  const day = 86_400_000;
+  const sod = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+  const eod = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), 23, 59, 59, 999).getTime();
+  const tripStart = new Date(now.getTime() - 2 * day);
+  const tripEnd = new Date(now.getTime() + 4 * day);
+  const renoStart = new Date(now.getTime() - 45 * day);
+  const renoEnd = new Date(now.getTime() - 25 * day);
+  db.insert(events).values([
+    { id: 'demo-ev-trip', name: 'Miami trip', icon: 'beach', color: '#F59E0B', startDate: sod(tripStart), endDate: eod(tripEnd), budget: 1200, budgetCurrency: 'USD', archived: 0, createdAt: Date.now() },
+    { id: 'demo-ev-reno', name: 'Kitchen renovation', icon: 'hammer', color: '#6366F1', startDate: sod(renoStart), endDate: eod(renoEnd), budget: 2500, budgetCurrency: 'USD', archived: 0, createdAt: Date.now() },
+  ]).run();
+  const at = (daysAgo: number, hour: number) => {
+    const d = new Date(now.getTime() - daysAgo * day);
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0).getTime();
+  };
+  const rows: (typeof transactions.$inferInsert)[] = [
+    { id: 'demo-ev-t1', type: 'expense', amount: 386, category: 'travel', accountId: 'demo-cc', note: 'Flights', date: at(12, 11), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t2', type: 'expense', amount: 289, category: 'travel', accountId: 'demo-cc', note: 'Hotel, 2 nights', date: at(2, 15), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t3', type: 'expense', amount: 42.8, category: 'transport', accountId: 'demo-cc', note: 'Taxi from airport', date: at(2, 13), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t4', type: 'expense', amount: 68.5, category: 'food', accountId: 'demo-cc', note: 'Dinner at Joe\'s', date: at(1, 20), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t5', type: 'expense', amount: 24.9, category: 'food', accountId: 'demo-cash', note: 'Beach lunch', date: at(1, 13), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t6', type: 'expense', amount: 55, category: 'shopping', accountId: 'demo-cc', note: 'Sunscreen & hats', date: at(0, 10), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-r1', type: 'expense', amount: 1450, category: 'shopping', accountId: 'demo-checking', note: 'Countertop', date: at(38, 10), createdAt: Date.now(), eventId: 'demo-ev-reno' },
+    { id: 'demo-ev-r2', type: 'expense', amount: 620, category: 'shopping', accountId: 'demo-checking', note: 'Cabinets', date: at(33, 10), createdAt: Date.now(), eventId: 'demo-ev-reno' },
+    { id: 'demo-ev-r3', type: 'expense', amount: 340, category: 'bills', accountId: 'demo-checking', note: 'Plumber', date: at(27, 9), createdAt: Date.now(), eventId: 'demo-ev-reno' },
+  ];
+  db.insert(transactions).values(rows).run();
 }
 
 function seedAccounts(): void {

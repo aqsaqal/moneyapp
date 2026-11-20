@@ -51,6 +51,18 @@ function ScreenshotController() {
             if (found.id !== P.getActiveProfileId()) P.switchActiveProfile(found.id);
             console.log(`[screenshot-ctl] profile → ${found.name}`);
           }
+          else if (txt === 'demo:rebuild') {
+            // Regenerate the Demo profile's sample data relative to today
+            // (store screenshots) and switch to it.
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const D = require('@/utils/db/demoSeed') as typeof import('@/utils/db/demoSeed');
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const P = require('@/utils/profiles') as typeof import('@/utils/profiles');
+            const r = D.rebuildDemoProfile();
+            const demo = P.listProfiles().find((p) => p.name.toLowerCase() === 'demo');
+            if (demo && demo.id !== P.getActiveProfileId()) P.switchActiveProfile(demo.id);
+            console.log(`[screenshot-ctl] demo rebuilt → ${JSON.stringify(r)}`);
+          }
           else if (txt.startsWith('taborder:')) {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const T = require('@/utils/tabOrder') as typeof import('@/utils/tabOrder');
