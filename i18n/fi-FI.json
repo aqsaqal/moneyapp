@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Maksamatta",
   "plan.budgets.overBudget": "{n} yli budjetin",
   "plan.budgets.plannedFor": "Suunniteltu: {month}",
-  "plan.budgets.pace.under": "Budjetissa"
+  "plan.budgets.pace.under": "Budjetissa",
+  "accounts.help.open": "Mitä nämä tarkoittavat?",
+  "accounts.help.title": "Näin tämä näkymä lasketaan",
+  "accounts.help.assets": "Varat: käteinen, pankki-, säästö- ja sijoitustilit sekä rahat, joita muut ovat sinulle velkaa.",
+  "accounts.help.debts": "Velat: luottokortit ja lainat, näytetään jäljellä olevana velkana.",
+  "accounts.help.netWorth": "Nettovarallisuus = Varat − Velat, muunnettuna päävaluuttaasi tämän päivän kurssilla.",
+  "accounts.help.cashFlow": "Kassavirta: tulot ja menot kuukaudessa. Siirtoja omien tiliesi välillä ei lasketa.",
+  "accounts.help.groups": "Kulutus sisältää tilit, joilta maksat, Säästäminen sisältää säästöt ja sijoitukset, Velat sisältää lainat ja sinulle velkaa olevat rahat. Napauta Varat tai Velat suodattaaksesi listan.",
+  "categories.dragHandle": "Vedä järjestääksesi uudelleen"
 }

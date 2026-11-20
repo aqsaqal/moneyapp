@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Bỏ lỡ",
   "plan.budgets.overBudget": "{n} vượt ngân sách",
   "plan.budgets.plannedFor": "Kế hoạch cho {month}",
-  "plan.budgets.pace.under": "Trong ngân sách"
+  "plan.budgets.pace.under": "Trong ngân sách",
+  "accounts.help.open": "Những mục này nghĩa là gì?",
+  "accounts.help.title": "Màn hình này được tính thế nào",
+  "accounts.help.assets": "Tài sản: tiền mặt, tài khoản ngân hàng, tiết kiệm và đầu tư, cùng tiền người khác nợ bạn.",
+  "accounts.help.debts": "Nợ: thẻ tín dụng và khoản vay, hiển thị theo số tiền còn phải trả.",
+  "accounts.help.netWorth": "Giá trị ròng = Tài sản − Nợ, quy đổi sang tiền tệ chính của bạn theo tỷ giá hôm nay.",
+  "accounts.help.cashFlow": "Dòng tiền: thu nhập so với chi tiêu mỗi tháng. Chuyển khoản giữa các tài khoản của bạn không được tính.",
+  "accounts.help.groups": "Chi tiêu gồm các tài khoản bạn dùng để thanh toán, Tiết kiệm gồm tiết kiệm và đầu tư, Nợ gồm khoản vay và tiền người khác nợ bạn. Chạm Tài sản hoặc Nợ để lọc danh sách.",
+  "categories.dragHandle": "Kéo để sắp xếp lại"
 }

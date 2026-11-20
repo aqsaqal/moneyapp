@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Nesamaksāts",
   "plan.budgets.overBudget": "{n} virs budžeta",
   "plan.budgets.plannedFor": "Plānots – {month}",
-  "plan.budgets.pace.under": "Budžeta robežās"
+  "plan.budgets.pace.under": "Budžeta robežās",
+  "accounts.help.open": "Ko tas nozīmē?",
+  "accounts.help.title": "Kā veidojas šis ekrāns",
+  "accounts.help.assets": "Aktīvi: skaidra nauda, bankas, uzkrājumu un ieguldījumu konti, kā arī nauda, ko citi tev ir parādā.",
+  "accounts.help.debts": "Saistības: kredītkartes un aizdevumi, rādīti kā vēl atmaksājamā summa.",
+  "accounts.help.netWorth": "Neto vērtība = Aktīvi − Saistības, pārrēķināta tavā galvenajā valūtā pēc šodienas kursa.",
+  "accounts.help.cashFlow": "Naudas plūsma: ienākumi pret tēriņiem mēnesī. Pārskaitījumi starp saviem kontiem netiek ieskaitīti.",
+  "accounts.help.groups": "Tēriņi ietver kontus, no kuriem maksā, Uzkrājumi – uzkrājumus un ieguldījumus, Parādi – aizdevumus un tev pienākošos naudu. Pieskaries Aktīvi vai Saistības, lai filtrētu sarakstu.",
+  "categories.dragHandle": "Velciet, lai mainītu secību"
 }

@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Hindi nabayaran",
   "plan.budgets.overBudget": "{n} lampas sa budget",
   "plan.budgets.plannedFor": "Nakaplano para sa {month}",
-  "plan.budgets.pace.under": "Nasa budget"
+  "plan.budgets.pace.under": "Nasa budget",
+  "accounts.help.open": "Ano ang ibig sabihin ng mga ito?",
+  "accounts.help.title": "Paano kinukwenta ang screen na ito",
+  "accounts.help.assets": "Mga Ari-arian: cash, bank, savings at investment account, pati ang perang utang sa iyo ng iba.",
+  "accounts.help.debts": "Mga Utang: credit card at loan, ipinapakita bilang halagang natitira pang bayaran.",
+  "accounts.help.netWorth": "Net na halaga = Mga Ari-arian − Mga Utang, naka-convert sa pangunahing currency mo sa rate ngayong araw.",
+  "accounts.help.cashFlow": "Cash flow: kita laban sa gastos kada buwan. Hindi kasama ang mga transfer sa pagitan ng sarili mong mga account.",
+  "accounts.help.groups": "Nasa Gastusin ang mga account na pinagbabayaran mo, nasa Ipon ang savings at investment, nasa Utang ang mga loan at perang utang sa iyo. I-tap ang Mga Ari-arian o Mga Utang para i-filter ang listahan.",
+  "categories.dragHandle": "I-drag para baguhin ang ayos"
 }

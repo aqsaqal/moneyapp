@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Praleista",
   "plan.budgets.overBudget": "{n} virš biudžeto",
   "plan.budgets.plannedFor": "Suplanuota – {month}",
-  "plan.budgets.pace.under": "Biudžeto ribose"
+  "plan.budgets.pace.under": "Biudžeto ribose",
+  "accounts.help.open": "Ką tai reiškia?",
+  "accounts.help.title": "Kaip skaičiuojamas šis ekranas",
+  "accounts.help.assets": "Turtas: grynieji, banko, taupymo ir investicinės sąskaitos bei pinigai, kuriuos tau skolingi kiti.",
+  "accounts.help.debts": "Skolos: kredito kortelės ir paskolos, rodomos kaip dar negrąžinta suma.",
+  "accounts.help.netWorth": "Grynoji vertė = Turtas − Skolos, konvertuota į tavo pagrindinę valiutą šios dienos kursu.",
+  "accounts.help.cashFlow": "Pinigų srautas: pajamos ir išlaidos per mėnesį. Pervedimai tarp savo sąskaitų neskaičiuojami.",
+  "accounts.help.groups": "Išlaidos – sąskaitos, iš kurių moki, Taupymas – taupymas ir investicijos, Skolos – paskolos ir tau skolingi pinigai. Palieskite Turtas arba Skolos, kad filtruotumėte sąrašą.",
+  "categories.dragHandle": "Vilkite, kad pakeistumėte tvarką"
 }

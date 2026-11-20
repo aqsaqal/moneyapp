@@ -640,5 +640,13 @@
   "plan.bills.group.missed": "Terlepas",
   "plan.budgets.overBudget": "{n} melebihi belanjawan",
   "plan.budgets.plannedFor": "Dirancang untuk {month}",
-  "plan.budgets.pace.under": "Dalam belanjawan"
+  "plan.budgets.pace.under": "Dalam belanjawan",
+  "accounts.help.open": "Apa maksud semua ini?",
+  "accounts.help.title": "Cara skrin ini dikira",
+  "accounts.help.assets": "Aset: tunai, akaun bank, simpanan dan pelaburan, serta wang yang orang lain berhutang kepada anda.",
+  "accounts.help.debts": "Hutang: kad kredit dan pinjaman, dipaparkan sebagai jumlah yang masih perlu dibayar.",
+  "accounts.help.netWorth": "Nilai bersih = Aset − Hutang, ditukar kepada mata wang utama anda pada kadar hari ini.",
+  "accounts.help.cashFlow": "Aliran tunai: pendapatan berbanding perbelanjaan setiap bulan. Pindahan antara akaun anda sendiri tidak dikira.",
+  "accounts.help.groups": "Perbelanjaan mengandungi akaun yang anda guna untuk membayar, Simpanan mengandungi simpanan dan pelaburan, Hutang mengandungi pinjaman dan wang yang orang lain berhutang kepada anda. Ketik Aset atau Hutang untuk menapis senarai.",
+  "categories.dragHandle": "Seret untuk menyusun semula"
 }

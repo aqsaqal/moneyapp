@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Não pagas",
   "plan.budgets.overBudget": "{n} acima do orçamento",
   "plan.budgets.plannedFor": "Planejado para {month}",
-  "plan.budgets.pace.under": "Dentro do orçamento"
+  "plan.budgets.pace.under": "Dentro do orçamento",
+  "accounts.help.open": "O que isso significa?",
+  "accounts.help.title": "Como esta tela é calculada",
+  "accounts.help.assets": "Ativos: dinheiro, contas bancárias, de poupança e de investimento, mais o que outros devem a você.",
+  "accounts.help.debts": "Dívidas: cartões de crédito e empréstimos, mostrados como o valor que ainda falta pagar.",
+  "accounts.help.netWorth": "Patrimônio líquido = Ativos − Dívidas, convertido para sua moeda principal pela cotação de hoje.",
+  "accounts.help.cashFlow": "Fluxo de caixa: receitas contra gastos por mês. Transferências entre suas próprias contas não contam.",
+  "accounts.help.groups": "Gastos reúne as contas de onde você paga, Poupança reúne poupança e investimentos, Dívidas reúne empréstimos e o que devem a você. Toque em Ativos ou Dívidas para filtrar a lista.",
+  "categories.dragHandle": "Arraste para reordenar"
 }

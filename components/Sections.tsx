@@ -17,27 +17,48 @@ export function SectionHeader({
   style,
   onAdd,
   addLabel,
+  onInfo,
+  infoLabel,
 }: {
   title: string;
   style?: ViewStyle;
   onAdd?: () => void;
   addLabel?: string;
+  /** Optional ⓘ button (rendered before the + button) for a short
+   *  "what do these numbers mean" explainer. */
+  onInfo?: () => void;
+  infoLabel?: string;
 }) {
-  if (!onAdd) {
+  if (!onAdd && !onInfo) {
     return <Text style={[sectionStyles.section, style as never]}>{title}</Text>;
   }
   return (
     <View style={[sectionStyles.headerRow, style as never]}>
       <Text style={sectionStyles.section}>{title}</Text>
-      <Pressable
-        onPress={onAdd}
-        hitSlop={10}
-        accessibilityRole="button"
-        accessibilityLabel={addLabel ?? `Add ${title.toLowerCase()}`}
-        style={({ pressed }) => [sectionStyles.headerAdd, pressed && { opacity: 0.6 }]}
-      >
-        <MaterialCommunityIcons name="plus" size={18} color={theme.accent} />
-      </Pressable>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+        {onInfo && (
+          <Pressable
+            onPress={onInfo}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={infoLabel ?? `About ${title.toLowerCase()}`}
+            style={({ pressed }) => [sectionStyles.headerAdd, pressed && { opacity: 0.6 }]}
+          >
+            <MaterialCommunityIcons name="information-outline" size={18} color={theme.text2} />
+          </Pressable>
+        )}
+        {onAdd && (
+          <Pressable
+            onPress={onAdd}
+            hitSlop={10}
+            accessibilityRole="button"
+            accessibilityLabel={addLabel ?? `Add ${title.toLowerCase()}`}
+            style={({ pressed }) => [sectionStyles.headerAdd, pressed && { opacity: 0.6 }]}
+          >
+            <MaterialCommunityIcons name="plus" size={18} color={theme.accent} />
+          </Pressable>
+        )}
+      </View>
     </View>
   );
 }

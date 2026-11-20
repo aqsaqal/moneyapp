@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Neplătite",
   "plan.budgets.overBudget": "{n} peste buget",
   "plan.budgets.plannedFor": "Planificat pentru {month}",
-  "plan.budgets.pace.under": "În buget"
+  "plan.budgets.pace.under": "În buget",
+  "accounts.help.open": "Ce înseamnă acestea?",
+  "accounts.help.title": "Cum se calculează acest ecran",
+  "accounts.help.assets": "Active: numerar, conturi bancare, de economii și de investiții, plus banii pe care ți-i datorează alții.",
+  "accounts.help.debts": "Datorii: carduri de credit și credite, afișate ca suma rămasă de plată.",
+  "accounts.help.netWorth": "Avere netă = Active − Datorii, convertită în moneda ta principală la cursul de azi.",
+  "accounts.help.cashFlow": "Flux de numerar: venituri față de cheltuieli pe lună. Transferurile între conturile tale nu se iau în calcul.",
+  "accounts.help.groups": "Cheltuieli cuprinde conturile din care plătești, Economii cuprinde economiile și investițiile, Datorii cuprinde creditele și banii care ți se datorează. Atinge Active sau Datorii pentru a filtra lista.",
+  "categories.dragHandle": "Trage pentru a reordona"
 }

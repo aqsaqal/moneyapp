@@ -165,21 +165,32 @@ export async function importData(): Promise<'ok' | 'cancelled'> {
 
   const uri = pick.assets[0].uri;
   const raw = await FileSystem.readAsStringAsync(uri);
+  return importBackupJson(raw);
+}
+
+/** Restore from the text of a backup file. Split from the picker so the
+ *  dev screenshot controller (and tests) can feed a file directly. */
+export async function importBackupJson(
+  raw: string,
+  opts: { skipConfirm?: boolean } = {},
+): Promise<'ok' | 'cancelled'> {
   const parsed = parseAndValidate(raw);
 
   // Confirm before any destructive write. Native dialog wraps a Promise
   // so we can branch on the user's choice.
-  const confirmed = await new Promise<boolean>((resolve) => {
-    Alert.alert(
-      t('me.import.confirm.title'),
-      t('me.import.confirm.body', { rows: countRows(parsed) }),
-      [
-        { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
-        { text: t('me.import.confirm.replace'), style: 'destructive', onPress: () => resolve(true) },
-      ],
-      { cancelable: true, onDismiss: () => resolve(false) },
-    );
-  });
+  const confirmed = opts.skipConfirm
+    ? true
+    : await new Promise<boolean>((resolve) => {
+        Alert.alert(
+          t('me.import.confirm.title'),
+          t('me.import.confirm.body', { rows: countRows(parsed) }),
+          [
+            { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
+            { text: t('me.import.confirm.replace'), style: 'destructive', onPress: () => resolve(true) },
+          ],
+          { cancelable: true, onDismiss: () => resolve(false) },
+        );
+      });
   if (!confirmed) return 'cancelled';
 
   applyImport(parsed);
@@ -271,9 +282,13 @@ function applyImport(p: ParsedDump): void {
     // Wipe in REVERSE dependency order so FK-style references don't
     // tear at intermediate steps (we don't declare FK constraints, but
     // the order keeps a partial-restore from showing orphan rows on
-    // cancel).
+    // cancel). Only tables the dump actually carries are replaced: a
+    // backup from before `custom_categories` (or `goals`, …) joined the
+    // export used to wipe the live table and leave nothing behind, so a
+    // restore silently reset the user's own categories to the defaults.
     const order = [...BACKUP_TABLES].reverse();
     for (const t of order) {
+      if (!(t in p.tables)) continue;
       raw.execSync(`DELETE FROM ${t}`);
     }
     // Now bulk insert. Skip tables not present in the dump so an older

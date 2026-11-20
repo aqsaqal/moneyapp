@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Kimaradt",
   "plan.budgets.overBudget": "{n} túllépve",
   "plan.budgets.plannedFor": "Tervezve: {month}",
-  "plan.budgets.pace.under": "Kereten belül"
+  "plan.budgets.pace.under": "Kereten belül",
+  "accounts.help.open": "Mit jelentenek ezek?",
+  "accounts.help.title": "Hogyan áll össze ez a képernyő",
+  "accounts.help.assets": "Eszközök: készpénz, bank-, megtakarítási és befektetési számlák, plusz a pénz, amit mások tartoznak neked.",
+  "accounts.help.debts": "Tartozások: hitelkártyák és hitelek, a még fennálló összeggel.",
+  "accounts.help.netWorth": "Nettó vagyon = Eszközök − Tartozások, a fő pénznemedre váltva a mai árfolyamon.",
+  "accounts.help.cashFlow": "Pénzáramlás: havi bevétel a költéssel szemben. A saját számláid közti átutalások nem számítanak.",
+  "accounts.help.groups": "A Költés a számlákat tartalmazza, amikről fizetsz, a Megtakarítás a megtakarításokat és befektetéseket, a Tartozások a hiteleket és a neked járó pénzt. Koppints az Eszközök vagy Tartozások elemre a lista szűréséhez.",
+  "categories.dragHandle": "Húzd az átrendezéshez"
 }

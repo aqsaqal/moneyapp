@@ -9,6 +9,19 @@ import type { StyleProp, TextStyle } from 'react-native';
 type MCCName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
 
 export const ICON_MAP: Record<string, MCCName> = {
+  // Account / goal icon picker additions
+  Bank: 'bank-outline',
+  Building: 'office-building-outline',
+  Cash: 'cash',
+  Chart: 'chart-line',
+  Bitcoin: 'bitcoin',
+  Coins: 'hand-coin-outline',
+  Shield: 'shield-outline',
+  Umbrella: 'umbrella-outline',
+  Key: 'key-outline',
+  School: 'school-outline',
+  Baby: 'baby-carriage',
+  Receipt: 'receipt-text-outline',
   // Expense category icons (v4 line 45-72)
   Utensils: 'silverware-fork-knife',
   Car: 'car',

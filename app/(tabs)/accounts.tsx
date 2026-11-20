@@ -19,7 +19,7 @@
 // the /settings modal behind the cog on every tab.
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -197,6 +197,7 @@ function OverviewAndAccounts({ overviewHidden, face }: { overviewHidden: boolean
 
   // null = creating new; Account = editing; undefined = sheet closed
   const [editing, setEditing] = useState<Account | null | undefined>(undefined);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const visible = (showArchived ? allAccounts : active).filter((a) =>
     filter === 'all' ? true : filter === 'assets' ? a.balance >= 0 : a.balance < 0,
@@ -286,6 +287,8 @@ function OverviewAndAccounts({ overviewHidden, face }: { overviewHidden: boolean
           title={t('me.section.accounts')}
           onAdd={() => setEditing(null)}
           addLabel={t('common.add')}
+          onInfo={() => setHelpOpen(true)}
+          infoLabel={t('accounts.help.open')}
         />
         {groups.length === 0 && (
           <Text style={styles.emptyText}>{t('accounts.emptyFilter')}</Text>
@@ -359,12 +362,45 @@ function OverviewAndAccounts({ overviewHidden, face }: { overviewHidden: boolean
         <View style={{ height: 100 }} />
       </NestableScrollContainer>
 
+      <AccountsHelpSheet visible={helpOpen} onClose={() => setHelpOpen(false)} />
+
       <AccountSheet
         visible={editing !== undefined}
         account={editing ?? undefined}
         onClose={() => setEditing(undefined)}
       />
     </>
+  );
+}
+
+/** One-screen explainer behind the ⓘ on the Accounts header: what counts
+ *  as an asset or a debt, how net worth and cash flow are computed, and
+ *  what the three groups mean. */
+function AccountsHelpSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
+  const t = useT();
+  const rows: { icon: React.ComponentProps<typeof MaterialCommunityIcons>['name']; color: string; key: string }[] = [
+    { icon: 'trending-up', color: theme.accent, key: 'assets' },
+    { icon: 'trending-down', color: theme.expense, key: 'debts' },
+    { icon: 'scale-balance', color: theme.text1, key: 'netWorth' },
+    { icon: 'swap-vertical', color: theme.text1, key: 'cashFlow' },
+    { icon: 'folder-outline', color: theme.text2, key: 'groups' },
+  ];
+  return (
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
+      <Pressable style={styles.helpBackdrop} onPress={onClose} accessibilityLabel={t('common.close')} />
+      <View style={styles.helpCard}>
+        <Text style={styles.helpTitle}>{t('accounts.help.title')}</Text>
+        {rows.map((r) => (
+          <View key={r.key} style={styles.helpRow}>
+            <MaterialCommunityIcons name={r.icon} size={20} color={r.color} style={{ marginTop: 1 }} />
+            <Text style={styles.helpText}>{t(`accounts.help.${r.key}`)}</Text>
+          </View>
+        ))}
+        <Pressable onPress={onClose} style={styles.helpDone} accessibilityRole="button">
+          <Text style={styles.helpDoneText}>{t('common.done')}</Text>
+        </Pressable>
+      </View>
+    </Modal>
   );
 }
 
@@ -567,6 +603,20 @@ function AccountCard({
 }
 
 const styles = StyleSheet.create({
+  helpBackdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)' },
+  helpCard: {
+    backgroundColor: theme.bg1,
+    borderTopLeftRadius: radii.xl,
+    borderTopRightRadius: radii.xl,
+    padding: spacing.lg,
+    paddingBottom: spacing.xxl,
+    gap: spacing.md,
+  },
+  helpTitle: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold, marginBottom: spacing.xs },
+  helpRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md },
+  helpText: { flex: 1, color: theme.text2, fontSize: sizes.sm, lineHeight: 20 },
+  helpDone: { alignSelf: 'flex-end', paddingHorizontal: spacing.md, paddingVertical: spacing.sm, marginTop: spacing.xs },
+  helpDoneText: { color: theme.accent, fontSize: sizes.md, fontFamily: font.bodySemi },
   safe: { flex: 1, backgroundColor: theme.bg },
   top: {
     flexDirection: 'row',

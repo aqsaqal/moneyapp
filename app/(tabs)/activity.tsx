@@ -28,7 +28,6 @@ import { SearchBar } from '@/components/SearchBar';
 import { MonthlyRecap } from '@/components/MonthlyRecap';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 import { CategoriesAnalytics } from '@/components/CategoriesAnalytics';
-import { CategoryPicker } from '@/components/CategoryPicker';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
 import { useT } from '@/hooks/useT';
@@ -82,7 +81,6 @@ export default function Activity() {
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [halalFilter, setHalalFilter] = useState<string | null>(null);
-  const [filterMoreOpen, setFilterMoreOpen] = useState(false);
   const [accountPickerOpen, setAccountPickerOpen] = useState(false);
   const [breakdownOpen, setBreakdownOpen] = useState(false);
   const [recapOpen, setRecapOpen] = useState(false);
@@ -154,15 +152,21 @@ export default function Activity() {
 
   // Category chips: top 5 by spend in the VIEWED month.
   const allCategories = useCategoriesWithMeta();
-  const monthTotals = useMonthTotalsByCategory(listMonthKey, 'expense');
-  const topCategories = useMemo(() => {
-    const spend = new Map(monthTotals.map((m) => [m.category, m.total]));
-    return allCategories
-      .filter((c) => !c.archived && (spend.get(c.id) ?? 0) > 0)
-      .sort((a, b) => (spend.get(b.id) ?? 0) - (spend.get(a.id) ?? 0))
-      .slice(0, 5)
-      .map((c) => ({ ...c, total: spend.get(c.id) ?? 0 }));
-  }, [allCategories, monthTotals]);
+  // Category chips: every category used in the viewed month — spending
+  // first, then income — each sorted by amount. The row scrolls, so
+  // nothing hides behind a "More" sheet.
+  const expenseTotals = useMonthTotalsByCategory(listMonthKey, 'expense');
+  const incomeTotals = useMonthTotalsByCategory(listMonthKey, 'income');
+  const usedCategories = useMemo(() => {
+    const build = (totals: { category: string; total: number }[], kind: 'expense' | 'income') => {
+      const sum = new Map(totals.map((m) => [m.category, m.total]));
+      return allCategories
+        .filter((c) => (sum.get(c.id) ?? 0) > 0)
+        .sort((a, b) => (sum.get(b.id) ?? 0) - (sum.get(a.id) ?? 0))
+        .map((c) => ({ ...c, total: sum.get(c.id) ?? 0, kind }));
+    };
+    return [...build(expenseTotals, 'expense'), ...build(incomeTotals, 'income')];
+  }, [allCategories, expenseTotals, incomeTotals]);
 
   const accounts = useAccounts({ includeArchived: true });
   const accountCcy = useMemo(() => {
@@ -288,19 +292,18 @@ export default function Activity() {
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow} keyboardShouldPersistTaps="handled">
         <Chip label={t('activity.allChip')} active={!filterCat} onPress={() => setFilterCat(null)} />
-        {topCategories.map((c) => (
+        {usedCategories.map((c) => (
           <Chip
-            key={c.id}
-            label={`${c.name} ${formatMoneyShort(c.total, currency)}`}
+            key={`${c.kind}-${c.id}`}
+            label={`${c.name} ${c.kind === 'income' ? '+' : ''}${formatMoneyShort(c.total, currency)}`}
             active={filterCat === c.id}
             color={c.color}
             onPress={() => setFilterCat(filterCat === c.id ? null : c.id)}
           />
         ))}
-        {filterCat && !topCategories.some((c) => c.id === filterCat) && (
+        {filterCat && !usedCategories.some((c) => c.id === filterCat) && (
           <Chip label={catInfo(filterCat).name} active color={catInfo(filterCat).color} onPress={() => setFilterCat(null)} />
         )}
-        <Chip label={t('smartAdd.more')} active={false} icon="dots-horizontal" onPress={() => setFilterMoreOpen(true)} />
         <Chip
           label={filterAccount ? (accountName.get(filterAccount) ?? '') : t('activity.filter.allAccounts')}
           active={!!filterAccount}
@@ -435,13 +438,6 @@ export default function Activity() {
         ]}
         onPick={(id) => setFilterAccount(id || null)}
         onClose={() => setAccountPickerOpen(false)}
-      />
-      <CategoryPicker
-        visible={filterMoreOpen}
-        mode="select"
-        headerText={t('picker.filterByCategory')}
-        onSelect={(id) => { setFilterCat(id); setFilterMoreOpen(false); }}
-        onClose={() => setFilterMoreOpen(false)}
       />
     </SafeAreaView>
   );

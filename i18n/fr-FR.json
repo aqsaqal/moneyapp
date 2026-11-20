@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Impayées",
   "plan.budgets.overBudget": "{n} dépassés",
   "plan.budgets.plannedFor": "Prévu pour {month}",
-  "plan.budgets.pace.under": "Dans le budget"
+  "plan.budgets.pace.under": "Dans le budget",
+  "accounts.help.open": "Que signifient ces chiffres ?",
+  "accounts.help.title": "Comment cet écran se calcule",
+  "accounts.help.assets": "Actifs : espèces, comptes bancaires, d'épargne et d'investissement, plus l'argent qu'on vous doit.",
+  "accounts.help.debts": "Dettes : cartes de crédit et prêts, affichés comme le montant restant dû.",
+  "accounts.help.netWorth": "Valeur nette = Actifs − Dettes, convertis dans votre devise principale au taux du jour.",
+  "accounts.help.cashFlow": "Flux de trésorerie : revenus contre dépenses par mois. Les virements entre vos propres comptes ne comptent pas.",
+  "accounts.help.groups": "Dépenses regroupe les comptes avec lesquels vous payez, Épargne regroupe l'épargne et les investissements, Dettes regroupe les prêts et l'argent qu'on vous doit. Touchez Actifs ou Dettes pour filtrer la liste.",
+  "categories.dragHandle": "Glisser pour réorganiser"
 }

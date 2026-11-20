@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "No pagadas",
   "plan.budgets.overBudget": "{n} excedidos",
   "plan.budgets.plannedFor": "Planificado para {month}",
-  "plan.budgets.pace.under": "Dentro del presupuesto"
+  "plan.budgets.pace.under": "Dentro del presupuesto",
+  "accounts.help.open": "¿Qué significa esto?",
+  "accounts.help.title": "Cómo se calcula esta pantalla",
+  "accounts.help.assets": "Activos: efectivo, cuentas bancarias, de ahorro e inversión, más el dinero que te deben.",
+  "accounts.help.debts": "Deudas: tarjetas de crédito y préstamos, mostrados como el importe pendiente.",
+  "accounts.help.netWorth": "Patrimonio neto = Activos − Deudas, convertido a tu moneda principal al tipo de cambio de hoy.",
+  "accounts.help.cashFlow": "Flujo de caja: ingresos frente a gastos por mes. Las transferencias entre tus propias cuentas no cuentan.",
+  "accounts.help.groups": "Gasto agrupa las cuentas desde las que pagas, Ahorro agrupa ahorros e inversiones, Deudas agrupa préstamos y dinero que te deben. Toca Activos o Deudas para filtrar la lista.",
+  "categories.dragHandle": "Arrastra para reordenar"
 }

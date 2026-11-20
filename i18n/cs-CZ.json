@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Nezaplaceno",
   "plan.budgets.overBudget": "{n} přes rozpočet",
   "plan.budgets.plannedFor": "Naplánováno na {month}",
-  "plan.budgets.pace.under": "V rozpočtu"
+  "plan.budgets.pace.under": "V rozpočtu",
+  "accounts.help.open": "Co to znamená?",
+  "accounts.help.title": "Jak se tato obrazovka počítá",
+  "accounts.help.assets": "Aktiva: hotovost, bankovní, spořicí a investiční účty, plus peníze, které vám dluží ostatní.",
+  "accounts.help.debts": "Dluhy: kreditní karty a půjčky, zobrazené jako zbývající dlužná částka.",
+  "accounts.help.netWorth": "Čisté jmění = Aktiva − Dluhy, převedeno do vaší hlavní měny dnešním kurzem.",
+  "accounts.help.cashFlow": "Cash flow: příjmy versus výdaje za měsíc. Převody mezi vlastními účty se nepočítají.",
+  "accounts.help.groups": "Výdaje obsahují účty, ze kterých platíte, Spoření obsahuje úspory a investice, Dluhy obsahují půjčky a peníze, které vám dluží. Klepnutím na Aktiva nebo Dluhy seznam vyfiltrujete.",
+  "categories.dragHandle": "Tažením změníte pořadí"
 }

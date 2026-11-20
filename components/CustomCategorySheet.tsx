@@ -40,19 +40,22 @@ const PALETTE = [
   '#34D399', '#FB7185', '#60A5FA', '#A78BFA',
 ];
 
+// Grouped roughly by theme: food, shopping, home, utilities, transport,
+// leisure, health, pets, family, work, money, misc.
 const ICONS: Array<React.ComponentProps<typeof MaterialCommunityIcons>['name']> = [
-  'tag-outline',
-  'food-fork-drink',
-  'cart-outline',
-  'gas-station',
-  'cellphone',
-  'gamepad-variant-outline',
-  'paw-outline',
-  'baby-bottle-outline',
-  'briefcase-outline',
-  'school-outline',
-  'gift-outline',
-  'medical-bag',
+  'tag-outline', 'food-fork-drink', 'silverware-fork-knife', 'coffee', 'pizza', 'glass-cocktail',
+  'cart-outline', 'shopping-outline', 'tshirt-crew-outline', 'shoe-sneaker', 'gift-outline',
+  'home-outline', 'sofa-outline', 'bed-outline', 'washing-machine', 'broom', 'wrench-outline', 'hammer',
+  'lightning-bolt', 'water', 'fire', 'wifi', 'phone', 'cellphone', 'laptop', 'television',
+  'car', 'gas-station', 'bus', 'train', 'taxi', 'bike', 'airplane', 'parking',
+  'gamepad-variant-outline', 'movie-open-outline', 'music', 'camera-outline', 'palette', 'book-open-variant', 'pencil',
+  'dumbbell', 'run', 'basketball', 'hiking', 'beach', 'tent',
+  'medical-bag', 'hospital-box-outline', 'pill', 'tooth-outline', 'heart-outline',
+  'paw-outline', 'dog', 'cat', 'flower', 'tree',
+  'baby-bottle-outline', 'baby-carriage', 'human-male-female', 'account-group-outline',
+  'briefcase-outline', 'school-outline', 'office-building-outline', 'receipt-text-outline',
+  'cash', 'bank-outline', 'credit-card-outline', 'piggy-bank-outline', 'chart-line', 'hand-coin-outline', 'bitcoin',
+  'shield-outline', 'umbrella-outline', 'key-outline', 'charity', 'church', 'mosque', 'star-outline', 'dots-horizontal',
 ];
 
 export interface CustomCategorySheetProps {
@@ -335,6 +338,9 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>{t('category.field.icon')}</Text>
+            {/* 3-row grid that scrolls sideways — ~80 icons without
+                turning the sheet into a wall. */}
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} keyboardShouldPersistTaps="handled">
             <View style={styles.iconRow}>
               {ICONS.map((i) => (
                 <Pressable
@@ -350,6 +356,7 @@ export function CustomCategorySheet({ visible, category, onClose }: CustomCatego
                 </Pressable>
               ))}
             </View>
+            </ScrollView>
           </View>
 
           {editing && !category?.isSystem && (
@@ -455,7 +462,7 @@ const styles = StyleSheet.create({
     borderWidth: 2, borderColor: 'transparent',
   },
   swatchActive: { borderColor: theme.text1 },
-  iconRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  iconRow: { flexDirection: 'column', flexWrap: 'wrap', gap: 8, height: 44 * 3 + 8 * 2 },
   iconChip: {
     width: 44, height: 44, borderRadius: radii.md,
     borderWidth: 1, borderColor: theme.border,

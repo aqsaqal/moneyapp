@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Non pagate",
   "plan.budgets.overBudget": "{n} oltre il budget",
   "plan.budgets.plannedFor": "Pianificato per {month}",
-  "plan.budgets.pace.under": "Nel budget"
+  "plan.budgets.pace.under": "Nel budget",
+  "accounts.help.open": "Cosa significano?",
+  "accounts.help.title": "Come si calcola questa schermata",
+  "accounts.help.assets": "Attività: contanti, conti bancari, di risparmio e di investimento, più i soldi che gli altri ti devono.",
+  "accounts.help.debts": "Debiti: carte di credito e prestiti, mostrati come importo ancora dovuto.",
+  "accounts.help.netWorth": "Patrimonio netto = Attività − Debiti, convertito nella tua valuta principale al cambio di oggi.",
+  "accounts.help.cashFlow": "Flusso di cassa: entrate contro spese per mese. I bonifici tra i tuoi conti non contano.",
+  "accounts.help.groups": "Spese contiene i conti da cui paghi, Risparmi i risparmi e gli investimenti, Debiti e crediti i prestiti e i soldi che ti devono. Tocca Attività o Debiti per filtrare l'elenco.",
+  "categories.dragHandle": "Trascina per riordinare"
 }

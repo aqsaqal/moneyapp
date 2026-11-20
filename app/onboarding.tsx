@@ -9,9 +9,12 @@ import React, { useMemo, useState } from 'react';
 import {
   FlatList,
   I18nManager,
+  Keyboard,
+  KeyboardAvoidingView,
   Modal,
   Platform,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -215,13 +218,32 @@ function AccountStep({
   const [name, setName] = useState(() => t('onboarding.account.defaultName'));
   const [type, setType] = useState<FirstAccountType>('cash');
   const [balance, setBalance] = useState('');
+  const balanceRef = React.useRef<TextInput>(null);
   const def = CURRENCIES[currency];
   const balanceNum = parseFloat(balance.replace(',', '.'));
   const canCreate = name.trim().length > 0 && (balance.trim() === '' || Number.isFinite(balanceNum));
+  const create = () => {
+    Keyboard.dismiss();
+    onCreate({ name, type, balance: Number.isFinite(balanceNum) ? balanceNum : 0 });
+  };
 
+  // The keyboard used to sit over the Create button on smaller phones
+  // with no way to dismiss it; the content now scrolls above it, Return
+  // on the name field moves to the balance, and Done on the balance
+  // dismisses (or creates when the form is valid).
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.scroll}>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={{ paddingBottom: spacing.xl }}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        showsVerticalScrollIndicator={false}
+      >
         <Pressable onPress={onBack} hitSlop={10} style={styles.backBtn} accessibilityRole="button">
           <MaterialCommunityIcons name="arrow-left" size={22} color={theme.text1} />
           <Text style={styles.backText}>{t('common.back')}</Text>
@@ -264,6 +286,9 @@ function AccountStep({
           placeholder={t('account.namePlaceholder')}
           placeholderTextColor={theme.text3}
           autoCorrect={false}
+          returnKeyType="next"
+          blurOnSubmit={false}
+          onSubmitEditing={() => balanceRef.current?.focus()}
         />
 
         <Text style={styles.fieldLabel}>
@@ -272,18 +297,21 @@ function AccountStep({
         <View style={styles.balanceRow}>
           <Text style={styles.balanceSymbol}>{def.symbolNative}</Text>
           <TextInput
+            ref={balanceRef}
             value={balance}
             onChangeText={setBalance}
             style={[styles.input, { flex: 1 }]}
             placeholder="0"
             placeholderTextColor={theme.text3}
             keyboardType="decimal-pad"
+            returnKeyType="done"
+            onSubmitEditing={() => (canCreate ? create() : Keyboard.dismiss())}
           />
           <Text style={styles.balanceCode}>{currency}</Text>
         </View>
 
         <Pressable
-          onPress={() => onCreate({ name, type, balance: Number.isFinite(balanceNum) ? balanceNum : 0 })}
+          onPress={create}
           style={[styles.cta, !canCreate && { opacity: 0.5 }]}
           disabled={!canCreate}
           accessibilityRole="button"
@@ -293,7 +321,8 @@ function AccountStep({
         <Pressable onPress={onSkip} style={styles.skipLink} accessibilityRole="button" hitSlop={8}>
           <Text style={styles.skipLinkText}>{t('onboarding.account.skip')}</Text>
         </Pressable>
-      </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }

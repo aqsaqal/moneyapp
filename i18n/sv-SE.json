@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Missade",
   "plan.budgets.overBudget": "{n} över budget",
   "plan.budgets.plannedFor": "Planerat för {month}",
-  "plan.budgets.pace.under": "Inom budget"
+  "plan.budgets.pace.under": "Inom budget",
+  "accounts.help.open": "Vad betyder det här?",
+  "accounts.help.title": "Så räknas den här skärmen",
+  "accounts.help.assets": "Tillgångar: kontanter, bank-, spar- och investeringskonton samt pengar andra är skyldiga dig.",
+  "accounts.help.debts": "Skulder: kreditkort och lån, visade som det belopp som fortfarande återstår.",
+  "accounts.help.netWorth": "Nettoförmögenhet = Tillgångar − Skulder, omräknat till din huvudvaluta med dagens kurs.",
+  "accounts.help.cashFlow": "Kassaflöde: inkomster mot utgifter per månad. Överföringar mellan dina egna konton räknas inte.",
+  "accounts.help.groups": "Utgifter innehåller kontona du betalar från, Sparande innehåller sparande och investeringar, Skulder innehåller lån och pengar andra är skyldiga dig. Tryck på Tillgångar eller Skulder för att filtrera listan.",
+  "categories.dragHandle": "Dra för att ändra ordning"
 }

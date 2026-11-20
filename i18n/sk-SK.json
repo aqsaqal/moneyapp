@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Zmeškané",
   "plan.budgets.overBudget": "{n} nad rozpočtom",
   "plan.budgets.plannedFor": "Plánované na {month}",
-  "plan.budgets.pace.under": "V rozpočte"
+  "plan.budgets.pace.under": "V rozpočte",
+  "accounts.help.open": "Čo to znamená?",
+  "accounts.help.title": "Ako sa táto obrazovka počíta",
+  "accounts.help.assets": "Aktíva: hotovosť, bankové, sporiace a investičné účty plus peniaze, ktoré vám dlžia iní.",
+  "accounts.help.debts": "Záväzky: kreditné karty a úvery, zobrazené ako suma, ktorú ešte dlžíte.",
+  "accounts.help.netWorth": "Čistý majetok = Aktíva − Záväzky, prepočítané na hlavnú menu dnešným kurzom.",
+  "accounts.help.cashFlow": "Peňažný tok: príjmy oproti výdavkom za mesiac. Prevody medzi vlastnými účtami sa nepočítajú.",
+  "accounts.help.groups": "Výdavky obsahujú účty, z ktorých platíte, Sporenie obsahuje úspory a investície, Dlhy obsahujú úvery a peniaze, ktoré vám dlžia. Ťuknutím na Aktíva alebo Záväzky zoznam vyfiltrujete.",
+  "categories.dragHandle": "Potiahni na zmenu poradia"
 }

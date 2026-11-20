@@ -150,7 +150,18 @@ export default function CategoriesManageScreen() {
           </View>
           <Text style={styles.hint}>{hintFor(c)}</Text>
         </View>
-        <MaterialCommunityIcons name="drag" size={20} color={theme.text3} />
+        {/* Touching the handle starts the drag at once; long-press on
+            the row still works for people who found that first. */}
+        <Pressable
+          onPressIn={searching ? undefined : drag}
+          hitSlop={10}
+          disabled={searching}
+          accessibilityRole="button"
+          accessibilityLabel={t('categories.dragHandle')}
+          style={{ padding: 4 }}
+        >
+          <MaterialCommunityIcons name="drag" size={22} color={theme.text3} />
+        </Pressable>
       </Pressable>
     </ScaleDecorator>
   );

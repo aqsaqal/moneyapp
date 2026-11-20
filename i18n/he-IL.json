@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "לא שולמו",
   "plan.budgets.overBudget": "{n} מעל התקציב",
   "plan.budgets.plannedFor": "מתוכנן ל{month}",
-  "plan.budgets.pace.under": "במסגרת התקציב"
+  "plan.budgets.pace.under": "במסגרת התקציב",
+  "accounts.help.open": "מה המשמעות של אלה?",
+  "accounts.help.title": "איך המסך הזה מתחשב",
+  "accounts.help.assets": "נכסים: מזומן, חשבונות בנק, חיסכון והשקעות, וגם כסף שאחרים חייבים לך.",
+  "accounts.help.debts": "חובות: כרטיסי אשראי והלוואות, מוצגים כסכום שנותר לשלם.",
+  "accounts.help.netWorth": "שווי נקי = נכסים − חובות, מומר למטבע הראשי שלך לפי שער היום.",
+  "accounts.help.cashFlow": "תזרים מזומנים: הכנסות מול הוצאות בכל חודש. העברות בין החשבונות שלך לא נספרות.",
+  "accounts.help.groups": "הוצאות מכיל את החשבונות שמהם משלמים, חיסכון מכיל חיסכון והשקעות, חובות מכיל הלוואות וכסף שחייבים לך. הקישו על נכסים או חובות כדי לסנן את הרשימה.",
+  "categories.dragHandle": "גררו לשינוי הסדר"
 }

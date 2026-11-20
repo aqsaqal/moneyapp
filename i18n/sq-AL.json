@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Të humbura",
   "plan.budgets.overBudget": "{n} mbi buxhet",
   "plan.budgets.plannedFor": "Planifikuar për {month}",
-  "plan.budgets.pace.under": "Brenda buxhetit"
+  "plan.budgets.pace.under": "Brenda buxhetit",
+  "accounts.help.open": "Çfarë kuptimi kanë këto?",
+  "accounts.help.title": "Si llogaritet ky ekran",
+  "accounts.help.assets": "Aktivet: para në dorë, llogari bankare, kursimesh dhe investimesh, plus paratë që të tjerët ju detyrohen.",
+  "accounts.help.debts": "Borxhet: karta krediti dhe kredi, të shfaqura si shuma që ende detyroheni.",
+  "accounts.help.netWorth": "Pasuria neto = Aktivet − Borxhet, e konvertuar në monedhën kryesore me kursin e sotëm.",
+  "accounts.help.cashFlow": "Fluksi i parasë: të ardhurat kundrejt shpenzimeve në muaj. Transfertat mes llogarive tuaja nuk llogariten.",
+  "accounts.help.groups": "Shpenzime përmban llogaritë nga të cilat paguani, Kursime përmban kursimet dhe investimet, Borxhe përmban kreditë dhe paratë që ju detyrohen. Prekni Aktivet ose Borxhet për të filtruar listën.",
+  "categories.dragHandle": "Tërhiq për të rirenditur"
 }

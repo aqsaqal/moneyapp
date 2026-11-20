@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "未付",
   "plan.budgets.overBudget": "{n} 個超支",
   "plan.budgets.plannedFor": "{month}計畫預算",
-  "plan.budgets.pace.under": "預算內"
+  "plan.budgets.pace.under": "預算內",
+  "accounts.help.open": "這些是什麼意思？",
+  "accounts.help.title": "此畫面如何計算",
+  "accounts.help.assets": "資產：現金、銀行、儲蓄和投資帳戶，以及他人欠你的錢。",
+  "accounts.help.debts": "負債：信用卡和貸款，顯示為尚欠金額。",
+  "accounts.help.netWorth": "淨資產 = 資產 − 負債，依今日匯率換算為你的主要貨幣。",
+  "accounts.help.cashFlow": "現金流：每月收入與支出的對比。自己帳戶之間的轉帳不計入。",
+  "accounts.help.groups": "「日常」包含你用來付款的帳戶，「儲蓄」包含儲蓄和投資，「債務」包含貸款和他人欠你的錢。點一下「資產」或「負債」即可篩選清單。",
+  "categories.dragHandle": "拖曳以重新排序"
 }

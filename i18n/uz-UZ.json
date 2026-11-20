@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Oʻtkazib yuborilgan",
   "plan.budgets.overBudget": "{n} ta byudjetdan oshdi",
   "plan.budgets.plannedFor": "{month} uchun rejalashtirilgan",
-  "plan.budgets.pace.under": "Byudjet doirasida"
+  "plan.budgets.pace.under": "Byudjet doirasida",
+  "accounts.help.open": "Bular nimani anglatadi?",
+  "accounts.help.title": "Bu ekran qanday hisoblanadi",
+  "accounts.help.assets": "Aktivlar: naqd pul, bank, jamgʻarma va investitsiya hisoblari, shuningdek, boshqalar sizga qarz boʻlgan pul.",
+  "accounts.help.debts": "Qarzlar: kredit kartalar va kreditlar, hali toʻlanishi kerak boʻlgan summa sifatida koʻrsatiladi.",
+  "accounts.help.netWorth": "Sof boylik = Aktivlar − Qarzlar, bugungi kurs boʻyicha asosiy valyutangizga oʻtkazilgan.",
+  "accounts.help.cashFlow": "Pul oqimi: oylik daromad va xarajatlar. Oʻz hisoblaringiz orasidagi oʻtkazmalar hisobga olinmaydi.",
+  "accounts.help.groups": "Xarajat boʻlimida toʻlov qiladigan hisoblaringiz, Jamgʻarma boʻlimida jamgʻarma va investitsiyalar, Qarzlar boʻlimida kreditlar va sizga qarz boʻlgan pul turadi. Roʻyxatni filtrlash uchun Aktivlar yoki Qarzlar ustiga bosing.",
+  "categories.dragHandle": "Tartibini oʻzgartirish uchun torting"
 }

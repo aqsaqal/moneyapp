@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "未付",
   "plan.budgets.overBudget": "{n} 个超支",
   "plan.budgets.plannedFor": "{month}计划预算",
-  "plan.budgets.pace.under": "预算内"
+  "plan.budgets.pace.under": "预算内",
+  "accounts.help.open": "这些是什么意思？",
+  "accounts.help.title": "此页面如何计算",
+  "accounts.help.assets": "资产：现金、银行、储蓄和投资账户，以及他人欠你的钱。",
+  "accounts.help.debts": "负债：信用卡和贷款，显示为尚欠金额。",
+  "accounts.help.netWorth": "净资产 = 资产 − 负债，按今日汇率折算为你的主货币。",
+  "accounts.help.cashFlow": "现金流：每月收入与支出的对比。自己账户之间的转账不计入。",
+  "accounts.help.groups": "“日常”包含你用于付款的账户，“储蓄”包含储蓄和投资，“债务”包含贷款和他人欠你的钱。点按“资产”或“负债”可筛选列表。",
+  "categories.dragHandle": "拖动以重新排序"
 }

@@ -640,5 +640,13 @@
   "plan.bills.group.missed": "Ödenmemiş",
   "plan.budgets.overBudget": "{n} bütçe aşıldı",
   "plan.budgets.plannedFor": "{month} için planlanan",
-  "plan.budgets.pace.under": "Bütçe içinde"
+  "plan.budgets.pace.under": "Bütçe içinde",
+  "accounts.help.open": "Bunlar ne anlama geliyor?",
+  "accounts.help.title": "Bu ekran nasıl hesaplanır",
+  "accounts.help.assets": "Varlıklar: nakit, banka, birikim ve yatırım hesapları ile başkalarının size borçlu olduğu para.",
+  "accounts.help.debts": "Borçlar: kredi kartları ve krediler, hâlâ ödenmesi gereken tutar olarak gösterilir.",
+  "accounts.help.netWorth": "Net değer = Varlıklar − Borçlar, bugünkü kurla ana para biriminize çevrilir.",
+  "accounts.help.cashFlow": "Nakit akışı: aylık gelir ile harcamanın karşılaştırması. Kendi hesaplarınız arasındaki transferler sayılmaz.",
+  "accounts.help.groups": "Harcama, ödeme yaptığınız hesapları; Birikim, birikim ve yatırımları; Borçlar, kredileri ve size borçlu olunan parayı içerir. Listeyi filtrelemek için Varlıklar veya Borçlar'a dokunun.",
+  "categories.dragHandle": "Sıralamak için sürükle"
 }

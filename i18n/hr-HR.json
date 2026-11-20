@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Propušteno",
   "plan.budgets.overBudget": "{n} iznad proračuna",
   "plan.budgets.plannedFor": "Planirano za {month}",
-  "plan.budgets.pace.under": "Unutar proračuna"
+  "plan.budgets.pace.under": "Unutar proračuna",
+  "accounts.help.open": "Što ovo znači?",
+  "accounts.help.title": "Kako se ovaj zaslon zbraja",
+  "accounts.help.assets": "Imovina: gotovina, bankovni, štedni i investicijski računi te novac koji ti drugi duguju.",
+  "accounts.help.debts": "Dugovi: kreditne kartice i krediti, prikazani kao preostali dug.",
+  "accounts.help.netWorth": "Neto vrijednost = Imovina − Dugovi, preračunano u tvoju glavnu valutu po današnjem tečaju.",
+  "accounts.help.cashFlow": "Novčani tok: prihodi naspram potrošnje po mjesecu. Prijenosi između vlastitih računa ne računaju se.",
+  "accounts.help.groups": "Potrošnja sadrži račune s kojih plaćaš, Štednja štedne i investicijske račune, Dugovanja kredite i novac koji ti duguju. Dodirni Imovina ili Dugovi za filtriranje popisa.",
+  "categories.dragHandle": "Povuci za promjenu redoslijeda"
 }

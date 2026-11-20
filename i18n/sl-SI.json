@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Zamujeno",
   "plan.budgets.overBudget": "{n} nad proračunom",
   "plan.budgets.plannedFor": "Načrtovano za {month}",
-  "plan.budgets.pace.under": "V okviru proračuna"
+  "plan.budgets.pace.under": "V okviru proračuna",
+  "accounts.help.open": "Kaj to pomeni?",
+  "accounts.help.title": "Kako se ta zaslon sešteje",
+  "accounts.help.assets": "Sredstva: gotovina, bančni, varčevalni in naložbeni računi ter denar, ki vam ga dolgujejo drugi.",
+  "accounts.help.debts": "Dolgovi: kreditne kartice in posojila, prikazani kot znesek, ki ga še dolgujete.",
+  "accounts.help.netWorth": "Neto vrednost = Sredstva − Dolgovi, pretvorjeno v glavno valuto po današnjem tečaju.",
+  "accounts.help.cashFlow": "Denarni tok: prihodki proti porabi na mesec. Prenosi med lastnimi računi se ne štejejo.",
+  "accounts.help.groups": "Poraba vsebuje račune, s katerih plačujete, Varčevanje vsebuje prihranke in naložbe, Dolgovi vsebujejo posojila in denar, ki vam ga dolgujejo. Tapnite Sredstva ali Dolgovi za filtriranje seznama.",
+  "categories.dragHandle": "Povleci za razvrščanje"
 }

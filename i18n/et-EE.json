@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Maksmata",
   "plan.budgets.overBudget": "{n} üle eelarve",
   "plan.budgets.plannedFor": "Planeeritud: {month}",
-  "plan.budgets.pace.under": "Eelarves"
+  "plan.budgets.pace.under": "Eelarves",
+  "accounts.help.open": "Mida need tähendavad?",
+  "accounts.help.title": "Kuidas see ekraan kokku arvutatakse",
+  "accounts.help.assets": "Varad: sularaha, panga-, säästu- ja investeerimiskontod, lisaks raha, mida teised sulle võlgnevad.",
+  "accounts.help.debts": "Võlad: krediitkaardid ja laenud, kuvatud veel tasumata summana.",
+  "accounts.help.netWorth": "Netoväärtus = Varad − Võlad, teisendatud sinu põhivaluutasse tänase kursiga.",
+  "accounts.help.cashFlow": "Rahavoog: sissetulekud ja kulud kuu kohta. Ülekandeid oma kontode vahel ei arvestata.",
+  "accounts.help.groups": "Kulutamine sisaldab kontosid, millelt maksad, Säästmine sisaldab sääste ja investeeringuid, Võlad sisaldab laene ja sulle võlgnetavat raha. Loendi filtreerimiseks puuduta Varad või Võlad.",
+  "categories.dragHandle": "Lohista järjekorra muutmiseks"
 }

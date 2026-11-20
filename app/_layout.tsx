@@ -40,6 +40,28 @@ function ScreenshotController() {
         if (txt && txt !== last) {
           last = txt;
           if (txt === 'dismiss') router.dismissAll();
+          else if (txt.startsWith('profile:')) {
+            // Switch to (creating if needed) a named profile — gives tests
+            // a genuinely fresh database without tapping through Settings.
+            const name = txt.slice('profile:'.length).trim();
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const P = require('@/utils/profiles') as typeof import('@/utils/profiles');
+            const found = P.listProfiles().find((p) => p.name.toLowerCase() === name.toLowerCase())
+              ?? P.createProfile({ name });
+            if (found.id !== P.getActiveProfileId()) P.switchActiveProfile(found.id);
+            console.log(`[screenshot-ctl] profile → ${found.name}`);
+          }
+          else if (txt.startsWith('import:')) {
+            // Restore a backup file from the simulator's filesystem so
+            // the import path can be exercised without the document picker.
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const FS = require('expo-file-system/legacy') as typeof import('expo-file-system/legacy');
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const { importBackupJson } = require('@/utils/dataExport') as typeof import('@/utils/dataExport');
+            const raw = await FS.readAsStringAsync(txt.slice('import:'.length));
+            const res = await importBackupJson(raw, { skipConfirm: true });
+            console.log(`[screenshot-ctl] import → ${res}`);
+          }
           else router.push(txt as never);
         }
       } catch { /* server not up yet */ }

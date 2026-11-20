@@ -84,9 +84,10 @@ function displayBalance(type: AccountType, n: number): number {
 // travel, investment, charity). The Account type's default icon
 // stays in the list so users can revert.
 const ACCOUNT_ICON_OPTIONS: string[] = [
-  'Wallet', 'Banknote', 'PiggyBank', 'CreditCard',
-  'TrendingUp', 'Briefcase', 'Home', 'Plane',
-  'Gift', 'Heart', 'Star', 'Target',
+  'Wallet', 'Banknote', 'Cash', 'PiggyBank', 'CreditCard', 'Bank', 'Building',
+  'TrendingUp', 'Chart', 'Bitcoin', 'Coins', 'Briefcase', 'Receipt',
+  'Home', 'Car', 'Plane', 'Gift', 'Heart', 'Star', 'Target', 'Shield', 'Umbrella', 'Key',
+  'School', 'Baby', 'Coffee', 'ShoppingCart', 'Smartphone', 'Zap', 'Droplet', 'Wifi', 'Package', 'Calendar',
 ];
 
 const PALETTE = [

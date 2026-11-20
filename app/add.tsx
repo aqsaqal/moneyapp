@@ -854,6 +854,7 @@ export default function AddScreen() {
             >
               <Text style={[styles.dateInlineText, { color: tone }]}>
                 {relativeDayLabel(txDate, locale)}
+                {diff > 0 ? ` · ${t('activity.scheduled')}` : ''}
               </Text>
             </Pressable>
           );
@@ -864,11 +865,44 @@ export default function AddScreen() {
             setDatePickerOpen(false);
             return null;
           }
+          // Android shows a dialog that closes itself after one pick.
+          // iOS renders the calendar inline and fires onChange on every
+          // interaction — including moving between months — so closing
+          // on the first event made the picker vanish before the user
+          // could choose (and sometimes left a date a month ahead, which
+          // silently turned the entry into a scheduled one). Keep it open
+          // until Done.
+          if (Platform.OS === 'ios') {
+            return (
+              <View style={styles.datePickerCard}>
+                <DateTimePicker
+                  value={txDate}
+                  mode="date"
+                  display="inline"
+                  maximumDate={new Date(Date.now() + 365 * 86_400_000)}
+                  locale={locale}
+                  themeVariant="dark"
+                  accentColor={theme.accent}
+                  onChange={(_event, selected) => {
+                    if (selected) setTxDate(selected);
+                  }}
+                />
+                <Pressable
+                  onPress={() => setDatePickerOpen(false)}
+                  style={styles.datePickerDone}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('common.done')}
+                >
+                  <Text style={styles.datePickerDoneText}>{t('common.done')}</Text>
+                </Pressable>
+              </View>
+            );
+          }
           return (
             <DateTimePicker
               value={txDate}
               mode="date"
-              display={Platform.OS === 'ios' ? 'inline' : 'default'}
+              display="default"
               maximumDate={new Date(Date.now() + 365 * 86_400_000)}
               // Honour the in-app language setting — without this the
               // Android dialog falls back to the OS locale and reads
@@ -1538,6 +1572,17 @@ const styles = StyleSheet.create({
     borderColor: theme.border,
     overflow: 'hidden',
   },
+  datePickerCard: {
+    marginTop: spacing.sm,
+    marginHorizontal: spacing.md,
+    borderRadius: radii.lg,
+    borderWidth: 1,
+    borderColor: theme.border,
+    backgroundColor: theme.bg2,
+    paddingBottom: spacing.xs,
+  },
+  datePickerDone: { alignSelf: 'flex-end', paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
+  datePickerDoneText: { color: theme.accent, fontSize: sizes.md, fontFamily: font.bodySemi },
   dateInlineText: {
     color: theme.text3,
     fontSize: 12,

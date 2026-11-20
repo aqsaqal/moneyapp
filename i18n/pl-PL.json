@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Nieopłacone",
   "plan.budgets.overBudget": "{n} ponad budżet",
   "plan.budgets.plannedFor": "Zaplanowano: {month}",
-  "plan.budgets.pace.under": "W budżecie"
+  "plan.budgets.pace.under": "W budżecie",
+  "accounts.help.open": "Co to oznacza?",
+  "accounts.help.title": "Jak liczy się ten ekran",
+  "accounts.help.assets": "Aktywa: gotówka, konta bankowe, oszczędnościowe i inwestycyjne oraz pieniądze, które inni są Ci dłużni.",
+  "accounts.help.debts": "Zobowiązania: karty kredytowe i kredyty, pokazane jako kwota pozostała do spłaty.",
+  "accounts.help.netWorth": "Wartość netto = Aktywa − Zobowiązania, przeliczone na Twoją główną walutę po dzisiejszym kursie.",
+  "accounts.help.cashFlow": "Przepływy: przychody kontra wydatki w miesiącu. Przelewy między własnymi kontami nie są liczone.",
+  "accounts.help.groups": "Wydatki zawierają konta, z których płacisz, Oszczędzanie – oszczędności i inwestycje, Zobowiązania – kredyty i pieniądze należne Ci. Dotknij Aktywa lub Zobowiązania, aby filtrować listę.",
+  "categories.dragHandle": "Przeciągnij, aby zmienić kolejność"
 }

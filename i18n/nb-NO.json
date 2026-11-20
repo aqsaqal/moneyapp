@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Ubetalt",
   "plan.budgets.overBudget": "{n} over budsjett",
   "plan.budgets.plannedFor": "Planlagt for {month}",
-  "plan.budgets.pace.under": "Innenfor budsjett"
+  "plan.budgets.pace.under": "Innenfor budsjett",
+  "accounts.help.open": "Hva betyr dette?",
+  "accounts.help.title": "Slik regnes denne skjermen sammen",
+  "accounts.help.assets": "Eiendeler: kontanter, bank-, spare- og investeringskontoer, pluss penger andre skylder deg.",
+  "accounts.help.debts": "Gjeld: kredittkort og lån, vist som beløpet som fortsatt skyldes.",
+  "accounts.help.netWorth": "Nettoformue = Eiendeler − Gjeld, omregnet til hovedvalutaen din med dagens kurs.",
+  "accounts.help.cashFlow": "Kontantstrøm: inntekt mot forbruk per måned. Overføringer mellom egne kontoer teller ikke.",
+  "accounts.help.groups": "Forbruk inneholder kontoene du betaler fra, Sparing inneholder sparing og investeringer, Gjeld inneholder lån og penger du har til gode. Trykk på Eiendeler eller Gjeld for å filtrere listen.",
+  "categories.dragHandle": "Dra for å endre rekkefølge"
 }

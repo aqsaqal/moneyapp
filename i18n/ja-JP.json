@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "未払い",
   "plan.budgets.overBudget": "{n} 件予算超過",
   "plan.budgets.plannedFor": "{month}の予算計画",
-  "plan.budgets.pace.under": "予算内"
+  "plan.budgets.pace.under": "予算内",
+  "accounts.help.open": "これは何を意味しますか？",
+  "accounts.help.title": "この画面の計算方法",
+  "accounts.help.assets": "資産：現金、銀行・貯蓄・投資口座に加え、他の人があなたに返すべきお金。",
+  "accounts.help.debts": "負債：クレジットカードとローン。残りの支払額として表示されます。",
+  "accounts.help.netWorth": "純資産 = 資産 − 負債。今日のレートでメイン通貨に換算されます。",
+  "accounts.help.cashFlow": "キャッシュフロー：月ごとの収入と支出の比較。自分の口座間の振替は含まれません。",
+  "accounts.help.groups": "支出用には支払いに使う口座、貯蓄には貯蓄と投資、貸借にはローンと貸したお金が入ります。資産または負債をタップすると一覧を絞り込めます。",
+  "categories.dragHandle": "ドラッグして並べ替え"
 }

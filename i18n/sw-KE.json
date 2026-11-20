@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Hazikulipwa",
   "plan.budgets.overBudget": "{n} zimezidi bajeti",
   "plan.budgets.plannedFor": "Imepangwa kwa {month}",
-  "plan.budgets.pace.under": "Ndani ya bajeti"
+  "plan.budgets.pace.under": "Ndani ya bajeti",
+  "accounts.help.open": "Haya yanamaanisha nini?",
+  "accounts.help.title": "Jinsi skrini hii inavyohesabu",
+  "accounts.help.assets": "Mali: pesa taslimu, akaunti za benki, akiba na uwekezaji, pamoja na pesa unazodai wengine.",
+  "accounts.help.debts": "Madeni: kadi za mkopo na mikopo, zinaonyeshwa kama kiasi ambacho bado unadaiwa.",
+  "accounts.help.netWorth": "Thamani halisi = Mali − Madeni, ikibadilishwa kwa sarafu yako kuu kwa kiwango cha leo.",
+  "accounts.help.cashFlow": "Mtiririko wa pesa: mapato dhidi ya matumizi kwa mwezi. Uhamisho kati ya akaunti zako mwenyewe hauhesabiwi.",
+  "accounts.help.groups": "Matumizi ina akaunti unazolipa kutoka, Akiba ina akiba na uwekezaji, Madeni ina mikopo na pesa unazodai. Gusa Mali au Madeni kuchuja orodha.",
+  "categories.dragHandle": "Buruta ili kupanga upya"
 }

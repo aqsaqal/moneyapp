@@ -640,5 +640,13 @@
   "plan.bills.group.missed": "Missed",
   "plan.budgets.overBudget": "{n} over budget",
   "plan.budgets.plannedFor": "Planned for {month}",
-  "plan.budgets.pace.under": "Within budget"
+  "plan.budgets.pace.under": "Within budget",
+  "accounts.help.open": "What do these mean?",
+  "accounts.help.title": "How this screen adds up",
+  "accounts.help.assets": "Assets: cash, bank, savings and investment accounts, plus money others owe you.",
+  "accounts.help.debts": "Debts: credit cards and loans, shown as the amount still owed.",
+  "accounts.help.netWorth": "Net worth = Assets − Debts, converted to your main currency at today's rate.",
+  "accounts.help.cashFlow": "Cash flow: income versus spending per month. Transfers between your own accounts don't count.",
+  "accounts.help.groups": "Spending holds the accounts you pay from, Saving holds savings and investments, Owed holds loans and money owed to you. Tap Assets or Debts to filter the list.",
+  "categories.dragHandle": "Drag to reorder"
 }

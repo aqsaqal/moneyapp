@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Ödənilməmiş",
   "plan.budgets.overBudget": "{n} büdcəni aşıb",
   "plan.budgets.plannedFor": "{month} üçün planlaşdırılıb",
-  "plan.budgets.pace.under": "Büdcə daxilində"
+  "plan.budgets.pace.under": "Büdcə daxilində",
+  "accounts.help.open": "Bunlar nə deməkdir?",
+  "accounts.help.title": "Bu ekran necə hesablanır",
+  "accounts.help.assets": "Aktivlər: nağd pul, bank, yığım və investisiya hesabları, üstəlik sizə olan borclar.",
+  "accounts.help.debts": "Borclar: kredit kartları və kreditlər, qalan borc məbləği ilə göstərilir.",
+  "accounts.help.netWorth": "Xalis sərvət = Aktivlər − Borclar, bugünkü məzənnə ilə əsas valyutanıza çevrilir.",
+  "accounts.help.cashFlow": "Pul axını: aylıq gəlir və xərclərin müqayisəsi. Öz hesablarınız arasındakı köçürmələr sayılmır.",
+  "accounts.help.groups": "«Xərclər» ödəniş etdiyiniz hesabları, «Yığım» yığım və investisiyaları, «Borclar» isə kreditləri və sizə olan borcları saxlayır. Siyahını filtrləmək üçün «Aktivlər» və ya «Borclar» üzərinə toxunun.",
+  "categories.dragHandle": "Sıralamaq üçün sürüşdürün"
 }

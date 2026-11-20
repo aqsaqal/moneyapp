@@ -640,5 +640,13 @@
   "plan.bills.group.missed": "Terlewat",
   "plan.budgets.overBudget": "{n} melebihi anggaran",
   "plan.budgets.plannedFor": "Direncanakan untuk {month}",
-  "plan.budgets.pace.under": "Dalam anggaran"
+  "plan.budgets.pace.under": "Dalam anggaran",
+  "accounts.help.open": "Apa arti semua ini?",
+  "accounts.help.title": "Cara layar ini dihitung",
+  "accounts.help.assets": "Aset: uang tunai, rekening bank, tabungan dan investasi, plus uang yang orang lain pinjam darimu.",
+  "accounts.help.debts": "Utang: kartu kredit dan pinjaman, ditampilkan sebagai jumlah yang masih harus dibayar.",
+  "accounts.help.netWorth": "Kekayaan bersih = Aset − Utang, dikonversi ke mata uang utamamu dengan kurs hari ini.",
+  "accounts.help.cashFlow": "Arus kas: pemasukan dibandingkan pengeluaran per bulan. Transfer antar akunmu sendiri tidak dihitung.",
+  "accounts.help.groups": "Pengeluaran berisi akun yang kamu pakai untuk membayar, Tabungan berisi tabungan dan investasi, Utang berisi pinjaman dan uang yang orang lain pinjam darimu. Ketuk Aset atau Utang untuk memfilter daftar.",
+  "categories.dragHandle": "Seret untuk mengubah urutan"
 }

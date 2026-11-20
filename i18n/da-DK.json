@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Ubetalte",
   "plan.budgets.overBudget": "{n} over budget",
   "plan.budgets.plannedFor": "Planlagt for {month}",
-  "plan.budgets.pace.under": "Inden for budget"
+  "plan.budgets.pace.under": "Inden for budget",
+  "accounts.help.open": "Hvad betyder det her?",
+  "accounts.help.title": "Sådan regnes skærmen sammen",
+  "accounts.help.assets": "Aktiver: kontanter, bank-, opsparings- og investeringskonti, plus penge andre skylder dig.",
+  "accounts.help.debts": "Gæld: kreditkort og lån, vist som det beløb der stadig skyldes.",
+  "accounts.help.netWorth": "Nettoformue = Aktiver − Gæld, omregnet til din hovedvaluta til dagens kurs.",
+  "accounts.help.cashFlow": "Pengestrøm: indkomst mod forbrug pr. måned. Overførsler mellem dine egne konti tæller ikke med.",
+  "accounts.help.groups": "Forbrug rummer de konti du betaler fra, Opsparing rummer opsparing og investeringer, Gæld rummer lån og penge du har til gode. Tryk på Aktiver eller Gæld for at filtrere listen.",
+  "categories.dragHandle": "Træk for at ændre rækkefølgen"
 }

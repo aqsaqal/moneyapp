@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Gemist",
   "plan.budgets.overBudget": "{n} over budget",
   "plan.budgets.plannedFor": "Gepland voor {month}",
-  "plan.budgets.pace.under": "Binnen budget"
+  "plan.budgets.pace.under": "Binnen budget",
+  "accounts.help.open": "Wat betekent dit?",
+  "accounts.help.title": "Hoe dit scherm wordt opgeteld",
+  "accounts.help.assets": "Activa: contant geld, bank-, spaar- en beleggingsrekeningen, plus geld dat anderen jou verschuldigd zijn.",
+  "accounts.help.debts": "Schulden: creditcards en leningen, weergegeven als het nog openstaande bedrag.",
+  "accounts.help.netWorth": "Eigen vermogen = Activa − Schulden, omgerekend naar je hoofdvaluta tegen de koers van vandaag.",
+  "accounts.help.cashFlow": "Cashflow: inkomsten tegenover uitgaven per maand. Overboekingen tussen je eigen rekeningen tellen niet mee.",
+  "accounts.help.groups": "Uitgaven bevat de rekeningen waarmee je betaalt, Sparen bevat spaargeld en beleggingen, Schulden bevat leningen en geld dat jou verschuldigd is. Tik op Activa of Schulden om de lijst te filteren.",
+  "categories.dragHandle": "Sleep om te herschikken"
 }

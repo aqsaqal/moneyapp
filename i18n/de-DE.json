@@ -641,5 +641,13 @@
   "plan.bills.group.missed": "Nicht bezahlt",
   "plan.budgets.overBudget": "{n} über Budget",
   "plan.budgets.plannedFor": "Geplant für {month}",
-  "plan.budgets.pace.under": "Im Budget"
+  "plan.budgets.pace.under": "Im Budget",
+  "accounts.help.open": "Was bedeutet das?",
+  "accounts.help.title": "So rechnet diese Ansicht",
+  "accounts.help.assets": "Vermögen: Bargeld, Bank-, Spar- und Anlagekonten, plus Geld, das andere dir schulden.",
+  "accounts.help.debts": "Schulden: Kreditkarten und Kredite, angezeigt als noch offener Betrag.",
+  "accounts.help.netWorth": "Nettovermögen = Vermögen − Schulden, umgerechnet in deine Hauptwährung zum heutigen Kurs.",
+  "accounts.help.cashFlow": "Cashflow: Einnahmen gegen Ausgaben pro Monat. Überweisungen zwischen deinen eigenen Konten zählen nicht.",
+  "accounts.help.groups": "Ausgaben enthält die Konten, von denen du zahlst, Sparen enthält Ersparnisse und Anlagen, Schulden enthält Kredite und Geld, das dir geschuldet wird. Tippe auf Vermögen oder Schulden, um die Liste zu filtern.",
+  "categories.dragHandle": "Ziehen zum Neuanordnen"
 }
