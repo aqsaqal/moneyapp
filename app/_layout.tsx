@@ -51,6 +51,11 @@ function ScreenshotController() {
             if (found.id !== P.getActiveProfileId()) P.switchActiveProfile(found.id);
             console.log(`[screenshot-ctl] profile → ${found.name}`);
           }
+          else if (txt.startsWith('taborder:')) {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const T = require('@/utils/tabOrder') as typeof import('@/utils/tabOrder');
+            T.setTabOrder(txt.slice('taborder:'.length).split(',').map((x) => x.trim()) as never);
+          }
           else if (txt.startsWith('import:')) {
             // Restore a backup file from the simulator's filesystem so
             // the import path can be exercised without the document picker.

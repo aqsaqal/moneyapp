@@ -701,5 +701,8 @@
   "events.status.oneDay": "۱ روز",
   "events.status.tomorrow": "فردا",
   "events.status.endedYesterday": "دیروز پایان یافت",
-  "home.event.oneDayLeft": "۱ روز باقی مانده"
+  "home.event.oneDayLeft": "۱ روز باقی مانده",
+  "settings.tabOrder": "ترتیب تب‌ها",
+  "settings.tabOrder.hint": "برای مرتب کردن چهار تب، بکشید. دکمه + همیشه در وسط می‌ماند.",
+  "settings.tabOrder.reset": "بازنشانی به پیش‌فرض"
 }

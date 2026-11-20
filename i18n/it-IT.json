@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 giorno",
   "events.status.tomorrow": "Domani",
   "events.status.endedYesterday": "Terminato ieri",
-  "home.event.oneDayLeft": "Manca 1 giorno"
+  "home.event.oneDayLeft": "Manca 1 giorno",
+  "settings.tabOrder": "Ordine delle schede",
+  "settings.tabOrder.hint": "Trascina per disporre le quattro schede. Il pulsante + resta sempre al centro.",
+  "settings.tabOrder.reset": "Ripristina predefinito"
 }

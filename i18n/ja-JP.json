@@ -701,5 +701,8 @@
   "events.status.oneDay": "1日間",
   "events.status.tomorrow": "明日",
   "events.status.endedYesterday": "昨日終了",
-  "home.event.oneDayLeft": "残り1日"
+  "home.event.oneDayLeft": "残り1日",
+  "settings.tabOrder": "タブの順序",
+  "settings.tabOrder.hint": "ドラッグして4つのタブを並べ替えます。+ボタンは常に中央に固定されます。",
+  "settings.tabOrder.reset": "デフォルトに戻す"
 }

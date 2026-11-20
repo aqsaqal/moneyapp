@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 ditë",
   "events.status.tomorrow": "Nesër",
   "events.status.endedYesterday": "Përfundoi dje",
-  "home.event.oneDayLeft": "Mbetet 1 ditë"
+  "home.event.oneDayLeft": "Mbetet 1 ditë",
+  "settings.tabOrder": "Renditja e skedave",
+  "settings.tabOrder.hint": "Zvarrit për të renditur katër skedat. Butoni + qëndron gjithmonë në mes.",
+  "settings.tabOrder.reset": "Rikthe në parazgjedhje"
 }

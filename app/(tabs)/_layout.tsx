@@ -27,6 +27,7 @@ import { kv } from '@/utils/kv';
 import { useOncePress } from '@/hooks/useOncePress';
 import { useT } from '@/hooks/useT';
 import { emitTabReselect } from '@/utils/tabReselect';
+import { useTabOrder } from '@/utils/tabOrder';
 
 const TAB_BAR_HEIGHT = 64;
 const TAB_BAR_PAD_BOTTOM = 8;
@@ -48,11 +49,12 @@ const TAB_LABEL_KEYS: Record<string, string> = {
   activity: 'tabs.activity',
   accounts: 'tabs.me',
 };
-// Visual order in the bar — splits 2 + spacer + 2 around the FAB.
-const TAB_ORDER = ['index', 'plan', '__spacer__', 'activity', 'accounts'] as const;
-
 function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarProps) {
   const t = useT();
+  // Visual order in the bar — the user's order (Settings → Tab order)
+  // split 2 + spacer + 2 around the FAB.
+  const order = useTabOrder();
+  const slots: string[] = [...order.slice(0, 2), '__spacer__', ...order.slice(2)];
   // Build map: route name → state.index, so we can render in our preferred order.
   const routeByName = new Map(state.routes.map((r, i) => [r.name, { route: r, idx: i }]));
 
@@ -66,7 +68,7 @@ function CustomTabBar({ state, descriptors, navigation, insets }: BottomTabBarPr
         },
       ]}
     >
-      {TAB_ORDER.map((slot, i) => {
+      {slots.map((slot) => {
         if (slot === '__spacer__') {
           return <View key="spacer" style={{ width: FAB_SPACER_WIDTH }} pointerEvents="none" />;
         }

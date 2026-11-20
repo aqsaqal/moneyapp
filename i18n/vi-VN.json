@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 ngày",
   "events.status.tomorrow": "Ngày mai",
   "events.status.endedYesterday": "Đã kết thúc hôm qua",
-  "home.event.oneDayLeft": "Còn 1 ngày"
+  "home.event.oneDayLeft": "Còn 1 ngày",
+  "settings.tabOrder": "Thứ tự tab",
+  "settings.tabOrder.hint": "Kéo để sắp xếp bốn tab. Nút + luôn nằm ở giữa.",
+  "settings.tabOrder.reset": "Đặt lại mặc định"
 }

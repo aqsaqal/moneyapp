@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 diena",
   "events.status.tomorrow": "Rīt",
   "events.status.endedYesterday": "Beidzās vakar",
-  "home.event.oneDayLeft": "Atlikusi 1 diena"
+  "home.event.oneDayLeft": "Atlikusi 1 diena",
+  "settings.tabOrder": "Ciļņu secība",
+  "settings.tabOrder.hint": "Velciet, lai sakārtotu četras cilnes. Poga + vienmēr paliek vidū.",
+  "settings.tabOrder.reset": "Atiestatīt uz noklusējumu"
 }

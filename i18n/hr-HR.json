@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 dan",
   "events.status.tomorrow": "Sutra",
   "events.status.endedYesterday": "Završilo jučer",
-  "home.event.oneDayLeft": "Još 1 dan"
+  "home.event.oneDayLeft": "Još 1 dan",
+  "settings.tabOrder": "Redoslijed kartica",
+  "settings.tabOrder.hint": "Povucite za raspored četiriju kartica. Gumb + uvijek ostaje u sredini.",
+  "settings.tabOrder.reset": "Vrati na zadano"
 }

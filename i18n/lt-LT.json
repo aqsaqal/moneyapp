@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 diena",
   "events.status.tomorrow": "Rytoj",
   "events.status.endedYesterday": "Baigėsi vakar",
-  "home.event.oneDayLeft": "Liko 1 diena"
+  "home.event.oneDayLeft": "Liko 1 diena",
+  "settings.tabOrder": "Kortelių tvarka",
+  "settings.tabOrder.hint": "Vilkite, kad sutvarkytumėte keturias korteles. Mygtukas + visada lieka viduryje.",
+  "settings.tabOrder.reset": "Atkurti numatytąją"
 }

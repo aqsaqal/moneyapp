@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 రోజు",
   "events.status.tomorrow": "రేపు",
   "events.status.endedYesterday": "నిన్న ముగిసింది",
-  "home.event.oneDayLeft": "1 రోజు మిగిలింది"
+  "home.event.oneDayLeft": "1 రోజు మిగిలింది",
+  "settings.tabOrder": "ట్యాబ్ క్రమం",
+  "settings.tabOrder.hint": "నాలుగు ట్యాబ్‌లను అమర్చడానికి లాగండి. + బటన్ ఎప్పుడూ మధ్యలోనే ఉంటుంది.",
+  "settings.tabOrder.reset": "డిఫాల్ట్‌కు రీసెట్ చేయండి"
 }

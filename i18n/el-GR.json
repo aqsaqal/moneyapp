@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 ημέρα",
   "events.status.tomorrow": "Αύριο",
   "events.status.endedYesterday": "Έληξε χθες",
-  "home.event.oneDayLeft": "Απομένει 1 ημέρα"
+  "home.event.oneDayLeft": "Απομένει 1 ημέρα",
+  "settings.tabOrder": "Σειρά καρτελών",
+  "settings.tabOrder.hint": "Σύρετε για να τακτοποιήσετε τις τέσσερις καρτέλες. Το κουμπί + μένει πάντα στη μέση.",
+  "settings.tabOrder.reset": "Επαναφορά προεπιλογής"
 }

@@ -701,5 +701,8 @@
   "events.status.oneDay": "1天",
   "events.status.tomorrow": "明天",
   "events.status.endedYesterday": "昨天结束",
-  "home.event.oneDayLeft": "剩余1天"
+  "home.event.oneDayLeft": "剩余1天",
+  "settings.tabOrder": "标签页顺序",
+  "settings.tabOrder.hint": "拖动以排列四个标签页。+ 按钮始终位于中间。",
+  "settings.tabOrder.reset": "恢复默认"
 }

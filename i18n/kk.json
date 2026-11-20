@@ -700,5 +700,8 @@
   "events.status.oneDay": "1 күн",
   "events.status.tomorrow": "Ертең",
   "events.status.endedYesterday": "Кеше аяқталды",
-  "home.event.oneDayLeft": "1 күн қалды"
+  "home.event.oneDayLeft": "1 күн қалды",
+  "settings.tabOrder": "Қойындылар реті",
+  "settings.tabOrder.hint": "Төрт қойындыны реттеу үшін сүйреңіз. + түймесі әрқашан ортада қалады.",
+  "settings.tabOrder.reset": "Әдепкіге қайтару"
 }

@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 dag",
   "events.status.tomorrow": "I morgen",
   "events.status.endedYesterday": "Sluttede i går",
-  "home.event.oneDayLeft": "1 dag tilbage"
+  "home.event.oneDayLeft": "1 dag tilbage",
+  "settings.tabOrder": "Rækkefølge af faner",
+  "settings.tabOrder.hint": "Træk for at arrangere de fire faner. Knappen + bliver altid i midten.",
+  "settings.tabOrder.reset": "Nulstil til standard"
 }

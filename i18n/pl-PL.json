@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 dzień",
   "events.status.tomorrow": "Jutro",
   "events.status.endedYesterday": "Zakończono wczoraj",
-  "home.event.oneDayLeft": "Pozostał 1 dzień"
+  "home.event.oneDayLeft": "Pozostał 1 dzień",
+  "settings.tabOrder": "Kolejność kart",
+  "settings.tabOrder.hint": "Przeciągnij, aby ułożyć cztery karty. Przycisk + zawsze zostaje na środku.",
+  "settings.tabOrder.reset": "Przywróć domyślne"
 }

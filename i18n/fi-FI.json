@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 päivä",
   "events.status.tomorrow": "Huomenna",
   "events.status.endedYesterday": "Päättyi eilen",
-  "home.event.oneDayLeft": "1 päivä jäljellä"
+  "home.event.oneDayLeft": "1 päivä jäljellä",
+  "settings.tabOrder": "Välilehtien järjestys",
+  "settings.tabOrder.hint": "Järjestä neljä välilehteä vetämällä. Painike + pysyy aina keskellä.",
+  "settings.tabOrder.reset": "Palauta oletus"
 }

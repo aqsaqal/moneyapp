@@ -701,5 +701,8 @@
   "events.status.oneDay": "יום אחד",
   "events.status.tomorrow": "מחר",
   "events.status.endedYesterday": "הסתיים אתמול",
-  "home.event.oneDayLeft": "נותר יום אחד"
+  "home.event.oneDayLeft": "נותר יום אחד",
+  "settings.tabOrder": "סדר הכרטיסיות",
+  "settings.tabOrder.hint": "גררו כדי לסדר את ארבע הכרטיסיות. כפתור + נשאר תמיד באמצע.",
+  "settings.tabOrder.reset": "איפוס לברירת המחדל"
 }

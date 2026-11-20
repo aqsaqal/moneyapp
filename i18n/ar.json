@@ -700,5 +700,8 @@
   "events.status.oneDay": "يوم واحد",
   "events.status.tomorrow": "غدًا",
   "events.status.endedYesterday": "انتهى أمس",
-  "home.event.oneDayLeft": "بقي يوم واحد"
+  "home.event.oneDayLeft": "بقي يوم واحد",
+  "settings.tabOrder": "ترتيب علامات التبويب",
+  "settings.tabOrder.hint": "اسحب لترتيب علامات التبويب الأربع. يبقى زر + دائمًا في المنتصف.",
+  "settings.tabOrder.reset": "إعادة التعيين إلى الافتراضي"
 }

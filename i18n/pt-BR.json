@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 dia",
   "events.status.tomorrow": "Amanhã",
   "events.status.endedYesterday": "Terminou ontem",
-  "home.event.oneDayLeft": "Falta 1 dia"
+  "home.event.oneDayLeft": "Falta 1 dia",
+  "settings.tabOrder": "Ordem das abas",
+  "settings.tabOrder.hint": "Arraste para organizar as quatro abas. O botão + fica sempre no meio.",
+  "settings.tabOrder.reset": "Restaurar padrão"
 }

@@ -701,5 +701,8 @@
   "events.status.oneDay": "1天",
   "events.status.tomorrow": "明天",
   "events.status.endedYesterday": "昨天結束",
-  "home.event.oneDayLeft": "剩餘1天"
+  "home.event.oneDayLeft": "剩餘1天",
+  "settings.tabOrder": "分頁順序",
+  "settings.tabOrder.hint": "拖曳以排列四個分頁。+ 按鈕一律保持在中間。",
+  "settings.tabOrder.reset": "恢復預設"
 }

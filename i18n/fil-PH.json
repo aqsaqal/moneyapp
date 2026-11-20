@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 araw",
   "events.status.tomorrow": "Bukas",
   "events.status.endedYesterday": "Natapos kahapon",
-  "home.event.oneDayLeft": "1 araw na lang"
+  "home.event.oneDayLeft": "1 araw na lang",
+  "settings.tabOrder": "Ayos ng mga tab",
+  "settings.tabOrder.hint": "I-drag para ayusin ang apat na tab. Laging nasa gitna ang button na +.",
+  "settings.tabOrder.reset": "Ibalik sa default"
 }

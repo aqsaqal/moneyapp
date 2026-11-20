@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 päev",
   "events.status.tomorrow": "Homme",
   "events.status.endedYesterday": "Lõppes eile",
-  "home.event.oneDayLeft": "1 päev jäänud"
+  "home.event.oneDayLeft": "1 päev jäänud",
+  "settings.tabOrder": "Vahekaartide järjestus",
+  "settings.tabOrder.hint": "Lohista nelja vahekaardi järjestamiseks. Nupp + jääb alati keskele.",
+  "settings.tabOrder.reset": "Taasta vaikeseaded"
 }

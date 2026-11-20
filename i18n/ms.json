@@ -700,5 +700,8 @@
   "events.status.oneDay": "1 hari",
   "events.status.tomorrow": "Esok",
   "events.status.endedYesterday": "Berakhir semalam",
-  "home.event.oneDayLeft": "1 hari lagi"
+  "home.event.oneDayLeft": "1 hari lagi",
+  "settings.tabOrder": "Susunan tab",
+  "settings.tabOrder.hint": "Seret untuk menyusun empat tab. Butang + sentiasa kekal di tengah.",
+  "settings.tabOrder.reset": "Tetapkan semula ke lalai"
 }

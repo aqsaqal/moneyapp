@@ -122,6 +122,7 @@ export interface KVSchema {
   biometricEnabled: string;    // '1' | '0'
   onboardingCompleted: string; // '1' | '0'
   themeMode: string;           // 'system' | 'dark' | 'light'
+  tabOrder: string;            // JSON array of tab route names (device-wide); absent = default order
   islamicPrayerMethod: string; // adhan-js method id (islamic only)
   islamicCity: string;         // city for prayer calculation (islamic only)
   islamicCoords: string;       // JSON {lat:number,lon:number}

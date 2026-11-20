@@ -700,5 +700,8 @@
   "events.status.oneDay": "1 day",
   "events.status.tomorrow": "Tomorrow",
   "events.status.endedYesterday": "Ended yesterday",
-  "home.event.oneDayLeft": "1 day left"
+  "home.event.oneDayLeft": "1 day left",
+  "settings.tabOrder": "Tab order",
+  "settings.tabOrder.hint": "Drag to arrange the four tabs. The + button always stays in the middle.",
+  "settings.tabOrder.reset": "Reset to default"
 }

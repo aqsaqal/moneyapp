@@ -700,5 +700,8 @@
   "events.status.oneDay": "1 gün",
   "events.status.tomorrow": "Yarın",
   "events.status.endedYesterday": "Dün sona erdi",
-  "home.event.oneDayLeft": "1 gün kaldı"
+  "home.event.oneDayLeft": "1 gün kaldı",
+  "settings.tabOrder": "Sekme sırası",
+  "settings.tabOrder.hint": "Dört sekmeyi sıralamak için sürükleyin. + düğmesi her zaman ortada kalır.",
+  "settings.tabOrder.reset": "Varsayılana sıfırla"
 }

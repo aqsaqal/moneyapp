@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 dag",
   "events.status.tomorrow": "Morgen",
   "events.status.endedYesterday": "Gisteren afgelopen",
-  "home.event.oneDayLeft": "Nog 1 dag"
+  "home.event.oneDayLeft": "Nog 1 dag",
+  "settings.tabOrder": "Volgorde van tabbladen",
+  "settings.tabOrder.hint": "Sleep om de vier tabbladen te ordenen. De +-knop blijft altijd in het midden.",
+  "settings.tabOrder.reset": "Standaard herstellen"
 }

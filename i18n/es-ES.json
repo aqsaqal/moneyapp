@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 día",
   "events.status.tomorrow": "Mañana",
   "events.status.endedYesterday": "Terminó ayer",
-  "home.event.oneDayLeft": "Queda 1 día"
+  "home.event.oneDayLeft": "Queda 1 día",
+  "settings.tabOrder": "Orden de las pestañas",
+  "settings.tabOrder.hint": "Arrastra para ordenar las cuatro pestañas. El botón + siempre se queda en el centro.",
+  "settings.tabOrder.reset": "Restablecer valores predeterminados"
 }

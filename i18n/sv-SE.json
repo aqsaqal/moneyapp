@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 dag",
   "events.status.tomorrow": "I morgon",
   "events.status.endedYesterday": "Avslutades igår",
-  "home.event.oneDayLeft": "1 dag kvar"
+  "home.event.oneDayLeft": "1 dag kvar",
+  "settings.tabOrder": "Flikordning",
+  "settings.tabOrder.hint": "Dra för att ordna de fyra flikarna. Knappen + stannar alltid i mitten.",
+  "settings.tabOrder.reset": "Återställ till standard"
 }

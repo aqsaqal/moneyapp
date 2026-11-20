@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 den",
   "events.status.tomorrow": "Zítra",
   "events.status.endedYesterday": "Skončilo včera",
-  "home.event.oneDayLeft": "Zbývá 1 den"
+  "home.event.oneDayLeft": "Zbývá 1 den",
+  "settings.tabOrder": "Pořadí karet",
+  "settings.tabOrder.hint": "Přetažením uspořádejte čtyři karty. Tlačítko + zůstává vždy uprostřed.",
+  "settings.tabOrder.reset": "Obnovit výchozí"
 }

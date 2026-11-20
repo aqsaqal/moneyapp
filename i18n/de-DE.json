@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 Tag",
   "events.status.tomorrow": "Morgen",
   "events.status.endedYesterday": "Gestern beendet",
-  "home.event.oneDayLeft": "Noch 1 Tag"
+  "home.event.oneDayLeft": "Noch 1 Tag",
+  "settings.tabOrder": "Tab-Reihenfolge",
+  "settings.tabOrder.hint": "Ziehe die vier Tabs in die gewünschte Reihenfolge. Die +-Taste bleibt immer in der Mitte.",
+  "settings.tabOrder.reset": "Auf Standard zurücksetzen"
 }

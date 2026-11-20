@@ -701,5 +701,8 @@
   "events.status.oneDay": "1일",
   "events.status.tomorrow": "내일",
   "events.status.endedYesterday": "어제 종료됨",
-  "home.event.oneDayLeft": "1일 남음"
+  "home.event.oneDayLeft": "1일 남음",
+  "settings.tabOrder": "탭 순서",
+  "settings.tabOrder.hint": "드래그하여 네 개의 탭을 정렬하세요. + 버튼은 항상 가운데에 있습니다.",
+  "settings.tabOrder.reset": "기본값으로 재설정"
 }

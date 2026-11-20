@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 дан",
   "events.status.tomorrow": "Сутра",
   "events.status.endedYesterday": "Завршено јуче",
-  "home.event.oneDayLeft": "Још 1 дан"
+  "home.event.oneDayLeft": "Још 1 дан",
+  "settings.tabOrder": "Редослед картица",
+  "settings.tabOrder.hint": "Превуците да распоредите четири картице. Дугме + увек остаје у средини.",
+  "settings.tabOrder.reset": "Врати на подразумевано"
 }

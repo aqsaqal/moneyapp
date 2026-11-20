@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 gün",
   "events.status.tomorrow": "Sabah",
   "events.status.endedYesterday": "Dünən bitdi",
-  "home.event.oneDayLeft": "1 gün qalıb"
+  "home.event.oneDayLeft": "1 gün qalıb",
+  "settings.tabOrder": "Tab sırası",
+  "settings.tabOrder.hint": "Dörd tabı sıralamaq üçün sürüşdürün. + düyməsi həmişə ortada qalır.",
+  "settings.tabOrder.reset": "Standarta qaytar"
 }

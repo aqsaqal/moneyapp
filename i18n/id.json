@@ -700,5 +700,8 @@
   "events.status.oneDay": "1 hari",
   "events.status.tomorrow": "Besok",
   "events.status.endedYesterday": "Berakhir kemarin",
-  "home.event.oneDayLeft": "Sisa 1 hari"
+  "home.event.oneDayLeft": "Sisa 1 hari",
+  "settings.tabOrder": "Urutan tab",
+  "settings.tabOrder.hint": "Seret untuk mengatur keempat tab. Tombol + selalu berada di tengah.",
+  "settings.tabOrder.reset": "Kembalikan ke default"
 }

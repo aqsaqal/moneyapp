@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 วัน",
   "events.status.tomorrow": "พรุ่งนี้",
   "events.status.endedYesterday": "สิ้นสุดเมื่อวานนี้",
-  "home.event.oneDayLeft": "เหลืออีก 1 วัน"
+  "home.event.oneDayLeft": "เหลืออีก 1 วัน",
+  "settings.tabOrder": "ลำดับแท็บ",
+  "settings.tabOrder.hint": "ลากเพื่อจัดเรียงแท็บทั้งสี่ ปุ่ม + จะอยู่ตรงกลางเสมอ",
+  "settings.tabOrder.reset": "รีเซ็ตเป็นค่าเริ่มต้น"
 }

@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 dan",
   "events.status.tomorrow": "Jutri",
   "events.status.endedYesterday": "Končano včeraj",
-  "home.event.oneDayLeft": "Še 1 dan"
+  "home.event.oneDayLeft": "Še 1 dan",
+  "settings.tabOrder": "Vrstni red zavihkov",
+  "settings.tabOrder.hint": "Povlecite, da razporedite štiri zavihke. Gumb + vedno ostane na sredini.",
+  "settings.tabOrder.reset": "Ponastavi na privzeto"
 }

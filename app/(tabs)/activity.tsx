@@ -302,6 +302,9 @@ export default function Activity() {
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow} keyboardShouldPersistTaps="handled">
         <Chip label={t('activity.allChip')} active={!filterCat} onPress={() => setFilterCat(null)} />
+        {/* Search is an action, not a filter value — it sits by All as an
+            icon-only chip and stays lit while a search is active. */}
+        <Chip iconOnly label={t('activity.search')} active={searchOpen || !!search} icon="magnify" onPress={() => setSearchOpen((v) => !v)} />
         {usedCategories.map((c) => (
           <Chip
             key={`${c.kind}-${c.id}`}
@@ -330,7 +333,6 @@ export default function Activity() {
           />
         )}
         <FeatureSlots.HistoryFilterExtras value={halalFilter} onChange={setHalalFilter} />
-        <Chip label={t('activity.search')} active={searchOpen || !!search} icon="magnify" onPress={() => setSearchOpen((v) => !v)} />
         {anyFilter && (
           <Chip label={t('activity.filter.clear')} active={false} icon="close" onPress={clearFilters} />
         )}
@@ -473,23 +475,25 @@ export default function Activity() {
   );
 }
 
-function Chip({ label, active, onPress, color, icon }: {
+function Chip({ label, active, onPress, color, icon, iconOnly }: {
   label: string;
   active: boolean;
   onPress: () => void;
   color?: string;
   icon?: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+  /** Round chip with just the icon; `label` becomes the accessibility label. */
+  iconOnly?: boolean;
 }) {
   return (
     <Pressable
       onPress={onPress}
-      style={[styles.chip, active && { backgroundColor: color ?? theme.accent, borderColor: 'transparent' }]}
+      style={[styles.chip, iconOnly && styles.chipIconOnly, active && { backgroundColor: color ?? theme.accent, borderColor: 'transparent' }]}
       accessibilityRole="button"
       accessibilityState={{ selected: active }}
       accessibilityLabel={label}
     >
-      {icon && <MaterialCommunityIcons name={icon} size={14} color={active ? theme.bg : theme.text2} />}
-      <Text style={[styles.chipText, active && { color: theme.bg }]} numberOfLines={1}>{label}</Text>
+      {icon && <MaterialCommunityIcons name={icon} size={iconOnly ? 16 : 14} color={active ? theme.bg : theme.text2} />}
+      {!iconOnly && <Text style={[styles.chipText, active && { color: theme.bg }]} numberOfLines={1}>{label}</Text>}
     </Pressable>
   );
 }
@@ -531,6 +535,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.bg2,
     maxWidth: 200,
   },
+  chipIconOnly: { paddingHorizontal: 10, gap: 0 },
   chipText: { color: theme.text2, fontSize: sizes.sm, fontFamily: font.body },
   breakdownLink: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', paddingVertical: 2 },
   breakdownLinkText: { color: theme.accent, fontSize: sizes.sm, fontFamily: font.bodySemi },

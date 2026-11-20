@@ -33,12 +33,14 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { SectionHeader, SettingRow, sectionStyles } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import { TabOrderSheet, TAB_META } from '@/components/TabOrderSheet';
+import { useTabOrder } from '@/utils/tabOrder';
 import { rebuildDemoProfile } from '@/utils/db/demoSeed';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { FeatureSlots } from '@/features';
@@ -106,6 +108,7 @@ export default function SettingsScreen() {
           <LanguageRow />
           <ArabicNumeralsRow />
           <AppearanceRow />
+          <TabOrderRow />
         </Group>
 
         <Group title={t('settings.groups.smartAdd')}>
@@ -450,6 +453,22 @@ function LanguageRow() {
         }}
         onClose={() => setOpen(false)}
       />
+    </>
+  );
+}
+
+function TabOrderRow() {
+  const t = useT();
+  const order = useTabOrder();
+  const [open, setOpen] = useState(false);
+  // Deep link / dev: /settings?tabOrder=1 opens the sheet.
+  const param = useLocalSearchParams<{ tabOrder?: string }>().tabOrder;
+  useEffect(() => { if (param === '1') setOpen(true); }, [param]);
+  const value = order.map((r) => t(TAB_META[r].labelKey)).join(' · ');
+  return (
+    <>
+      <SettingRow label={t('settings.tabOrder')} value={value} icon="view-dashboard-outline" onPress={() => setOpen(true)} />
+      <TabOrderSheet visible={open} onClose={() => setOpen(false)} />
     </>
   );
 }

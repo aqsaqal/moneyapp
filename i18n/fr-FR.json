@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 jour",
   "events.status.tomorrow": "Demain",
   "events.status.endedYesterday": "Terminé hier",
-  "home.event.oneDayLeft": "1 jour restant"
+  "home.event.oneDayLeft": "1 jour restant",
+  "settings.tabOrder": "Ordre des onglets",
+  "settings.tabOrder.hint": "Faites glisser pour organiser les quatre onglets. Le bouton + reste toujours au centre.",
+  "settings.tabOrder.reset": "Rétablir par défaut"
 }

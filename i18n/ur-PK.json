@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 دن",
   "events.status.tomorrow": "کل",
   "events.status.endedYesterday": "کل ختم ہوا",
-  "home.event.oneDayLeft": "1 دن باقی"
+  "home.event.oneDayLeft": "1 دن باقی",
+  "settings.tabOrder": "ٹیبز کی ترتیب",
+  "settings.tabOrder.hint": "چار ٹیبز ترتیب دینے کے لیے گھسیٹیں۔ + بٹن ہمیشہ درمیان میں رہتا ہے۔",
+  "settings.tabOrder.reset": "ڈیفالٹ پر ری سیٹ کریں"
 }

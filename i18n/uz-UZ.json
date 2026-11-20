@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 kun",
   "events.status.tomorrow": "Ertaga",
   "events.status.endedYesterday": "Kecha tugadi",
-  "home.event.oneDayLeft": "1 kun qoldi"
+  "home.event.oneDayLeft": "1 kun qoldi",
+  "settings.tabOrder": "Tablar tartibi",
+  "settings.tabOrder.hint": "Toʻrtta tabni joylashtirish uchun suring. + tugmasi har doim oʻrtada qoladi.",
+  "settings.tabOrder.reset": "Standartga qaytarish"
 }

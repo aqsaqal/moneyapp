@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 день",
   "events.status.tomorrow": "Завтра",
   "events.status.endedYesterday": "Завершилось учора",
-  "home.event.oneDayLeft": "Залишився 1 день"
+  "home.event.oneDayLeft": "Залишився 1 день",
+  "settings.tabOrder": "Порядок вкладок",
+  "settings.tabOrder.hint": "Перетягніть, щоб розставити чотири вкладки. Кнопка + завжди лишається посередині.",
+  "settings.tabOrder.reset": "Скинути до стандартного"
 }

@@ -701,5 +701,8 @@
   "events.status.oneDay": "Siku 1",
   "events.status.tomorrow": "Kesho",
   "events.status.endedYesterday": "Ilimalizika jana",
-  "home.event.oneDayLeft": "Imesalia siku 1"
+  "home.event.oneDayLeft": "Imesalia siku 1",
+  "settings.tabOrder": "Mpangilio wa vichupo",
+  "settings.tabOrder.hint": "Buruta kupanga vichupo vinne. Kitufe cha + hubaki katikati kila wakati.",
+  "settings.tabOrder.reset": "Rejesha chaguomsingi"
 }

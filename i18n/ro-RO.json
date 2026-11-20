@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 zi",
   "events.status.tomorrow": "Mâine",
   "events.status.endedYesterday": "S-a încheiat ieri",
-  "home.event.oneDayLeft": "A mai rămas 1 zi"
+  "home.event.oneDayLeft": "A mai rămas 1 zi",
+  "settings.tabOrder": "Ordinea filelor",
+  "settings.tabOrder.hint": "Trage pentru a aranja cele patru file. Butonul + rămâne mereu în mijloc.",
+  "settings.tabOrder.reset": "Resetează la implicit"
 }

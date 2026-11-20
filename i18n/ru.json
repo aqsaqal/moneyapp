@@ -700,5 +700,8 @@
   "events.status.oneDay": "1 день",
   "events.status.tomorrow": "Завтра",
   "events.status.endedYesterday": "Закончилось вчера",
-  "home.event.oneDayLeft": "Остался 1 день"
+  "home.event.oneDayLeft": "Остался 1 день",
+  "settings.tabOrder": "Порядок вкладок",
+  "settings.tabOrder.hint": "Перетащите, чтобы расставить четыре вкладки. Кнопка + всегда остаётся в центре.",
+  "settings.tabOrder.reset": "Сбросить по умолчанию"
 }

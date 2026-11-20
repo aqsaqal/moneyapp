@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 ден",
   "events.status.tomorrow": "Утре",
   "events.status.endedYesterday": "Приключи вчера",
-  "home.event.oneDayLeft": "Остава 1 ден"
+  "home.event.oneDayLeft": "Остава 1 ден",
+  "settings.tabOrder": "Ред на разделите",
+  "settings.tabOrder.hint": "Плъзнете, за да подредите четирите раздела. Бутонът + винаги остава в средата.",
+  "settings.tabOrder.reset": "Върни по подразбиране"
 }

@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 nap",
   "events.status.tomorrow": "Holnap",
   "events.status.endedYesterday": "Tegnap véget ért",
-  "home.event.oneDayLeft": "1 nap van hátra"
+  "home.event.oneDayLeft": "1 nap van hátra",
+  "settings.tabOrder": "Lapok sorrendje",
+  "settings.tabOrder.hint": "Húzással rendezd el a négy lapot. A + gomb mindig középen marad.",
+  "settings.tabOrder.reset": "Alapértelmezés visszaállítása"
 }

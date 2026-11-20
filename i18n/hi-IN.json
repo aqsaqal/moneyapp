@@ -701,5 +701,8 @@
   "events.status.oneDay": "1 दिन",
   "events.status.tomorrow": "कल",
   "events.status.endedYesterday": "कल समाप्त हुआ",
-  "home.event.oneDayLeft": "1 दिन बाकी"
+  "home.event.oneDayLeft": "1 दिन बाकी",
+  "settings.tabOrder": "टैब का क्रम",
+  "settings.tabOrder.hint": "चारों टैब क्रम में लगाने के लिए खींचें। + बटन हमेशा बीच में रहता है।",
+  "settings.tabOrder.reset": "डिफ़ॉल्ट पर रीसेट करें"
 }
