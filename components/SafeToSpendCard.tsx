@@ -121,7 +121,9 @@ export function SafeToSpendCard({
               hitSlop={6}
             >
               <Text style={styles.planLinkText}>{t('hero.openPlan')}</Text>
-              <MaterialCommunityIcons name="chevron-right" size={16} color={theme.accent} />
+              {/* The glyph sits a touch high against the text's font metrics
+                  on both platforms; nudge it onto the baseline. */}
+              <MaterialCommunityIcons name="chevron-right" size={16} color={theme.accent} style={{ marginTop: 2 }} />
             </Pressable>
           )}
         </View>

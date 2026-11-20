@@ -147,7 +147,7 @@ export function allIncomeCategories(): CategoryDef[] {
   return [...liveCustoms, ...seededFiltered, ...FeatureSlots.CategoryExtras.income];
 }
 
-const FALLBACK: CategoryDef = { id: 'unknown', name: 'Other', icon: 'MoreHorizontal', color: '#8888AA' };
+const FALLBACK: CategoryDef = { id: 'unknown', name: 'Other', icon: 'dots-horizontal', color: '#8888AA' };
 
 export function catInfo(id: string | null | undefined, type: 'expense' | 'income' = 'expense'): CategoryDef {
   if (!id) return { ...FALLBACK, name: localizedSeededName('other', FALLBACK.name) };

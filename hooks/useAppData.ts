@@ -39,6 +39,7 @@ import { snapshotTodayIfMissing, refreshTodaySnapshot, backfillNetWorthHistory }
 import { ensureDemoProfile } from '@/utils/db/demoSeed';
 import { FX_TTL_MS, convert as fxConvert, convertAt as fxConvertAt, oldestFetchedAt, refreshRates } from '@/utils/fx';
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES, localizedSeededName } from '@/constants/categories';
+import { ICON_MAP } from '@/constants/icons';
 import { kv } from '@/utils/kv';
 import { getLocale, tForLocale } from '@/utils/i18n';
 import { LOCALES } from '@/constants/locales';
@@ -380,7 +381,10 @@ export function useCategoriesWithMeta(): CategoryWithMeta[] {
           }
         }
         out.set(r.id, {
-          id: r.id, name: displayName, icon: r.icon, color: r.color,
+          // Rows created before Phase 10x may still hold a Lucide-style
+          // name ("MoreHorizontal"); resolve it so every consumer can hand
+          // the icon straight to MaterialCommunityIcons.
+          id: r.id, name: displayName, icon: ICON_MAP[r.icon] ?? r.icon, color: r.color,
           type: (r.type as 'expense' | 'income' | 'both'),
           isSystem: r.is_system === 1,
           isPinned: r.is_pinned === 1,
@@ -455,7 +459,7 @@ export function setCategoryMeta(
       [
         id,
         initialName,
-        patch.icon ?? seeded?.icon ?? 'MoreHorizontal',
+        patch.icon ?? seeded?.icon ?? 'dots-horizontal',
         patch.color ?? seeded?.color ?? '#8888AA',
         patch.type ?? (seededIncome && !seededExpense ? 'income' : 'expense'),
         Date.now(),
@@ -1063,7 +1067,7 @@ function migrateBudgetsToCategories() {
       } else {
         const seeded = seededLookup.get(b.category);
         const name = seeded?.name ?? b.category;
-        const icon = seeded?.icon ?? 'MoreHorizontal';
+        const icon = seeded?.icon ?? 'dots-horizontal';
         const color = seeded?.color ?? '#8888AA';
         const type = seeded?.type ?? 'expense';
         raw.runSync(

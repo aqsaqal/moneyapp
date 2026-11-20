@@ -395,7 +395,7 @@ export default function Activity() {
 
       {/* Full category table — the old Categories view, now on demand. */}
       <Modal visible={breakdownOpen} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setBreakdownOpen(false)}>
-        <SafeAreaView style={styles.safe} edges={['top']}>
+        <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
           <View style={styles.modalHead}>
             <Text style={styles.modalTitle}>{t('analytics.breakdown')}</Text>
             <Pressable onPress={() => setBreakdownOpen(false)} hitSlop={10} accessibilityRole="button" accessibilityLabel={t('common.close')}>

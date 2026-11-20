@@ -20,7 +20,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Swipeable } from 'react-native-gesture-handler';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -198,6 +198,9 @@ function OverviewAndAccounts({ overviewHidden, face }: { overviewHidden: boolean
   // null = creating new; Account = editing; undefined = sheet closed
   const [editing, setEditing] = useState<Account | null | undefined>(undefined);
   const [helpOpen, setHelpOpen] = useState(false);
+  // Deep link / handoff: flow://accounts?help=1 opens the explainer.
+  const helpParam = useLocalSearchParams<{ help?: string }>().help;
+  React.useEffect(() => { if (helpParam === '1') setHelpOpen(true); else if (helpParam === '0') setHelpOpen(false); }, [helpParam]);
 
   const visible = (showArchived ? allAccounts : active).filter((a) =>
     filter === 'all' ? true : filter === 'assets' ? a.balance >= 0 : a.balance < 0,
@@ -378,6 +381,9 @@ function OverviewAndAccounts({ overviewHidden, face }: { overviewHidden: boolean
  *  what the three groups mean. */
 function AccountsHelpSheet({ visible, onClose }: { visible: boolean; onClose: () => void }) {
   const t = useT();
+  // Modals ignore the SafeAreaView above them, so the sheet pads for the
+  // Android navigation bar / iOS home indicator itself.
+  const insets = useSafeAreaInsets();
   const rows: { icon: React.ComponentProps<typeof MaterialCommunityIcons>['name']; color: string; key: string }[] = [
     { icon: 'trending-up', color: theme.accent, key: 'assets' },
     { icon: 'trending-down', color: theme.expense, key: 'debts' },
@@ -388,7 +394,7 @@ function AccountsHelpSheet({ visible, onClose }: { visible: boolean; onClose: ()
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <Pressable style={styles.helpBackdrop} onPress={onClose} accessibilityLabel={t('common.close')} />
-      <View style={styles.helpCard}>
+      <View style={[styles.helpCard, { paddingBottom: insets.bottom + spacing.lg }]}>
         <Text style={styles.helpTitle}>{t('accounts.help.title')}</Text>
         {rows.map((r) => (
           <View key={r.key} style={styles.helpRow}>
@@ -609,7 +615,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: radii.xl,
     borderTopRightRadius: radii.xl,
     padding: spacing.lg,
-    paddingBottom: spacing.xxl,
     gap: spacing.md,
   },
   helpTitle: { color: theme.text1, fontSize: sizes.lg, fontFamily: font.displayBold, marginBottom: spacing.xs },
