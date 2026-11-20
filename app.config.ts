@@ -114,6 +114,8 @@ const config: ExpoConfig = {
     allowBackup: false,
   },
   plugins: [
+    // Camera is optional hardware (receipt scanning only) — see plugins/.
+    './plugins/withOptionalCamera',
     'expo-router',
     'expo-font',
     'expo-sqlite',

@@ -49,3 +49,4 @@ yarn-error.*
 
 # Local Xcode archives / IPA exports (regenerated per release)
 /build
+/.playwright-mcp
