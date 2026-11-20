@@ -7,6 +7,7 @@ import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import DraggableFlatList, { ScaleDecorator, type RenderItemParams } from 'react-native-draggable-flatlist';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { useT } from '@/hooks/useT';
 import { useHaptics } from '@/hooks/useHaptics';
@@ -62,6 +63,10 @@ export function TabOrderSheet({ visible, onClose }: { visible: boolean; onClose:
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
+      {/* Android renders a Modal in its own window, outside the app's
+          GestureHandlerRootView, so the drag list needs a root of its own
+          here or long-press/drag never activates. */}
+      <GestureHandlerRootView style={{ flex: 1 }}>
       <Pressable style={styles.backdrop} onPress={onClose} />
       <SafeAreaView style={styles.sheet} edges={['bottom']}>
         <View style={styles.handle} />
@@ -110,6 +115,7 @@ export function TabOrderSheet({ visible, onClose }: { visible: boolean; onClose:
           </Pressable>
         )}
       </SafeAreaView>
+      </GestureHandlerRootView>
     </Modal>
   );
 }
