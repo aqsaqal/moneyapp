@@ -39,6 +39,7 @@ import {
   useMonthFlow,
   useAccounts,
   useCategoriesWithMeta,
+  useEvents,
 } from '@/hooks/useAppData';
 import { convert as fxConvert } from '@/utils/fx';
 import { catInfo } from '@/constants/categories';
@@ -77,6 +78,9 @@ export default function Activity() {
 
   // ── Filters ──────────────────────────────────────────────────────
   const [filterCat, setFilterCat] = useState<string | null>(null);
+  const [filterEvent, setFilterEvent] = useState<string | null>(null);
+  const [eventPickerOpen, setEventPickerOpen] = useState(false);
+  const eventsList = useEvents({ includeArchived: true });
   const [filterAccount, setFilterAccount] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
@@ -85,17 +89,21 @@ export default function Activity() {
   const [breakdownOpen, setBreakdownOpen] = useState(false);
   const [recapOpen, setRecapOpen] = useState(false);
   const [pageLimit, setPageLimit] = useState(200);
-  const anyFilter = !!(filterCat || filterAccount || search || halalFilter);
+  const anyFilter = !!(filterCat || filterAccount || search || halalFilter || filterEvent);
   const clearFilters = () => {
-    setFilterCat(null); setFilterAccount(null); setSearch(''); setSearchOpen(false); setHalalFilter(null);
+    setFilterCat(null); setFilterAccount(null); setSearch(''); setSearchOpen(false); setHalalFilter(null); setFilterEvent(null);
   };
 
   // Deep link: flow://activity?view=categories opens the breakdown sheet.
-  const params = useLocalSearchParams<{ view?: string }>();
+  const params = useLocalSearchParams<{ view?: string; event?: string }>();
   React.useEffect(() => {
     if (params.view === 'categories') setBreakdownOpen(true);
     else if (params.view === 'list') setBreakdownOpen(false);
   }, [params.view]);
+  // flow://activity?event=<id> filters by that event ('' clears).
+  React.useEffect(() => {
+    if (typeof params.event === 'string') setFilterEvent(params.event || null);
+  }, [params.event]);
   // Home / Insights hand off a month (and formerly a view) via kv.
   useFocusEffect(useCallback(() => {
     const jump = kv.get('activityJumpToMonth');
@@ -120,6 +128,7 @@ export default function Activity() {
     accountId: filterAccount,
     search: search || undefined,
     halalStatus: halalFilter,
+    eventId: filterEvent,
     dateLte: isFutureMonth ? undefined : endOfToday,
     limit: pageLimit,
   });
@@ -128,6 +137,7 @@ export default function Activity() {
     accountId: filterAccount,
     search: search || undefined,
     halalStatus: halalFilter,
+    eventId: filterEvent,
     dateGt: endOfToday,
     limit: 100,
   });
@@ -310,6 +320,15 @@ export default function Activity() {
           icon="wallet-outline"
           onPress={() => setAccountPickerOpen(true)}
         />
+        {eventsList.length > 0 && (
+          <Chip
+            label={filterEvent ? (eventsList.find((e) => e.id === filterEvent)?.name ?? '') : t('activity.filter.event')}
+            active={!!filterEvent}
+            color={eventsList.find((e) => e.id === filterEvent)?.color}
+            icon="calendar-star"
+            onPress={() => setEventPickerOpen(true)}
+          />
+        )}
         <FeatureSlots.HistoryFilterExtras value={halalFilter} onChange={setHalalFilter} />
         <Chip label={t('activity.search')} active={searchOpen || !!search} icon="magnify" onPress={() => setSearchOpen((v) => !v)} />
         {anyFilter && (
@@ -438,6 +457,17 @@ export default function Activity() {
         ]}
         onPick={(id) => setFilterAccount(id || null)}
         onClose={() => setAccountPickerOpen(false)}
+      />
+      <PickerSheet
+        visible={eventPickerOpen}
+        title={t('activity.filter.event')}
+        selected={filterEvent ?? ''}
+        options={[
+          { value: '', label: t('activity.filter.allEvents'), icon: 'calendar-star' },
+          ...eventsList.map<PickerOption<string>>((e) => ({ value: e.id, label: e.name, icon: e.icon as never, iconColor: e.color })),
+        ]}
+        onPick={(id) => setFilterEvent(id || null)}
+        onClose={() => setEventPickerOpen(false)}
       />
     </SafeAreaView>
   );

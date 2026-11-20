@@ -27,6 +27,7 @@ import { DisposableHeroCard } from '@/components/BalanceCard';
 import { SafeToSpendCard } from '@/components/SafeToSpendCard';
 import { HomeActionStrip } from '@/components/HomeActionCard';
 import { MonthStripCard } from '@/components/MonthStripCard';
+import { ActiveEventCard } from '@/components/ActiveEventCard';
 import { TransactionRow } from '@/components/TransactionRow';
 import { StreakBadge } from '@/components/StreakBadge';
 import {
@@ -292,6 +293,9 @@ export default function Home() {
 
         {/* Islamic flavor: ZakatHomeCard + RamadanHomeCard. Generic: nothing. */}
         <FeatureSlots.HomeExtras />
+
+        {/* Events / trips: shown only while one is running. */}
+        <ActiveEventCard />
 
         {/* Up to three actionable insights, swipeable; empty when nothing's wrong. */}
         <HomeActionStrip />

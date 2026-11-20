@@ -7,21 +7,6 @@
 
 import React, { useEffect, useState } from 'react';
 
-// Lazy-loaded datetimepicker — same trick app/add.tsx uses so the
-// native module is only required on platforms that bundle it. Kept at
-// module scope so re-renders don't re-import.
-type DateTimePickerModule = typeof import('@react-native-community/datetimepicker').default;
-let _datePicker: DateTimePickerModule | null = null;
-function getDatePicker(): DateTimePickerModule | null {
-  if (_datePicker) return _datePicker;
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    _datePicker = require('@react-native-community/datetimepicker').default as DateTimePickerModule;
-  } catch {
-    _datePicker = null;
-  }
-  return _datePicker;
-}
 import {
   Alert,
   KeyboardAvoidingView,
@@ -40,6 +25,7 @@ import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { SettingRow } from '@/components/Sections';
 import { NumpadInputSheet } from '@/components/NumpadInputSheet';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import { NativeDatePicker } from '@/components/NativeDatePicker';
 import { upsertGoal, deleteGoal, useAccounts } from '@/hooks/useAppData';
 import { useT } from '@/hooks/useT';
 import { useHaptics } from '@/hooks/useHaptics';
@@ -252,29 +238,14 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
             )}
           </View>
 
-          {datePickerOpen && (() => {
-            const DateTimePicker = getDatePicker();
-            if (!DateTimePicker) {
-              setDatePickerOpen(false);
-              return null;
-            }
-            const seed = targetDate ? new Date(targetDate) : new Date();
-            return (
-              <DateTimePicker
-                value={seed}
-                mode="date"
-                display={Platform.OS === 'ios' ? 'inline' : 'default'}
-                minimumDate={new Date()}
-                locale={(kv.get('locale') ?? 'en-US') as never}
-                onChange={(event, selected) => {
-                  setDatePickerOpen(false);
-                  if (event.type === 'set' && selected) {
-                    setTargetDate(selected.toISOString().slice(0, 10));
-                  }
-                }}
-              />
-            );
-          })()}
+          {datePickerOpen && (
+            <NativeDatePicker
+              value={targetDate ? new Date(targetDate) : new Date()}
+              minimumDate={new Date()}
+              onChange={(d) => setTargetDate(d.toISOString().slice(0, 10))}
+              onClose={() => setDatePickerOpen(false)}
+            />
+          )}
 
           <View style={styles.field}>
             <Text style={styles.fieldLabel}>{t('profile.field.color')}</Text>

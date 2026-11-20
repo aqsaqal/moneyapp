@@ -194,6 +194,7 @@ export default function RootLayout() {
               <Stack.Screen name="insights" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="net-worth" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="account/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
+              <Stack.Screen name="event/[id]" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="account-balance" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               {/* Long-press → category-grid mirrors Smart Add's near-
                   instant fade so the picker pops up as quickly as the

@@ -67,5 +67,6 @@ export function buildEditPrefill(tx: Transaction): string {
     note: tx.note ?? undefined,
     originalCurrency: tx.originalCurrency ?? undefined,
     date: tx.date,
+    eventId: tx.eventId ?? undefined,
   });
 }

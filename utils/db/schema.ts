@@ -53,6 +53,8 @@ export const transactions = sqliteTable(
     // later rate change never rewrites history. Null on transfers and
     // on rows written before the column existed (backfilled at boot).
     amountMain: real('amount_main'),
+    // Events / trips: the event this row is counted under (nullable).
+    eventId: text('event_id'),
   },
   (t) => ({
     dateIdx: index('tx_date_idx').on(t.date),
@@ -195,6 +197,24 @@ export const goals = sqliteTable('goals', {
   createdAt: integer('created_at').notNull(),
 });
 
+// Events / trips — a named date range that groups the spending it cost
+// ("Almaty trip", "Dana's birthday", "Kitchen renovation"). Rows join via
+// transactions.event_id; while an event is running Smart Add preselects
+// it, outside the dates the user tags by hand.
+export const events = sqliteTable('events', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  icon: text('icon').notNull(),
+  color: text('color').notNull(),
+  startDate: integer('start_date').notNull(),   // unix ms, local start of day
+  endDate: integer('end_date').notNull(),       // unix ms, local END of day (inclusive)
+  budget: real('budget'),                        // optional cap; null = none
+  budgetCurrency: text('budget_currency'),       // ISO; null = main currency
+  note: text('note'),
+  archived: integer('archived'),                 // 1 = hidden from pickers / Plan
+  createdAt: integer('created_at').notNull(),
+});
+
 export const budgets = sqliteTable('budgets', {
   id: text('id').primaryKey(),
   category: text('category').notNull(),
@@ -256,6 +276,9 @@ export type NewAccount = typeof accounts.$inferInsert;
 
 export type Budget = typeof budgets.$inferSelect;
 export type NewBudget = typeof budgets.$inferInsert;
+
+export type SpendEvent = typeof events.$inferSelect;
+export type NewSpendEvent = typeof events.$inferInsert;
 
 export type Recurring = typeof recurring.$inferSelect;
 export type NewRecurring = typeof recurring.$inferInsert;

@@ -7,7 +7,7 @@
 //   const { transactions, addTransaction, deleteTransaction } = useAppData();
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { and, desc, eq, gt, gte, like, lt, lte, or, sql } from 'drizzle-orm';
+import { and, desc, eq, gt, gte, like, lt, lte, or, sql, isNull } from 'drizzle-orm';
 import { getDB, getRawDB } from '@/utils/db/client';
 import {
   accounts,
@@ -30,8 +30,7 @@ import {
   type NewTransaction,
   type PaidItem,
   type Recurring,
-  type Transaction,
-} from '@/utils/db/schema';
+  type Transaction, events, type SpendEvent, type NewSpendEvent } from '@/utils/db/schema';
 import { monthKey } from '@/utils/format';
 import { seedIfEmpty } from '@/utils/db/seed';
 import { onProfileChange } from '@/utils/profiles';
@@ -217,6 +216,8 @@ export interface UseTransactionsOpts {
   /** Exclusive lower bound on date (epoch ms). For the Upcoming
    *  section on Activity: only rows with date > end-of-today. */
   dateGt?: number;
+  /** Only rows tagged with this event. */
+  eventId?: string | null;
 }
 
 /** Default page size for transaction queries when no limit is passed.
@@ -251,6 +252,7 @@ export function useTransactions(opts: UseTransactionsOpts = {}): Transaction[] {
     }
     if (typeof opts.dateLte === 'number') clauses.push(lte(transactions.date, opts.dateLte));
     if (typeof opts.dateGt === 'number') clauses.push(gt(transactions.date, opts.dateGt));
+    if (opts.eventId) clauses.push(eq(transactions.eventId, opts.eventId));
     const where = clauses.length ? and(...clauses) : undefined;
     let q = db.select().from(transactions).where(where).orderBy(desc(transactions.date));
     // Always cap. The caller can override with an explicit limit; otherwise
@@ -259,7 +261,7 @@ export function useTransactions(opts: UseTransactionsOpts = {}): Transaction[] {
     q = q.limit(cap) as typeof q;
     return q.all();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [version, opts.monthKey, opts.category, opts.accountId, opts.type, opts.search, opts.halalStatus, opts.limit, opts.dateLte, opts.dateGt]);
+  }, [version, opts.monthKey, opts.category, opts.accountId, opts.type, opts.search, opts.halalStatus, opts.limit, opts.dateLte, opts.dateGt, opts.eventId]);
 }
 
 export interface UseAccountsOpts {
@@ -769,6 +771,8 @@ export interface AddTxnInput {
    *  When omitted on a transfer, the To side is credited with `amount`
    *  (legacy / same-currency behavior). */
   toAmount?: number | null;
+  /** Events / trips: tag the row with an event (null = none). */
+  eventId?: string | null;
 }
 
 /** Pre-flight checks. Throws AccountValidationError with `code='cash_negative'`
@@ -822,6 +826,7 @@ export function addTransaction(
     note: input.note ?? null,
     halalStatus: input.halalStatus ?? null,
     recurringId: input.recurringId ?? null,
+    eventId: input.eventId ?? null,
     receiptImagePath: input.receiptImagePath ?? null,
     asnaf: input.asnaf ?? null,
     originalAmount: input.originalAmount ?? null,
@@ -1333,6 +1338,141 @@ export function upsertGoal(g: NewGoal): void {
 export function deleteGoal(id: string): void {
   getDB().delete(goals).where(eq(goals.id, id)).run();
   bump();
+}
+
+// ---- Events / trips ----
+
+export function useEvents(opts: { includeArchived?: boolean } = {}): SpendEvent[] {
+  useVersion();
+  const db = getDB();
+  const includeArchived = opts.includeArchived ?? false;
+  return useMemo(() => {
+    const rows = db.select().from(events).orderBy(desc(events.startDate)).all();
+    return includeArchived ? rows : rows.filter((e) => e.archived !== 1);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version, includeArchived]);
+}
+
+export function upsertEvent(e: NewSpendEvent): void {
+  const db = getDB();
+  const existing = db.select().from(events).where(eq(events.id, e.id)).get();
+  if (existing) db.update(events).set(e).where(eq(events.id, e.id)).run();
+  else db.insert(events).values(e).run();
+  bump();
+}
+
+/** Removes the event; its transactions stay and just lose the tag. */
+export function deleteEvent(id: string): void {
+  getRawDB().runSync('UPDATE transactions SET event_id = NULL WHERE event_id = ?', [id]);
+  getDB().delete(events).where(eq(events.id, id)).run();
+  bump();
+}
+
+export function setTransactionEvent(txId: string, eventId: string | null): void {
+  getRawDB().runSync('UPDATE transactions SET event_id = ? WHERE id = ?', [eventId, txId]);
+  bump();
+}
+
+export function attachTransactionsToEvent(txIds: string[], eventId: string): void {
+  if (txIds.length === 0) return;
+  const raw = getRawDB();
+  const stmt = raw.prepareSync('UPDATE transactions SET event_id = ? WHERE id = ?');
+  try {
+    for (const id of txIds) stmt.executeSync([eventId, id]);
+  } finally {
+    stmt.finalizeSync();
+  }
+  bump();
+}
+
+export function eventCoversDate(e: Pick<SpendEvent, 'startDate' | 'endDate'>, ms: number): boolean {
+  return ms >= e.startDate && ms <= e.endDate;
+}
+
+export type EventStatus = 'active' | 'upcoming' | 'past';
+export function eventStatus(e: Pick<SpendEvent, 'startDate' | 'endDate'>, now: number = Date.now()): EventStatus {
+  if (now < e.startDate) return 'upcoming';
+  if (now > e.endDate) return 'past';
+  return 'active';
+}
+
+/** Whole calendar days in the range (inclusive), min 1. */
+export function eventDayCount(e: Pick<SpendEvent, 'startDate' | 'endDate'>): number {
+  return Math.max(1, Math.round((e.endDate + 1 - e.startDate) / 86_400_000));
+}
+
+export interface EventTotals {
+  /** Expense total in the main currency (amount_main at the row's day rate). */
+  spent: number;
+  income: number;
+  count: number;
+  byCategory: CategoryTotal[];
+}
+
+export function useEventTotals(eventId: string | null | undefined): EventTotals {
+  useVersion();
+  const raw = getRawDB();
+  return useMemo(() => {
+    const empty: EventTotals = { spent: 0, income: 0, count: 0, byCategory: [] };
+    if (!eventId) return empty;
+    const rows = raw.getAllSync<{ type: string; category: string | null; total: number; n: number }>(
+      `SELECT type, category, SUM(COALESCE(amount_main, amount)) AS total, COUNT(*) AS n
+         FROM transactions
+        WHERE event_id = ? AND type != 'transfer'
+        GROUP BY type, category`,
+      [eventId],
+    );
+    const out: EventTotals = { ...empty, byCategory: [] };
+    for (const r of rows) {
+      out.count += r.n;
+      if (r.type === 'income') out.income += r.total;
+      else {
+        out.spent += r.total;
+        if (r.category) out.byCategory.push({ category: r.category, total: r.total });
+      }
+    }
+    out.byCategory.sort((a, b) => b.total - a.total);
+    return out;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version, eventId]);
+}
+
+/** Expense total per event (main currency) for list screens. */
+export function useEventSpentMap(): Map<string, number> {
+  useVersion();
+  const raw = getRawDB();
+  return useMemo(() => {
+    const rows = raw.getAllSync<{ event_id: string; total: number }>(
+      `SELECT event_id, SUM(COALESCE(amount_main, amount)) AS total
+         FROM transactions WHERE event_id IS NOT NULL AND type = 'expense' GROUP BY event_id`,
+    );
+    return new Map(rows.map((r) => [r.event_id, r.total]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version]);
+}
+
+/** Expenses inside the event's dates that aren't tagged with any event
+ *  and aren't recurring bills — candidates for "add past expenses". */
+export function useEventCandidates(e: Pick<SpendEvent, 'startDate' | 'endDate'> | null | undefined): Transaction[] {
+  useVersion();
+  const db = getDB();
+  return useMemo(() => {
+    if (!e) return [];
+    return db
+      .select()
+      .from(transactions)
+      .where(and(
+        eq(transactions.type, 'expense'),
+        isNull(transactions.eventId),
+        isNull(transactions.recurringId),
+        gte(transactions.date, e.startDate),
+        lte(transactions.date, e.endDate),
+      ))
+      .orderBy(desc(transactions.date))
+      .limit(500)
+      .all();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version, e?.startDate, e?.endDate]);
 }
 
 // ---- Debts (Phase 10o) ----

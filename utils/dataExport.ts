@@ -27,7 +27,7 @@ export type ExportFormat = 'json' | 'csv';
 /** JSON-export schema version. Bump when the on-disk shape changes.
  *  Import checks this for forward-compat — older payloads are upcast,
  *  newer ones are rejected with a clear error. */
-const EXPORT_SCHEMA_VERSION = 3;
+const EXPORT_SCHEMA_VERSION = 4; // v4: + events table, transactions.event_id
 
 /** Profile-scoped preferences that travel with the data. Without these a
  *  restore onto a fresh install lands KZT data under the USD default.
@@ -49,6 +49,7 @@ const BACKUP_TABLES = [
   'fx_history',
   'accounts',
   'custom_categories',
+  'events',
   'transactions',
   'budgets',
   'recurring',

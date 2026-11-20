@@ -137,6 +137,21 @@ function createTables(db: SQLite.SQLiteDatabase) {
       created_at INTEGER NOT NULL
     );
 
+    -- Events / trips: a named date range that groups the spending it cost.
+    CREATE TABLE IF NOT EXISTS events (
+      id TEXT PRIMARY KEY NOT NULL,
+      name TEXT NOT NULL,
+      icon TEXT NOT NULL,
+      color TEXT NOT NULL,
+      start_date INTEGER NOT NULL,
+      end_date INTEGER NOT NULL,
+      budget REAL,
+      budget_currency TEXT,
+      note TEXT,
+      archived INTEGER,
+      created_at INTEGER NOT NULL
+    );
+
     -- Phase 10o: liability tracker — debts with APR + min payment.
     CREATE TABLE IF NOT EXISTS debts (
       id TEXT PRIMARY KEY NOT NULL,
@@ -241,6 +256,9 @@ function createTables(db: SQLite.SQLiteDatabase) {
     }
     if (!cols.some((c) => c.name === 'amount_main')) {
       db.execSync(`ALTER TABLE transactions ADD COLUMN amount_main REAL;`);
+    }
+    if (!cols.some((c) => c.name === 'event_id')) {
+      db.execSync(`ALTER TABLE transactions ADD COLUMN event_id TEXT;`);
     }
   } catch {
     /* swallow — fresh DB will already have the column from CREATE TABLE if we add it there in a future major. */

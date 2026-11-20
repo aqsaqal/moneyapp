@@ -43,7 +43,13 @@ import {
   setCategoryMeta,
   deleteGoal,
   type CategoryWithMeta,
+  useEvents,
+  useEventSpentMap,
+  eventStatus,
+  eventDayCount,
 } from '@/hooks/useAppData';
+import { EventSheet, formatEventRange } from '@/components/EventSheet';
+import type { SpendEvent } from '@/utils/db/schema';
 import { ActionMenu, type ActionMenuOption } from '@/components/ActionMenu';
 import { CustomCategorySheet } from '@/components/CustomCategorySheet';
 import { CategoryPicker } from '@/components/CategoryPicker';
@@ -66,8 +72,8 @@ import { kv } from '@/utils/kv';
 import { useT } from '@/hooks/useT';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 
-type Segment = 'bills' | 'budgets' | 'goals' | 'debts';
-const SEGMENTS: Segment[] = ['bills', 'budgets', 'goals', 'debts'];
+type Segment = 'bills' | 'budgets' | 'goals' | 'debts' | 'events';
+const SEGMENTS: Segment[] = ['bills', 'budgets', 'goals', 'debts', 'events'];
 const DISMISSED_KEY = 'planDismissedSuggestions';
 
 function buildPrefill(data: Record<string, unknown>): string {
@@ -140,7 +146,9 @@ export default function PlanScreen() {
   const categories = useCategoriesWithMeta();
   const goals = useGoals();
   const accounts = useAccounts();
+  const allEvents = useEvents();
   const counts: Record<Segment, number> = {
+    events: allEvents.filter((e) => eventStatus(e) !== 'past').length,
     bills: recurring.filter((r) => r.type === 'expense' && !paid.some((p) => p.recurringId === r.id)).length,
     budgets: categories.filter((c) => c.monthlyBudget != null && !c.archived).length,
     goals: goals.length,
@@ -153,7 +161,10 @@ export default function PlanScreen() {
         <Text style={styles.title}>{t('plan.title')}</Text>
         <HeaderSettingsButton />
       </View>
-      <View style={styles.segRow}>
+      {/* Explicit height: a horizontal ScrollView otherwise either claims
+          spare vertical space (tall pills) or, on Android, measures too
+          short on first layout and clips the chips until a re-render. */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.segScroll} contentContainerStyle={[styles.segRow, { flexGrow: 1 }]}>
         {SEGMENTS.map((s) => {
           const active = s === segment;
           return (
@@ -174,7 +185,7 @@ export default function PlanScreen() {
             </Pressable>
           );
         })}
-      </View>
+      </ScrollView>
       {monthly && (
         <View style={styles.periodRow}>
           <Pressable onPress={() => stepMonth(-1)} hitSlop={8} style={styles.periodArrow} accessibilityRole="button" accessibilityLabel={t('activity.month.prev')}>
@@ -212,6 +223,7 @@ export default function PlanScreen() {
           </GestureDetector>
         )}
         {segment === 'goals' && <GoalsSegment />}
+        {segment === 'events' && <EventsSegment />}
         {segment === 'debts' && <DebtsSegment />}
         {/* Islamic: Zakat + Sadaqa nav rows. Generic: renders nothing. */}
         <FeatureSlots.PlanTabExtras onNavigate={(p) => router.push(p as never)} />
@@ -550,6 +562,133 @@ function promoteDetected(
   );
 }
 
+// ─────────────────────────── Events ───────────────────────────
+
+function EventsSegment() {
+  const t = useT();
+  const router = useRouter();
+  const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
+  const events = useEvents({ includeArchived: true });
+  const spentMap = useEventSpentMap();
+  const [createOpen, setCreateOpen] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
+  // Deep link: flow://plan?segment=events&new=1 opens the editor.
+  const newParam = useLocalSearchParams<{ new?: string }>().new;
+  React.useEffect(() => { if (newParam === '1') setCreateOpen(true); else if (newParam === '0') setCreateOpen(false); }, [newParam]);
+
+  const now = Date.now();
+  const live = events.filter((e) => e.archived !== 1);
+  const active = live.filter((e) => eventStatus(e, now) === 'active');
+  const upcoming = live.filter((e) => eventStatus(e, now) === 'upcoming').sort((a, b) => a.startDate - b.startDate);
+  const past = live.filter((e) => eventStatus(e, now) === 'past');
+  const archived = events.filter((e) => e.archived === 1);
+  const hero = active[0] ?? upcoming[0] ?? null;
+
+  const budgetMain = (e: SpendEvent) =>
+    e.budget != null && e.budget > 0 ? convert(e.budget, (e.budgetCurrency as CurrencyCode | null) ?? currency, currency) : null;
+  const statusLine = (e: SpendEvent) => {
+    const st = eventStatus(e, now);
+    const days = eventDayCount(e);
+    if (st === 'active') {
+      const d = Math.min(days, Math.max(1, Math.floor((now - e.startDate) / 86_400_000) + 1));
+      return t('events.status.dayOf', { d, n: days });
+    }
+    if (st === 'upcoming') {
+      const n = Math.ceil((e.startDate - now) / 86_400_000);
+      return n <= 0 ? t('events.status.startsToday') : n === 1 ? t('events.status.tomorrow') : t('events.status.inDays', { n });
+    }
+    return formatEventRange(e.startDate, e.endDate);
+  };
+
+  const Row = ({ e }: { e: SpendEvent }) => {
+    const spent = spentMap.get(e.id) ?? 0;
+    const b = budgetMain(e);
+    return (
+      <Pressable
+        onPress={() => router.push(`/event/${e.id}` as never)}
+        style={[styles.eventRow, e.archived === 1 && { opacity: 0.6 }]}
+        accessibilityRole="button"
+        accessibilityLabel={`${e.name}, ${statusLine(e)}, ${formatMoney(spent, currency)}`}
+      >
+        <View style={[styles.eventIcon, { backgroundColor: `${e.color}22` }]}>
+          <MaterialCommunityIcons name={e.icon as never} size={20} color={e.color} />
+        </View>
+        <View style={{ flex: 1, minWidth: 0 }}>
+          <Text style={styles.eventName} numberOfLines={1}>{e.name}</Text>
+          <Text style={styles.eventSub} numberOfLines={1}>
+            {eventStatus(e, now) === 'past' ? statusLine(e) : `${formatEventRange(e.startDate, e.endDate)} · ${statusLine(e)}`}
+          </Text>
+        </View>
+        <View style={{ alignItems: 'flex-end', maxWidth: '38%' }}>
+          <Text style={[styles.eventAmt, b != null && spent > b && { color: theme.expense }]} adjustsFontSizeToFit numberOfLines={1}>
+            {formatMoney(spent, currency)}
+          </Text>
+          {b != null && <Text style={styles.eventSub} numberOfLines={1}>{t('events.ofBudget.short', { budget: formatMoney(b, currency) })}</Text>}
+        </View>
+        <MaterialCommunityIcons name="chevron-right" size={18} color={theme.text3} />
+      </Pressable>
+    );
+  };
+
+  const Group = ({ label, items }: { label: string; items: SpendEvent[] }) =>
+    items.length === 0 ? null : (
+      <View style={{ gap: spacing.sm }}>
+        <Text style={styles.groupLabel}>{label}</Text>
+        {items.map((e) => <Row key={e.id} e={e} />)}
+      </View>
+    );
+
+  return (
+    <View style={{ gap: spacing.lg }}>
+      {hero && (() => {
+        const spent = spentMap.get(hero.id) ?? 0;
+        const b = budgetMain(hero);
+        const st = eventStatus(hero, now);
+        const days = eventDayCount(hero);
+        const dayIndex = Math.min(days, Math.max(1, Math.floor((now - hero.startDate) / 86_400_000) + 1));
+        const pct = b ? Math.min(1, spent / b) : st === 'active' ? dayIndex / days : 0;
+        return (
+          <Pressable onPress={() => router.push(`/event/${hero.id}` as never)} style={[styles.hero, { borderColor: `${hero.color}66` }]} accessibilityRole="button">
+            <Text style={styles.heroLabel}>{st === 'active' ? t('events.group.active') : t('events.group.upcoming')}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
+              <MaterialCommunityIcons name={hero.icon as never} size={22} color={hero.color} />
+              <Text style={[styles.heroValue, { color: hero.color, flex: 1 }]} adjustsFontSizeToFit numberOfLines={1}>{hero.name}</Text>
+            </View>
+            <Text style={styles.heroSub}>
+              {statusLine(hero)} · {t('events.spent')} {formatMoney(spent, currency)}
+              {b != null ? ` ${t('events.ofBudget.short', { budget: formatMoney(b, currency) })}` : ''}
+            </Text>
+            <View style={styles.barBg}>
+              <View style={[styles.barFill, { width: `${pct * 100}%`, backgroundColor: b != null && spent > b ? theme.expense : hero.color }]} />
+            </View>
+          </Pressable>
+        );
+      })()}
+
+      <SectionHeader title={t('plan.seg.events')} onAdd={() => setCreateOpen(true)} addLabel={t('events.add')} />
+      {live.length === 0 && <Text style={styles.emptyHint}>{t('events.empty')}</Text>}
+      <Group label={t('events.group.active')} items={active} />
+      <Group label={t('events.group.upcoming')} items={upcoming} />
+      <Group label={t('events.group.past')} items={past} />
+      {archived.length > 0 && (
+        <View style={{ gap: spacing.sm }}>
+          <Pressable onPress={() => setShowArchived((v) => !v)} style={styles.paidToggle} accessibilityRole="button" accessibilityState={{ expanded: showArchived }}>
+            <Text style={styles.groupLabel}>{t('categories.showArchived', { n: archived.length })}</Text>
+            <MaterialCommunityIcons name={showArchived ? 'chevron-up' : 'chevron-down'} size={18} color={theme.text3} />
+          </Pressable>
+          {showArchived && archived.map((e) => <Row key={e.id} e={e} />)}
+        </View>
+      )}
+
+      <EventSheet
+        visible={createOpen}
+        onClose={() => setCreateOpen(false)}
+        onSaved={(id, created) => { if (created) router.push(`/event/${id}` as never); }}
+      />
+    </View>
+  );
+}
+
 // ─────────────────────────── Budgets ───────────────────────────
 
 function buildBudgetMenuOptions(args: {
@@ -662,22 +801,23 @@ function BudgetsSegment({ month }: { month: Date }) {
             accessibilityRole="button"
             accessibilityLabel={`${c.name} budget ${spent.toFixed(0)} of ${budget.toFixed(0)} ${ccy}, ${Math.round(pct * 100)} percent used, ${t(`plan.budgets.pace.${pace}`)}`}
           >
+            {/* Name and pace on one line, amounts on the next: long
+                currency strings (KZT 449,847.82 / KZT 500,000.00) used to
+                squeeze the name down to a single letter. */}
             <View style={styles.budgetHead}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
-                <View style={[styles.budgetIconWrap, { backgroundColor: `${c.color}22` }]}>
-                  <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={14} color={c.color} />
-                </View>
-                <Text style={styles.budgetName} numberOfLines={1}>{c.name}</Text>
-                {kind !== 'future' && (
-                  <Text style={[styles.paceTag, { color: paceColor, borderColor: `${paceColor}66` }]}>
-                    {t(`plan.budgets.pace.${pace}`)}
-                  </Text>
-                )}
+              <View style={[styles.budgetIconWrap, { backgroundColor: `${c.color}22` }]}>
+                <MaterialCommunityIcons name={(c.icon as never) || 'tag-outline'} size={14} color={c.color} />
               </View>
-              <Text style={[styles.budgetAmt, pace === 'exceeded' && { color: theme.expense }]}>
-                {formatMoney(spent, ccy)} / {formatMoney(budget, ccy)}
-              </Text>
+              <Text style={styles.budgetName} numberOfLines={1}>{c.name}</Text>
+              {kind !== 'future' && (
+                <Text style={[styles.paceTag, { color: paceColor, borderColor: `${paceColor}66` }]}>
+                  {t(`plan.budgets.pace.${pace}`)}
+                </Text>
+              )}
             </View>
+            <Text style={[styles.budgetAmt, pace === 'exceeded' && { color: theme.expense }]} numberOfLines={1} adjustsFontSizeToFit>
+              {formatMoney(spent, ccy)} / {formatMoney(budget, ccy)}
+            </Text>
             <View style={styles.barBg}>
               <View style={[styles.barFill, { width: `${clamped * 100}%`, backgroundColor: barColor }]} />
             </View>
@@ -1024,14 +1164,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   title: { color: theme.text1, fontSize: sizes.xxxl, fontFamily: font.displayBold },
+  segScroll: { flexGrow: 0, height: 48, marginBottom: spacing.sm },
   segRow: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: 6,
     paddingHorizontal: spacing.lg,
-    paddingBottom: spacing.md,
   },
   segChip: {
     flex: 1,
+    minWidth: 72,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
@@ -1106,6 +1248,20 @@ const styles = StyleSheet.create({
     letterSpacing: 0.6,
     paddingHorizontal: 4,
   },
+  eventRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    padding: spacing.md,
+    borderRadius: radii.lg,
+    backgroundColor: theme.bg2,
+    borderWidth: 1,
+    borderColor: theme.border,
+  },
+  eventIcon: { width: 36, height: 36, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center' },
+  eventName: { color: theme.text1, fontSize: sizes.md, fontFamily: font.bodySemi },
+  eventSub: { color: theme.text3, fontSize: sizes.xs, marginTop: 2 },
+  eventAmt: { color: theme.text1, fontSize: sizes.md, fontFamily: font.displayBold },
   paidToggle: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 4 },
   emptyHint: { color: theme.text3, fontSize: sizes.sm, paddingHorizontal: 4, lineHeight: 20 },
   suggestCard: {
@@ -1173,9 +1329,9 @@ const styles = StyleSheet.create({
     borderColor: theme.border,
     gap: 8,
   },
-  budgetHead: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: spacing.sm },
-  budgetName: { color: theme.text1, fontSize: sizes.md, fontFamily: font.body, flexShrink: 1 },
-  budgetAmt: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.display },
+  budgetHead: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  budgetName: { color: theme.text1, fontSize: sizes.md, fontFamily: font.body, flex: 1, minWidth: 0 },
+  budgetAmt: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.display, textAlign: 'right' },
   paceTag: {
     fontSize: 10,
     fontFamily: font.bodySemi,

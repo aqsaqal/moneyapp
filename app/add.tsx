@@ -33,7 +33,8 @@ import { PredictedStrip } from '@/components/PredictedStrip';
 import { ReceiptScanButton } from '@/components/ReceiptScanButton';
 import { PickerSheet } from '@/components/PickerSheet';
 import { FeatureSlots } from '@/features';
-import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, useCategoriesWithMeta, useMonthTotalsByCategory, AccountValidationError } from '@/hooks/useAppData';
+import { useAccounts, addTransaction, linkRecurringPaid, updateTransaction, deleteTransaction, useTransactions, useCategoriesWithMeta, useMonthTotalsByCategory, AccountValidationError, useEvents, eventCoversDate, eventStatus } from '@/hooks/useAppData';
+import { formatEventRange } from '@/components/EventSheet';
 import { CategoryPicker } from '@/components/CategoryPicker';
 import { AccountPicker } from '@/components/AccountPicker';
 import type { Account } from '@/utils/db/schema';
@@ -115,6 +116,8 @@ export default function AddScreen() {
        *  as paid. */
       markMonth?: string;
       editId?: string;
+      /** Events / trips: the event the row is (or should be) tagged with. */
+      eventId?: string;
     } | null;
   }, [params.prefill]);
 
@@ -136,6 +139,19 @@ export default function AddScreen() {
   const [note, setNote] = useState(prefill?.note ?? '');
   const [txDate, setTxDate] = useState<Date>(prefill?.date ? new Date(prefill.date) : new Date());
   const [datePickerOpen, setDatePickerOpen] = useState(false);
+  // Events / trips. A running event is preselected for new entries (one
+  // tap to clear); once the user touches the chip their choice sticks
+  // even if the date changes. Edits keep whatever the row had.
+  const allEvents = useEvents();
+  const [eventId, setEventId] = useState<string | null>(prefill?.eventId ?? null);
+  const [eventTouched, setEventTouched] = useState(!!prefill?.eventId);
+  const [eventPickerOpen, setEventPickerOpen] = useState(false);
+  useEffect(() => {
+    if (isEditing || eventTouched) return;
+    const ms = txDate.getTime();
+    const hit = allEvents.find((e) => eventCoversDate(e, ms));
+    setEventId(hit?.id ?? null);
+  }, [txDate, allEvents, isEditing, eventTouched]);
   const [draft, setDraft] = useState<Partial<Transaction>>({});
   const [success, setSuccess] = useState(false);
   const [successCaption, setSuccessCaption] = useState<string | null>(null);
@@ -251,6 +267,7 @@ export default function AddScreen() {
     }
     if (prefill.note != null) setNote(prefill.note);
     if (prefill.date != null) setTxDate(new Date(prefill.date));
+    if (prefill.eventId != null) { setEventId(prefill.eventId); setEventTouched(true); }
     if (prefill.category != null) setCatOverride(prefill.category);
     if (prefill.accountId != null) setAccountOverride(prefill.accountId);
     if (prefill.originalCurrency != null) {
@@ -613,6 +630,7 @@ export default function AddScreen() {
           originalAmount,
           originalCurrency,
           toAmount,
+          eventId: null,
         });
       } else {
         try {
@@ -652,6 +670,7 @@ export default function AddScreen() {
           date: txDate.getTime(),
           originalAmount,
           originalCurrency,
+          eventId,
         });
       } else {
         try {
@@ -673,6 +692,7 @@ export default function AddScreen() {
             // subscription audit, edit-flow detection) can identify
             // the row as fixed-cost rather than discretionary.
             recurringId: prefill?.recurringId ?? null,
+            eventId,
           }, { skipCashCheck: opts.skipCashCheck });
           createdTxId = tx.id;
           // Remember the user's account choice so L4 fallback can lock in.
@@ -915,6 +935,54 @@ export default function AddScreen() {
             />
           );
         })()}
+        {/* Events / trips: which event this entry counts under. Hidden
+            until the user has at least one event, and for transfers. */}
+        {mode !== 'transfer' && allEvents.length > 0 && (() => {
+          const ev = allEvents.find((e) => e.id === eventId) ?? null;
+          return (
+            <View style={styles.eventRow}>
+              <Pressable
+                onPress={() => setEventPickerOpen(true)}
+                style={[styles.eventChip, ev && { borderColor: `${ev.color}88`, backgroundColor: `${ev.color}14` }]}
+                accessibilityRole="button"
+                accessibilityLabel={ev ? `${t('add.event.pick')}: ${ev.name}` : t('add.event.none')}
+              >
+                <MaterialCommunityIcons name={(ev?.icon as never) ?? 'calendar-star'} size={14} color={ev ? ev.color : theme.text3} />
+                <Text style={[styles.eventChipText, ev && { color: ev.color }]} numberOfLines={1}>
+                  {ev ? ev.name : t('add.event.none')}
+                </Text>
+                {ev ? (
+                  <Pressable
+                    onPress={() => { setEventTouched(true); setEventId(null); }}
+                    hitSlop={8}
+                    accessibilityRole="button"
+                    accessibilityLabel={t('add.event.noEvent')}
+                  >
+                    <MaterialCommunityIcons name="close" size={14} color={ev.color} />
+                  </Pressable>
+                ) : (
+                  <MaterialCommunityIcons name="chevron-down" size={14} color={theme.text3} />
+                )}
+              </Pressable>
+            </View>
+          );
+        })()}
+        <PickerSheet
+          visible={eventPickerOpen}
+          title={t('add.event.pick')}
+          selected={eventId ?? ''}
+          options={[
+            { value: '', label: t('add.event.noEvent'), icon: 'close-circle-outline' },
+            ...[...allEvents]
+              .sort((a, b) => {
+                const rank = { active: 0, upcoming: 1, past: 2 } as const;
+                return rank[eventStatus(a)] - rank[eventStatus(b)] || b.startDate - a.startDate;
+              })
+              .map((e) => ({ value: e.id, label: e.name, icon: e.icon as never, iconColor: e.color, hint: formatEventRange(e.startDate, e.endDate) })),
+          ]}
+          onPick={(v) => { setEventTouched(true); setEventId(v || null); }}
+          onClose={() => setEventPickerOpen(false)}
+        />
         <CurrencyPickerSheet
           visible={currencyPickerOpen}
           title={t('me.currency')}
@@ -1572,6 +1640,19 @@ const styles = StyleSheet.create({
     borderColor: theme.border,
     overflow: 'hidden',
   },
+  eventRow: { alignItems: 'center', marginTop: 6 },
+  eventChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: radii.pill,
+    borderWidth: 1,
+    borderColor: theme.border,
+    maxWidth: '80%',
+  },
+  eventChipText: { color: theme.text3, fontSize: sizes.xs, fontFamily: font.bodySemi, flexShrink: 1 },
   datePickerCard: {
     marginTop: spacing.sm,
     marginHorizontal: spacing.md,
