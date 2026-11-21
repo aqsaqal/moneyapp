@@ -129,6 +129,19 @@ const config: ExpoConfig = {
           // Jetifier is harmless and covers any legacy AAR deps that
           // still ship with non-AndroidX classnames.
           enableJetifier: true,
+          // R8 minification + resource shrinking in release builds. Play
+          // flagged "DEX code optimization below threshold" (obfuscation
+          // 1%, fix by Feb 2027). Libraries ship their own consumer keep
+          // rules; the extras below cover the ones that reflect at runtime.
+          enableProguardInReleaseBuilds: true,
+          enableShrinkResourcesInReleaseBuilds: true,
+          extraProguardRules: [
+            '-keep class com.tencent.mmkv.** { *; }',
+            '-keep class com.google.mlkit.** { *; }',
+            '-dontwarn com.google.mlkit.**',
+            '-keep class com.shopify.reactnative.skia.** { *; }',
+            '-keep class expo.modules.** { *; }',
+          ].join('\n'),
         },
         ios: {
           // @react-native-ml-kit/text-recognition's pod requires 15.5
