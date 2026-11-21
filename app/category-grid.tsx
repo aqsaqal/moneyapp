@@ -116,7 +116,16 @@ export default function CategoryGridScreen() {
         onMomentumScrollEnd={onPagerScroll}
         keyboardShouldPersistTaps="handled"
       >
-        <Pane width={width} cats={expense} spent={spentMap} currency={displayCcy} onPick={(c) => pick(c, 'expense')} />
+        <Pane
+          width={width}
+          cats={expense}
+          spent={spentMap}
+          currency={displayCcy}
+          onPick={(c) => pick(c, 'expense')}
+          onSplit={() => router.replace('/split' as never)}
+          splitLabel={t('grid.split')}
+          splitCaption={t('grid.split.caption')}
+        />
         <Pane width={width} cats={income} spent={spentMap} currency={displayCcy} onPick={(c) => pick(c, 'income')} />
       </ScrollView>
     </SafeAreaView>
@@ -148,18 +157,20 @@ function TabBtn({ label, active, onPress }: { label: string; active: boolean; on
   );
 }
 
-function Pane({
-  width,
+function Pane({ width,
   cats,
   spent,
   currency,
-  onPick,
-}: {
+  onPick, onSplit, splitLabel, splitCaption }: {
   width: number;
   cats: CategoryWithMeta[];
   spent: Map<string, number>;
   currency: CurrencyCode;
   onPick: (c: CategoryWithMeta) => void;
+  /** Expense pane only: trailing "Split" tile → /split. */
+  onSplit?: () => void;
+  splitLabel?: string;
+  splitCaption?: string;
 }) {
   // Pixel-precise 3-column layout: derive tile width from the actual
   // pane width minus horizontal padding (spacing.md ×2) and the two
@@ -213,6 +224,20 @@ function Pane({
           </Pressable>
         );
       })}
+      {onSplit && (
+        <Pressable
+          onPress={onSplit}
+          style={[styles.tile, styles.tileSplit, { width: tileWidth }]}
+          accessibilityRole="button"
+          accessibilityLabel={splitLabel}
+        >
+          <View style={[styles.tileIcon, { backgroundColor: `${theme.accent}22` }]}>
+            <MaterialCommunityIcons name="call-split" size={22} color={theme.accent} />
+          </View>
+          <Text style={styles.tileName} numberOfLines={1}>{splitLabel}</Text>
+          <Text style={[styles.tileCaption, { textAlign: 'center' }]} numberOfLines={2}>{splitCaption}</Text>
+        </Pressable>
+      )}
     </ScrollView>
   );
 }
@@ -289,6 +314,7 @@ const styles = StyleSheet.create({
     width: 44, height: 44, borderRadius: 22,
     alignItems: 'center', justifyContent: 'center',
   },
+  tileSplit: { borderWidth: 1, borderStyle: 'dashed', borderColor: `${theme.accent}66` },
   tileName: { color: theme.text1, fontSize: sizes.sm, textAlign: 'center' },
   tileCaption: { color: theme.text3, fontSize: 10, textAlign: 'center' },
   tileBar: {

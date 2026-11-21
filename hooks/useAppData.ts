@@ -1437,6 +1437,25 @@ export function useEventTotals(eventId: string | null | undefined): EventTotals 
   }, [version, eventId]);
 }
 
+/** Expense total per category (main currency) over the last `days` days —
+ *  orders the Split screen so the regulars come first. */
+export function useCategorySpendSince(days: number): Map<string, number> {
+  useVersion();
+  const raw = getRawDB();
+  return useMemo(() => {
+    const since = Date.now() - days * 86_400_000;
+    const rows = raw.getAllSync<{ category: string; total: number }>(
+      `SELECT category, SUM(COALESCE(amount_main, amount)) AS total
+         FROM transactions
+        WHERE type = 'expense' AND category IS NOT NULL AND date >= ? AND date <= ?
+        GROUP BY category`,
+      [since, Date.now()],
+    );
+    return new Map(rows.map((r) => [r.category, r.total]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [version, days]);
+}
+
 /** Expense total per event (main currency) for list screens. */
 export function useEventSpentMap(): Map<string, number> {
   useVersion();

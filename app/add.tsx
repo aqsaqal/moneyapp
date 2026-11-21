@@ -39,7 +39,7 @@ import { CategoryPicker } from '@/components/CategoryPicker';
 import { AccountPicker } from '@/components/AccountPicker';
 import type { Account } from '@/utils/db/schema';
 import { monthKey, daysDiff, relativeDayLabel } from '@/utils/format';
-import { decodePrefill } from '@/utils/prefill';
+import { decodePrefill, encodePrefill } from '@/utils/prefill';
 import { useSmartPredict, setDefaultAccount } from '@/hooks/useSmartPredict';
 import { useT } from '@/hooks/useT';
 import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
@@ -935,6 +935,25 @@ export default function AddScreen() {
             />
           );
         })()}
+        {/* Split: "this much, roughly across these categories" — swaps
+            this modal for the Split screen, carrying the amount + account. */}
+        {mode === 'expense' && !isEditing && (parseFloat(amount) || 0) > 0 && (
+          <Pressable
+            onPress={() =>
+              router.replace({
+                pathname: '/split',
+                params: { prefill: encodePrefill({ amount: parseFloat(amount) || 0, accountId: effectiveAcct }) },
+              } as never)
+            }
+            style={styles.splitLink}
+            hitSlop={6}
+            accessibilityRole="button"
+            accessibilityLabel={t('add.split')}
+          >
+            <MaterialCommunityIcons name="call-split" size={14} color={theme.text3} />
+            <Text style={styles.splitLinkText}>{t('add.split')}</Text>
+          </Pressable>
+        )}
         {/* Events / trips: which event this entry counts under. Hidden
             until the user has at least one event, and for transfers. */}
         {mode !== 'transfer' && allEvents.length > 0 && (() => {
@@ -1640,6 +1659,8 @@ const styles = StyleSheet.create({
     borderColor: theme.border,
     overflow: 'hidden',
   },
+  splitLink: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 4, marginTop: 6 },
+  splitLinkText: { color: theme.text3, fontSize: sizes.xs, fontFamily: font.bodySemi },
   eventRow: { alignItems: 'center', marginTop: 6 },
   eventChip: {
     flexDirection: 'row',

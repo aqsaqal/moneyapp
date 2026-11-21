@@ -207,6 +207,7 @@ export default function RootLayout() {
                   slide_from_bottom — snappy enough to read as a popup
                   rather than a separate screen. */}
               <Stack.Screen name="add" options={{ presentation: 'modal', animation: 'fade', animationDuration: 1 }} />
+              <Stack.Screen name="split" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="insights" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="net-worth" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />

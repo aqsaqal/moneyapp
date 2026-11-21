@@ -44,6 +44,7 @@ const PROFILE_SCOPED_KEYS_FRESH = new Set<string>([
   'liabilitySignsRepaired_v1',
   'debtsLinkedToAccounts_v1',
   'amountMainBackfilled_v1',
+  'splitLastShares',
 ]);
 const PROFILE_SCOPED_KEYS = new Set<string>([
   ...PROFILE_SCOPED_KEYS_INHERIT,
@@ -123,6 +124,7 @@ export interface KVSchema {
   onboardingCompleted: string; // '1' | '0'
   themeMode: string;           // 'system' | 'dark' | 'light'
   tabOrder: string;            // JSON array of tab route names (device-wide); absent = default order
+  splitLastShares: string;     // JSON { categoryId: fraction } — proportions of the last Split, per profile
   islamicPrayerMethod: string; // adhan-js method id (islamic only)
   islamicCity: string;         // city for prayer calculation (islamic only)
   islamicCoords: string;       // JSON {lat:number,lon:number}
