@@ -60,6 +60,21 @@ exports, events and split stay free.
 - Trip summary export.
 - Future polish features of the same kind.
 
+Existing free features that could move to Pro later, ranked by how well
+they'd survive the move (core features — multi-currency, backup, categories,
+bills, budgets, net worth — never):
+
+1. PDF reports.
+2. Events and trips.
+3. Split.
+4. Budget rollover and envelope-style rules (plain budgets stay free).
+5. A third profile (the second stays free).
+6. Receipt scanning.
+
+Rule for any such move: grandfather. A flag set on first launch of the
+paywall version keeps everything free for installs that predate it; only
+new installs see the gate.
+
 **Flow Sync — subscription.** Only features with a monthly cost on our side
 or recurring value for the user go here, so the recurring price is honest:
 
