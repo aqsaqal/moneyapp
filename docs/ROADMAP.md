@@ -46,6 +46,35 @@ Already on `dev`, send when there is a reason to:
 - Trip cost splitting with friends; shared events.
 - Reports: yearly PDF, tax CSV packs, scheduled backups to Drive / iCloud.
 
+## Growth levers (no ad spend)
+
+Baseline 2026-11: ~15 installs/month with no marketing. Finance apps
+convert 2–5% of installs to a paid tier, so installs come before any
+paywall. In order of expected effect per hour of work:
+
+1. **Store screenshots with captions.** A script composes the existing
+   captures into device frames with one headline each, for every store
+   size, so captions are a text-file change:
+   1. "Know what's safe to spend today" (Home)
+   2. "Add a coffee in three taps" (Smart Add)
+   3. "See what a trip really cost" (Events)
+   4. "Bills, budgets, goals, one plan" (Plan)
+   5. "Your money stays on your phone" (Accounts)
+2. **Localized store listings** (title, subtitle, description, captions) in
+   the ten largest locales. Fifty in-app locales is an asset almost no
+   competitor matches; listings are where it shows up in search.
+3. **Rating prompt**, native, once, after a success moment (first month
+   Home says "On track"). Ratings move search position most at this size.
+4. **Onboarding → first minute.** "Try with sample data" at the end of
+   onboarding (one tap into the Demo profile); a three-step guided card on
+   the empty Home (add income, add a bill, log a purchase) that ticks off
+   and disappears.
+5. **Listing copy**: keywords in title/subtitle, Events and Split in the
+   description, first two screenshots carry the message.
+6. **Community posts** where people compare finance apps (personal-finance
+   and privacy communities): "no accounts, no tracking, works offline" is
+   what gets asked for there.
+
 ## Monetisation model
 
 Free to download, everything shipped today stays free. Two paid tiers
