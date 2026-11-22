@@ -46,6 +46,35 @@ Already on `dev`, send when there is a reason to:
 - Trip cost splitting with friends; shared events.
 - Reports: yearly PDF, tax CSV packs, scheduled backups to Drive / iCloud.
 
+## Monetisation model
+
+Free to download, everything shipped today stays free. Two paid tiers
+later, chosen by what each feature costs us to run:
+
+**Flow Pro — one-time unlock.** Finished work with no running cost:
+
+- Custom themes and icon packs.
+- Advanced budget rules: rollover, envelopes, per-category alerts.
+- Report exports: yearly PDF, tax CSV packs.
+- Future polish features of the same kind.
+
+**Flow Sync — subscription.** Only features with a monthly cost on our side
+or recurring value for the user go here, so the recurring price is honest:
+
+- Sync and multi-device, end-to-end encrypted, with a household mode where
+  two people share one profile (server cost).
+- AI insights: monthly written review, spike explanations, questions over
+  your own data (API cost per user).
+- Automatic bank import where open banking exists (EU, UK, Brazil first).
+- Widgets, Apple Watch and Wear OS companions.
+- Trip features beyond the basics: split costs with friends, shared events,
+  trip summary export.
+- Scheduled backups to Drive / iCloud.
+
+Pro is included in Sync. No caps on accounts, bills or categories in either
+tier (see below). The store description's "no subscriptions" line changes
+only when Sync ships.
+
 ## Decided against
 
 - Home period filters (Today / Week / Year): Home stays month-centric;
