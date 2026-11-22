@@ -51,11 +51,13 @@ Already on `dev`, send when there is a reason to:
 Free to download, everything shipped today stays free. Two paid tiers
 later, chosen by what each feature costs us to run:
 
-**Flow Pro — one-time unlock.** Finished work with no running cost:
+**Flow Pro — one-time unlock.** New finished work with no running cost.
+Not anything already shipped: budget rollover and alerts, PDF and CSV
+exports, events and split stay free.
 
-- Custom themes and icon packs.
-- Advanced budget rules: rollover, envelopes, per-category alerts.
-- Report exports: yearly PDF, tax CSV packs.
+- Custom color themes and icon packs (today: dark / light only).
+- Envelope budgeting.
+- Trip summary export.
 - Future polish features of the same kind.
 
 **Flow Sync — subscription.** Only features with a monthly cost on our side
