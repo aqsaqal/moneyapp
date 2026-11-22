@@ -30,17 +30,16 @@ Already on `dev`, send when there is a reason to:
 
 1. Palette refresh. Variants captured 2026-11-22 (current / graphite +
    chartreuse / ink + saffron / espresso + sage); ink + saffron recommended.
-   Do this before Pro, since it touches every screen.
+   Do this before any paywall work, since it touches every screen.
 2. Large-screen and landscape support (Android 16 ignores orientation locks
    on tablets and foldables).
 3. Expo SDK upgrade (clears the deprecated edge-to-edge warning).
-4. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
-   paywall screen, Restore. Everything shipped free today stays free.
+4. Billing groundwork for Sync: RevenueCat, entitlement flag, paywall and
+   Restore screens, products in both consoles. Ships with Sync, not before.
 
 ## Later
 
-- Sync and household sharing, end-to-end encrypted. The subscription anchor;
-  Pro included.
+- Sync and household sharing, end-to-end encrypted. The subscription anchor.
 - Widgets, Apple Watch, Wear OS.
 - AI monthly review and spike explanations (API cost, so subscription).
 - Trip cost splitting with friends; shared events.
@@ -48,18 +47,12 @@ Already on `dev`, send when there is a reason to:
 
 ## Monetisation model
 
-Free to download, everything shipped today stays free. Two paid tiers
-later, chosen by what each feature costs us to run:
+Free to download, and everything that runs on the device stays free,
+including what ships today (budget rollover and alerts, PDF and CSV
+exports, events, split, themes). One paid tier only:
 
-**Flow Pro — one-time unlock.** Finished work with no running cost:
-
-- Custom themes and icon packs.
-- Advanced budget rules: rollover, envelopes, per-category alerts.
-- Report exports: yearly PDF, tax CSV packs.
-- Future polish features of the same kind.
-
-**Flow Sync — subscription.** Only features with a monthly cost on our side
-or recurring value for the user go here, so the recurring price is honest:
+**Flow Sync — subscription.** Features with a monthly cost on our side or
+recurring value for the user, so the recurring price is honest:
 
 - Sync and multi-device, end-to-end encrypted, with a household mode where
   two people share one profile (server cost).
@@ -71,9 +64,10 @@ or recurring value for the user go here, so the recurring price is honest:
   trip summary export.
 - Scheduled backups to Drive / iCloud.
 
-Pro is included in Sync. No caps on accounts, bills or categories in either
-tier (see below). The store description's "no subscriptions" line changes
-only when Sync ships.
+No one-time "Pro" tier: after removing what is already free there is not
+enough left to sell honestly. No caps on accounts, bills or categories.
+The store description's "no subscriptions" line changes only when Sync
+ships.
 
 ## Decided against
 
