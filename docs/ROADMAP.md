@@ -75,6 +75,23 @@ paywall. In order of expected effect per hour of work:
    and privacy communities): "no accounts, no tracking, works offline" is
    what gets asked for there.
 
+### What to measure (store consoles, free)
+
+Installs show the listing works; whether people like the app shows in
+what they do afterwards. Readable from ~100 installs/month, no need to
+wait for 1,000:
+
+- **Day-30 retention**: 20% good, 10% average, under 5% means the first
+  minute isn't landing.
+- **First-week uninstalls**: above 50% means the listing promised something
+  the app didn't deliver.
+- **Active devices ÷ installs**: Flow is meant to be opened most days; this
+  is the health number.
+- **Written reviews**: five of them say more than any install count.
+
+Milestones: 100 installs/month → read retention and fix the first minute;
+1,000 installs/month → the growth levers worked, start the paywall work.
+
 ## Monetisation model
 
 Free to download, everything shipped today stays free. Two paid tiers
