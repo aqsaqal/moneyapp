@@ -22,7 +22,7 @@ import { useRouter } from 'expo-router';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { useCategoriesWithMeta, useMonthTotalsByCategory, type CategoryWithMeta } from '@/hooks/useAppData';
 import { encodePrefill } from '@/utils/prefill';
-import { canUse } from '@/utils/pro';
+import { canUse, usePro } from '@/utils/pro';
 import { useT } from '@/hooks/useT';
 import { monthKey } from '@/utils/format';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
@@ -33,6 +33,7 @@ type Tab = 'expense' | 'income';
 export default function CategoryGridScreen() {
   const router = useRouter();
   const t = useT();
+  const pro = usePro();
   const { width } = useWindowDimensions();
   const pagerRef = useRef<ScrollView>(null);
   const [tab, setTab] = useState<Tab>('expense');
@@ -126,6 +127,8 @@ export default function CategoryGridScreen() {
           onSplit={() => (canUse('split') ? router.replace('/split' as never) : router.push('/paywall?feature=split' as never))}
           splitLabel={t('grid.split')}
           splitCaption={t('grid.split.caption')}
+          splitLocked={!pro}
+          splitLockedLabel={t('pro.badge')}
         />
         <Pane width={width} cats={income} spent={spentMap} currency={displayCcy} onPick={(c) => pick(c, 'income')} />
       </ScrollView>
@@ -162,7 +165,7 @@ function Pane({ width,
   cats,
   spent,
   currency,
-  onPick, onSplit, splitLabel, splitCaption }: {
+  onPick, onSplit, splitLabel, splitCaption, splitLocked, splitLockedLabel }: {
   width: number;
   cats: CategoryWithMeta[];
   spent: Map<string, number>;
@@ -172,6 +175,8 @@ function Pane({ width,
   onSplit?: () => void;
   splitLabel?: string;
   splitCaption?: string;
+  splitLocked?: boolean;
+  splitLockedLabel?: string;
 }) {
   // Pixel-precise 3-column layout: derive tile width from the actual
   // pane width minus horizontal padding (spacing.md ×2) and the two
@@ -182,6 +187,31 @@ function Pane({ width,
   const tileWidth = Math.floor((width - HORIZONTAL_PADDING * 2 - GAP * 2) / 3);
   return (
     <ScrollView style={{ width }} contentContainerStyle={styles.grid}>
+      {onSplit && (
+        // Split is an action, not a category: a slim full-width row above
+        // the grid keeps it visible without taking the first tile, which
+        // is the one people tap from memory.
+        <Pressable
+          onPress={onSplit}
+          style={styles.splitRow}
+          accessibilityRole="button"
+          accessibilityLabel={splitLabel}
+        >
+          <View style={[styles.splitIcon, { backgroundColor: `${theme.accent}22` }]}>
+            <MaterialCommunityIcons name="call-split" size={18} color={theme.accent} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.splitLabel} numberOfLines={1}>{splitLabel}</Text>
+            <Text style={styles.splitCaption} numberOfLines={1}>{splitCaption}</Text>
+          </View>
+          {splitLocked && (
+            <View style={styles.proBadge}>
+              <Text style={styles.proBadgeText}>{splitLockedLabel}</Text>
+            </View>
+          )}
+          <MaterialCommunityIcons name="chevron-right" size={20} color={theme.text3} />
+        </Pressable>
+      )}
       {cats.map((c) => {
         const s = spent.get(c.id) ?? 0;
         const budget = c.monthlyBudget ?? null;
@@ -225,20 +255,6 @@ function Pane({ width,
           </Pressable>
         );
       })}
-      {onSplit && (
-        <Pressable
-          onPress={onSplit}
-          style={[styles.tile, styles.tileSplit, { width: tileWidth }]}
-          accessibilityRole="button"
-          accessibilityLabel={splitLabel}
-        >
-          <View style={[styles.tileIcon, { backgroundColor: `${theme.accent}22` }]}>
-            <MaterialCommunityIcons name="call-split" size={22} color={theme.accent} />
-          </View>
-          <Text style={styles.tileName} numberOfLines={1}>{splitLabel}</Text>
-          <Text style={[styles.tileCaption, { textAlign: 'center' }]} numberOfLines={2}>{splitCaption}</Text>
-        </Pressable>
-      )}
     </ScrollView>
   );
 }
@@ -315,7 +331,24 @@ const styles = StyleSheet.create({
     width: 44, height: 44, borderRadius: 22,
     alignItems: 'center', justifyContent: 'center',
   },
-  tileSplit: { borderWidth: 1, borderStyle: 'dashed', borderColor: `${theme.accent}66` },
+  splitRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.sm,
+    paddingVertical: 10,
+    paddingHorizontal: spacing.sm,
+    borderRadius: radii.md,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderColor: `${theme.accent}66`,
+    marginBottom: 2,
+  },
+  splitIcon: { width: 32, height: 32, borderRadius: radii.sm, alignItems: 'center', justifyContent: 'center' },
+  splitLabel: { color: theme.text1, fontSize: sizes.sm, fontFamily: font.bodySemi },
+  splitCaption: { color: theme.text3, fontSize: 10 },
+  proBadge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: radii.pill, backgroundColor: theme.accentDim },
+  proBadgeText: { color: theme.accent, fontSize: 10, fontFamily: font.bodySemi, letterSpacing: 0.5 },
   tileName: { color: theme.text1, fontSize: sizes.sm, textAlign: 'center' },
   tileCaption: { color: theme.text3, fontSize: 10, textAlign: 'center' },
   tileBar: {
