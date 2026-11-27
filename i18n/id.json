@@ -122,6 +122,8 @@
   "me.theme.graphite": "Grafit",
   "me.theme.ink": "Tinta",
   "me.theme.espresso": "Espresso",
+  "me.look.changeTitle": "Mulai ulang untuk menerapkan?",
+  "me.look.changeBody": "Aplikasi akan dimulai ulang untuk menerapkan tampilan baru.",
   "settings.title": "Pengaturan",
   "settings.categories.title": "Kategori",
   "settings.categories.empty": "Buat kategori sendiri dengan nama, ikon, dan warna pilihanmu.",

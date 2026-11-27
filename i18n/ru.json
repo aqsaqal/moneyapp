@@ -122,6 +122,8 @@
   "me.theme.graphite": "Графит",
   "me.theme.ink": "Чернила",
   "me.theme.espresso": "Эспрессо",
+  "me.look.changeTitle": "Перезапустить для применения?",
+  "me.look.changeBody": "Приложение перезапустится, чтобы применить новый вид.",
   "settings.title": "Настройки",
   "settings.categories.title": "Категории",
   "settings.categories.empty": "Создайте свои категории с именем, иконкой и цветом.",

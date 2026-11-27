@@ -157,6 +157,8 @@
   "me.theme.graphite": "Graphite",
   "me.theme.ink": "Ink",
   "me.theme.espresso": "Espresso",
+  "me.look.changeTitle": "Restart to apply?",
+  "me.look.changeBody": "The app will restart to apply the new look.",
   "settings.title": "Settings",
   "settings.categories.title": "Categories",
   "settings.categories.empty": "Create your own categories with custom name, icon, and color.",

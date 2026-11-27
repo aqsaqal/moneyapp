@@ -122,6 +122,8 @@
   "me.theme.graphite": "Графит",
   "me.theme.ink": "Сия",
   "me.theme.espresso": "Эспрессо",
+  "me.look.changeTitle": "Қолдану үшін қайта іске қосу керек пе?",
+  "me.look.changeBody": "Жаңа көріністі қолдану үшін қолданба қайта іске қосылады.",
   "settings.title": "Параметрлер",
   "settings.categories.title": "Санаттар",
   "settings.categories.empty": "Өз атау, белгіше және түспен жеке санаттар жасаңыз.",

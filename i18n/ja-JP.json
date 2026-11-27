@@ -130,6 +130,8 @@
   "me.theme.graphite": "グラファイト",
   "me.theme.ink": "インク",
   "me.theme.espresso": "エスプレッソ",
+  "me.look.changeTitle": "再起動して適用しますか？",
+  "me.look.changeBody": "新しい外観を適用するためアプリを再起動します。",
   "settings.title": "設定",
   "settings.categories.title": "カテゴリー",
   "settings.categories.empty": "名前・アイコン・色を指定して独自のカテゴリを作成。",

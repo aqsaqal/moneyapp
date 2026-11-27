@@ -471,7 +471,7 @@ function ThemeRow() {
     const prev = id;
     kv.set('themeId', next);
     setId(next);
-    Alert.alert(t('me.lang.changeTitle'), t('me.lang.changeBody'), [
+    Alert.alert(t('me.look.changeTitle'), t('me.look.changeBody'), [
       {
         text: t('common.cancel'),
         style: 'cancel',
@@ -544,7 +544,7 @@ function AppearanceRow() {
     const prev = mode;
     kv.set('themeMode', next);
     setMode(next);
-    Alert.alert(t('me.lang.changeTitle'), t('me.lang.changeBody'), [
+    Alert.alert(t('me.look.changeTitle'), t('me.look.changeBody'), [
       {
         text: t('common.cancel'),
         style: 'cancel',

@@ -130,6 +130,8 @@
   "me.theme.graphite": "石墨",
   "me.theme.ink": "墨色",
   "me.theme.espresso": "浓缩咖啡",
+  "me.look.changeTitle": "重启以应用？",
+  "me.look.changeBody": "应用将重新启动以应用新的外观。",
   "settings.title": "设置",
   "settings.categories.title": "分类",
   "settings.categories.empty": "创建自己的分类，含名称、图标和颜色。",

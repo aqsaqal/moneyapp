@@ -130,6 +130,8 @@
   "me.theme.graphite": "Grafite",
   "me.theme.ink": "Tinta",
   "me.theme.espresso": "Espresso",
+  "me.look.changeTitle": "Reiniciar para aplicar?",
+  "me.look.changeBody": "O app será reiniciado para aplicar o novo visual.",
   "settings.title": "Ajustes",
   "settings.categories.title": "Categorias",
   "settings.categories.empty": "Crie suas próprias categorias com nome, ícone e cor.",

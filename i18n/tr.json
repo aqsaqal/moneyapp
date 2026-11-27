@@ -122,6 +122,8 @@
   "me.theme.graphite": "Grafit",
   "me.theme.ink": "Mürekkep",
   "me.theme.espresso": "Espresso",
+  "me.look.changeTitle": "Uygulamak için yeniden başlatılsın mı?",
+  "me.look.changeBody": "Yeni görünümü uygulamak için uygulama yeniden başlatılacak.",
   "settings.title": "Ayarlar",
   "settings.categories.title": "Kategoriler",
   "settings.categories.empty": "Kendi kategorilerini ad, ikon ve renkle oluştur.",

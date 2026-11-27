@@ -130,6 +130,8 @@
   "me.theme.graphite": "그래파이트",
   "me.theme.ink": "잉크",
   "me.theme.espresso": "에스프레소",
+  "me.look.changeTitle": "다시 시작하여 적용할까요?",
+  "me.look.changeBody": "새 디자인을 적용하기 위해 앱이 다시 시작됩니다.",
   "settings.title": "설정",
   "settings.categories.title": "카테고리",
   "settings.categories.empty": "이름, 아이콘, 색으로 나만의 카테고리 만들기.",
