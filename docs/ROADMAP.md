@@ -28,14 +28,13 @@ Already on `dev`, send when there is a reason to:
 
 ## 1.3 candidates, in order
 
-1. Keyboard dismissal audit (2026-11-27). Every numeric and text field on
-   iOS and Android must have a way to put the keyboard away: a Done /
-   hide button on the numpad, tapping empty space outside the field, or
-   both. Found in iOS onboarding: after typing the first account's
-   balance the numpad stays up and covers the Create button. Check every
-   screen with a field (onboarding, Add, Split, account / category /
-   budget / goal / event sheets, settings inputs) on both platforms.
-2. Palette refresh, shipped as themes. Variants captured 2026-11-22
+Done on `dev` (2026-11-27): keyboard dismissal audit. Every field was
+checked on iOS: tapping blank space closes the keyboard on screens, and in
+sheets the first backdrop tap closes the keyboard, the second the sheet.
+No Done bar; the native one looked out of place. Android still to be
+checked on the S26.
+
+1. Palette refresh, shipped as themes. Variants captured 2026-11-22
    (current / graphite + chartreuse / ink + saffron / espresso + sage);
    ink + saffron recommended as the new default. The current mint palette
    stays as a selectable theme ("Mint") and is preselected for installs
@@ -43,7 +42,7 @@ Already on `dev`, send when there is a reason to:
    picker in Settings → Appearance next to dark / light; this picker is the
    base for Pro themes later. Do this before Pro, since it touches every
    screen.
-3. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
+2. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
    paywall screen, Restore. Everything shipped free today stays free.
 
 ## 1.4 — early 2027
@@ -165,6 +164,21 @@ or recurring value for the user go here, so the recurring price is honest:
 Pro is included in Sync. No caps on accounts, bills or categories in either
 tier (see below). The store description's "no subscriptions" line changes
 only when Sync ships.
+
+## Release process
+
+Steps are in `docs/release-playbook.md`. Per version: finish and test on
+the S26 and the iOS simulator; bump version / build number / version
+code; prepare the listing; build the AAB and the iOS archive; Play
+internal track → closed track → production; App Store version → submit;
+store-side products last; after approval check the live build and
+update this file. Submit, publish and legal clicks are the user's.
+
+Store listings and screenshots in twelve languages, English the source:
+English, Spanish, Portuguese, French, German, Turkish, Indonesian,
+Russian, Kazakh, Japanese, Korean, Chinese (Simplified). App Store has no
+Kazakh storefront, so Kazakh is Play and in-app only; Spanish is entered
+twice there (Spain, Mexico). Machine translations need a fluent read.
 
 ## Decided against
 
