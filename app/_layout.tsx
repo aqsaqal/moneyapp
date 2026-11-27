@@ -65,6 +65,16 @@ function ScreenshotController() {
             if (demo && demo.id !== P.getActiveProfileId()) P.switchActiveProfile(demo.id);
             console.log(`[screenshot-ctl] demo rebuilt → ${JSON.stringify(r)}`);
           }
+          else if (txt.startsWith('kv:')) {
+            // kv:<key> logs a value; kv:<key>=<value> sets it; kv:<key>= deletes it.
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const { kv: K } = require('@/utils/kv') as typeof import('@/utils/kv');
+            const body = txt.slice('kv:'.length);
+            const eq = body.indexOf('=');
+            if (eq < 0) console.log(`[screenshot-ctl] kv ${body} = ${JSON.stringify(K.get(body as never))}`);
+            else if (eq === body.length - 1) K.delete(body.slice(0, eq) as never);
+            else K.set(body.slice(0, eq) as never, body.slice(eq + 1) as never);
+          }
           else if (txt.startsWith('pro:') || txt.startsWith('gate:')) {
             // pro:on|off|clear — fake the entitlement; gate:gated|grandfathered|clear.
             // eslint-disable-next-line @typescript-eslint/no-require-imports
