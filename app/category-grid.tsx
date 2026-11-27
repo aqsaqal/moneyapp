@@ -22,6 +22,7 @@ import { useRouter } from 'expo-router';
 import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { useCategoriesWithMeta, useMonthTotalsByCategory, type CategoryWithMeta } from '@/hooks/useAppData';
 import { encodePrefill } from '@/utils/prefill';
+import { canUse } from '@/utils/pro';
 import { useT } from '@/hooks/useT';
 import { monthKey } from '@/utils/format';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
@@ -122,7 +123,7 @@ export default function CategoryGridScreen() {
           spent={spentMap}
           currency={displayCcy}
           onPick={(c) => pick(c, 'expense')}
-          onSplit={() => router.replace('/split' as never)}
+          onSplit={() => (canUse('split') ? router.replace('/split' as never) : router.push('/paywall?feature=split' as never))}
           splitLabel={t('grid.split')}
           splitCaption={t('grid.split.caption')}
         />

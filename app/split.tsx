@@ -14,7 +14,7 @@
 // and from the category grid's Split tile. Prefill: ?prefill=<base64
 // JSON { amount?, accountId? }>.
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View, type LayoutChangeEvent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -24,6 +24,7 @@ import { theme, spacing, font, sizes, radii } from '@/constants/theme';
 import { useT } from '@/hooks/useT';
 import { useHaptics } from '@/hooks/useHaptics';
 import { kv } from '@/utils/kv';
+import { canUse } from '@/utils/pro';
 import { formatMoney, relativeDayLabel } from '@/utils/format';
 import { decodePrefill } from '@/utils/prefill';
 import { CURRENCIES, type CurrencyCode } from '@/constants/currency';
@@ -64,6 +65,8 @@ function roundTo(v: number, step: number): number {
 export default function SplitScreen() {
   const t = useT();
   const router = useRouter();
+  // Deep links and stale shortcuts: Split is Pro.
+  useEffect(() => { if (!canUse('split')) router.replace('/paywall?feature=split' as never); }, [router]);
   const haptics = useHaptics();
   const params = useLocalSearchParams<{ prefill?: string }>();
   const prefill = useMemo(() => {

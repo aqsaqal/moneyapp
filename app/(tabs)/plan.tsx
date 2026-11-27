@@ -69,6 +69,7 @@ import { useHaptics } from '@/hooks/useHaptics';
 import { convert } from '@/utils/fx';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
+import { canUse } from '@/utils/pro';
 import { useT } from '@/hooks/useT';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 
@@ -583,6 +584,11 @@ function EventsSegment() {
   const past = live.filter((e) => eventStatus(e, now) === 'past');
   const archived = events.filter((e) => e.archived === 1);
   const hero = active[0] ?? upcoming[0] ?? null;
+  // Free: one live event; more is Pro (installs from before the paywall keep unlimited).
+  const openCreate = () => {
+    if (canUse('events', live.length)) setCreateOpen(true);
+    else router.push('/paywall?feature=events' as never);
+  };
 
   const budgetMain = (e: SpendEvent) =>
     e.budget != null && e.budget > 0 ? convert(e.budget, (e.budgetCurrency as CurrencyCode | null) ?? currency, currency) : null;
@@ -665,7 +671,7 @@ function EventsSegment() {
         );
       })()}
 
-      <SectionHeader title={t('plan.seg.events')} onAdd={() => setCreateOpen(true)} addLabel={t('events.add')} />
+      <SectionHeader title={t('plan.seg.events')} onAdd={openCreate} addLabel={t('events.add')} />
       {live.length === 0 && <Text style={styles.emptyHint}>{t('events.empty')}</Text>}
       <Group label={t('events.group.active')} items={active} />
       <Group label={t('events.group.upcoming')} items={upcoming} />

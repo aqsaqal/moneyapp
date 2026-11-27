@@ -122,6 +122,7 @@ const config: ExpoConfig = {
     'expo-notifications',
     'expo-local-authentication',
     'expo-localization',
+    'expo-iap',
     [
       'expo-build-properties',
       {

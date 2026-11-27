@@ -13,6 +13,8 @@ import {
   theme, THEMES, THEME_IDS, activeThemeIsLight, font, radii, sizes, spacing, type ThemeId,
 } from '@/constants/theme';
 import { useT } from '@/hooks/useT';
+import { useRouter } from 'expo-router';
+import { usePro } from '@/utils/pro';
 
 export function themeName(t: (k: string) => string, id: ThemeId): string {
   return t(`me.theme.${id}`);
@@ -30,6 +32,8 @@ export function ThemeSheet({
   onClose: () => void;
 }) {
   const t = useT();
+  const router = useRouter();
+  const pro = usePro();
   const mode = activeThemeIsLight() ? 'light' : 'dark';
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
@@ -42,12 +46,14 @@ export function ThemeSheet({
           {THEME_IDS.map((id) => {
             const p = THEMES[id][mode];
             const isSel = id === selected;
+            const locked = id !== 'mint' && !pro;
             return (
               <Pressable
                 key={id}
                 onPress={() => {
-                  onPick(id);
                   onClose();
+                  if (locked) router.push('/paywall?feature=themes' as never);
+                  else onPick(id);
                 }}
                 style={[styles.row, isSel && styles.rowSelected]}
                 accessibilityRole="button"
@@ -66,6 +72,11 @@ export function ThemeSheet({
                 <Text style={[styles.label, isSel && { color: theme.accent, fontFamily: font.bodySemi }]}>
                   {themeName(t, id)}
                 </Text>
+                {locked && (
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{t('pro.badge')}</Text>
+                  </View>
+                )}
                 {isSel && <MaterialCommunityIcons name="check" size={20} color={theme.accent} />}
               </Pressable>
             );
@@ -115,4 +126,6 @@ const styles = StyleSheet.create({
   dot: { width: 8, height: 8, borderRadius: 4 },
   swatchLine: { height: 3, borderRadius: 2, width: 34 },
   label: { flex: 1, color: theme.text1, fontSize: sizes.md, fontFamily: font.body },
+  badge: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: radii.pill, backgroundColor: theme.accentDim },
+  badgeText: { color: theme.accent, fontSize: sizes.xs, fontFamily: font.bodySemi, letterSpacing: 0.5 },
 });

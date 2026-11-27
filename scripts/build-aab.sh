@@ -81,9 +81,15 @@ if sed --version >/dev/null 2>&1; then
 else
   SED_INPLACE=(-i '')
 fi
+# Both spellings: the Expo template writes `signingConfig signingConfigs.debug`,
+# the expo-iap plugin normalizes it to `signingConfig = signingConfigs.debug`.
 sed "${SED_INPLACE[@]}" '/release {$/,/^        }/ {
-  s/signingConfig signingConfigs.debug/signingConfig signingConfigs.release/
+  s/signingConfig *=* *signingConfigs\.debug/signingConfig = signingConfigs.release/
 }' "$GRADLE_BUILD"
+if ! grep -q "signingConfig = signingConfigs.release" "$GRADLE_BUILD"; then
+  echo "[build-aab] FAILED — could not point the release buildType at signingConfigs.release." >&2
+  exit 1
+fi
 
 echo "[build-aab] gradle bundleRelease ($FLAVOR)…"
 cd android
@@ -93,6 +99,14 @@ OUT_AAB="app/build/outputs/bundle/release/app-release.aab"
 if [ ! -f "$OUT_AAB" ]; then
   echo "[build-aab] FAILED — $OUT_AAB not produced." >&2
   exit 1
+fi
+# Refuse a debug-signed bundle: Play rejects it, and a sideloaded APK from
+# the same project would not install over the store build.
+if command -v keytool >/dev/null 2>&1; then
+  if keytool -printcert -jarfile "$OUT_AAB" 2>/dev/null | grep -q "CN=Android Debug"; then
+    echo "[build-aab] FAILED — bundle is signed with the debug keystore." >&2
+    exit 1
+  fi
 fi
 
 DEST="/tmp/${FLAVOR}-release.aab"

@@ -40,6 +40,7 @@ import { theme, spacing, font, sizes, radii, activeThemeId, type ThemeId } from 
 import { SectionHeader, SettingRow, sectionStyles } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { ThemeSheet, themeName } from '@/components/ThemeSheet';
+import { canUse, usePro } from '@/utils/pro';
 import { TabOrderSheet, TAB_META } from '@/components/TabOrderSheet';
 import { useTabOrder } from '@/utils/tabOrder';
 import { rebuildDemoProfile } from '@/utils/db/demoSeed';
@@ -97,6 +98,10 @@ export default function SettingsScreen() {
       </View>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <ProfileCard key={`profile-${k}`} />
+
+        <Group title={t('pro.name', { app: APP_NAME })}>
+          <ProRow />
+        </Group>
 
         <Group title={t('settings.groups.money')}>
           <CurrencyRow key={`currency-${k}`} />
@@ -185,6 +190,7 @@ type ProfileSheetMode =
 
 function ProfileCard() {
   const t = useT();
+  const router = useRouter();
   const haptics = useHaptics();
   const active = useActiveProfile();
   const profiles = useProfiles();
@@ -238,7 +244,7 @@ function ProfileCard() {
           );
         })}
         <Pressable
-          onPress={() => setSheet({ kind: 'create' })}
+          onPress={() => (canUse('profiles') ? setSheet({ kind: 'create' }) : router.push('/paywall?feature=profiles' as never))}
           style={[styles.chip, styles.chipAdd]}
           accessibilityRole="button"
           accessibilityLabel={t('settings.profile.new')}
@@ -456,6 +462,21 @@ function LanguageRow() {
         onClose={() => setOpen(false)}
       />
     </>
+  );
+}
+
+function ProRow() {
+  const t = useT();
+  const router = useRouter();
+  const pro = usePro();
+  return (
+    <SettingRow
+      label={pro ? t('pro.name', { app: APP_NAME }) : t('pro.row.unlock', { app: APP_NAME })}
+      hint={pro ? t('pro.row.unlockedHint') : t('pro.row.hint')}
+      icon="star-four-points-outline"
+      iconColor={theme.warning}
+      onPress={() => router.push('/paywall' as never)}
+    />
   );
 }
 
@@ -741,6 +762,7 @@ function NotificationsRow() {
 
 function ExportRow() {
   const t = useT();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [lastExport, setLastExport] = useState<number>(() => Number(kv.get('lastExportAt') ?? 0));
   const currency = (kv.get('currency') ?? 'USD') as CurrencyCode;
@@ -752,6 +774,11 @@ function ExportRow() {
   };
   // Only the JSON dump is a restorable backup; CSV / PDF are reports.
   const run = (fmt: string) => {
+    if ((fmt === 'pdfMonth' || fmt === 'pdfYear') && !canUse('pdf')) {
+      setOpen(false);
+      router.push('/paywall?feature=pdf' as never);
+      return;
+    }
     if (fmt === 'json') void exportData('json').then(markExported).catch(() => {});
     else if (fmt === 'csv') void exportData('csv').catch(() => {});
     else if (fmt === 'pdfMonth') void exportMonthlyPdf(monthKeyOf(now), currency).catch(() => {});

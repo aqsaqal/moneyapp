@@ -123,6 +123,10 @@ export interface KVSchema {
   biometricEnabled: string;    // '1' | '0'
   onboardingCompleted: string; // '1' | '0'
   themeMode: string;           // 'system' | 'dark' | 'light'
+  proOwned: string;            // '1' once the store confirmed the Pro unlock (cached, works offline)
+  proGate: string;             // 'grandfathered' | 'gated' — written on first launch of a Pro build
+  proDevOverride: string;      // dev only: '1' | '0'
+  proGateOverride: string;     // dev only: 'gated' | 'grandfathered'
   themeId: string;             // 'mint' | 'graphite' | 'ink' | 'espresso' (device-wide); absent = mint
   tabOrder: string;            // JSON array of tab route names (device-wide); absent = default order
   splitLastShares: string;     // JSON { categoryId: fraction } — proportions of the last Split, per profile

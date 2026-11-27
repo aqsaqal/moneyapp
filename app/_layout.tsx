@@ -13,6 +13,7 @@ import { Outfit_700Bold, Outfit_800ExtraBold } from '@expo-google-fonts/outfit';
 import { PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold } from '@expo-google-fonts/plus-jakarta-sans';
 import { IS_ISLAMIC } from '@/constants/flavor';
 import { theme, activeThemeIsLight } from '@/constants/theme';
+import { initPro } from '@/utils/pro';
 import { bootAppData } from '@/hooks/useAppData';
 import { useAppLock, isBiometricEnabled } from '@/hooks/useBiometricLock';
 import { kv } from '@/utils/kv';
@@ -62,6 +63,14 @@ function ScreenshotController() {
             const demo = P.listProfiles().find((p) => p.name.toLowerCase() === 'demo');
             if (demo && demo.id !== P.getActiveProfileId()) P.switchActiveProfile(demo.id);
             console.log(`[screenshot-ctl] demo rebuilt → ${JSON.stringify(r)}`);
+          }
+          else if (txt.startsWith('pro:') || txt.startsWith('gate:')) {
+            // pro:on|off|clear — fake the entitlement; gate:gated|grandfathered|clear.
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const Pro = require('@/utils/pro') as typeof import('@/utils/pro');
+            const v = txt.split(':')[1].trim();
+            if (txt.startsWith('pro:')) Pro.devSetPro(v === 'on' ? '1' : v === 'off' ? '0' : null);
+            else Pro.devSetGate(v === 'gated' || v === 'grandfathered' ? v : null);
           }
           else if (txt.startsWith('mode:')) {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -153,6 +162,9 @@ export default function RootLayout() {
     // Make sure a profile exists before bootAppData opens its .db file.
     ensureDefaultProfile();
     bootAppData().then(() => {
+      // Pro gate + store connection. Before the dev bypass below, so a
+      // fresh dev install is 'gated' like a fresh store install.
+      initPro();
       // Dev backdoor: skip onboarding when EXPO_PUBLIC_BYPASS_ONBOARDING=1.
       // Babel inlines process.env.EXPO_PUBLIC_BYPASS_ONBOARDING at build time,
       // and __DEV__ is a Metro-injected boolean. In production builds, the
@@ -233,6 +245,7 @@ export default function RootLayout() {
                   rather than a separate screen. */}
               <Stack.Screen name="add" options={{ presentation: 'modal', animation: 'fade', animationDuration: 1 }} />
               <Stack.Screen name="split" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
+              <Stack.Screen name="paywall" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="settings" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="insights" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />
               <Stack.Screen name="net-worth" options={{ presentation: 'modal', animation: 'slide_from_bottom', animationDuration: 75 }} />

@@ -62,6 +62,7 @@ function getDatePicker(): DateTimePickerModule | null {
 import { allExpenseCategories, allIncomeCategories } from '@/constants/categories';
 import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
+import { canUse } from '@/utils/pro';
 import { useHaptics } from '@/hooks/useHaptics';
 import { t as i18nT } from '@/utils/i18n';
 import type { Transaction } from '@/utils/db/schema';
@@ -939,12 +940,13 @@ export default function AddScreen() {
             this modal for the Split screen, carrying the amount + account. */}
         {mode === 'expense' && !isEditing && (parseFloat(amount) || 0) > 0 && (
           <Pressable
-            onPress={() =>
+            onPress={() => {
+              if (!canUse('split')) { router.push('/paywall?feature=split' as never); return; }
               router.replace({
                 pathname: '/split',
                 params: { prefill: encodePrefill({ amount: parseFloat(amount) || 0, accountId: effectiveAcct }) },
-              } as never)
-            }
+              } as never);
+            }}
             style={styles.splitLink}
             hitSlop={6}
             accessibilityRole="button"

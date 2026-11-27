@@ -38,8 +38,12 @@ original, default), Graphite, Ink, Espresso, each with a dark and a light
 palette. Device-wide, restart on change like light/dark. Existing
 installs see no change. The picker is the base for Pro themes later.
 
-1. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
-   paywall screen, Restore. Everything shipped free today stays free.
+1. Flow Pro, one-time unlock at 9.99, bought through the store SDKs
+   (expo-iap, no server, no account; same shape as LifePilot). Gated:
+   the three new themes, Split (never shipped free), events beyond one
+   live event, PDF reports, a third profile (Demo not counted). Installs
+   from before the paywall keep unlimited events and PDF. Accounts,
+   bills, budgets, categories stay unlimited for everyone.
 
 ## 1.4 — early 2027
 
@@ -120,14 +124,19 @@ Milestones: 100 installs/month → read retention and fix the first minute;
 Free to download, everything shipped today stays free. Two paid tiers
 later, chosen by what each feature costs us to run:
 
-**Flow Pro — one-time unlock.** New finished work with no running cost.
-Not anything already shipped: budget rollover and alerts, PDF and CSV
-exports, events and split stay free.
+**Flow Pro — one-time unlock, 9.99.** Decided 2026-11-28, built for 1.3:
 
-- Custom color themes and icon packs (today: dark / light only).
-- Envelope budgeting.
-- Trip summary export.
-- Future polish features of the same kind.
+- Themes: Graphite, Ink, Espresso (Mint stays free).
+- Events and trips beyond one live event.
+- Split.
+- PDF monthly and yearly reports.
+- More than two profiles (the Demo profile does not count).
+- Every future polish feature of the same kind: envelope budgeting, trip
+  summary export, icon packs.
+
+Grandfathered (installs that completed onboarding before the first Pro
+build): unlimited events and PDF stay free. Budget rollover, alerts, CSV
+export stay free for everyone.
 
 Existing free features that could move to Pro later, ranked by how well
 they'd survive the move (core features — multi-currency, backup, categories,
@@ -182,7 +191,6 @@ twice there (Spain, Mexico). Machine translations need a fluent read.
   Activity and Insights cover other ranges.
 - Swiping between tabs: conflicts with month swipe and row swipe actions.
 - Caps on accounts, bills or categories as a paywall.
-- Making Split paid now: it shipped free and is in the store description.
 
 ## Done recently
 

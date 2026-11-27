@@ -132,6 +132,11 @@ What the script does, for a new app:
    release buildType at it. The Expo template signs release with the debug
    keystore otherwise, which Play rejects.
 4. `./gradlew app:bundleRelease` → `android/app/build/outputs/bundle/release/app-release.aab`.
+5. Checks the bundle is not debug-signed. Config plugins can rewrite
+   `build.gradle` (expo-iap normalizes `signingConfig signingConfigs.debug`
+   to `signingConfig = signingConfigs.debug`); the script handles both
+   spellings, and a debug-signed APK will not install over the store build
+   ("signatures do not match").
 
 For a local APK to sideload: `./gradlew app:assembleRelease` then
 `adb -s <serial> install -r android/app/build/outputs/apk/release/app-release.apk`.
@@ -180,6 +185,44 @@ re-checks the app itself; a paid app or an unreviewed release shows as
 "Day 0 / 16" until Play catches up (up to 24 h). After the 14 days: apply
 for production access in Play Console, then promote the release.
 
+## 5b. Store products (Pro unlock)
+
+Flow Pro is one non-consumable product, bought through expo-iap with no
+server. The id must match `PRO_PRODUCT_ID` in `constants/pro.ts`:
+`flow_pro_lifetime` (Amanah: `amanah_pro_lifetime`). The paywall shows
+the store's own price; until the product is approved the store returns
+nothing and the buy button reports "Store unavailable".
+
+App Store Connect:
+1. App → Monetization → In-App Purchases → **+** → Non-Consumable.
+   Reference name "Flow Pro", Product ID `flow_pro_lifetime`.
+2. Price schedule: pick the 9.99 USD tier; Apple fills the other
+   currencies. Localizations: display name "Flow Pro", description one
+   line. Review screenshot: any paywall capture (1320×2868 works).
+3. The first in-app purchase must be submitted **with** an app version:
+   on the version page, section In-App Purchases → add it, then submit.
+   After that, product changes go through on their own.
+4. Testing: Users and Access → Sandbox → add a sandbox Apple ID. On the
+   phone, Settings → App Store → Sandbox Account. TestFlight builds buy
+   against sandbox for free.
+
+Google Play:
+1. Monetize → Products → In-app products → **Create product**.
+   Product ID `flow_pro_lifetime`, name "Flow Pro", description, price
+   9.99 USD → set the other currencies from it. **Activate**.
+2. The Billing permission comes from the expo-iap config plugin
+   (`android.permission.BILLING` is added at prebuild); a build without
+   it cannot see products.
+3. Testing: Setup → License testing → add the test Google accounts; they
+   buy for free on any track, including internal testing. Purchases made
+   by license testers can be refunded from the Order management page.
+4. Products only resolve in builds installed from Play (any track), not
+   from a sideloaded APK.
+
+Both stores: the paywall's Restore button is required by Apple review;
+Play just needs the purchase to be acknowledged (`finishTransaction`),
+which the purchase module does, or Play refunds after three days.
+
 ## 6. Screenshots
 
 iOS, from the simulator (iPhone 17 Pro Max gives 6.9" natively; downscale
@@ -224,5 +267,6 @@ Playwright MCP works for everything up to the final submit:
 - [ ] AAB built and signed with the upload key.
 - [ ] ASC: new version, What's New, build, screenshots, age ratings current → Add for Review.
 - [ ] Play: release on the right track, notes ≤ 500 chars, listing screenshots → Submit for review.
+- [ ] Store products created and active in both consoles (first time only); iOS product attached to the version.
 - [ ] Push the release commits.
 - [ ] Update `docs/ROADMAP.md`.
