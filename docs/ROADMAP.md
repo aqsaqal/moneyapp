@@ -1,7 +1,7 @@
 # Flow roadmap
 
 Living document. Dates are when a decision was made, not promises.
-Last updated 2026-11-22.
+Last updated 2026-11-27.
 
 ## In flight — 1.2.0
 
@@ -28,13 +28,25 @@ Already on `dev`, send when there is a reason to:
 
 ## 1.3 candidates, in order
 
-1. Palette refresh. Variants captured 2026-11-22 (current / graphite +
-   chartreuse / ink + saffron / espresso + sage); ink + saffron recommended.
-   Do this before Pro, since it touches every screen.
-2. Large-screen and landscape support (Android 16 ignores orientation locks
+1. Keyboard dismissal audit (2026-11-27). Every numeric and text field on
+   iOS and Android must have a way to put the keyboard away: a Done /
+   hide button on the numpad, tapping empty space outside the field, or
+   both. Found in iOS onboarding: after typing the first account's
+   balance the numpad stays up and covers the Create button. Check every
+   screen with a field (onboarding, Add, Split, account / category /
+   budget / goal / event sheets, settings inputs) on both platforms.
+2. Palette refresh, shipped as themes. Variants captured 2026-11-22
+   (current / graphite + chartreuse / ink + saffron / espresso + sage);
+   ink + saffron recommended as the new default. The current mint palette
+   stays as a selectable theme ("Mint") and is preselected for installs
+   that already have data, so nobody's app changes color on upgrade. Theme
+   picker in Settings → Appearance next to dark / light; this picker is the
+   base for Pro themes later. Do this before Pro, since it touches every
+   screen.
+3. Large-screen and landscape support (Android 16 ignores orientation locks
    on tablets and foldables).
-3. Expo SDK upgrade (clears the deprecated edge-to-edge warning).
-4. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
+4. Expo SDK upgrade (clears the deprecated edge-to-edge warning).
+5. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
    paywall screen, Restore. Everything shipped free today stays free.
 
 ## Later
