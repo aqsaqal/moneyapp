@@ -31,18 +31,14 @@ Already on `dev`, send when there is a reason to:
 Done on `dev` (2026-11-27): keyboard dismissal audit. Every field was
 checked on iOS: tapping blank space closes the keyboard on screens, and in
 sheets the first backdrop tap closes the keyboard, the second the sheet.
-No Done bar; the native one looked out of place. Android still to be
-checked on the S26.
+No Done bar; the native one looked out of place. Verified on the S26.
 
-1. Palette refresh, shipped as themes. Variants captured 2026-11-22
-   (current / graphite + chartreuse / ink + saffron / espresso + sage);
-   ink + saffron recommended as the new default. The current mint palette
-   stays as a selectable theme ("Mint") and is preselected for installs
-   that already have data, so nobody's app changes color on upgrade. Theme
-   picker in Settings → Appearance next to dark / light; this picker is the
-   base for Pro themes later. Do this before Pro, since it touches every
-   screen.
-2. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
+Done on `dev` (2026-11-28): color themes. Settings → Theme: Mint (the
+original, default), Graphite, Ink, Espresso, each with a dark and a light
+palette. Device-wide, restart on change like light/dark. Existing
+installs see no change. The picker is the base for Pro themes later.
+
+1. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
    paywall screen, Restore. Everything shipped free today stays free.
 
 ## 1.4 — early 2027
