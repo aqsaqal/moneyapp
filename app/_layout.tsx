@@ -164,7 +164,11 @@ export default function RootLayout() {
     bootAppData().then(() => {
       // Pro gate + store connection. Before the dev bypass below, so a
       // fresh dev install is 'gated' like a fresh store install.
-      initPro();
+      try {
+        initPro();
+      } catch (e) {
+        console.warn('[pro] init failed', e);
+      }
       // Dev backdoor: skip onboarding when EXPO_PUBLIC_BYPASS_ONBOARDING=1.
       // Babel inlines process.env.EXPO_PUBLIC_BYPASS_ONBOARDING at build time,
       // and __DEV__ is a Metro-injected boolean. In production builds, the

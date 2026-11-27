@@ -4,9 +4,13 @@
     "strict": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "resolveJsonModule": true,
     "esModuleInterop": true
   },
@@ -19,6 +23,7 @@
   "exclude": [
     "node_modules",
     "_legacy",
-    "dist"
+    "dist",
+    "build"
   ]
 }

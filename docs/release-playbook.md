@@ -246,6 +246,21 @@ Order and content: Home, Add, Plan, Activity, Accounts, plus the headline
 feature. Keep file names stable (`01-home.png` …) so store uploads replace
 cleanly.
 
+### iOS simulator dev build (known issue, 2026-11-28)
+
+The simulator dev client cannot currently be rebuilt: the ML Kit
+text-recognition pods ship plain fat frameworks whose arm64 slice is the
+device one and set `EXCLUDED_ARCHS[sdk=iphonesimulator*] = arm64`, so the
+simulator must be x86_64, and the prebuilt React Native core (SDK 54) fails
+to link x86_64 in Debug (`facebook::react::Sealable` undefined). Ways out,
+when it matters: build React Native from source
+(`ios.buildReactNativeFromSource` in `ios/Podfile.properties.json`, slow
+first build), or make the receipt-scanner pod conditional on device
+builds. Until then the old simulator client keeps working with Metro;
+native modules added later (expo-iap) are loaded lazily so a missing one
+only shows as "store unavailable". `xcodebuild` also cannot list concrete
+simulators here; use `-destination 'generic/platform=iOS Simulator'`.
+
 ## 7. Driving the consoles from a browser session
 
 Playwright MCP works for everything up to the final submit:
