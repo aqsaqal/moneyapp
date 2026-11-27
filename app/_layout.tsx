@@ -12,7 +12,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Outfit_700Bold, Outfit_800ExtraBold } from '@expo-google-fonts/outfit';
 import { PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold } from '@expo-google-fonts/plus-jakarta-sans';
 import { IS_ISLAMIC } from '@/constants/flavor';
-import { theme } from '@/constants/theme';
+import { theme, activeThemeIsLight } from '@/constants/theme';
 import { bootAppData } from '@/hooks/useAppData';
 import { useAppLock, isBiometricEnabled } from '@/hooks/useBiometricLock';
 import { kv } from '@/utils/kv';
@@ -62,6 +62,31 @@ function ScreenshotController() {
             const demo = P.listProfiles().find((p) => p.name.toLowerCase() === 'demo');
             if (demo && demo.id !== P.getActiveProfileId()) P.switchActiveProfile(demo.id);
             console.log(`[screenshot-ctl] demo rebuilt → ${JSON.stringify(r)}`);
+          }
+          else if (txt.startsWith('mode:')) {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const { kv: K } = require('@/utils/kv') as typeof import('@/utils/kv');
+            const v = txt.slice('mode:'.length).trim();
+            // After the reload the controller re-reads the same command;
+            // only reload when the value actually changes.
+            if ((K.get('themeMode') ?? 'system') !== v) {
+              K.set('themeMode', v);
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
+              const { DevSettings } = require('react-native') as typeof import('react-native');
+              DevSettings.reload();
+            }
+          }
+          else if (txt.startsWith('theme:')) {
+            // Switch color theme (kv.themeId) and reload so StyleSheets pick it up.
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const { kv: K } = require('@/utils/kv') as typeof import('@/utils/kv');
+            const v = txt.slice('theme:'.length).trim();
+            if ((K.get('themeId') ?? 'mint') !== v) {
+              K.set('themeId', v);
+              // eslint-disable-next-line @typescript-eslint/no-require-imports
+              const { DevSettings } = require('react-native') as typeof import('react-native');
+              DevSettings.reload();
+            }
           }
           else if (txt.startsWith('taborder:')) {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -192,7 +217,7 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.root}>
       <SafeAreaProvider>
-        <StatusBar style="light" />
+        <StatusBar style={activeThemeIsLight() ? 'dark' : 'light'} />
         <ErrorBoundary>
           <LockGate>
             <Stack

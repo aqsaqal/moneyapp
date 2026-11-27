@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 10,
     borderRadius: radii.md,
-    backgroundColor: '#1F2937',
+    backgroundColor: theme.bg3,
     gap: 2,
   },
   statAccent: { width: 24, height: 3, borderRadius: 2, marginBottom: 4 },

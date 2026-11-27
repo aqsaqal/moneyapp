@@ -36,9 +36,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
-import { theme, spacing, font, sizes, radii } from '@/constants/theme';
+import { theme, spacing, font, sizes, radii, activeThemeId, type ThemeId } from '@/constants/theme';
 import { SectionHeader, SettingRow, sectionStyles } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
+import { ThemeSheet, themeName } from '@/components/ThemeSheet';
 import { TabOrderSheet, TAB_META } from '@/components/TabOrderSheet';
 import { useTabOrder } from '@/utils/tabOrder';
 import { rebuildDemoProfile } from '@/utils/db/demoSeed';
@@ -108,6 +109,7 @@ export default function SettingsScreen() {
           <LanguageRow />
           <ArabicNumeralsRow />
           <AppearanceRow />
+          <ThemeRow />
           <TabOrderRow />
         </Group>
 
@@ -453,6 +455,38 @@ function LanguageRow() {
         }}
         onClose={() => setOpen(false)}
       />
+    </>
+  );
+}
+
+function ThemeRow() {
+  const t = useT();
+  const [open, setOpen] = useState(false);
+  const [id, setId] = useState<ThemeId>(activeThemeId);
+  // Deep link / dev: /settings?theme=1 opens the sheet.
+  const param = useLocalSearchParams<{ theme?: string }>().theme;
+  useEffect(() => { if (param === '1') setOpen(true); }, [param]);
+  const pick = (next: ThemeId) => {
+    if (next === id) return;
+    const prev = id;
+    kv.set('themeId', next);
+    setId(next);
+    Alert.alert(t('me.lang.changeTitle'), t('me.lang.changeBody'), [
+      {
+        text: t('common.cancel'),
+        style: 'cancel',
+        onPress: () => {
+          kv.set('themeId', prev);
+          setId(prev);
+        },
+      },
+      { text: t('me.lang.restart'), style: 'default', onPress: () => void reloadApp(t) },
+    ]);
+  };
+  return (
+    <>
+      <SettingRow label={t('me.theme')} value={themeName(t, id)} icon="palette-swatch-outline" onPress={() => setOpen(true)} />
+      <ThemeSheet visible={open} selected={id} onPick={pick} onClose={() => setOpen(false)} />
     </>
   );
 }

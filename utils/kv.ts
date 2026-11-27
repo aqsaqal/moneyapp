@@ -123,6 +123,7 @@ export interface KVSchema {
   biometricEnabled: string;    // '1' | '0'
   onboardingCompleted: string; // '1' | '0'
   themeMode: string;           // 'system' | 'dark' | 'light'
+  themeId: string;             // 'mint' | 'graphite' | 'ink' | 'espresso' (device-wide); absent = mint
   tabOrder: string;            // JSON array of tab route names (device-wide); absent = default order
   splitLastShares: string;     // JSON { categoryId: fraction } — proportions of the last Split, per profile
   islamicPrayerMethod: string; // adhan-js method id (islamic only)
