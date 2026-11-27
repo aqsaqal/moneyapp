@@ -45,7 +45,14 @@ Already on `dev`, send when there is a reason to:
    screen.
 3. Large-screen and landscape support (Android 16 ignores orientation locks
    on tablets and foldables).
-4. Expo SDK upgrade (clears the deprecated edge-to-edge warning).
+4. Expo SDK upgrade + Xcode 27. The one item with a deadline: from
+   April 2027 App Store Connect accepts only uploads built with the iOS 27
+   SDK (Xcode 27). Today: Xcode 26.4.1, Expo SDK 54 / RN 0.81.5. Plan:
+   install Xcode 27 when it is stable, move to the Expo SDK that supports
+   it, re-check the patched libraries (draggable-flatlist, reanimated,
+   gesture-handler, MMKV), run through both platforms. Target: the first
+   release of 2027, so there is slack before April. Also clears the
+   deprecated edge-to-edge warning on Play.
 5. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
    paywall screen, Restore. Everything shipped free today stays free.
 
