@@ -43,9 +43,7 @@ Already on `dev`, send when there is a reason to:
    picker in Settings → Appearance next to dark / light; this picker is the
    base for Pro themes later. Do this before Pro, since it touches every
    screen.
-3. Large-screen and landscape support (Android 16 ignores orientation locks
-   on tablets and foldables).
-4. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
+3. Flow Pro, one-time unlock: products in both consoles, RevenueCat,
    paywall screen, Restore. Everything shipped free today stays free.
 
 ## 1.4 — early 2027
@@ -58,6 +56,14 @@ Already on `dev`, send when there is a reason to:
   gesture-handler, MMKV), run through both platforms. Target: the first
   release of 2027, so there is slack before April. Also clears the
   deprecated edge-to-edge warning on Play.
+- Don't break in landscape on large screens. Android 16 ignores the
+  portrait lock on screens 600dp and wider (tablets, unfolded foldables),
+  so the phone layout rotates and stretches there. Not a tablet layout:
+  cap content width around 600dp and center it, check modals and sheets
+  in landscape, check the Plan segment row, Home tiles and the category
+  grid, which do their own width math. Test by lifting the portrait lock
+  and rotating the S26. Rides along with the SDK upgrade's full
+  run-through of every screen.
 
 ## Later
 
