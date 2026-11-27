@@ -28,6 +28,15 @@ Already on `dev`, send when there is a reason to:
 
 ## 1.3 candidates, in order
 
+Done on `dev` (2026-11-28): Flow Pro (expo-iap, 9.99 one-time; gates on
+themes, Split, events beyond one, PDF, third profile, widgets; paywall
+with Restore; grandfathering for events and PDF), home screen widgets
+(Safe to spend small/medium/large + lock screen on iOS, Quick add; Android
+and iOS verified), the Home widget nudge card, Split as a slim row above
+the category grid, and the Flow Demo build (`scripts/build-demo-apk.sh`,
+Settings → Demo controls). Left for the stores: create the products, then
+TestFlight / Play internal for a real purchase.
+
 Done on `dev` (2026-11-27): keyboard dismissal audit. Every field was
 checked on iOS: tapping blank space closes the keyboard on screens, and in
 sheets the first backdrop tap closes the keyboard, the second the sheet.
@@ -38,12 +47,9 @@ original, default), Graphite, Ink, Espresso, each with a dark and a light
 palette. Device-wide, restart on change like light/dark. Existing
 installs see no change. The picker is the base for Pro themes later.
 
-1. Flow Pro, one-time unlock at 9.99, bought through the store SDKs
-   (expo-iap, no server, no account; same shape as LifePilot). Gated:
-   the three new themes, Split (never shipped free), events beyond one
-   live event, PDF reports, a third profile (Demo not counted). Installs
-   from before the paywall keep unlimited events and PDF. Accounts,
-   bills, budgets, categories stay unlimited for everyone.
+1. (built, see above) Flow Pro, one-time unlock at 9.99 through the
+   store SDKs. Remaining: products in both consoles, sandbox / license
+   tester purchase on a track build, store review.
 
 ## 1.4 — early 2027
 

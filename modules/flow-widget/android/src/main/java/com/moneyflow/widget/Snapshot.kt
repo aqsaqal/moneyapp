@@ -8,6 +8,7 @@ import org.json.JSONObject
 class Snapshot(private val o: JSONObject) {
   class Row(val label: String, val value: String)
   class Quick(val label: String, val color: Int, val url: String)
+  class Top(val label: String, val color: Int, val value: String)
 
   val pro get() = o.optBoolean("pro")
   val homeUrl get() = o.optString("homeUrl", "")
@@ -21,6 +22,15 @@ class Snapshot(private val o: JSONObject) {
   val dayLine get() = o.optString("dayLine", "")
   val verdict get() = o.optString("verdict", "")
   val quickTitle get() = o.optString("quickTitle", "")
+  val topTitle get() = o.optString("topTitle", "")
+
+  val top: List<Top>
+    get() {
+      val a = o.optJSONArray("top") ?: return emptyList()
+      return (0 until a.length()).mapNotNull { i ->
+        a.optJSONObject(i)?.let { Top(it.optString("label"), parse(it.optString("color")) ?: Color.GRAY, it.optString("value")) }
+      }
+    }
 
   fun color(name: String, fallback: Int): Int {
     val hex = o.optJSONObject("colors")?.optString(name, "") ?: ""

@@ -162,6 +162,7 @@
   "widget.inOut": "Entrées · sorties",
   "widget.quickAdd": "Ajout rapide",
   "widget.more": "Plus",
+  "widget.topMonth": "Les plus gros ce mois-ci",
   "widget.locked": "Débloquez {app} Pro pour ce widget",
   "widget.open": "Ouvrez {app} pour configurer",
   "settings.widgets": "Widgets d’écran d’accueil",

@@ -162,6 +162,7 @@
   "widget.inOut": "收入 · 支出",
   "widget.quickAdd": "快速记一笔",
   "widget.more": "更多",
+  "widget.topMonth": "本月最高",
   "widget.locked": "解锁 {app} Pro 以使用此小组件",
   "widget.open": "打开 {app} 进行设置",
   "settings.widgets": "主屏幕小组件",

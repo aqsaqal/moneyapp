@@ -154,6 +154,7 @@
   "widget.inOut": "Gelen · giden",
   "widget.quickAdd": "Hızlı ekle",
   "widget.more": "Daha fazla",
+  "widget.topMonth": "Bu ayın en yükseği",
   "widget.locked": "Bu widget için {app} Pro’yu aç",
   "widget.open": "Kurmak için {app} uygulamasını aç",
   "settings.widgets": "Ana ekran widget’ları",

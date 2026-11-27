@@ -160,6 +160,29 @@ object Draw {
         views.setTextColor(values[i], text1)
       }
     }
+    // Four rows or more: room for the top categories as well.
+    val top = snap.top
+    val showTop = showRows && top.isNotEmpty() && (if (rowSpan > 0) rowSpan >= 4 else hDp >= 380)
+    views.setViewVisibility(R.id.fw_top, if (showTop) View.VISIBLE else View.GONE)
+    if (showTop) {
+      views.setTextViewText(R.id.fw_top_title, snap.topTitle)
+      views.setTextColor(R.id.fw_top_title, text2)
+      val dots = intArrayOf(R.id.fw_td1, R.id.fw_td2, R.id.fw_td3)
+      val labels = intArrayOf(R.id.fw_tl1, R.id.fw_tl2, R.id.fw_tl3)
+      val values = intArrayOf(R.id.fw_tv1, R.id.fw_tv2, R.id.fw_tv3)
+      for (i in 0 until 3) {
+        val r = top.getOrNull(i)
+        views.setViewVisibility(labels[i], if (r == null) View.GONE else View.VISIBLE)
+        views.setViewVisibility(values[i], if (r == null) View.GONE else View.VISIBLE)
+        views.setViewVisibility(dots[i], if (r == null) View.GONE else View.VISIBLE)
+        if (r == null) continue
+        views.setImageViewBitmap(dots[i], dot((8 * d).roundToInt(), r.color))
+        views.setTextViewText(labels[i], r.label)
+        views.setTextColor(labels[i], text1)
+        views.setTextViewText(values[i], r.value)
+        views.setTextColor(values[i], text1)
+      }
+    }
     open(ctx, snap.homeUrl, id)?.let { views.setOnClickPendingIntent(R.id.fw_root, it) }
     manager.updateAppWidget(id, views)
   }

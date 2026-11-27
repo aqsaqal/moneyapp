@@ -154,6 +154,7 @@
   "widget.inOut": "Приход · расход",
   "widget.quickAdd": "Быстрая запись",
   "widget.more": "Ещё",
+  "widget.topMonth": "Больше всего в этом месяце",
   "widget.locked": "Откройте {app} Pro для этого виджета",
   "widget.open": "Откройте {app}, чтобы настроить",
   "settings.widgets": "Виджеты на главном экране",

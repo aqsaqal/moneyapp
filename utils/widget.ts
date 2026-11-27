@@ -15,6 +15,7 @@ import { requireOptionalNativeModule } from 'expo-modules-core';
 
 export type WidgetRow = { label: string; value: string };
 export type WidgetQuick = { label: string; color: string; url: string };
+export type WidgetTop = { label: string; color: string; value: string };
 export type WidgetSnapshot = {
   v: 1;
   asOf: string;
@@ -31,6 +32,8 @@ export type WidgetSnapshot = {
   dayLine: string;
   verdict: string;
   rows: WidgetRow[];
+  topTitle: string;
+  top: WidgetTop[];
   quickTitle: string;
   quick: WidgetQuick[];
 };

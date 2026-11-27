@@ -162,6 +162,7 @@
   "widget.inOut": "수입 · 지출",
   "widget.quickAdd": "빠른 추가",
   "widget.more": "더보기",
+  "widget.topMonth": "이번 달 상위",
   "widget.locked": "이 위젯은 {app} Pro가 필요합니다",
   "widget.open": "{app}을 열어 설정하세요",
   "settings.widgets": "홈 화면 위젯",

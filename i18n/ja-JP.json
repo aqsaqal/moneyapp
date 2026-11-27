@@ -162,6 +162,7 @@
   "widget.inOut": "収入 · 支出",
   "widget.quickAdd": "クイック追加",
   "widget.more": "その他",
+  "widget.topMonth": "今月の上位",
   "widget.locked": "このウィジェットには {app} Pro が必要です",
   "widget.open": "{app} を開いて設定",
   "settings.widgets": "ホーム画面ウィジェット",

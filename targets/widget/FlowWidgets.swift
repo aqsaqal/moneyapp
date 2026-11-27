@@ -12,6 +12,7 @@ import WidgetKit
 // MARK: - Snapshot
 
 struct FwRow: Decodable { let label: String; let value: String }
+struct FwTop: Decodable { let label: String; let color: String; let value: String }
 struct FwQuick: Decodable { let label: String; let color: String; let url: String }
 struct FwColors: Decodable {
   let bg: String; let bg2: String; let accent: String; let text1: String; let text2: String; let text3: String
@@ -31,6 +32,8 @@ struct FwSnapshot: Decodable {
   let dayLine: String
   let verdict: String
   let rows: [FwRow]
+  let topTitle: String
+  let top: [FwTop]
   let quickTitle: String
   let quick: [FwQuick]
 }
@@ -56,6 +59,8 @@ enum FwData {
     verdict: "On track · $570 left after bills",
     rows: [FwRow(label: "Left this month", value: "$570.00"), FwRow(label: "Projected end of month", value: "$312.00"),
            FwRow(label: "Bills still due", value: "$240.00"), FwRow(label: "In · out", value: "+$3,200 · −$2,390")],
+    topTitle: "Top this month",
+    top: [FwTop(label: "Food", color: "#FF6B8A", value: "$541"), FwTop(label: "Shopping", color: "#FFBE44", value: "$412"), FwTop(label: "Transport", color: "#60A5FA", value: "$333")],
     quickTitle: "Quick add",
     quick: [FwQuick(label: "Food", color: "#FF6B8A", url: "flow://add"), FwQuick(label: "Transport", color: "#60A5FA", url: "flow://add"),
             FwQuick(label: "Shopping", color: "#FFBE44", url: "flow://add"), FwQuick(label: "More", color: "#55556A", url: "flow://category-grid")])
@@ -135,7 +140,7 @@ struct SafeToSpendView: View {
     VStack(alignment: .leading, spacing: 4) {
       Text(snap.title.uppercased()).font(.system(size: 10, weight: .semibold)).tracking(0.8).foregroundColor(fwColor(c.text2))
       HStack(alignment: .lastTextBaseline, spacing: 5) {
-        Text(snap.perDay).font(.system(size: family == .systemSmall ? 22 : 28, weight: .bold)).foregroundColor(fwColor(c.text1))
+        Text(snap.perDay).font(.system(size: family == .systemSmall ? 22 : family == .systemLarge ? 34 : 28, weight: .bold)).foregroundColor(fwColor(c.text1))
           .minimumScaleFactor(0.6).lineLimit(1)
         Text(snap.aDay).font(.system(size: 12)).foregroundColor(fwColor(c.text2))
       }
@@ -147,15 +152,28 @@ struct SafeToSpendView: View {
         VStack(spacing: 0) {
           ForEach(Array(snap.rows.enumerated()), id: \.offset) { _, r in
             HStack {
-              Text(r.label).font(.system(size: 13)).foregroundColor(fwColor(c.text2))
+              Text(r.label).font(.system(size: 14)).foregroundColor(fwColor(c.text2))
               Spacer()
-              Text(r.value).font(.system(size: 13, weight: .medium)).foregroundColor(fwColor(c.text1))
+              Text(r.value).font(.system(size: 14, weight: .semibold)).foregroundColor(fwColor(c.text1))
             }
-            .padding(.vertical, 6)
+            .padding(.vertical, 8)
             Divider().overlay(fwColor(c.border))
           }
         }
-        .padding(.top, 8)
+        .padding(.top, 10)
+        if !snap.top.isEmpty {
+          Text(snap.topTitle.uppercased()).font(.system(size: 10, weight: .semibold)).tracking(0.8).foregroundColor(fwColor(c.text2))
+            .padding(.top, 14)
+          ForEach(Array(snap.top.enumerated()), id: \.offset) { _, r in
+            HStack(spacing: 8) {
+              Circle().fill(fwColor(r.color)).frame(width: 8, height: 8)
+              Text(r.label).font(.system(size: 14)).foregroundColor(fwColor(c.text1))
+              Spacer()
+              Text(r.value).font(.system(size: 14, weight: .semibold)).foregroundColor(fwColor(c.text1))
+            }
+            .padding(.vertical, 6)
+          }
+        }
         Spacer(minLength: 0)
       }
     }

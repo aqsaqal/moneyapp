@@ -56,6 +56,23 @@ export function WidgetSync() {
     const forecast = day >= 1 ? disposable - (variable / day) * daysLeft : null;
     const perDay = Math.max(0, disposable) / Math.max(1, daysLeft);
 
+    // Top spending categories this month, for the large widget.
+    const byCat = new Map<string, number>();
+    for (const x of txns) {
+      if (x.type !== 'expense' || !x.category) continue;
+      const v = x.amountMain ?? fxConvert(x.amount, ccyOf.get(x.accountId ?? '') ?? currency, currency);
+      byCat.set(x.category, (byCat.get(x.category) ?? 0) + v);
+    }
+    const catMeta = new Map(cats.map((c) => [c.id, c]));
+    const top = [...byCat.entries()]
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([id, v]) => ({
+        label: catMeta.get(id)?.name ?? id,
+        color: catMeta.get(id)?.color ?? theme.text3,
+        value: formatMoney(v, currency, undefined, 0),
+      }));
+
     let tone: 'good' | 'warn' | 'bad' = 'good';
     if (disposable < 0 || (forecast != null && forecast < 0)) tone = 'bad';
     else if (forecast != null && forecast < 20 && forecast < disposable * 0.1) tone = 'warn';
@@ -69,7 +86,7 @@ export function WidgetSync() {
             ? t('hero.verdict.close', { amount: formatMoney(forecast ?? 0, currency) })
             : t('hero.verdict.onTrack', { amount: formatMoney(disposable, currency) });
 
-    const top = cats
+    const quickTop = cats
       .filter((c) => c.type !== 'income')
       .map((c) => ({ c, s: spend30.get(c.id) ?? 0 }))
       .sort((a, b) => b.s - a.s)
@@ -104,8 +121,10 @@ export function WidgetSync() {
         { label: t('widget.billsDue'), value: formatMoney(bills, currency) },
         { label: t('widget.inOut'), value: `+${formatMoney(income, currency, undefined, 0)} · −${formatMoney(expense, currency, undefined, 0)}` },
       ],
+      topTitle: t('widget.topMonth'),
+      top,
       quickTitle: t('widget.quickAdd'),
-      quick: [...top, { label: t('widget.more'), color: theme.text3, url: `${APP_SCHEME}://category-grid` }],
+      quick: [...quickTop, { label: t('widget.more'), color: theme.text3, url: `${APP_SCHEME}://category-grid` }],
     };
     // `tick` and `activeThemeIsLight()` are deliberate extra inputs: a
     // foreground return or a theme reload must re-run this.
