@@ -28,3 +28,11 @@ const extra = (Constants.expoConfig?.extra ?? {}) as {
 export const FLAVOR: 'generic' | 'islamic' = extra.flavor ?? (IS_ISLAMIC ? 'islamic' : 'generic');
 export const APP_NAME: string = extra.appName ?? (IS_ISLAMIC ? 'Amanah' : 'Flow');
 export const PRIMARY_COLOR: string = extra.primaryColor ?? (IS_ISLAMIC ? '#00C9A7' : '#00E09E');
+
+/**
+ * Demo builds (internal testers, the S26): Settings shows a "Demo
+ * controls" group with Pro on/off and the pre-paywall switch. Inlined at
+ * bundle time from EXPO_PUBLIC_DEMO_CONTROLS=1; store builds leave it
+ * unset, so the group and its code are dead-code-eliminated.
+ */
+export const DEMO_CONTROLS: boolean = process.env.EXPO_PUBLIC_DEMO_CONTROLS === '1';

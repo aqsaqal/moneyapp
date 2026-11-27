@@ -185,6 +185,20 @@ re-checks the app itself; a paid app or an unreviewed release shows as
 "Day 0 / 16" until Play catches up (up to 24 h). After the 14 days: apply
 for production access in Play Console, then promote the release.
 
+## 5a. Demo builds (internal testers, the S26)
+
+`bash scripts/build-demo-apk.sh` builds "Flow Demo": the generic flavor
+as package `com.moneyflow.generic.demo`, link scheme `flowdemo`, with
+`EXPO_PUBLIC_DEMO_CONTROLS=1` baked in, which adds Settings → Demo
+controls (Pro on/off, pre-paywall on/off, reset). It installs beside the
+store build with its own data, so both can live on the S26. Store
+releases never carry the flag (the group and its code disappear).
+
+The script regenerates `android/` as the demo variant; `build-aab.sh`
+regenerates it again for a store build. Internal testers get the demo
+APK directly (it is not a Play track build); the Play internal track
+carries the normal package with license testers for real purchases.
+
 ## 5b. Store products (Pro unlock)
 
 Flow Pro is one non-consumable product, bought through expo-iap with no
@@ -245,6 +259,21 @@ status-bar demo mode; live with the real clock.
 Order and content: Home, Add, Plan, Activity, Accounts, plus the headline
 feature. Keep file names stable (`01-home.png` …) so store uploads replace
 cleanly.
+
+### Widgets
+
+iOS: `targets/widget/` (SwiftUI, `@bacons/apple-targets`). The target and
+the App Group entitlement (`group.<bundle id>`) are generated at
+`expo prebuild`; after changing `expo-target.config.js` or `app.config.ts`
+run `npx expo prebuild --platform ios --clean` and `npx pod-install`.
+The widget reads `snapshot` from the App Group; the app writes it from
+`components/WidgetSync.tsx`. Verify with a device archive, the simulator
+build is blocked (above).
+
+Android: `modules/flow-widget/` (Kotlin, autolinked; no prebuild needed
+for code changes, the manifest receivers merge from the module). Test on
+the S26: Settings → Home screen widgets pins one, or long-press the home
+screen → Widgets → Flow.
 
 ### iOS simulator dev build (known issue, 2026-11-28)
 

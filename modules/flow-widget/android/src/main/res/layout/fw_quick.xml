@@ -1,0 +1,44 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/fw_root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+  <ImageView
+    android:id="@+id/fw_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:importantForAccessibility="no"
+    android:scaleType="fitXY" />
+  <LinearLayout
+    android:id="@+id/fw_cells"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingLeft="6dp"
+    android:paddingRight="6dp">
+    <LinearLayout android:id="@+id/fw_c1" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+      <ImageView android:id="@+id/fw_d1" android:layout_width="22dp" android:layout_height="22dp" android:importantForAccessibility="no" />
+      <TextView android:id="@+id/fw_n1" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:maxLines="1" android:ellipsize="end" android:textSize="11sp" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/fw_c2" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+      <ImageView android:id="@+id/fw_d2" android:layout_width="22dp" android:layout_height="22dp" android:importantForAccessibility="no" />
+      <TextView android:id="@+id/fw_n2" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:maxLines="1" android:ellipsize="end" android:textSize="11sp" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/fw_c3" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+      <ImageView android:id="@+id/fw_d3" android:layout_width="22dp" android:layout_height="22dp" android:importantForAccessibility="no" />
+      <TextView android:id="@+id/fw_n3" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:maxLines="1" android:ellipsize="end" android:textSize="11sp" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/fw_c4" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+      <ImageView android:id="@+id/fw_d4" android:layout_width="22dp" android:layout_height="22dp" android:importantForAccessibility="no" />
+      <TextView android:id="@+id/fw_n4" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:gravity="center" android:maxLines="1" android:ellipsize="end" android:textSize="11sp" />
+    </LinearLayout>
+  </LinearLayout>
+  <TextView
+    android:id="@+id/fw_locked"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="12dp"
+    android:fontFamily="sans-serif-medium"
+    android:textSize="13sp"
+    android:visibility="gone" />
+</FrameLayout>

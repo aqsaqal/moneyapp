@@ -13,6 +13,10 @@ import { kv } from '@/utils/kv';
 import { listProfiles } from '@/utils/profiles';
 import { initPurchases } from '@/utils/purchases';
 import { FREE_EVENT_LIMIT, FREE_PROFILE_LIMIT, type ProFeature } from '@/constants/pro';
+import { DEMO_CONTROLS } from '@/constants/flavor';
+
+/** Overrides exist in dev and in demo builds only. */
+const OVERRIDES = __DEV__ || DEMO_CONTROLS;
 
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((l) => l());
@@ -35,7 +39,7 @@ export function initPro() {
 }
 
 export function isPro(): boolean {
-  if (__DEV__) {
+  if (OVERRIDES) {
     const o = kv.get('proDevOverride');
     if (o === '1') return true;
     if (o === '0') return false;
@@ -44,7 +48,7 @@ export function isPro(): boolean {
 }
 
 export function isGrandfathered(): boolean {
-  if (__DEV__) {
+  if (OVERRIDES) {
     const o = kv.get('proGateOverride');
     if (o) return o === 'grandfathered';
   }
@@ -65,6 +69,7 @@ export function canUse(feature: ProFeature, n?: number): boolean {
   switch (feature) {
     case 'themes':
     case 'split':
+    case 'widgets':
       return false;
     case 'pdf':
       return isGrandfathered();
@@ -79,15 +84,24 @@ export function usePro(): boolean {
   return useSyncExternalStore(subscribe, isPro, isPro);
 }
 
-/** Dev-only switches for the screenshot controller and manual testing. */
+export function devProOverride(): '1' | '0' | null {
+  const o = kv.get('proDevOverride');
+  return o === '1' || o === '0' ? o : null;
+}
+export function devGateOverride(): 'gated' | 'grandfathered' | null {
+  const o = kv.get('proGateOverride');
+  return o === 'gated' || o === 'grandfathered' ? o : null;
+}
+
+/** Dev / demo switches for the screenshot controller, Settings → Demo controls and manual testing. */
 export function devSetPro(v: '1' | '0' | null) {
-  if (!__DEV__) return;
+  if (!OVERRIDES) return;
   if (v) kv.set('proDevOverride', v);
   else kv.delete('proDevOverride');
   emit();
 }
 export function devSetGate(v: 'gated' | 'grandfathered' | null) {
-  if (!__DEV__) return;
+  if (!OVERRIDES) return;
   if (v) kv.set('proGateOverride', v);
   else kv.delete('proGateOverride');
   emit();

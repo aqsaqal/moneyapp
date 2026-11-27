@@ -15,6 +15,7 @@ if (fs.existsSync(envPath)) {
 }
 
 const flavor = process.env.APP_FLAVOR ?? 'generic';
+const APP_GROUP = `group.${process.env.APP_BUNDLE_ID ?? 'com.moneyflow.generic'}`;
 const isIslamic = flavor === 'islamic';
 
 // Per-flavor branded icons — generated from scripts/generate-icons.py.
@@ -42,6 +43,8 @@ const config: ExpoConfig = {
     // Signing team for automatic signing — prebuild writes it into the
     // Xcode project so `xcodebuild archive` works from a clean regen.
     appleTeamId: '7WFPU5WEG7',
+    // Shared with the widget extension (targets/widget) for the snapshot.
+    entitlements: { 'com.apple.security.application-groups': [APP_GROUP] },
     // Increment monotonically per upload to App Store Connect — see the
     // checklist in v2-features.md §1.1. version stays the marketing
     // string ('1.0.0'); buildNumber is what Apple uniques on.
@@ -123,6 +126,7 @@ const config: ExpoConfig = {
     'expo-local-authentication',
     'expo-localization',
     'expo-iap',
+    '@bacons/apple-targets',
     [
       'expo-build-properties',
       {
@@ -158,6 +162,7 @@ const config: ExpoConfig = {
     appName: process.env.APP_NAME,
     primaryColor: process.env.PRIMARY_COLOR,
     featuresIslamic: process.env.FEATURES_ISLAMIC === 'true',
+    appGroup: APP_GROUP,
   },
 };
 

@@ -12,4 +12,4 @@ export const PRO_FALLBACK_PRICE = '$9.99';
 export const FREE_PROFILE_LIMIT = 2;
 export const FREE_EVENT_LIMIT = 1;
 
-export type ProFeature = 'themes' | 'events' | 'split' | 'pdf' | 'profiles';
+export type ProFeature = 'themes' | 'events' | 'split' | 'pdf' | 'profiles' | 'widgets';

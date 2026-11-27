@@ -68,7 +68,7 @@ installs see no change. The picker is the base for Pro themes later.
 
 - Sync and household sharing, end-to-end encrypted. The subscription anchor;
   Pro included.
-- Widgets, Apple Watch, Wear OS.
+- Apple Watch, Wear OS (home screen widgets shipped in 1.3).
 - AI monthly review and spike explanations (API cost, so subscription).
 - Trip cost splitting with friends; shared events.
 - Reports: yearly PDF, tax CSV packs, scheduled backups to Drive / iCloud.
@@ -131,6 +131,12 @@ later, chosen by what each feature costs us to run:
 - Split.
 - PDF monthly and yearly reports.
 - More than two profiles (the Demo profile does not count).
+- Home screen widgets beyond the small Safe to spend one (2026-11-28):
+  medium and large Safe to spend (day line, verdict, left this month,
+  projected end of month, bills still due, in/out), Quick add (top three
+  categories + More, deep links into Smart Add), iOS lock-screen widgets.
+  The app writes a pre-formatted snapshot (language, currency, theme
+  applied); native widgets only lay it out.
 - Every future polish feature of the same kind: envelope budgeting, trip
   summary export, icon packs.
 
@@ -161,7 +167,7 @@ or recurring value for the user go here, so the recurring price is honest:
 - AI insights: monthly written review, spike explanations, questions over
   your own data (API cost per user).
 - Automatic bank import where open banking exists (EU, UK, Brazil first).
-- Widgets, Apple Watch and Wear OS companions.
+- Apple Watch and Wear OS companions.
 - Trip features beyond the basics: split costs with friends, shared events,
   trip summary export.
 - Scheduled backups to Drive / iCloud.

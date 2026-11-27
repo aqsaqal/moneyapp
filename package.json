@@ -31,6 +31,7 @@
     "ios": "expo run:ios"
   },
   "dependencies": {
+    "@bacons/apple-targets": "^5.0.0",
     "@expo-google-fonts/ibm-plex-sans-arabic": "^0.4.2",
     "@expo-google-fonts/outfit": "^0.4.3",
     "@expo-google-fonts/plus-jakarta-sans": "^0.4.2",

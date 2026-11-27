@@ -22,6 +22,7 @@ const FEATURES: { key: ProFeature | 'future'; icon: Icon }[] = [
   { key: 'split', icon: 'call-split' },
   { key: 'pdf', icon: 'file-pdf-box' },
   { key: 'profiles', icon: 'account-multiple-outline' },
+  { key: 'widgets', icon: 'widgets-outline' },
   { key: 'future', icon: 'star-four-points-outline' },
 ];
 

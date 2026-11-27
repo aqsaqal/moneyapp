@@ -129,6 +129,7 @@ export interface KVSchema {
   proGateOverride: string;     // dev only: 'gated' | 'grandfathered'
   themeId: string;             // 'mint' | 'graphite' | 'ink' | 'espresso' (device-wide); absent = mint
   tabOrder: string;            // JSON array of tab route names (device-wide); absent = default order
+  widgetNudgeDone: string;     // '1' once the Home widget nudge was dismissed or acted on (device-wide)
   splitLastShares: string;     // JSON { categoryId: fraction } — proportions of the last Split, per profile
   islamicPrayerMethod: string; // adhan-js method id (islamic only)
   islamicCity: string;         // city for prayer calculation (islamic only)

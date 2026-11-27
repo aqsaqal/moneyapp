@@ -1,0 +1,7 @@
+<resources>
+  <string name="fw_safe_label">Safe to spend</string>
+  <string name="fw_safe_description">What you can spend today, and how the month is going</string>
+  <string name="fw_quick_label">Quick add</string>
+  <string name="fw_quick_description">Log an expense in your most used categories</string>
+  <string name="fw_open">Open the app to set up</string>
+</resources>

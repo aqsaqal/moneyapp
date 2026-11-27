@@ -14,6 +14,7 @@ import { PlusJakartaSans_500Medium, PlusJakartaSans_600SemiBold } from '@expo-go
 import { IS_ISLAMIC } from '@/constants/flavor';
 import { theme, activeThemeIsLight } from '@/constants/theme';
 import { initPro } from '@/utils/pro';
+import { WidgetSync } from '@/components/WidgetSync';
 import { bootAppData } from '@/hooks/useAppData';
 import { useAppLock, isBiometricEnabled } from '@/hooks/useBiometricLock';
 import { kv } from '@/utils/kv';
@@ -264,6 +265,7 @@ export default function RootLayout() {
               <Stack.Screen name="onboarding" options={{ presentation: 'fullScreenModal' }} />
             </Stack>
             <ToastHost />
+            <WidgetSync />
             <ScreenshotController />
           </LockGate>
         </ErrorBoundary>

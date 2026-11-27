@@ -40,7 +40,9 @@ import { theme, spacing, font, sizes, radii, activeThemeId, type ThemeId } from 
 import { SectionHeader, SettingRow, sectionStyles } from '@/components/Sections';
 import { PickerSheet, type PickerOption } from '@/components/PickerSheet';
 import { ThemeSheet, themeName } from '@/components/ThemeSheet';
-import { canUse, usePro } from '@/utils/pro';
+import { canUse, usePro, devSetPro, devSetGate, devProOverride, devGateOverride, isGrandfathered } from '@/utils/pro';
+import { DEMO_CONTROLS } from '@/constants/flavor';
+import { pinWidget } from '@/utils/widget';
 import { TabOrderSheet, TAB_META } from '@/components/TabOrderSheet';
 import { useTabOrder } from '@/utils/tabOrder';
 import { rebuildDemoProfile } from '@/utils/db/demoSeed';
@@ -103,6 +105,12 @@ export default function SettingsScreen() {
           <ProRow />
         </Group>
 
+        {DEMO_CONTROLS && (
+          <Group title={t('demo.title')}>
+            <DemoControls />
+          </Group>
+        )}
+
         <Group title={t('settings.groups.money')}>
           <CurrencyRow key={`currency-${k}`} />
           <CurrencyFormatRow key={`fmt-${k}`} />
@@ -116,6 +124,7 @@ export default function SettingsScreen() {
           <AppearanceRow />
           <ThemeRow />
           <TabOrderRow />
+          <WidgetsRow />
         </Group>
 
         <Group title={t('settings.groups.smartAdd')}>
@@ -465,6 +474,38 @@ function LanguageRow() {
   );
 }
 
+function DemoControls() {
+  const t = useT();
+  const pro = usePro();
+  const [, bump] = useState(0);
+  const gate = devGateOverride();
+  const grandfathered = isGrandfathered();
+  return (
+    <>
+      <SettingRow
+        label={t('demo.pro')}
+        hint={devProOverride() ? t('demo.pro.forced') : t('demo.pro.hint')}
+        icon="star-four-points-outline"
+        iconColor={theme.warning}
+        trailing={<Toggle on={pro} onToggle={() => { devSetPro(pro ? '0' : '1'); bump((x) => x + 1); }} />}
+      />
+      <SettingRow
+        label={t('demo.gate')}
+        hint={gate ? t('demo.gate.forced') : t('demo.gate.hint')}
+        icon="shield-check-outline"
+        iconColor={theme.text2}
+        trailing={<Toggle on={grandfathered} onToggle={() => { devSetGate(grandfathered ? 'gated' : 'grandfathered'); bump((x) => x + 1); }} />}
+      />
+      <SettingRow
+        label={t('demo.reset')}
+        icon="restore"
+        iconColor={theme.text2}
+        onPress={() => { devSetPro(null); devSetGate(null); bump((x) => x + 1); }}
+      />
+    </>
+  );
+}
+
 function ProRow() {
   const t = useT();
   const router = useRouter();
@@ -510,6 +551,15 @@ function ThemeRow() {
       <ThemeSheet visible={open} selected={id} onPick={pick} onClose={() => setOpen(false)} />
     </>
   );
+}
+
+function WidgetsRow() {
+  const t = useT();
+  const onPress = () => {
+    if (Platform.OS === 'android' && pinWidget('safe')) return;
+    Alert.alert(t('settings.widgets'), Platform.OS === 'ios' ? t('settings.widgets.ios', { app: APP_NAME }) : t('settings.widgets.manual', { app: APP_NAME }));
+  };
+  return <SettingRow label={t('settings.widgets')} hint={t('settings.widgets.hint')} icon="widgets-outline" onPress={onPress} />;
 }
 
 function TabOrderRow() {

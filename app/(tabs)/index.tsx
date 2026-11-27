@@ -28,6 +28,7 @@ import { SafeToSpendCard } from '@/components/SafeToSpendCard';
 import { HomeActionStrip } from '@/components/HomeActionCard';
 import { MonthStripCard } from '@/components/MonthStripCard';
 import { ActiveEventCard } from '@/components/ActiveEventCard';
+import { WidgetNudgeCard } from '@/components/WidgetNudgeCard';
 import { TransactionRow } from '@/components/TransactionRow';
 import { StreakBadge } from '@/components/StreakBadge';
 import {
@@ -302,6 +303,9 @@ export default function Home() {
 
         {/* Where in the month the money went: daily bars + in/out. */}
         <MonthStripCard monthKey={thisMonth} income={income} spending={expense} currency={currency} />
+
+        {/* One-time nudge to put the Safe to spend widget on the home screen. */}
+        {income > 0 && <WidgetNudgeCard />}
 
         {/* Recent — 3 rows + "View all" tail link to /activity */}
         {recentTxns.length > 0 && (
