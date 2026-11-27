@@ -26,6 +26,7 @@ import { useHaptics } from '@/hooks/useHaptics';
 import { showToast } from '@/components/Toast';
 import type { CurrencyCode } from '@/constants/currency';
 import type { Account, Debt } from '@/utils/db/schema';
+import { closeOrDismissKeyboard } from '@/utils/keyboard';
 
 const PALETTE = [
   '#EF4444', '#F97316', '#EAB308', '#10B981',
@@ -138,7 +139,7 @@ export function DebtSheet({ visible, debt, account, onClose }: DebtSheetProps) {
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={styles.backdrop} onPress={onClose} />
+      <Pressable style={styles.backdrop} onPress={closeOrDismissKeyboard(onClose)} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.kav}
@@ -182,7 +183,8 @@ export function DebtSheet({ visible, debt, account, onClose }: DebtSheetProps) {
               <TextInput
                 value={balance}
                 onChangeText={setBalance}
-                keyboardType="numbers-and-punctuation"
+                keyboardType="decimal-pad"
+                returnKeyType="done"
                 placeholder="0"
                 placeholderTextColor={theme.text3}
                 style={styles.input}
@@ -194,7 +196,8 @@ export function DebtSheet({ visible, debt, account, onClose }: DebtSheetProps) {
             <TextInput
               value={apr}
               onChangeText={setApr}
-              keyboardType="numbers-and-punctuation"
+              keyboardType="decimal-pad"
+                returnKeyType="done"
               placeholder={t('debt.aprPlaceholder')}
               placeholderTextColor={theme.text3}
               style={styles.input}
@@ -205,7 +208,8 @@ export function DebtSheet({ visible, debt, account, onClose }: DebtSheetProps) {
             <TextInput
               value={minPayment}
               onChangeText={setMinPayment}
-              keyboardType="numbers-and-punctuation"
+              keyboardType="decimal-pad"
+                returnKeyType="done"
               placeholder="0"
               placeholderTextColor={theme.text3}
               style={styles.input}

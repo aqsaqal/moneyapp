@@ -34,6 +34,7 @@ import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
 import type { Goal } from '@/utils/db/schema';
+import { closeOrDismissKeyboard } from '@/utils/keyboard';
 
 const PALETTE = [
   '#10B981', '#6366F1', '#F59E0B', '#EC4899',
@@ -157,7 +158,7 @@ export function GoalSheet({ visible, goal, onClose }: GoalSheetProps) {
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={styles.backdrop} onPress={onClose} />
+      <Pressable style={styles.backdrop} onPress={closeOrDismissKeyboard(onClose)} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.kav}

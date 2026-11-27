@@ -34,6 +34,7 @@ import { monthKey } from '@/utils/format';
 import { formatMoney, type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { useT } from '@/hooks/useT';
+import { closeOrDismissKeyboard } from '@/utils/keyboard';
 
 export type CategoryPickerMode = 'select' | 'multi-select';
 
@@ -134,7 +135,7 @@ export function CategoryPicker({
       onRequestClose={onClose}
       statusBarTranslucent
     >
-      <Pressable style={styles.backdrop} onPress={onClose} />
+      <Pressable style={styles.backdrop} onPress={closeOrDismissKeyboard(onClose)} />
       <SafeAreaView style={styles.sheet} edges={['bottom']}>
         <View style={styles.handle} />
         <View style={styles.header}>

@@ -52,6 +52,7 @@ import { useHaptics } from '@/hooks/useHaptics';
 import { showToast } from '@/components/Toast';
 import { kv } from '@/utils/kv';
 import type { Account } from '@/utils/db/schema';
+import { closeOrDismissKeyboard } from '@/utils/keyboard';
 
 export type AccountType = 'cash' | 'bank' | 'credit' | 'savings' | 'debt' | 'investment' | 'receivable';
 
@@ -342,7 +343,7 @@ export function AccountSheet({ visible, account, initialType: initialTypeProp, o
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={styles.backdrop} onPress={onClose} />
+      <Pressable style={styles.backdrop} onPress={closeOrDismissKeyboard(onClose)} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.kav}

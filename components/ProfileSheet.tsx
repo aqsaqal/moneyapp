@@ -34,6 +34,7 @@ import {
   PROFILE_ICONS,
   type Profile,
 } from '@/utils/profiles';
+import { closeOrDismissKeyboard } from '@/utils/keyboard';
 
 type Mode =
   | { kind: 'switch'; profiles: Profile[]; activeId: string }
@@ -105,7 +106,7 @@ export function ProfileSheet({ visible, mode, onClose }: ProfileSheetProps) {
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={styles.backdrop} onPress={onClose} />
+      <Pressable style={styles.backdrop} onPress={closeOrDismissKeyboard(onClose)} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.kav}

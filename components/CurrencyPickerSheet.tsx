@@ -26,6 +26,7 @@ import {
   METAL_CURRENCIES,
   type CurrencyCode,
 } from '@/constants/currency';
+import { closeOrDismissKeyboard } from '@/utils/keyboard';
 
 export interface CurrencyPickerSheetProps {
   visible: boolean;
@@ -70,7 +71,7 @@ export function CurrencyPickerSheet({
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={styles.backdrop} onPress={onClose} />
+      <Pressable style={styles.backdrop} onPress={closeOrDismissKeyboard(onClose)} />
       <SafeAreaView style={styles.sheet} edges={['bottom']}>
         <View style={styles.handle} />
         <View style={styles.header}>

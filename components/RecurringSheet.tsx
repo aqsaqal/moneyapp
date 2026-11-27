@@ -36,6 +36,7 @@ import { CurrencyPickerSheet } from '@/components/CurrencyPickerSheet';
 import { kv } from '@/utils/kv';
 import type { CurrencyCode } from '@/constants/currency';
 import type { Recurring } from '@/utils/db/schema';
+import { closeOrDismissKeyboard } from '@/utils/keyboard';
 
 type Mode = 'expense' | 'income';
 
@@ -130,7 +131,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose} statusBarTranslucent>
-      <Pressable style={styles.backdrop} onPress={onClose} />
+      <Pressable style={styles.backdrop} onPress={closeOrDismissKeyboard(onClose)} />
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.kav}
@@ -214,6 +215,7 @@ export function RecurringSheet({ visible, recurring, defaultType, onClose }: Rec
               value={day}
               onChangeText={setDay}
               keyboardType="number-pad"
+              returnKeyType="done"
               placeholder="1"
               placeholderTextColor={theme.text3}
               style={styles.input}
