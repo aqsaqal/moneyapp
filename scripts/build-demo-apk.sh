@@ -42,6 +42,7 @@ APK="app/build/outputs/apk/release/app-release.apk"
 [ -f "$APK" ] || { echo "[demo] FAILED — no APK" >&2; exit 1; }
 echo "[demo] APK: $ROOT/android/$APK"
 if [ "${1:-}" != "--no-install" ]; then
-  "$ANDROID_HOME/platform-tools/adb" install -r "$APK"
+  # Main profile only: the S26 has a second (work/dual) user that should not get the demo.
+  "$ANDROID_HOME/platform-tools/adb" install --user 0 -r "$APK"
 fi
 echo "[demo] done. The android/ folder is now the demo variant; build-aab.sh regenerates it for store builds."

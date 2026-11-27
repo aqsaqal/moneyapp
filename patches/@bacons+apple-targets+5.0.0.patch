@@ -1,0 +1,32 @@
+diff --git a/node_modules/@bacons/apple-targets/expo-module.config.json b/node_modules/@bacons/apple-targets/expo-module.config.json
+index 4e6b6bc..178be22 100644
+--- a/node_modules/@bacons/apple-targets/expo-module.config.json
++++ b/node_modules/@bacons/apple-targets/expo-module.config.json
+@@ -1,6 +1,10 @@
+ {
+-  "platforms": ["ios"],
+-  "ios": {
+-    "modules": ["ExtensionStorageModule"]
++  "platforms": [
++    "apple"
++  ],
++  "apple": {
++    "modules": [
++      "ExtensionStorageModule"
++    ]
+   }
+ }
+\ No newline at end of file
+diff --git a/node_modules/@bacons/apple-targets/ios/ExtensionStorage.podspec b/node_modules/@bacons/apple-targets/ios/ExtensionStorage.podspec
+index c65b189..ba12b6c 100644
+--- a/node_modules/@bacons/apple-targets/ios/ExtensionStorage.podspec
++++ b/node_modules/@bacons/apple-targets/ios/ExtensionStorage.podspec
+@@ -5,7 +5,7 @@ Pod::Spec.new do |s|
+   s.description    = 'A sample project description'
+   s.author         = ''
+   s.homepage       = 'https://docs.expo.dev/modules/'
+-  s.platform       = :ios, '16.4'
++  s.platform       = :ios, '15.1'
+   s.source         = { git: '' }
+   s.static_framework = true
+ 

@@ -191,8 +191,13 @@ for production access in Play Console, then promote the release.
 as package `com.moneyflow.generic.demo`, link scheme `flowdemo`, with
 `EXPO_PUBLIC_DEMO_CONTROLS=1` baked in, which adds Settings → Demo
 controls (Pro on/off, pre-paywall on/off, reset). It installs beside the
-store build with its own data, so both can live on the S26. Store
-releases never carry the flag (the group and its code disappear).
+store build with its own data, so both can live on the S26. It installs
+for the main Android user only (`--user 0`), not the dual/work profile.
+Store releases never carry the flag (the group and its code disappear).
+
+The iOS simulator is a dev client, so the same group appears there when
+Metro runs with `EXPO_PUBLIC_DEMO_CONTROLS=1` (add it to the start
+command; `-c` after changing it, the value is inlined at bundle time).
 
 The script regenerates `android/` as the demo variant; `build-aab.sh`
 regenerates it again for a store build. Internal testers get the demo
