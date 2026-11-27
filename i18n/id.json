@@ -160,6 +160,8 @@
   "settings.widgets.hint": "Aman dibelanjakan dan Tambah cepat di layar utama",
   "settings.widgets.ios": "Tekan lama layar utama, ketuk +, lalu cari {app}.",
   "settings.widgets.manual": "Tekan lama layar utama, buka Widget, lalu cari {app}.",
+  "settings.widgets.safeHint": "Yang bisa dibelanjakan hari ini; ukuran besar menampilkan bulan",
+  "settings.widgets.quickHint": "Kategori teratasmu, satu ketukan untuk mencatat",
   "home.widgetNudge.title": "Simpan di layar utama",
   "home.widgetNudge.body": "Lihat berapa yang aman dibelanjakan tanpa membuka aplikasi.",
   "home.widgetNudge.cta": "Tambah widget",

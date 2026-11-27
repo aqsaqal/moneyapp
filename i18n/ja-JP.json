@@ -168,6 +168,8 @@
   "settings.widgets.hint": "ホーム画面に「使える金額」と「クイック追加」",
   "settings.widgets.ios": "ホーム画面を長押しし、+ をタップして {app} を検索します。",
   "settings.widgets.manual": "ホーム画面を長押しし、ウィジェットを開いて {app} を探します。",
+  "settings.widgets.safeHint": "今日使える金額。大きいサイズは月の状況も表示",
+  "settings.widgets.quickHint": "よく使うカテゴリをワンタップで記録",
   "home.widgetNudge.title": "ホーム画面に置いておく",
   "home.widgetNudge.body": "アプリを開かずに使える金額を確認できます。",
   "home.widgetNudge.cta": "ウィジェットを追加",

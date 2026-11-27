@@ -168,6 +168,8 @@
   "settings.widgets.hint": "Disponible para gastar y Añadir rápido en tu pantalla de inicio",
   "settings.widgets.ios": "Mantén pulsada la pantalla de inicio, toca + y busca {app}.",
   "settings.widgets.manual": "Mantén pulsada la pantalla de inicio, abre Widgets y busca {app}.",
+  "settings.widgets.safeHint": "Lo que puedes gastar hoy; los tamaños grandes muestran el mes",
+  "settings.widgets.quickHint": "Tus categorías principales, un toque para registrar",
   "home.widgetNudge.title": "Tenlo en tu pantalla de inicio",
   "home.widgetNudge.body": "Mira cuánto puedes gastar sin abrir la app.",
   "home.widgetNudge.cta": "Añadir widget",

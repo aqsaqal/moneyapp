@@ -168,6 +168,8 @@
   "settings.widgets.hint": "Seguro para gastar e Adicionar rápido na tela inicial",
   "settings.widgets.ios": "Toque e segure a tela inicial, toque em + e procure {app}.",
   "settings.widgets.manual": "Toque e segure a tela inicial, abra Widgets e procure {app}.",
+  "settings.widgets.safeHint": "O que você pode gastar hoje; tamanhos maiores mostram o mês",
+  "settings.widgets.quickHint": "Suas principais categorias, um toque para registrar",
   "home.widgetNudge.title": "Deixe na sua tela inicial",
   "home.widgetNudge.body": "Veja quanto pode gastar sem abrir o app.",
   "home.widgetNudge.cta": "Adicionar widget",

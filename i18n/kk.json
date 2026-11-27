@@ -160,6 +160,8 @@
   "settings.widgets.hint": "Негізгі экранда Жұмсауға болады және Жылдам қосу",
   "settings.widgets.ios": "Негізгі экранды басып тұрып, + басыңыз да, {app} іздеңіз.",
   "settings.widgets.manual": "Негізгі экранды басып тұрып, Виджеттерді ашып, {app} табыңыз.",
+  "settings.widgets.safeHint": "Бүгін жұмсауға болатын сома; үлкен өлшемдер айды көрсетеді",
+  "settings.widgets.quickHint": "Жиі қолданатын санаттар, бір түртумен жазу",
   "home.widgetNudge.title": "Негізгі экранда ұстаңыз",
   "home.widgetNudge.body": "Қолданбаны ашпай-ақ қанша жұмсауға болатынын көріңіз.",
   "home.widgetNudge.cta": "Виджет қосу",

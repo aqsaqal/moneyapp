@@ -168,6 +168,8 @@
   "settings.widgets.hint": "在主屏幕显示可支配金额和快速记一笔",
   "settings.widgets.ios": "长按主屏幕，点击 +，然后搜索 {app}。",
   "settings.widgets.manual": "长按主屏幕，打开小组件并找到 {app}。",
+  "settings.widgets.safeHint": "今天可以花多少；大尺寸显示整月情况",
+  "settings.widgets.quickHint": "常用分类，一键记账",
   "home.widgetNudge.title": "放到主屏幕上",
   "home.widgetNudge.body": "无需打开应用即可查看可支配金额。",
   "home.widgetNudge.cta": "添加小组件",

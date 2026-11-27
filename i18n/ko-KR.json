@@ -168,6 +168,8 @@
   "settings.widgets.hint": "홈 화면에 쓸 수 있는 금액과 빠른 추가",
   "settings.widgets.ios": "홈 화면을 길게 누르고 +를 탭한 뒤 {app}을 검색하세요.",
   "settings.widgets.manual": "홈 화면을 길게 누르고 위젯을 열어 {app}을 찾으세요.",
+  "settings.widgets.safeHint": "오늘 쓸 수 있는 금액, 큰 크기는 이번 달까지 표시",
+  "settings.widgets.quickHint": "자주 쓰는 카테고리를 한 번에 기록",
   "home.widgetNudge.title": "홈 화면에 두세요",
   "home.widgetNudge.body": "앱을 열지 않아도 쓸 수 있는 금액을 확인하세요.",
   "home.widgetNudge.cta": "위젯 추가",

@@ -555,11 +555,29 @@ function ThemeRow() {
 
 function WidgetsRow() {
   const t = useT();
-  const onPress = () => {
-    if (Platform.OS === 'android' && pinWidget('safe')) return;
+  const [open, setOpen] = useState(false);
+  const manual = () =>
     Alert.alert(t('settings.widgets'), Platform.OS === 'ios' ? t('settings.widgets.ios', { app: APP_NAME }) : t('settings.widgets.manual', { app: APP_NAME }));
+  const onPress = () => {
+    if (Platform.OS === 'android') setOpen(true);
+    else manual();
   };
-  return <SettingRow label={t('settings.widgets')} hint={t('settings.widgets.hint')} icon="widgets-outline" onPress={onPress} />;
+  return (
+    <>
+      <SettingRow label={t('settings.widgets')} hint={t('settings.widgets.hint')} icon="widgets-outline" onPress={onPress} />
+      <PickerSheet
+        visible={open}
+        title={t('settings.widgets')}
+        options={[
+          { value: 'safe', label: t('hero.safeToSpend'), hint: t('settings.widgets.safeHint'), icon: 'speedometer' },
+          { value: 'quick', label: t('widget.quickAdd'), hint: t('settings.widgets.quickHint'), icon: 'plus-circle-outline' },
+        ]}
+        selected={undefined}
+        onPick={(kind) => { if (!pinWidget(kind as 'safe' | 'quick')) manual(); }}
+        onClose={() => setOpen(false)}
+      />
+    </>
+  );
 }
 
 function TabOrderRow() {

@@ -168,6 +168,8 @@
   "settings.widgets.hint": "Verfügbar zum Ausgeben und Schnell hinzufügen auf dem Startbildschirm",
   "settings.widgets.ios": "Startbildschirm gedrückt halten, auf + tippen und nach {app} suchen.",
   "settings.widgets.manual": "Startbildschirm gedrückt halten, Widgets öffnen und {app} suchen.",
+  "settings.widgets.safeHint": "Was du heute ausgeben kannst; größere Formate zeigen den Monat",
+  "settings.widgets.quickHint": "Deine Top-Kategorien, ein Tipp zum Erfassen",
   "home.widgetNudge.title": "Auf dem Startbildschirm behalten",
   "home.widgetNudge.body": "Sieh, was du ausgeben kannst, ohne die App zu öffnen.",
   "home.widgetNudge.cta": "Widget hinzufügen",

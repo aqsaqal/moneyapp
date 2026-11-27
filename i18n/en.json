@@ -196,6 +196,8 @@
   "settings.widgets.hint": "Safe to spend and Quick add on your home screen",
   "settings.widgets.ios": "Touch and hold the home screen, tap +, then search for {app}.",
   "settings.widgets.manual": "Touch and hold the home screen, open Widgets and find {app}.",
+  "settings.widgets.safeHint": "What you can spend today; bigger sizes show the month",
+  "settings.widgets.quickHint": "Your top categories, one tap to log",
   "home.widgetNudge.title": "Keep it on your home screen",
   "home.widgetNudge.body": "See what's safe to spend without opening the app.",
   "home.widgetNudge.cta": "Add widget",

@@ -168,6 +168,8 @@
   "settings.widgets.hint": "Reste à dépenser et Ajout rapide sur l’écran d’accueil",
   "settings.widgets.ios": "Maintenez l’écran d’accueil, touchez + puis cherchez {app}.",
   "settings.widgets.manual": "Maintenez l’écran d’accueil, ouvrez Widgets et cherchez {app}.",
+  "settings.widgets.safeHint": "Ce que vous pouvez dépenser aujourd’hui ; les grands formats montrent le mois",
+  "settings.widgets.quickHint": "Vos catégories principales, un geste pour enregistrer",
   "home.widgetNudge.title": "Gardez-le sur l’écran d’accueil",
   "home.widgetNudge.body": "Voyez ce que vous pouvez dépenser sans ouvrir l’app.",
   "home.widgetNudge.cta": "Ajouter le widget",

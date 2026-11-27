@@ -160,6 +160,8 @@
   "settings.widgets.hint": "Ana ekranda Harcanabilir ve Hızlı ekle",
   "settings.widgets.ios": "Ana ekrana basılı tut, + simgesine dokun ve {app} ara.",
   "settings.widgets.manual": "Ana ekrana basılı tut, Widget’ları aç ve {app} bul.",
+  "settings.widgets.safeHint": "Bugün harcayabileceğin; büyük boyutlar ayı gösterir",
+  "settings.widgets.quickHint": "En çok kullandığın kategoriler, tek dokunuşla kaydet",
   "home.widgetNudge.title": "Ana ekranında kalsın",
   "home.widgetNudge.body": "Uygulamayı açmadan ne kadar harcayabileceğini gör.",
   "home.widgetNudge.cta": "Widget ekle",
