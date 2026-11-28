@@ -3,7 +3,7 @@
 // highlights that row.
 
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -130,7 +130,7 @@ export default function Paywall() {
                 <Text style={styles.restoreText}>{t('pro.restore')}</Text>
               )}
             </Pressable>
-            <Text style={styles.fine}>{t('pro.fine')}</Text>
+            <Text style={styles.fine}>{t(Platform.OS === 'ios' ? 'pro.fine.ios' : 'pro.fine.android')}</Text>
           </>
         )}
 
