@@ -23,7 +23,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_vertical"
+    android:gravity="top"
     android:paddingLeft="14dp"
     android:paddingTop="12dp"
     android:paddingRight="14dp"
@@ -83,22 +83,22 @@
       android:id="@+id/fw_rows"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
+      android:layout_marginTop="12dp"
       android:orientation="vertical"
       android:visibility="gone">
-      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="3dp" android:paddingBottom="3dp">
+      <LinearLayout android:id="@+id/fw_r1" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="3dp" android:paddingBottom="3dp">
         <TextView android:id="@+id/fw_l1" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:textSize="12sp" />
         <TextView android:id="@+id/fw_v1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="sans-serif-medium" android:maxLines="1" android:textSize="12sp" />
       </LinearLayout>
-      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="3dp" android:paddingBottom="3dp">
+      <LinearLayout android:id="@+id/fw_r2" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="3dp" android:paddingBottom="3dp">
         <TextView android:id="@+id/fw_l2" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:textSize="12sp" />
         <TextView android:id="@+id/fw_v2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="sans-serif-medium" android:maxLines="1" android:textSize="12sp" />
       </LinearLayout>
-      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="3dp" android:paddingBottom="3dp">
+      <LinearLayout android:id="@+id/fw_r3" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="3dp" android:paddingBottom="3dp">
         <TextView android:id="@+id/fw_l3" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:textSize="12sp" />
         <TextView android:id="@+id/fw_v3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="sans-serif-medium" android:maxLines="1" android:textSize="12sp" />
       </LinearLayout>
-      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="3dp" android:paddingBottom="3dp">
+      <LinearLayout android:id="@+id/fw_r4" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:paddingTop="3dp" android:paddingBottom="3dp">
         <TextView android:id="@+id/fw_l4" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:textSize="12sp" />
         <TextView android:id="@+id/fw_v4" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="sans-serif-medium" android:maxLines="1" android:textSize="12sp" />
       </LinearLayout>
@@ -111,17 +111,17 @@
       android:orientation="vertical"
       android:visibility="gone">
       <TextView android:id="@+id/fw_top_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:letterSpacing="0.08" android:textAllCaps="true" android:textSize="10sp" android:layout_marginBottom="4dp" />
-      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="3dp" android:paddingBottom="3dp">
+      <LinearLayout android:id="@+id/fw_t1" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="3dp" android:paddingBottom="3dp">
         <ImageView android:id="@+id/fw_td1" android:layout_width="8dp" android:layout_height="8dp" android:layout_marginRight="8dp" android:importantForAccessibility="no" />
         <TextView android:id="@+id/fw_tl1" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:textSize="12sp" />
         <TextView android:id="@+id/fw_tv1" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="sans-serif-medium" android:maxLines="1" android:textSize="12sp" />
       </LinearLayout>
-      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="3dp" android:paddingBottom="3dp">
+      <LinearLayout android:id="@+id/fw_t2" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="3dp" android:paddingBottom="3dp">
         <ImageView android:id="@+id/fw_td2" android:layout_width="8dp" android:layout_height="8dp" android:layout_marginRight="8dp" android:importantForAccessibility="no" />
         <TextView android:id="@+id/fw_tl2" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:textSize="12sp" />
         <TextView android:id="@+id/fw_tv2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="sans-serif-medium" android:maxLines="1" android:textSize="12sp" />
       </LinearLayout>
-      <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="3dp" android:paddingBottom="3dp">
+      <LinearLayout android:id="@+id/fw_t3" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical" android:paddingTop="3dp" android:paddingBottom="3dp">
         <ImageView android:id="@+id/fw_td3" android:layout_width="8dp" android:layout_height="8dp" android:layout_marginRight="8dp" android:importantForAccessibility="no" />
         <TextView android:id="@+id/fw_tl3" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="1" android:textSize="12sp" />
         <TextView android:id="@+id/fw_tv3" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="sans-serif-medium" android:maxLines="1" android:textSize="12sp" />

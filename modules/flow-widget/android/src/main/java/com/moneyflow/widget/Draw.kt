@@ -131,14 +131,29 @@ object Draw {
     views.setViewVisibility(R.id.fw_locked, View.GONE)
     views.setViewVisibility(R.id.fw_content, View.VISIBLE)
 
+    // Type scales with the size, like the iOS families: 2×2 compact, 4×2
+    // regular, 4×4 and taller get the large layout.
+    val body = if (tall) 14f else 12f
+    val pad = ((if (tall) 18 else 14) * d).roundToInt()
+    views.setViewPadding(R.id.fw_content, pad, pad, pad, pad)
+    for (idv in intArrayOf(R.id.fw_l1, R.id.fw_l2, R.id.fw_l3, R.id.fw_l4, R.id.fw_v1, R.id.fw_v2, R.id.fw_v3, R.id.fw_v4,
+                           R.id.fw_tl1, R.id.fw_tl2, R.id.fw_tl3, R.id.fw_tv1, R.id.fw_tv2, R.id.fw_tv3))
+      views.setTextViewTextSize(idv, TypedValue.COMPLEX_UNIT_SP, body)
+    views.setTextViewTextSize(R.id.fw_aday, TypedValue.COMPLEX_UNIT_SP, if (tall) 14f else 12f)
+    views.setTextViewTextSize(R.id.fw_dayline, TypedValue.COMPLEX_UNIT_SP, if (tall) 12f else 11f)
+    views.setTextViewTextSize(R.id.fw_verdict, TypedValue.COMPLEX_UNIT_SP, if (tall) 14f else 12f)
+    val rowPad = ((if (tall) 8 else 3) * d).roundToInt()
+    for (idv in intArrayOf(R.id.fw_r1, R.id.fw_r2, R.id.fw_r3, R.id.fw_r4, R.id.fw_t1, R.id.fw_t2, R.id.fw_t3))
+      views.setViewPadding(idv, 0, rowPad, 0, rowPad)
+
     views.setTextViewText(R.id.fw_title, snap.title)
     views.setTextColor(R.id.fw_title, text2)
     views.setTextViewText(R.id.fw_perday, snap.perDay)
     views.setTextColor(R.id.fw_perday, text1)
-    views.setTextViewTextSize(R.id.fw_perday, TypedValue.COMPLEX_UNIT_SP, if (small) 22f else if (tall) 30f else 26f)
+    views.setTextViewTextSize(R.id.fw_perday, TypedValue.COMPLEX_UNIT_SP, if (small) 22f else if (tall) 34f else 26f)
     views.setTextViewText(R.id.fw_aday, snap.aDay)
     views.setTextColor(R.id.fw_aday, text2)
-    views.setImageViewBitmap(R.id.fw_bar, bar(((wDp - 28) * d).roundToInt(), (6 * d).roundToInt(), snap.progress, bg2, tone))
+    views.setImageViewBitmap(R.id.fw_bar, bar(((wDp - (if (tall) 36 else 28)) * d).roundToInt(), (6 * d).roundToInt(), snap.progress, bg2, tone))
     views.setTextViewText(R.id.fw_dayline, snap.dayLine)
     views.setTextColor(R.id.fw_dayline, text3)
     views.setTextViewText(R.id.fw_verdict, snap.verdict)
