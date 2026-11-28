@@ -113,12 +113,10 @@ object Draw {
 
     // 2×2 is the free size; anything wider or taller is Pro. Samsung's
     // launcher says how many cells it gave us; others get judged by dp
-    // (a 2-column widget is under ~200dp wide, three rows are ~300dp+).
+    // (a 2-column widget is under ~200dp wide).
     val o = manager.getAppWidgetOptions(id)
     val cols = o.getInt("semAppWidgetColumnSpan", 0)
-    val rowSpan = o.getInt("semAppWidgetRowSpan", 0)
     val small = if (cols > 0) cols <= 2 else wDp < 200
-    val tall = if (rowSpan > 0) rowSpan >= 3 else hDp >= 300
     if (!small && !snap.pro) {
       views.setViewVisibility(R.id.fw_content, View.GONE)
       views.setViewVisibility(R.id.fw_locked, View.VISIBLE)
@@ -131,38 +129,79 @@ object Draw {
     views.setViewVisibility(R.id.fw_locked, View.GONE)
     views.setViewVisibility(R.id.fw_content, View.VISIBLE)
 
-    // Type scales with the size, like the iOS families: 2×2 compact, 4×2
-    // regular, 4×4 and taller get the large layout.
-    val body = if (tall) 14f else 12f
-    val pad = ((if (tall) 18 else 14) * d).roundToInt()
-    views.setViewPadding(R.id.fw_content, pad, pad, pad, pad)
+    // Pick the richest content that fits the height, then the biggest type
+    // that fits. Rows are weighted in the layout, so whatever is shown
+    // stretches to fill the widget exactly; estimates here only decide what
+    // to show. Line height without font padding is about 1.2 x the size.
+    val fs = ctx.resources.configuration.fontScale
+    fun lh(sp: Float) = sp * fs * 1.2f
+    class Tier(val pad: Int, val amount: Float, val body: Float, val day: Float, val verdict: Float)
+    class Plan(val t: Tier, val title: Boolean, val day: Boolean, val rows: Boolean, val top: Boolean) {
+      val count = (if (rows) 4 else 0) + (if (top) 3 else 0)
+      val need: Float = 2 * t.pad + (if (title) lh(10f) + 2 else 0f) + lh(t.amount) + 12 +
+        (if (day) 4 + lh(t.day) else 0f) + 2 + lh(t.verdict) +
+        (if (rows) 8 + 4 * (lh(t.body) + 4) else 0f) +
+        (if (top) 8 + lh(10f) + 3 * (lh(t.body) + 4) else 0f)
+    }
+    val big = Tier(18, 34f, 14f, 12f, 14f)
+    val mid = Tier(14, if (small) 22f else 26f, 12f, 11f, 12f)
+    val dense = Tier(10, if (small) 22f else 24f, 12f, 11f, 12f)
+    val hasRows = !small && snap.rows.isNotEmpty()
+    val hasTop = hasRows && snap.top.isNotEmpty()
+    val plans = ArrayList<Plan>()
+    if (hasTop) {
+      plans += Plan(big, true, true, true, true)
+      plans += Plan(mid, true, true, true, true)
+      plans += Plan(mid, true, false, true, true)
+    }
+    if (hasRows) {
+      plans += Plan(big, true, true, true, false)
+      plans += Plan(mid, true, true, true, false)
+      plans += Plan(mid, true, false, true, false)
+      plans += Plan(dense, true, false, true, false)
+    }
+    if (!small) plans += Plan(big, true, true, false, false)
+    plans += Plan(mid, true, true, false, false)
+    plans += Plan(mid, true, false, false, false)
+    plans += Plan(dense, true, false, false, false)
+    plans += Plan(dense, false, false, false, false)
+    val plan = plans.firstOrNull { it.need + 3 <= hDp } ?: plans.last()
+    val t = plan.t
+
+    // Rows stretch up to 8dp of air each side; past that the rest of the
+    // height stays empty at the bottom (four rows and taller). A hero with
+    // a little slack sits centred.
+    val slack = hDp - plan.need
+    var padTop = t.pad.toFloat()
+    var padBottom = t.pad.toFloat()
+    if (plan.count > 0) padBottom += max(0f, slack - plan.count * 12f)
+    else if (slack > 0 && slack < 24) { padTop += slack / 2; padBottom += slack / 2 }
+    val pad = (t.pad * d).roundToInt()
+    views.setViewPadding(R.id.fw_content, pad, (padTop * d).roundToInt(), pad, (padBottom * d).roundToInt())
     for (idv in intArrayOf(R.id.fw_l1, R.id.fw_l2, R.id.fw_l3, R.id.fw_l4, R.id.fw_v1, R.id.fw_v2, R.id.fw_v3, R.id.fw_v4,
                            R.id.fw_tl1, R.id.fw_tl2, R.id.fw_tl3, R.id.fw_tv1, R.id.fw_tv2, R.id.fw_tv3))
-      views.setTextViewTextSize(idv, TypedValue.COMPLEX_UNIT_SP, body)
-    views.setTextViewTextSize(R.id.fw_aday, TypedValue.COMPLEX_UNIT_SP, if (tall) 14f else 12f)
-    views.setTextViewTextSize(R.id.fw_dayline, TypedValue.COMPLEX_UNIT_SP, if (tall) 12f else 11f)
-    views.setTextViewTextSize(R.id.fw_verdict, TypedValue.COMPLEX_UNIT_SP, if (tall) 14f else 12f)
-    val rowPad = ((if (tall) 8 else 3) * d).roundToInt()
-    for (idv in intArrayOf(R.id.fw_r1, R.id.fw_r2, R.id.fw_r3, R.id.fw_r4, R.id.fw_t1, R.id.fw_t2, R.id.fw_t3))
-      views.setViewPadding(idv, 0, rowPad, 0, rowPad)
+      views.setTextViewTextSize(idv, TypedValue.COMPLEX_UNIT_SP, t.body)
+    views.setTextViewTextSize(R.id.fw_aday, TypedValue.COMPLEX_UNIT_SP, t.verdict)
+    views.setTextViewTextSize(R.id.fw_dayline, TypedValue.COMPLEX_UNIT_SP, t.day)
+    views.setTextViewTextSize(R.id.fw_verdict, TypedValue.COMPLEX_UNIT_SP, t.verdict)
 
+    views.setViewVisibility(R.id.fw_title, if (plan.title) View.VISIBLE else View.GONE)
     views.setTextViewText(R.id.fw_title, snap.title)
     views.setTextColor(R.id.fw_title, text2)
     views.setTextViewText(R.id.fw_perday, snap.perDay)
     views.setTextColor(R.id.fw_perday, text1)
-    views.setTextViewTextSize(R.id.fw_perday, TypedValue.COMPLEX_UNIT_SP, if (small) 22f else if (tall) 34f else 26f)
+    views.setTextViewTextSize(R.id.fw_perday, TypedValue.COMPLEX_UNIT_SP, t.amount)
     views.setTextViewText(R.id.fw_aday, snap.aDay)
     views.setTextColor(R.id.fw_aday, text2)
-    views.setImageViewBitmap(R.id.fw_bar, bar(((wDp - (if (tall) 36 else 28)) * d).roundToInt(), (6 * d).roundToInt(), snap.progress, bg2, tone))
+    views.setImageViewBitmap(R.id.fw_bar, bar(((wDp - 2 * t.pad) * d).roundToInt(), (6 * d).roundToInt(), snap.progress, bg2, tone))
     views.setTextViewText(R.id.fw_dayline, snap.dayLine)
     views.setTextColor(R.id.fw_dayline, text3)
     views.setTextViewText(R.id.fw_verdict, snap.verdict)
     views.setTextColor(R.id.fw_verdict, tone)
-    // A squat 2×2 (short cells) has no room for the verdict.
-    views.setViewVisibility(R.id.fw_verdict, if (small && hDp < 150) View.GONE else View.VISIBLE)
+    views.setViewVisibility(R.id.fw_dayline, if (plan.day) View.VISIBLE else View.GONE)
 
     val rows = snap.rows
-    val showRows = tall && rows.isNotEmpty()
+    val showRows = plan.rows
     views.setViewVisibility(R.id.fw_rows, if (showRows) View.VISIBLE else View.GONE)
     if (showRows) {
       val labels = intArrayOf(R.id.fw_l1, R.id.fw_l2, R.id.fw_l3, R.id.fw_l4)
@@ -175,10 +214,10 @@ object Draw {
         views.setTextColor(values[i], text1)
       }
     }
-    // Four rows or more: room for the top categories as well.
     val top = snap.top
-    val showTop = showRows && top.isNotEmpty() && (if (rowSpan > 0) rowSpan >= 4 else hDp >= 380)
+    val showTop = plan.top
     views.setViewVisibility(R.id.fw_top, if (showTop) View.VISIBLE else View.GONE)
+    views.setViewVisibility(R.id.fw_top_title, if (showTop) View.VISIBLE else View.GONE)
     if (showTop) {
       views.setTextViewText(R.id.fw_top_title, snap.topTitle)
       views.setTextColor(R.id.fw_top_title, text2)
