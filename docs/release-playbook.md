@@ -226,7 +226,8 @@ App Store Connect:
    against sandbox for free.
 
 Google Play:
-1. Monetize → Products → In-app products → **Create product**.
+1. Monetize → Products → One-time products → **Create product** (the
+   page only opens once a build with the Billing permission is uploaded).
    Product ID `flow_pro_lifetime`, name "Flow Pro", description, price
    9.99 USD → set the other currencies from it. **Activate**.
 2. The Billing permission comes from the expo-iap config plugin
@@ -295,6 +296,58 @@ native modules added later (expo-iap) are loaded lazily so a missing one
 only shows as "store unavailable". `xcodebuild` also cannot list concrete
 simulators here; use `-destination 'generic/platform=iOS Simulator'`.
 
+## 6a. Listings and captioned screenshots in twelve languages
+
+English is the source; everything else is generated from it.
+
+- Text: `assets/store/generic/listings/<lang>.json` (name, subtitle, short,
+  keywords, full, whatsNew, notes, captions) and `demo-<lang>.json` (the
+  sample-data labels that show up in screenshots). `BRIEF.md` there is the
+  brief for translating; `check.py` enforces the store limits and the
+  "no platform names" rule, so one text serves both stores.
+- `python3 scripts/demo-text.py` turns the demo files into
+  `utils/db/demoText.ts`; the Demo profile is seeded in the app's language.
+- Captures: `bash scripts/capture-shots.sh <ctl dir> <out dir> [lang ...]`
+  on the iPhone 17 Pro Max simulator. Per language it sets the app language
+  (`kv:locale=…`, relaunch with `-AppleLanguages`), rebuilds the Demo
+  profile and walks eight screens: home, add, plan, event, activity,
+  insights, accounts, themes (Home in Espresso light). The controller also
+  takes `locale:<code>` to switch language in place.
+- Compose: `python3 scripts/store-shots.py <out dir> [lang ...]` puts each
+  caption over a framed capture and writes `build/store-out/<lang>/<set>/`
+  for four sets: `play` 1080×1920, `appstore-6.9` 1320×2868, `appstore-6.5`
+  1284×2778, `appstore-6.3` 1206×2622. Not committed; remake at will.
+  Caption fonts: Outfit (Latin, Turkish), Helvetica Neue Bold (Russian,
+  Kazakh), Hiragino Sans GB (Japanese, Chinese), Apple SD Gothic Neo (Korean).
+- App Store locales: en-US, es-ES, es-MX (same Spanish text), pt-BR, fr-FR,
+  de-DE, tr, id, ru, ja, ko, zh-Hans. No Kazakh there. Display types for
+  the three sets: `APP_IPHONE_67`, `APP_IPHONE_65`, `APP_IPHONE_61`.
+  Localizations cannot be added while the version is Waiting for Review:
+  remove the submission, edit, submit again (the version and, the first
+  time, the in-app purchase).
+- Play locales: en-US, es-ES, pt-BR, fr-FR, de-DE, tr-TR, id, ru-RU, kk,
+  ja-JP, ko-KR, zh-CN. Store listings → Edit default listing → language
+  menu → Manage languages. A new language shows the default graphics greyed
+  out until it gets its own. Add assets → Upload puts files in the asset
+  library; select them in the panel in the order wanted, then Add.
+- Bulk upload, both from the signed-in browser session (section 7):
+  `python3 scripts/store/manifest.py` writes sizes and checksums,
+  `scripts/store/asc-shots.js` replaces the three App Store sets per locale
+  (about a minute per locale), `scripts/store/play-shots.js` fills name,
+  short and full description and the eight phone screenshots per Play
+  language and saves a draft. Both read their to-do list and the files from
+  a local `python3 -m http.server 8091`; the header of each says what to
+  serve.
+- Look at one contact sheet per language before uploading. The add screen
+  is the one that breaks: its prefill is base64 in the route and has to be
+  percent-encoded (a "+" arrives as a space and the form opens empty).
+- Sending: Play listing → Next → AI asset declaration ("Don't label
+  assets": the screenshots are captures) → Save → Publishing overview →
+  Submit changes. If a release is already in review, Play asks to restart
+  that review. App Store: Add for Review on the in-app purchase page while
+  it is not yet approved, then on the version, same draft submission,
+  Submit for Review.
+
 ## 7. Driving the consoles from a browser session
 
 Playwright MCP works for everything up to the final submit:
@@ -306,6 +359,16 @@ Playwright MCP works for everything up to the final submit:
 - Play's Angular pages render late; wait for a known text before snapshotting.
 - The permission classifier blocks publishing clicks ("Add for Review",
   store submit). Prepare everything, then hand those clicks to the user.
+- App Store Connect has no API key here, but its own web API answers from
+  the signed-in tab: `https://appstoreconnect.apple.com/iris/v1/<path>` with
+  headers `Accept: application/json` and `X-CSRF-ITC: [asc-ui]`. Same
+  resources as the public API (localizations, screenshot sets, uploads).
+  `page.request` in a Playwright script carries the session cookies and can
+  also fetch local files from a `python3 -m http.server`, which is how
+  screenshots get uploaded in bulk.
+- ASC: wait a few seconds after Save before navigating, or the save is lost.
+- Play paths: `/app/<id>/one-time-products`, `/app/<id>/store-listings`,
+  `/app/<id>/publishing`, `/developers/<dev>/license-tester`.
 - Stale `playwright-mcp` processes block reconnects: `pkill -f playwright-mcp`,
   then `/mcp` in Claude Code to reconnect.
 
@@ -317,5 +380,6 @@ Playwright MCP works for everything up to the final submit:
 - [ ] ASC: new version, What's New, build, screenshots, age ratings current → Add for Review.
 - [ ] Play: release on the right track, notes ≤ 500 chars, listing screenshots → Submit for review.
 - [ ] Store products created and active in both consoles (first time only); iOS product attached to the version.
+- [ ] Listings and screenshots in all twelve languages (section 6a) when the text or screens changed.
 - [ ] Push the release commits.
 - [ ] Update `docs/ROADMAP.md`.

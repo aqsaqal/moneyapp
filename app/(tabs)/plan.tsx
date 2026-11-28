@@ -71,6 +71,7 @@ import { type CurrencyCode } from '@/constants/currency';
 import { kv } from '@/utils/kv';
 import { canUse } from '@/utils/pro';
 import { useT } from '@/hooks/useT';
+import { getLocale } from '@/utils/i18n';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
 
 type Segment = 'bills' | 'budgets' | 'goals' | 'debts' | 'events';
@@ -965,7 +966,7 @@ function GoalsSegment() {
                 : perMonth != null && g.targetDate
                   ? t('plan.goals.perMonth', {
                       amount: formatMoney(perMonth, goalCcy),
-                      date: new Date(g.targetDate).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }),
+                      date: new Date(g.targetDate).toLocaleDateString(getLocale(), { month: 'short', year: 'numeric' }),
                     })
                   : daysLeft != null
                     ? t('plan.goals.remainingByDate', { amount: formatMoney(remaining, goalCcy), days: daysLeft })

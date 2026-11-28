@@ -17,6 +17,8 @@
 // never touched.
 
 import { kv } from '@/utils/kv';
+import { getLocale, t } from '@/utils/i18n';
+import { DEMO_TEXT } from './demoText';
 import {
   listProfiles,
   createProfile,
@@ -114,23 +116,23 @@ function seedEvents(): void {
   const renoStart = new Date(now.getTime() - 45 * day);
   const renoEnd = new Date(now.getTime() - 25 * day);
   db.insert(events).values([
-    { id: 'demo-ev-trip', name: 'Miami trip', icon: 'beach', color: '#F59E0B', startDate: sod(tripStart), endDate: eod(tripEnd), budget: 1200, budgetCurrency: 'USD', archived: 0, createdAt: Date.now() },
-    { id: 'demo-ev-reno', name: 'Kitchen renovation', icon: 'hammer', color: '#6366F1', startDate: sod(renoStart), endDate: eod(renoEnd), budget: 2500, budgetCurrency: 'USD', archived: 0, createdAt: Date.now() },
+    { id: 'demo-ev-trip', name: L('Miami trip'), icon: 'beach', color: '#F59E0B', startDate: sod(tripStart), endDate: eod(tripEnd), budget: 1200, budgetCurrency: 'USD', archived: 0, createdAt: Date.now() },
+    { id: 'demo-ev-reno', name: L('Kitchen renovation'), icon: 'hammer', color: '#6366F1', startDate: sod(renoStart), endDate: eod(renoEnd), budget: 2500, budgetCurrency: 'USD', archived: 0, createdAt: Date.now() },
   ]).run();
   const at = (daysAgo: number, hour: number) => {
     const d = new Date(now.getTime() - daysAgo * day);
     return new Date(d.getFullYear(), d.getMonth(), d.getDate(), hour, 0).getTime();
   };
   const rows: (typeof transactions.$inferInsert)[] = [
-    { id: 'demo-ev-t1', type: 'expense', amount: 386, category: 'travel', accountId: 'demo-cc', note: 'Flights', date: at(12, 11), createdAt: Date.now(), eventId: 'demo-ev-trip' },
-    { id: 'demo-ev-t2', type: 'expense', amount: 289, category: 'travel', accountId: 'demo-cc', note: 'Hotel, 2 nights', date: at(2, 15), createdAt: Date.now(), eventId: 'demo-ev-trip' },
-    { id: 'demo-ev-t3', type: 'expense', amount: 42.8, category: 'transport', accountId: 'demo-cc', note: 'Taxi from airport', date: at(2, 13), createdAt: Date.now(), eventId: 'demo-ev-trip' },
-    { id: 'demo-ev-t4', type: 'expense', amount: 68.5, category: 'food', accountId: 'demo-cc', note: 'Dinner at Joe\'s', date: at(1, 20), createdAt: Date.now(), eventId: 'demo-ev-trip' },
-    { id: 'demo-ev-t5', type: 'expense', amount: 24.9, category: 'food', accountId: 'demo-cash', note: 'Beach lunch', date: at(1, 13), createdAt: Date.now(), eventId: 'demo-ev-trip' },
-    { id: 'demo-ev-t6', type: 'expense', amount: 55, category: 'shopping', accountId: 'demo-cc', note: 'Sunscreen & hats', date: at(0, 10), createdAt: Date.now(), eventId: 'demo-ev-trip' },
-    { id: 'demo-ev-r1', type: 'expense', amount: 1450, category: 'shopping', accountId: 'demo-checking', note: 'Countertop', date: at(38, 10), createdAt: Date.now(), eventId: 'demo-ev-reno' },
-    { id: 'demo-ev-r2', type: 'expense', amount: 620, category: 'shopping', accountId: 'demo-checking', note: 'Cabinets', date: at(33, 10), createdAt: Date.now(), eventId: 'demo-ev-reno' },
-    { id: 'demo-ev-r3', type: 'expense', amount: 340, category: 'bills', accountId: 'demo-checking', note: 'Plumber', date: at(27, 9), createdAt: Date.now(), eventId: 'demo-ev-reno' },
+    { id: 'demo-ev-t1', type: 'expense', amount: 386, category: 'travel', accountId: 'demo-cc', note: L('Flights'), date: at(12, 11), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t2', type: 'expense', amount: 289, category: 'travel', accountId: 'demo-cc', note: L('Hotel, 2 nights'), date: at(2, 15), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t3', type: 'expense', amount: 42.8, category: 'transport', accountId: 'demo-cc', note: L('Taxi from airport'), date: at(2, 13), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t4', type: 'expense', amount: 68.5, category: 'food', accountId: 'demo-cc', note: L('Dinner at Joe\'s'), date: at(1, 20), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t5', type: 'expense', amount: 24.9, category: 'food', accountId: 'demo-cash', note: L('Beach lunch'), date: at(1, 13), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-t6', type: 'expense', amount: 55, category: 'shopping', accountId: 'demo-cc', note: L('Sunscreen & hats'), date: at(0, 10), createdAt: Date.now(), eventId: 'demo-ev-trip' },
+    { id: 'demo-ev-r1', type: 'expense', amount: 1450, category: 'shopping', accountId: 'demo-checking', note: L('Countertop'), date: at(38, 10), createdAt: Date.now(), eventId: 'demo-ev-reno' },
+    { id: 'demo-ev-r2', type: 'expense', amount: 620, category: 'shopping', accountId: 'demo-checking', note: L('Cabinets'), date: at(33, 10), createdAt: Date.now(), eventId: 'demo-ev-reno' },
+    { id: 'demo-ev-r3', type: 'expense', amount: 340, category: 'bills', accountId: 'demo-checking', note: L('Plumber'), date: at(27, 9), createdAt: Date.now(), eventId: 'demo-ev-reno' },
   ];
   db.insert(transactions).values(rows).run();
 }
@@ -138,12 +140,12 @@ function seedEvents(): void {
 function seedAccounts(): void {
   const db = getDB();
   db.insert(accounts).values([
-    { id: 'demo-checking', name: 'Main Checking', type: 'bank',    balance: 4820.45, icon: 'Banknote',   color: '#818CF8', sortOrder: 1, currency: 'USD', includeInTotal: 1 },
-    { id: 'demo-savings',  name: 'Savings',       type: 'savings', balance: 12500.0, icon: 'PiggyBank',  color: '#FFBE44', sortOrder: 2, currency: 'USD', includeInTotal: 1 },
-    { id: 'demo-cc',       name: 'Credit Card',   type: 'credit',  balance: -642.30, creditLimit: 5000, icon: 'CreditCard', color: '#FF6B8A', sortOrder: 3, currency: 'USD', includeInTotal: 1 },
-    { id: 'demo-cash',     name: 'Cash',          type: 'cash',    balance: 180.0,   icon: 'Wallet',     color: '#00E09E', sortOrder: 4, currency: 'USD', includeInTotal: 1 },
-    { id: 'demo-mortgage', name: 'Mortgage',      type: 'debt',    balance: -184500, icon: 'Home',       color: '#F97316', sortOrder: 5, currency: 'USD', includeInTotal: 1 },
-    { id: 'demo-carloan',  name: 'Car Loan',      type: 'debt',    balance: -8240.0, icon: 'Car',        color: '#EAB308', sortOrder: 6, currency: 'USD', includeInTotal: 1 },
+    { id: 'demo-checking', name: L('Main Checking'), type: 'bank',    balance: 4820.45, icon: 'Banknote',   color: '#818CF8', sortOrder: 1, currency: 'USD', includeInTotal: 1 },
+    { id: 'demo-savings',  name: L('Savings'),       type: 'savings', balance: 12500.0, icon: 'PiggyBank',  color: '#FFBE44', sortOrder: 2, currency: 'USD', includeInTotal: 1 },
+    { id: 'demo-cc',       name: L('Credit Card'),   type: 'credit',  balance: -642.30, creditLimit: 5000, icon: 'CreditCard', color: '#FF6B8A', sortOrder: 3, currency: 'USD', includeInTotal: 1 },
+    { id: 'demo-cash',     name: L('Cash'),          type: 'cash',    balance: 180.0,   icon: 'Wallet',     color: '#00E09E', sortOrder: 4, currency: 'USD', includeInTotal: 1 },
+    { id: 'demo-mortgage', name: L('Mortgage'),      type: 'debt',    balance: -184500, icon: 'Home',       color: '#F97316', sortOrder: 5, currency: 'USD', includeInTotal: 1 },
+    { id: 'demo-carloan',  name: L('Car Loan'),      type: 'debt',    balance: -8240.0, icon: 'Car',        color: '#EAB308', sortOrder: 6, currency: 'USD', includeInTotal: 1 },
   ]).run();
 }
 
@@ -154,18 +156,18 @@ function seedRecurring(): void {
   // 'fitness' don't exist anymore — they all fold into 'bills', the
   // catch-all for fixed-utility expenses ('rent' stays for shelter).
   db.insert(recurring).values([
-    { id: 'demo-r-rent',    name: 'Mortgage Payment', amount: 1650,  type: 'expense', category: 'rent',     accountId: 'demo-checking', dayOfMonth: 1,  icon: 'Home',       color: '#FB923C' },
-    { id: 'demo-r-elec',    name: 'Electric',         amount: 92.5,  type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 5,  icon: 'Zap',        color: '#EAB308' },
-    { id: 'demo-r-water',   name: 'Water',            amount: 38,    type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 6,  icon: 'Droplet',    color: '#38BDF8' },
-    { id: 'demo-r-int',     name: 'Internet',         amount: 65,    type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 7,  icon: 'Wifi',       color: '#38BDF8' },
-    { id: 'demo-r-phone',   name: 'Phone Plan',       amount: 42,    type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 12, icon: 'Smartphone', color: '#A78BFA' },
+    { id: 'demo-r-rent',    name: L('Mortgage Payment'), amount: 1650,  type: 'expense', category: 'rent',     accountId: 'demo-checking', dayOfMonth: 1,  icon: 'Home',       color: '#FB923C' },
+    { id: 'demo-r-elec',    name: L('Electric'),         amount: 92.5,  type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 5,  icon: 'Zap',        color: '#EAB308' },
+    { id: 'demo-r-water',   name: L('Water'),            amount: 38,    type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 6,  icon: 'Droplet',    color: '#38BDF8' },
+    { id: 'demo-r-int',     name: L('Internet'),         amount: 65,    type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 7,  icon: 'Wifi',       color: '#38BDF8' },
+    { id: 'demo-r-phone',   name: L('Phone Plan'),       amount: 42,    type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 12, icon: 'Smartphone', color: '#A78BFA' },
     { id: 'demo-r-netflix', name: 'Netflix',          amount: 15.49, type: 'expense', category: 'subs',     accountId: 'demo-cc',       dayOfMonth: 10, icon: 'Star',       color: '#E50914' },
     { id: 'demo-r-spotify', name: 'Spotify',          amount: 11.99, type: 'expense', category: 'subs',     accountId: 'demo-cc',       dayOfMonth: 14, icon: 'Star',       color: '#1DB954' },
-    { id: 'demo-r-gym',     name: 'Gym',              amount: 39.99, type: 'expense', category: 'health',   accountId: 'demo-checking', dayOfMonth: 18, icon: 'Activity',   color: '#4ADE80' },
-    { id: 'demo-r-ins',     name: 'Auto Insurance',   amount: 125,   type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 25, icon: 'Shield',     color: '#A3A3A3' },
-    { id: 'demo-r-carloan', name: 'Car Loan Payment', amount: 320,   type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 20, icon: 'Car',        color: '#EAB308' },
-    { id: 'demo-r-salary',  name: 'Salary',           amount: 5200,  type: 'income',  category: 'salary',   accountId: 'demo-checking', dayOfMonth: 1,  icon: 'Briefcase',  color: '#00E09E' },
-    { id: 'demo-r-side',    name: 'Freelance',        amount: 700,   type: 'income',  category: 'freelance',accountId: 'demo-checking', dayOfMonth: 15, icon: 'TrendingUp', color: '#818CF8' },
+    { id: 'demo-r-gym',     name: L('Gym'),              amount: 39.99, type: 'expense', category: 'health',   accountId: 'demo-checking', dayOfMonth: 18, icon: 'Activity',   color: '#4ADE80' },
+    { id: 'demo-r-ins',     name: L('Auto Insurance'),   amount: 125,   type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 25, icon: 'Shield',     color: '#A3A3A3' },
+    { id: 'demo-r-carloan', name: L('Car Loan Payment'), amount: 320,   type: 'expense', category: 'bills',    accountId: 'demo-checking', dayOfMonth: 20, icon: 'Car',        color: '#EAB308' },
+    { id: 'demo-r-salary',  name: L('Salary'),           amount: 5200,  type: 'income',  category: 'salary',   accountId: 'demo-checking', dayOfMonth: 1,  icon: 'Briefcase',  color: '#00E09E' },
+    { id: 'demo-r-side',    name: L('Freelance'),        amount: 700,   type: 'income',  category: 'freelance',accountId: 'demo-checking', dayOfMonth: 15, icon: 'TrendingUp', color: '#818CF8' },
   ]).run();
 }
 
@@ -174,13 +176,13 @@ function seedGoalsAndDebts(): void {
   const now = Date.now();
   const DAY = 86_400_000;
   db.insert(goals).values([
-    { id: 'demo-g-emergency', name: 'Emergency Fund',  targetAmount: 10000, targetDate: now + 180 * DAY, accountId: 'demo-savings', icon: 'shield-outline',   color: '#10B981', createdAt: now - 540 * DAY },
-    { id: 'demo-g-vacation',  name: 'Vacation',         targetAmount: 3000,  targetDate: now + 120 * DAY, accountId: 'demo-savings', icon: 'beach',            color: '#F97316', createdAt: now - 200 * DAY },
-    { id: 'demo-g-downpay',   name: 'House Down Payment', targetAmount: 50000, targetDate: now + 720 * DAY, accountId: 'demo-savings', icon: 'home-outline',   color: '#A78BFA', createdAt: now - 90 * DAY },
+    { id: 'demo-g-emergency', name: L('Emergency Fund'),  targetAmount: 10000, targetDate: now + 180 * DAY, accountId: 'demo-savings', icon: 'shield-outline',   color: '#10B981', createdAt: now - 540 * DAY },
+    { id: 'demo-g-vacation',  name: L('Vacation'),         targetAmount: 3000,  targetDate: now + 120 * DAY, accountId: 'demo-savings', icon: 'beach',            color: '#F97316', createdAt: now - 200 * DAY },
+    { id: 'demo-g-downpay',   name: L('House Down Payment'), targetAmount: 50000, targetDate: now + 720 * DAY, accountId: 'demo-savings', icon: 'home-outline',   color: '#A78BFA', createdAt: now - 90 * DAY },
   ]).run();
   db.insert(debts).values([
-    { id: 'demo-d-cc',   name: 'Credit Card', balance: 642.30, apr: 22.99, minPayment: 35, accountId: 'demo-cc',      currency: 'USD', icon: 'credit-card-outline', color: '#FF6B8A', createdAt: now - 600 * DAY },
-    { id: 'demo-d-car',  name: 'Car Loan',    balance: 8240,   apr: 6.5,   minPayment: 320, accountId: 'demo-carloan', currency: 'USD', icon: 'car-outline',         color: '#EAB308', createdAt: now - 400 * DAY },
+    { id: 'demo-d-cc',   name: L('Credit Card'), balance: 642.30, apr: 22.99, minPayment: 35, accountId: 'demo-cc',      currency: 'USD', icon: 'credit-card-outline', color: '#FF6B8A', createdAt: now - 600 * DAY },
+    { id: 'demo-d-car',  name: L('Car Loan'),    balance: 8240,   apr: 6.5,   minPayment: 320, accountId: 'demo-carloan', currency: 'USD', icon: 'car-outline',         color: '#EAB308', createdAt: now - 400 * DAY },
   ]).run();
 }
 
@@ -202,7 +204,7 @@ function seedBudgets(): void {
       `INSERT OR IGNORE INTO custom_categories
          (id, name, icon, color, type, created_at, monthly_budget, budget_currency, sort_order, is_pinned, archived, rollover_enabled)
        VALUES (?, ?, ?, ?, 'expense', ?, ?, 'USD', 0, 0, 0, 0)`,
-      [r.catId, r.name, r.icon, r.color, Date.now(), r.limit],
+      [r.catId, t(`cat.${r.catId}`), r.icon, r.color, Date.now(), r.limit],
     );
     raw.runSync(
       `UPDATE custom_categories
@@ -211,6 +213,13 @@ function seedBudgets(): void {
       [r.limit, r.catId],
     );
   }
+}
+
+/** Sample-data labels in the app's language, so the Demo profile (and the
+ *  store screenshots taken from it) is not half English. Falls back to the
+ *  English label for languages without a table. */
+function L(s: string): string {
+  return DEMO_TEXT[getLocale()]?.[s] ?? s;
 }
 
 // ---- Transaction generator ---------------------------------------------
@@ -284,7 +293,7 @@ function seedTransactions(): void {
           accountId: tpl.accountId,
           date: d.getTime(),
           createdAt: Date.now(),
-          note: tpl.note ?? pick(noteSrc),
+          note: L(tpl.note ?? pick(noteSrc)),
         });
       }
     }
@@ -295,16 +304,16 @@ function seedTransactions(): void {
     // unpaid checkboxes today.
     if (m > 0) {
       const recItems: { id: string; cat: string; acct: string; amt: number; day: number; note: string }[] = [
-        { id: 'mortgage', cat: 'rent',   acct: 'demo-checking', amt: 1650,  day: 1,  note: 'Mortgage Payment' },
-        { id: 'elec',     cat: 'bills',  acct: 'demo-checking', amt: 92.5,  day: 5,  note: 'Electric' },
-        { id: 'water',    cat: 'bills',  acct: 'demo-checking', amt: 38,    day: 6,  note: 'Water' },
-        { id: 'int',      cat: 'bills',  acct: 'demo-checking', amt: 65,    day: 7,  note: 'Internet' },
-        { id: 'phone',    cat: 'bills',  acct: 'demo-checking', amt: 42,    day: 12, note: 'Phone Plan' },
+        { id: 'mortgage', cat: 'rent',   acct: 'demo-checking', amt: 1650,  day: 1,  note: L('Mortgage Payment') },
+        { id: 'elec',     cat: 'bills',  acct: 'demo-checking', amt: 92.5,  day: 5,  note: L('Electric') },
+        { id: 'water',    cat: 'bills',  acct: 'demo-checking', amt: 38,    day: 6,  note: L('Water') },
+        { id: 'int',      cat: 'bills',  acct: 'demo-checking', amt: 65,    day: 7,  note: L('Internet') },
+        { id: 'phone',    cat: 'bills',  acct: 'demo-checking', amt: 42,    day: 12, note: L('Phone Plan') },
         { id: 'netflix',  cat: 'subs',   acct: 'demo-cc',       amt: 15.49, day: 10, note: 'Netflix' },
         { id: 'spotify',  cat: 'subs',   acct: 'demo-cc',       amt: 11.99, day: 14, note: 'Spotify' },
-        { id: 'gym',      cat: 'health', acct: 'demo-checking', amt: 39.99, day: 18, note: 'Gym' },
-        { id: 'ins',      cat: 'bills',  acct: 'demo-checking', amt: 125,   day: 25, note: 'Auto Insurance' },
-        { id: 'carloan',  cat: 'bills',  acct: 'demo-checking', amt: 320,   day: 20, note: 'Car Loan Payment' },
+        { id: 'gym',      cat: 'health', acct: 'demo-checking', amt: 39.99, day: 18, note: L('Gym') },
+        { id: 'ins',      cat: 'bills',  acct: 'demo-checking', amt: 125,   day: 25, note: L('Auto Insurance') },
+        { id: 'carloan',  cat: 'bills',  acct: 'demo-checking', amt: 320,   day: 20, note: L('Car Loan Payment') },
       ];
       for (const r of recItems) {
         const day = Math.min(r.day, daysInMonth);

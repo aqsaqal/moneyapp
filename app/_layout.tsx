@@ -108,6 +108,12 @@ function ScreenshotController() {
               DevSettings.reload();
             }
           }
+          else if (txt.startsWith('locale:')) {
+            // Switch the app language in place (store screenshots per language).
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            const I = require('@/utils/i18n') as typeof import('@/utils/i18n');
+            I.setLocale(txt.slice('locale:'.length).trim() as never);
+          }
           else if (txt.startsWith('taborder:')) {
             // eslint-disable-next-line @typescript-eslint/no-require-imports
             const T = require('@/utils/tabOrder') as typeof import('@/utils/tabOrder');

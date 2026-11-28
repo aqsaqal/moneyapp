@@ -1,24 +1,24 @@
 # Flow roadmap
 
 Living document. Dates are when a decision was made, not promises.
-Last updated 2026-11-27.
+Last updated 2026-11-28.
 
-## In flight — 1.2.0
+## In flight — 1.3.0
 
-- iOS 1.2 (build 4) in App Review.
-- Play: closed-testing release 4 (1.2.0), Testers Community group and the
-  refreshed listing are in Google's review. App is free on Play as of
-  2026-11-21 (permanent).
-- Testers Community: 14-day closed test starts once Play shows the app as
-  free and the release is live.
+Sent 2026-11-28. Flow Pro, widgets, themes, Split row (see "Done" below).
 
-## Next build — 1.2.1
+- iOS 1.3 (build 5) submitted to App Review together with the Flow Pro
+  in-app purchase (`flow_pro_lifetime`, non-consumable). 1.2 was pulled
+  from the queue in its favour and never went live.
+- Play: release 5 (1.3.0) on Internal testing and on the closed track
+  (Alpha), in Google's review. Product `flow_pro_lifetime` is active.
+  Internal testers list exists; license testers buy without being charged.
+- Listings and captioned screenshots in twelve languages on both stores
+  (eleven on the App Store, Spanish twice), sent with this release.
+- Testers Community: 14-day closed test continues on the closed track.
 
-Already on `dev`, send when there is a reason to:
-
-- Split: one total distributed across categories (Smart Add link + grid tile).
-- Camera declared optional hardware (clears the Play availability warning).
-- R8 minification + resource shrinking (clears the DEX warning, due Feb 2027).
+Went out with 1.3.0 as well, from the old 1.2.1 list: Split, camera as
+optional hardware, R8 minification + resource shrinking.
 
 ## After the 14-day test
 

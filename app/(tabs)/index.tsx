@@ -40,6 +40,7 @@ import {
 } from '@/hooks/useAppData';
 import { useStreak } from '@/hooks/useStreak';
 import { useT } from '@/hooks/useT';
+import { getLocale } from '@/utils/i18n';
 import { useActiveProfile, useProfiles } from '@/hooks/useProfile';
 import { ProfileSheet } from '@/components/ProfileSheet';
 import { HeaderSettingsButton } from '@/components/HeaderSettingsButton';
@@ -209,7 +210,7 @@ export default function Home() {
           <Text style={styles.brand}>{APP_NAME}</Text>
           {/* Context for every per-day number on the screen. */}
           <Text style={styles.dateLine} numberOfLines={1}>
-            {now.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}
+            {now.toLocaleDateString(getLocale(), { weekday: 'long', day: 'numeric', month: 'long' })}
             {' · '}
             {t('home.dayOf', { d: daysElapsed, n: dim })}
           </Text>
@@ -366,7 +367,7 @@ function dayLabel(ts: number, t: (k: string) => string): string {
   yesterday.setDate(today.getDate() - 1);
   if (d.toDateString() === today.toDateString()) return t('home.today');
   if (d.toDateString() === yesterday.toDateString()) return t('home.yesterday');
-  return d.toLocaleDateString(undefined, { day: 'numeric', month: 'short' });
+  return d.toLocaleDateString(getLocale(), { day: 'numeric', month: 'short' });
 }
 
 const styles = StyleSheet.create({
